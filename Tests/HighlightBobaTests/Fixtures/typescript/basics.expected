@@ -1,0 +1,66 @@
+interface User { readonly id: number; name?: string }
+^^^^^^^^^ keyword
+          ^^^^ entity.name.type
+                 ^^^^^^^^ keyword
+                              ^^^^^^ entity.name.type
+                                             ^^^^^^ entity.name.type
+type Pair<T> = [T, T];
+^^^^ keyword
+     ^^^^ entity.name.type
+          ^ entity.name.type
+                ^ entity.name.type
+                   ^ entity.name.type
+export abstract class Repo<T extends object> implements Store {
+^^^^^^ keyword
+       ^^^^^^^^ keyword
+                ^^^^^ keyword
+                      ^^^^ entity.name.type
+                           ^ entity.name.type
+                             ^^^^^^^ keyword
+                                     ^^^^^^ entity.name.type
+                                             ^^^^^^^^^^ keyword
+                                                        ^^^^^ entity.name.type
+  private cache: Map<string, T> = new Map();
+  ^^^^^^^ keyword
+                 ^^^ entity.name.type
+                     ^^^^^^ entity.name.type
+                             ^ entity.name.type
+                                  ^^^ keyword
+                                      ^^^ entity.name.type
+  async find(id: string): Promise<T | undefined> { return this.cache.get(id) as T; }
+  ^^^^^ keyword
+                 ^^^^^^ entity.name.type
+                          ^^^^^^^ entity.name.type
+                                  ^ entity.name.type
+                                      ^^^^^^^^^ constant.language
+                                                   ^^^^^^ keyword
+                                                          ^^^^ variable.language
+                                                                     ^^^ keyword
+                                                                             ^^ keyword
+                                                                                ^ entity.name.type
+}
+enum Color { Red, Green }
+^^^^ keyword
+     ^^^^^ entity.name.type
+             ^^^ entity.name.type
+                  ^^^^^ entity.name.type
+declare const x: unknown, y: never, z: any;
+^^^^^^^ keyword
+        ^^^^^ keyword
+                 ^^^^^^^ entity.name.type
+                             ^^^^^ entity.name.type
+                                       ^^^ entity.name.type
+const v = value satisfies Config;
+^^^^^ keyword
+                ^^^^^^^^^ keyword
+                          ^^^^^^ entity.name.type
+function isUser(u: unknown): u is User { return typeof u === "object"; }
+^^^^^^^^ keyword
+         ^^^^^^ entity.name.function
+                   ^^^^^^^ entity.name.type
+                               ^^ keyword
+                                  ^^^^ entity.name.type
+                                         ^^^^^^ keyword
+                                                ^^^^^^ keyword
+                                                             ^^^^^^^^ string.quoted
+

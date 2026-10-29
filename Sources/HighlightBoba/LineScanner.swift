@@ -47,6 +47,8 @@ struct LineScanner {
     private var caches: [RunCache] = []
     private var cacheSlots: [ObjectIdentifier: Int] = [:]
     private(set) var tokens: [LineToken] = []
+    /// `pushAtNextLine` frames per embedding depth, pushed at the line end in opener order.
+    private var pending: [[Frame]] = []
     /// Work done, for the linearity tests.
     private(set) var steps = 0
 
@@ -130,6 +132,11 @@ struct LineScanner {
         while stack.count > 1, grammar.states[stack[stack.count - 1].state].endsAtEOL {
             stack.removeLast()
         }
+        if depth < pending.count {
+            // The first opener's body comes first, so it goes on top.
+            for frame in pending[depth].reversed() where stack.count < Grammar.maxDepth { stack.append(frame) }
+            pending[depth] = []
+        }
     }
 
     // MARK: Stepping
@@ -181,7 +188,7 @@ struct LineScanner {
         return end
     }
 
-    private func apply(_ rule: FlatRule, _ grammar: Grammar, _ stack: inout [Frame],
+    private mutating func apply(_ rule: FlatRule, _ grammar: Grammar, _ stack: inout [Frame],
                        from start: Int, to end: Int, bounds: [Int]?, depth: Int) {
         if rule.pop > 0 { stack.removeLast(min(Int(rule.pop), stack.count - 1)) }
         guard rule.push >= 0, stack.count < Grammar.maxDepth else { return }
@@ -199,7 +206,12 @@ struct LineScanner {
                 frame.guest = Guest(grammar: guest, stack: [Frame(state: guest.initial)])
             }
         }
-        stack.append(frame)
+        if rule.pushAtNextLine {
+            while pending.count <= depth { pending.append([]) }
+            pending[depth].append(frame)
+        } else {
+            stack.append(frame)
+        }
     }
 
     private mutating func emit(_ start: Int, _ end: Int, _ scope: Int32, _ grammar: Grammar) {

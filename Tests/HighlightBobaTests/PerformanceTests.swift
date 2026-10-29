@@ -22,7 +22,16 @@ import Testing
         ("swift", "func captures", { String(repeating: "func ", count: $0 / 5) }),
         ("heredoc", "heredoc openers", { String(repeating: "<<EOF\n", count: $0 / 6) }),
         ("heredoc", "long delimiter, near misses", { "<<" + String(repeating: "A", count: 200) + "\n" + String(repeating: String(repeating: "A", count: 199) + "\n", count: $0 / 200) }),
-        ("markdown", "fence spam", { String(repeating: "```swift\n", count: $0 / 9) }),
+        ("fence", "fence spam", { String(repeating: "```swift\n", count: $0 / 9) }),
+        ("javascript", "slashes after operators", { String(repeating: "= /", count: $0 / 3) }),
+        ("javascript", "template openers", { String(repeating: "`${", count: $0 / 3) }),
+        ("go", "receiver lookahead without a close", { String(repeating: "func (", count: $0 / 6) }),
+        ("yaml", "key-like runs without a colon", { String(repeating: "abc-def ", count: $0 / 8) }),
+        ("yaml", "block scalars at every line", { String(repeating: "a: |\n", count: $0 / 5) }),
+        ("markdown", "unclosed emphasis and backticks", { String(repeating: "**_`", count: $0 / 4) }),
+        ("markdown", "real fence spam", { String(repeating: "```swift\n", count: $0 / 9) }),
+        ("shell", "heredoc openers on one line", { String(repeating: "<<A ", count: $0 / 4) }),
+        ("shell", "nested substitutions", { String(repeating: "$(", count: $0 / 2) }),
         ("block", "deep indentation", { String(repeating: "a: |\n" + String(repeating: " ", count: 40) + "x\n", count: $0 / 48) })
     ]
 

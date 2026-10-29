@@ -120,6 +120,8 @@ enum FixtureReport {
         .keyword{color:#cf222e;font-weight:600}.variable{color:#953800}.entity{color:#8250df}
         .meta{color:#116329}.support{color:#6639ba}.punctuation{color:#57606a}.invalid{background:#ffcecb}
         .escape{color:#0550ae;font-weight:600}.embedded{color:#bc4c00}
+        .markup{color:#0550ae}span[title="markup.heading"]{font-weight:700}span[title="markup.bold"]{font-weight:700}
+        span[title="markup.italic"]{font-style:italic}span[title="string.regexp"]{color:#116329}
         </style></head><body>
         <h1>HighlightBoba fixtures</h1>
         <p>\(entries.count) fixtures, <span class="\(failures == 0 ? "pass" : "fail")">\(failures) failing</span></p>

@@ -1,0 +1,10 @@
+#!/usr/bin/env bash
+# comment
+set -euo pipefail
+name="world $USER ${HOME}/x \$literal"
+echo 'single $not' "$1 $@ $#" $'tab\there'
+greet() { local who=${1:-you}; printf "%s\n" "Hi $who"; }
+function cleanup { rm -rf "$tmp"; }
+files=$(ls "$dir" | grep -v '^\.') count=$(( ${#arr[@]} + 1 ))
+for f in *.txt; do if [ -f "$f" ]; then echo `basename $f`; fi; done
+url=http://host/a#b # real comment

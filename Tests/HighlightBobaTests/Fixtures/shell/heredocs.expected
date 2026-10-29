@@ -1,0 +1,40 @@
+cat <<EOF | grep x
+    ^^^^^ keyword
+Hello $USER, today is $(date)
+^^^^^^ string.quoted
+      ^^^^^ variable.other
+           ^^^^^^^^^^^ string.quoted
+                      ^^ punctuation.section.embedded
+                            ^ punctuation.section.embedded
+not EOF yet
+^^^^^^^^^^^ string.quoted
+EOFX
+^^^^ string.quoted
+EOF
+^^^ keyword
+cat <<'RAW' > out.txt
+    ^^^^^^^ keyword
+no $expansion here
+^^^^^^^^^^^^^^^^^^ string.quoted
+RAW
+^^^ keyword
+	cat <<-INDENT
+     ^^^^^^^^^ keyword
+	tab-indented body
+^^^^^^^^^^^^^^^^^^ string.quoted
+	INDENT
+^^^^^^^ keyword
+cat <<A <<B
+    ^^^ keyword
+        ^^^ keyword
+first body
+^^^^^^^^^^ string.quoted
+A
+^ keyword
+second body
+^^^^^^^^^^^ string.quoted
+B
+^ keyword
+echo finished
+^^^^ support.function
+

@@ -1,0 +1,2 @@
+var bad = "\q"
+var e = "🧋 \u00e9 \U0001F9CB \101 \xff"

@@ -1,0 +1,18 @@
+# Heading *one*
+Some **bold**, *italic*, __also bold__, _also italic_ and `code` text.
+snake_case_word stays plain, and so does 2 * 3 * 4.
+A [link](https://example.com "Title") and <https://auto.link>.
+Escaped \*not italic\* and ``double `tick` code``.
+
+> quoted line
+- item
+* another
+1. numbered
+10) also numbered
+
+---
+***
+###### six
+####### seven is text
+* * *
+- - - -

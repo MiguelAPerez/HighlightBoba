@@ -1,0 +1,5 @@
+const a = b / c / 2;
+const re = /ab+c\/d[/]x/gi;
+if (/^\d+$/.test(s)) return /done/;
+const half = (x) / 2, arr = [1] / 3;
+typeof /re/

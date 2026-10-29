@@ -1,0 +1,17 @@
+cat <<EOF | grep x
+Hello $USER, today is $(date)
+not EOF yet
+EOFX
+EOF
+cat <<'RAW' > out.txt
+no $expansion here
+RAW
+	cat <<-INDENT
+	tab-indented body
+	INDENT
+cat <<A <<B
+first body
+A
+second body
+B
+echo finished

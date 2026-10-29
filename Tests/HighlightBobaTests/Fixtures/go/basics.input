@@ -1,0 +1,21 @@
+package main
+
+import (
+	"fmt"
+	"strings"
+)
+
+// Point is a coordinate.
+type Point struct{ X, Y int }
+
+func (p *Point) Scale(f float64) Point {
+	return Point{int(float64(p.X) * f), 0x1F}
+}
+
+func main() {
+	s := `raw \n string
+spanning lines`
+	r := '\n'
+	fmt.Println("hi\t\"there\"", len(s), r, nil, iota, 3.14, 1e9, 2i)
+	defer close(ch) /* done */
+}

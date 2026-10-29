@@ -1,0 +1,19 @@
+```swift
+let x = "```" // not a fence end
+```
+~~~python
+def f(): return None
+~~~
+````json
+{"a": [1, true]}
+`````
+```
+plain block
+```
+```cobol
+MOVE A TO B
+```
+```yaml
+key: value
+```
+after
