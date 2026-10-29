@@ -1,0 +1,37 @@
+{"path": "C:\\dir\n", "quote": "say \"hi\"", "snow": "\u2603", "bad": "\q", "short": "\u12"}
+^ punctuation
+ ^^^^^^ string.quoted
+       ^ punctuation
+         ^^^ string.quoted
+            ^^ constant.character.escape
+              ^^^ string.quoted
+                 ^^ constant.character.escape
+                   ^ string.quoted
+                    ^ punctuation
+                      ^^^^^^^ string.quoted
+                             ^ punctuation
+                               ^^^^^ string.quoted
+                                    ^^ constant.character.escape
+                                      ^^ string.quoted
+                                        ^^ constant.character.escape
+                                          ^ string.quoted
+                                           ^ punctuation
+                                             ^^^^^^ string.quoted
+                                                   ^ punctuation
+                                                     ^ string.quoted
+                                                      ^^^^^^ constant.character.escape
+                                                            ^ string.quoted
+                                                             ^ punctuation
+                                                               ^^^^^ string.quoted
+                                                                    ^ punctuation
+                                                                      ^ string.quoted
+                                                                       ^ invalid
+                                                                        ^^ string.quoted
+                                                                          ^ punctuation
+                                                                            ^^^^^^^ string.quoted
+                                                                                   ^ punctuation
+                                                                                     ^ string.quoted
+                                                                                      ^ invalid
+                                                                                       ^^^^ string.quoted
+                                                                                           ^ punctuation
+

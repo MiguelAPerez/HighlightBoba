@@ -1,0 +1,21 @@
+{"emoji": "🧋 boba", "ok": 1}
+^ punctuation
+ ^^^^^^^ string.quoted
+        ^ punctuation
+          ^^^^^^^^ string.quoted
+                  ^ punctuation
+                    ^^^^ string.quoted
+                        ^ punctuation
+                          ^ constant.numeric
+                           ^ punctuation
+{"zwj": "👩‍💻", "n": 2}
+^ punctuation
+ ^^^^^ string.quoted
+      ^ punctuation
+        ^^^ string.quoted
+           ^ punctuation
+             ^^^ string.quoted
+                ^ punctuation
+                  ^ constant.numeric
+                   ^ punctuation
+

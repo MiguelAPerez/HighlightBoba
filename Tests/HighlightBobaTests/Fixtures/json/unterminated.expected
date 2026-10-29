@@ -1,0 +1,11 @@
+{"open": "never closed
+^ punctuation
+ ^^^^^^ string.quoted
+       ^ punctuation
+         ^^^^^^^^^^^^^ string.quoted
+"next": 1}
+^^^^^^ string.quoted
+      ^ punctuation
+        ^ constant.numeric
+         ^ punctuation
+

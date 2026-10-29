@@ -2,7 +2,20 @@
 
 A grammar-driven syntax highlighter for Swift, written from scratch with Apple frameworks only.
 
-**Status:** early. The package builds and has a placeholder test; the grammar format and engine are not written yet.
+**Status:** early. The engine and three grammars (JSON, Swift, Python) work; the API may still change.
+
+```swift
+import HighlightBoba
+
+let grammar = try Grammar.bundled("swift")
+let highlighter = Highlighter(grammar: grammar, text: source)
+for token in highlighter.tokens {
+    // token.range is a UTF-16 NSRange; token.scope is e.g. "keyword"
+}
+let changed = highlighter.replaceCharacters(in: editedRange, with: replacement) // re-scans only what the edit affects
+```
+
+Grammars are data: a small pushdown state machine per language, matched without regex or backtracking. See [docs/GRAMMAR.md](docs/GRAMMAR.md).
 
 ## Contributing
 

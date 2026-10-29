@@ -1,0 +1,11 @@
+a = "tab\t quote\" hex\x41 unié name\N{BLACK STAR} keep\q"
+b = 'single \'quoted\''
+c = r"raw \n \" stays" + rb'bytes\n'
+d = b"bytes\n" + u"text"
+e = """triple "quoted"
+spans lines \n
+"""
+f = '''also
+triple'''
+g = "runs to the end
+h = 1

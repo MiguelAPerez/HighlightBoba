@@ -8,7 +8,7 @@ let package = Package(
         .library(name: "HighlightBoba", targets: ["HighlightBoba"])
     ],
     targets: [
-        .target(name: "HighlightBoba"),
-        .testTarget(name: "HighlightBobaTests", dependencies: ["HighlightBoba"])
+        .target(name: "HighlightBoba", resources: [.copy("Grammars")]),
+        .testTarget(name: "HighlightBobaTests", dependencies: ["HighlightBoba"], exclude: ["Fixtures"])
     ]
 )

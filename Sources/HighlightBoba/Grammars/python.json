@@ -1,0 +1,797 @@
+{
+  "name": "python",
+  "fileExtensions": [
+    "py",
+    "pyi"
+  ],
+  "initial": "code",
+  "states": {
+    "code": {
+      "rules": [
+        {
+          "match": {
+            "seq": [
+              {
+                "literal": "#"
+              },
+              {
+                "repeat": "[^\\r\\n]"
+              }
+            ]
+          },
+          "scope": "comment.line"
+        },
+        {
+          "match": {
+            "seq": [
+              {
+                "literal": "@"
+              },
+              {
+                "class": "[A-Za-z_]"
+              },
+              {
+                "repeat": "[A-Za-z0-9_.]"
+              }
+            ]
+          },
+          "scope": "entity.other.attribute",
+          "notAfterWord": true
+        },
+        {
+          "match": {
+            "seq": [
+              {
+                "opt": {
+                  "class": "[rRbB]"
+                }
+              },
+              {
+                "class": "[fF]"
+              },
+              {
+                "opt": {
+                  "class": "[rR]"
+                }
+              },
+              {
+                "literal": "\"\"\""
+              }
+            ]
+          },
+          "scope": "string.quoted",
+          "push": "fTripleDouble",
+          "notAfterWord": true
+        },
+        {
+          "match": {
+            "seq": [
+              {
+                "opt": {
+                  "class": "[rRbB]"
+                }
+              },
+              {
+                "class": "[fF]"
+              },
+              {
+                "opt": {
+                  "class": "[rR]"
+                }
+              },
+              {
+                "literal": "'''"
+              }
+            ]
+          },
+          "scope": "string.quoted",
+          "push": "fTripleSingle",
+          "notAfterWord": true
+        },
+        {
+          "match": {
+            "seq": [
+              {
+                "opt": {
+                  "class": "[rRbB]"
+                }
+              },
+              {
+                "class": "[fF]"
+              },
+              {
+                "opt": {
+                  "class": "[rR]"
+                }
+              },
+              {
+                "literal": "\""
+              }
+            ]
+          },
+          "scope": "string.quoted",
+          "push": "fDouble",
+          "notAfterWord": true
+        },
+        {
+          "match": {
+            "seq": [
+              {
+                "opt": {
+                  "class": "[rRbB]"
+                }
+              },
+              {
+                "class": "[fF]"
+              },
+              {
+                "opt": {
+                  "class": "[rR]"
+                }
+              },
+              {
+                "literal": "'"
+              }
+            ]
+          },
+          "scope": "string.quoted",
+          "push": "fSingle",
+          "notAfterWord": true
+        },
+        {
+          "match": {
+            "seq": [
+              {
+                "opt": {
+                  "class": "[bBuU]"
+                }
+              },
+              {
+                "class": "[rR]"
+              },
+              {
+                "opt": {
+                  "class": "[bB]"
+                }
+              },
+              {
+                "literal": "\"\"\""
+              }
+            ]
+          },
+          "scope": "string.quoted",
+          "push": "rawTripleDouble",
+          "notAfterWord": true
+        },
+        {
+          "match": {
+            "seq": [
+              {
+                "opt": {
+                  "class": "[bBuU]"
+                }
+              },
+              {
+                "class": "[rR]"
+              },
+              {
+                "opt": {
+                  "class": "[bB]"
+                }
+              },
+              {
+                "literal": "'''"
+              }
+            ]
+          },
+          "scope": "string.quoted",
+          "push": "rawTripleSingle",
+          "notAfterWord": true
+        },
+        {
+          "match": {
+            "seq": [
+              {
+                "opt": {
+                  "class": "[bBuU]"
+                }
+              },
+              {
+                "class": "[rR]"
+              },
+              {
+                "opt": {
+                  "class": "[bB]"
+                }
+              },
+              {
+                "literal": "\""
+              }
+            ]
+          },
+          "scope": "string.quoted",
+          "push": "rawDouble",
+          "notAfterWord": true
+        },
+        {
+          "match": {
+            "seq": [
+              {
+                "opt": {
+                  "class": "[bBuU]"
+                }
+              },
+              {
+                "class": "[rR]"
+              },
+              {
+                "opt": {
+                  "class": "[bB]"
+                }
+              },
+              {
+                "literal": "'"
+              }
+            ]
+          },
+          "scope": "string.quoted",
+          "push": "rawSingle",
+          "notAfterWord": true
+        },
+        {
+          "match": {
+            "seq": [
+              {
+                "opt": {
+                  "class": "[bBuU]"
+                }
+              },
+              {
+                "literal": "\"\"\""
+              }
+            ]
+          },
+          "scope": "string.quoted",
+          "push": "plainTripleDouble",
+          "notAfterWord": true
+        },
+        {
+          "match": {
+            "seq": [
+              {
+                "opt": {
+                  "class": "[bBuU]"
+                }
+              },
+              {
+                "literal": "'''"
+              }
+            ]
+          },
+          "scope": "string.quoted",
+          "push": "plainTripleSingle",
+          "notAfterWord": true
+        },
+        {
+          "match": {
+            "seq": [
+              {
+                "opt": {
+                  "class": "[bBuU]"
+                }
+              },
+              {
+                "literal": "\""
+              }
+            ]
+          },
+          "scope": "string.quoted",
+          "push": "plainDouble",
+          "notAfterWord": true
+        },
+        {
+          "match": {
+            "seq": [
+              {
+                "opt": {
+                  "class": "[bBuU]"
+                }
+              },
+              {
+                "literal": "'"
+              }
+            ]
+          },
+          "scope": "string.quoted",
+          "push": "plainSingle",
+          "notAfterWord": true
+        },
+        {
+          "match": {
+            "seq": [
+              {
+                "class": "[0-9]"
+              },
+              {
+                "repeat": "[0-9A-Fa-fxXoObBjJ_]"
+              },
+              {
+                "opt": {
+                  "seq": [
+                    {
+                      "literal": "."
+                    },
+                    {
+                      "repeat": "[0-9A-Fa-fxXoObBjJ_]"
+                    }
+                  ]
+                }
+              }
+            ]
+          },
+          "scope": "constant.numeric",
+          "notAfterWord": true
+        },
+        {
+          "match": {
+            "words": [
+              "True",
+              "False",
+              "None"
+            ]
+          },
+          "scope": "constant.language"
+        },
+        {
+          "match": {
+            "words": [
+              "self",
+              "cls"
+            ]
+          },
+          "scope": "variable.language"
+        },
+        {
+          "match": {
+            "words": [
+              "and",
+              "as",
+              "assert",
+              "async",
+              "await",
+              "break",
+              "class",
+              "continue",
+              "def",
+              "del",
+              "elif",
+              "else",
+              "except",
+              "finally",
+              "for",
+              "from",
+              "global",
+              "if",
+              "import",
+              "in",
+              "is",
+              "lambda",
+              "nonlocal",
+              "not",
+              "or",
+              "pass",
+              "raise",
+              "return",
+              "try",
+              "while",
+              "with",
+              "yield",
+              "match",
+              "case"
+            ]
+          },
+          "scope": "keyword"
+        },
+        {
+          "match": {
+            "words": [
+              "print",
+              "len",
+              "range",
+              "int",
+              "str",
+              "float",
+              "list",
+              "dict",
+              "set",
+              "tuple",
+              "bool",
+              "bytes",
+              "open",
+              "isinstance",
+              "issubclass",
+              "super",
+              "enumerate",
+              "zip",
+              "map",
+              "filter",
+              "sorted",
+              "reversed",
+              "min",
+              "max",
+              "sum",
+              "abs",
+              "any",
+              "all",
+              "repr",
+              "type",
+              "object",
+              "iter",
+              "next",
+              "hasattr",
+              "getattr",
+              "setattr",
+              "input",
+              "format"
+            ]
+          },
+          "scope": "support.function"
+        },
+        {
+          "match": {
+            "wordStarting": "[A-Z]"
+          },
+          "scope": "entity.name.type"
+        }
+      ]
+    },
+    "escapes": {
+      "rules": [
+        {
+          "match": {
+            "seq": [
+              {
+                "literal": "\\x"
+              },
+              {
+                "repeat": "[0-9A-Fa-f]",
+                "min": 2,
+                "max": 2
+              }
+            ]
+          },
+          "scope": "constant.character.escape"
+        },
+        {
+          "match": {
+            "seq": [
+              {
+                "literal": "\\u"
+              },
+              {
+                "repeat": "[0-9A-Fa-f]",
+                "min": 4,
+                "max": 4
+              }
+            ]
+          },
+          "scope": "constant.character.escape"
+        },
+        {
+          "match": {
+            "seq": [
+              {
+                "literal": "\\N{"
+              },
+              {
+                "repeat": "[A-Za-z0-9 -]",
+                "min": 1
+              },
+              {
+                "literal": "}"
+              }
+            ]
+          },
+          "scope": "constant.character.escape"
+        },
+        {
+          "match": {
+            "seq": [
+              {
+                "literal": "\\"
+              },
+              {
+                "class": "[\\\\'\"abfnrtv0-7]"
+              }
+            ]
+          },
+          "scope": "constant.character.escape"
+        }
+      ]
+    },
+    "fDouble": {
+      "scope": "string.quoted",
+      "endsAtEOL": true,
+      "rules": [
+        {
+          "include": "escapes"
+        },
+        {
+          "include": "fieldBraces"
+        },
+        {
+          "match": {
+            "literal": "\""
+          },
+          "pop": true
+        }
+      ]
+    },
+    "fSingle": {
+      "scope": "string.quoted",
+      "endsAtEOL": true,
+      "rules": [
+        {
+          "include": "escapes"
+        },
+        {
+          "include": "fieldBraces"
+        },
+        {
+          "match": {
+            "literal": "'"
+          },
+          "pop": true
+        }
+      ]
+    },
+    "fTripleDouble": {
+      "scope": "string.quoted",
+      "rules": [
+        {
+          "include": "escapes"
+        },
+        {
+          "include": "fieldBraces"
+        },
+        {
+          "match": {
+            "literal": "\"\"\""
+          },
+          "pop": true
+        }
+      ]
+    },
+    "fTripleSingle": {
+      "scope": "string.quoted",
+      "rules": [
+        {
+          "include": "escapes"
+        },
+        {
+          "include": "fieldBraces"
+        },
+        {
+          "match": {
+            "literal": "'''"
+          },
+          "pop": true
+        }
+      ]
+    },
+    "field": {
+      "rules": [
+        {
+          "match": {
+            "literal": "}"
+          },
+          "scope": "punctuation.section.embedded",
+          "pop": true
+        },
+        {
+          "match": {
+            "class": "[\\[({]"
+          },
+          "push": "fieldNested"
+        },
+        {
+          "include": "code"
+        }
+      ]
+    },
+    "fieldBraces": {
+      "rules": [
+        {
+          "match": {
+            "literal": "{{"
+          },
+          "scope": "constant.character.escape"
+        },
+        {
+          "match": {
+            "literal": "}}"
+          },
+          "scope": "constant.character.escape"
+        },
+        {
+          "match": {
+            "literal": "{"
+          },
+          "scope": "punctuation.section.embedded",
+          "push": "field"
+        }
+      ]
+    },
+    "fieldNested": {
+      "rules": [
+        {
+          "match": {
+            "class": "[\\])}]"
+          },
+          "pop": true
+        },
+        {
+          "match": {
+            "class": "[\\[({]"
+          },
+          "push": "fieldNested"
+        },
+        {
+          "include": "code"
+        }
+      ]
+    },
+    "plainDouble": {
+      "scope": "string.quoted",
+      "endsAtEOL": true,
+      "rules": [
+        {
+          "include": "escapes"
+        },
+        {
+          "match": {
+            "literal": "\""
+          },
+          "pop": true
+        }
+      ]
+    },
+    "plainSingle": {
+      "scope": "string.quoted",
+      "endsAtEOL": true,
+      "rules": [
+        {
+          "include": "escapes"
+        },
+        {
+          "match": {
+            "literal": "'"
+          },
+          "pop": true
+        }
+      ]
+    },
+    "plainTripleDouble": {
+      "scope": "string.quoted",
+      "rules": [
+        {
+          "include": "escapes"
+        },
+        {
+          "match": {
+            "literal": "\"\"\""
+          },
+          "pop": true
+        }
+      ]
+    },
+    "plainTripleSingle": {
+      "scope": "string.quoted",
+      "rules": [
+        {
+          "include": "escapes"
+        },
+        {
+          "match": {
+            "literal": "'''"
+          },
+          "pop": true
+        }
+      ]
+    },
+    "rawDouble": {
+      "scope": "string.quoted",
+      "endsAtEOL": true,
+      "rules": [
+        {
+          "match": {
+            "seq": [
+              {
+                "literal": "\\"
+              },
+              {
+                "class": "[^\\r\\n]"
+              }
+            ]
+          }
+        },
+        {
+          "match": {
+            "literal": "\""
+          },
+          "pop": true
+        }
+      ]
+    },
+    "rawSingle": {
+      "scope": "string.quoted",
+      "endsAtEOL": true,
+      "rules": [
+        {
+          "match": {
+            "seq": [
+              {
+                "literal": "\\"
+              },
+              {
+                "class": "[^\\r\\n]"
+              }
+            ]
+          }
+        },
+        {
+          "match": {
+            "literal": "'"
+          },
+          "pop": true
+        }
+      ]
+    },
+    "rawTripleDouble": {
+      "scope": "string.quoted",
+      "rules": [
+        {
+          "match": {
+            "seq": [
+              {
+                "literal": "\\"
+              },
+              {
+                "class": "[^\\r\\n]"
+              }
+            ]
+          }
+        },
+        {
+          "match": {
+            "literal": "\"\"\""
+          },
+          "pop": true
+        }
+      ]
+    },
+    "rawTripleSingle": {
+      "scope": "string.quoted",
+      "rules": [
+        {
+          "match": {
+            "seq": [
+              {
+                "literal": "\\"
+              },
+              {
+                "class": "[^\\r\\n]"
+              }
+            ]
+          }
+        },
+        {
+          "match": {
+            "literal": "'''"
+          },
+          "pop": true
+        }
+      ]
+    }
+  }
+}

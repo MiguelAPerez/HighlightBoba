@@ -1,0 +1,7 @@
+x = 1
+    ^ constant.numeric
+s = """a
+    ^^^^ string.quoted
+b"""
+^^^^ string.quoted
+

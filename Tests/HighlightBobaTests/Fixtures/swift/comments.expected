@@ -1,0 +1,24 @@
+// line comment with "quotes" and /* not a block
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ comment.line
+/// doc comment
+^^^^^^^^^^^^^^^ comment.line
+let a = 1 /* inline */ + 2
+^^^ keyword
+        ^ constant.numeric
+          ^^^^^^^^^^^^ comment.block
+                         ^ constant.numeric
+/* outer /* nested */ still comment */ let b = 2
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ comment.block
+                                       ^^^ keyword
+                                               ^ constant.numeric
+/* spans
+^^^^^^^^ comment.block
+   lines /* nested
+^^^^^^^^^^^^^^^^^^ comment.block
+   */ still
+^^^^^^^^^^^ comment.block
+*/ let c = 3
+^^ comment.block
+   ^^^ keyword
+           ^ constant.numeric
+

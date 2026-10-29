@@ -1,0 +1,31 @@
+{"name": "HighlightBoba", "stars": 42, "ratio": -1.5e+3, "ok": true, "none": null}
+^ punctuation
+ ^^^^^^ string.quoted
+       ^ punctuation
+         ^^^^^^^^^^^^^^^ string.quoted
+                        ^ punctuation
+                          ^^^^^^^ string.quoted
+                                 ^ punctuation
+                                   ^^ constant.numeric
+                                     ^ punctuation
+                                       ^^^^^^^ string.quoted
+                                              ^ punctuation
+                                                ^^^^^^^ constant.numeric
+                                                       ^ punctuation
+                                                         ^^^^ string.quoted
+                                                             ^ punctuation
+                                                               ^^^^ constant.language
+                                                                   ^ punctuation
+                                                                     ^^^^^^ string.quoted
+                                                                           ^ punctuation
+                                                                             ^^^^ constant.language
+                                                                                 ^ punctuation
+[1, 2.0, false]
+^ punctuation
+ ^ constant.numeric
+  ^ punctuation
+    ^^^ constant.numeric
+       ^ punctuation
+         ^^^^^ constant.language
+              ^ punctuation
+

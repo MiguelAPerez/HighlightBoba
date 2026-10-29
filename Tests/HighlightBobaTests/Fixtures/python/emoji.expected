@@ -1,0 +1,9 @@
+boba = "🧋 tea"  # 🍵
+       ^^^^^^^ string.quoted
+                ^^^ comment.line
+x = f"{👩‍💻}"
+    ^^ string.quoted
+      ^ punctuation.section.embedded
+        ^ punctuation.section.embedded
+         ^ string.quoted
+

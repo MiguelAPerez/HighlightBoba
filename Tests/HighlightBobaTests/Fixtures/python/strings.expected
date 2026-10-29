@@ -1,0 +1,40 @@
+a = "tab\t quote\" hex\x41 unié name\N{BLACK STAR} keep\q"
+    ^^^^ string.quoted
+        ^^ constant.character.escape
+          ^^^^^^ string.quoted
+                ^^ constant.character.escape
+                  ^^^^ string.quoted
+                      ^^^^ constant.character.escape
+                          ^^^^^^^^^^ string.quoted
+                                    ^^^^^^^^^^^^^^ constant.character.escape
+                                                  ^^^^^^^^ string.quoted
+b = 'single \'quoted\''
+    ^^^^^^^^ string.quoted
+            ^^ constant.character.escape
+              ^^^^^^ string.quoted
+                    ^^ constant.character.escape
+                      ^ string.quoted
+c = r"raw \n \" stays" + rb'bytes\n'
+    ^^^^^^^^^^^^^^^^^^ string.quoted
+                         ^^^^^^^^^^^ string.quoted
+d = b"bytes\n" + u"text"
+    ^^^^^^^ string.quoted
+           ^^ constant.character.escape
+             ^ string.quoted
+                 ^^^^^^^ string.quoted
+e = """triple "quoted"
+    ^^^^^^^^^^^^^^^^^^ string.quoted
+spans lines \n
+^^^^^^^^^^^^ string.quoted
+            ^^ constant.character.escape
+"""
+^^^ string.quoted
+f = '''also
+    ^^^^^^^ string.quoted
+triple'''
+^^^^^^^^^ string.quoted
+g = "runs to the end
+    ^^^^^^^^^^^^^^^^ string.quoted
+h = 1
+    ^ constant.numeric
+

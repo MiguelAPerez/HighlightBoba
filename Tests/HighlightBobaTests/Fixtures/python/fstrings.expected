@@ -1,0 +1,48 @@
+a = f"hello {name}!"
+    ^^^^^^^^ string.quoted
+            ^ punctuation.section.embedded
+                 ^ punctuation.section.embedded
+                  ^^ string.quoted
+b = f"{x!r:>10} and {{literal}} braces"
+    ^^ string.quoted
+      ^ punctuation.section.embedded
+            ^^ constant.numeric
+              ^ punctuation.section.embedded
+               ^^^^^ string.quoted
+                    ^^ constant.character.escape
+                      ^^^^^^^ string.quoted
+                             ^^ constant.character.escape
+                               ^^^^^^^^ string.quoted
+c = f"nested {d["key"]} and {f'{inner}'} done"
+    ^^^^^^^^^ string.quoted
+             ^ punctuation.section.embedded
+                ^^^^^ string.quoted
+                      ^ punctuation.section.embedded
+                       ^^^^^ string.quoted
+                            ^ punctuation.section.embedded
+                             ^^ string.quoted
+                               ^ punctuation.section.embedded
+                                     ^ punctuation.section.embedded
+                                      ^ string.quoted
+                                       ^ punctuation.section.embedded
+                                        ^^^^^^ string.quoted
+d = f"call {fn(a, [1, 2], {'k': v})} end"
+    ^^^^^^^ string.quoted
+           ^ punctuation.section.embedded
+                   ^ constant.numeric
+                      ^ constant.numeric
+                           ^^^ string.quoted
+                                   ^ punctuation.section.embedded
+                                    ^^^^^ string.quoted
+e = rf"raw {path} \d+"
+    ^^^^^^^ string.quoted
+           ^ punctuation.section.embedded
+                ^ punctuation.section.embedded
+                 ^^^^^ string.quoted
+g = f"""multi
+    ^^^^^^^^^ string.quoted
+{value} line"""
+^ punctuation.section.embedded
+      ^ punctuation.section.embedded
+       ^^^^^^^^ string.quoted
+

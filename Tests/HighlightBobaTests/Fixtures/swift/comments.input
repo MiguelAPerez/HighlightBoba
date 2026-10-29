@@ -1,0 +1,8 @@
+// line comment with "quotes" and /* not a block
+/// doc comment
+let a = 1 /* inline */ + 2
+/* outer /* nested */ still comment */ let b = 2
+/* spans
+   lines /* nested
+   */ still
+*/ let c = 3

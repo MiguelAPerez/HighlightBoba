@@ -1,0 +1,50 @@
+import Foundation
+^^^^^^ keyword
+       ^^^^^^^^^^ entity.name.type
+
+@MainActor
+^^^^^^^^^^ entity.other.attribute
+public final class Store: ObservableObject {
+^^^^^^ keyword
+       ^^^^^ keyword
+             ^^^^^ keyword
+                   ^^^^^ entity.name.type
+                          ^^^^^^^^^^^^^^^^ entity.name.type
+    private var count = 0x1F + 1_000 + 2.5e3
+    ^^^^^^^ keyword
+            ^^^ keyword
+                        ^^^^ constant.numeric
+                               ^^^^^ constant.numeric
+                                       ^^^^^ constant.numeric
+    func load(_ id: Int?) async throws -> [String] {
+    ^^^^ keyword
+                    ^^^ entity.name.type
+                          ^^^^^ keyword
+                                ^^^^^^ keyword
+                                           ^^^^^^ entity.name.type
+        guard let id, id > 0 else { return [] }
+        ^^^^^ keyword
+              ^^^ keyword
+                           ^ constant.numeric
+                             ^^^^ keyword
+                                    ^^^^^^ keyword
+        return self.items.map { $0.name } ?? nil
+        ^^^^^^ keyword
+               ^^^^ variable.language
+                                             ^^^ constant.language
+    }
+}
+let range = 1..<5
+^^^ keyword
+            ^ constant.numeric
+                ^ constant.numeric
+#if DEBUG
+^^^ meta.preprocessor
+    ^^^^^ entity.name.type
+let lookup = #selector(Store.load)
+^^^ keyword
+             ^^^^^^^^^ meta.preprocessor
+                       ^^^^^ entity.name.type
+#endif
+^^^^^^ meta.preprocessor
+

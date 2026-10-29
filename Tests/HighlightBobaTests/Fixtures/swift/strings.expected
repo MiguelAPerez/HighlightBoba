@@ -1,0 +1,49 @@
+let s = "tab\t quote\" unicode\u{1F9CB} bad\q"
+^^^ keyword
+        ^^^^ string.quoted
+            ^^ constant.character.escape
+              ^^^^^^ string.quoted
+                    ^^ constant.character.escape
+                      ^^^^^^^^ string.quoted
+                              ^^^^^^^^^ constant.character.escape
+                                       ^^^^ string.quoted
+                                           ^ invalid
+                                            ^^ string.quoted
+let t = "Hello, \(name)!"
+^^^ keyword
+        ^^^^^^^^ string.quoted
+                ^^ punctuation.section.embedded
+                      ^ punctuation.section.embedded
+                       ^^ string.quoted
+let u = "outer \("inner \(deep) string") done"
+^^^ keyword
+        ^^^^^^^ string.quoted
+               ^^ punctuation.section.embedded
+                 ^^^^^^^ string.quoted
+                        ^^ punctuation.section.embedded
+                              ^ punctuation.section.embedded
+                               ^^^^^^^^ string.quoted
+                                       ^ punctuation.section.embedded
+                                        ^^^^^^ string.quoted
+let v = "math \(f(a, (b + c))) end"
+^^^ keyword
+        ^^^^^^ string.quoted
+              ^^ punctuation.section.embedded
+                             ^ punctuation.section.embedded
+                              ^^^^^ string.quoted
+let w = """
+^^^ keyword
+        ^^^ string.quoted
+    multi "quoted" line \(x)
+^^^^^^^^^^^^^^^^^^^^^^^^ string.quoted
+                        ^^ punctuation.section.embedded
+                           ^ punctuation.section.embedded
+    """
+^^^^^^^ string.quoted
+let unterminated = "runs to the end
+^^^ keyword
+                   ^^^^^^^^^^^^^^^^ string.quoted
+let after = 1
+^^^ keyword
+            ^ constant.numeric
+

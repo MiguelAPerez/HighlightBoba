@@ -1,0 +1,9 @@
+let s = "tab\t quote\" unicode\u{1F9CB} bad\q"
+let t = "Hello, \(name)!"
+let u = "outer \("inner \(deep) string") done"
+let v = "math \(f(a, (b + c))) end"
+let w = """
+    multi "quoted" line \(x)
+    """
+let unterminated = "runs to the end
+let after = 1

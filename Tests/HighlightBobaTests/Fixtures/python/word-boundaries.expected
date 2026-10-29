@@ -1,0 +1,5 @@
+identifier_with_def = defx + 1if
+                             ^ constant.numeric
+printable = print
+            ^^^^^ support.function
+

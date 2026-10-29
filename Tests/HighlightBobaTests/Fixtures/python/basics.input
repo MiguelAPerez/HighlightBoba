@@ -1,0 +1,11 @@
+# comment with "quotes"
+import os
+from typing import Optional
+
+@dataclass(frozen=True)
+class Store(Base):
+    def load(self, ident: int = 0x1F) -> Optional[str]:
+        if ident is None or not self.items:
+            return None
+        print(len(range(10)), 3.14, 1_000, 2e10)
+        return True
