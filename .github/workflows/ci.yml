@@ -1,0 +1,37 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  privacy:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Commit email and domain allowlist
+        run: |
+          if [ "${{ github.event_name }}" = "pull_request" ]; then
+            scripts/check-commit-emails.sh "origin/${{ github.base_ref }}..HEAD^2"
+          else
+            scripts/check-commit-emails.sh HEAD
+          fi
+
+  test:
+    runs-on: macos-15
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - name: swift test
+        run: swift test
