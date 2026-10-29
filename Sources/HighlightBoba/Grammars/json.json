@@ -1,0 +1,153 @@
+{
+  "name": "json",
+  "fileExtensions": [
+    "json"
+  ],
+  "initial": "value",
+  "states": {
+    "value": {
+      "rules": [
+        {
+          "match": {
+            "literal": "\""
+          },
+          "scope": "string.quoted",
+          "push": "string"
+        },
+        {
+          "match": {
+            "seq": [
+              {
+                "opt": {
+                  "literal": "-"
+                }
+              },
+              {
+                "repeat": "[0-9]",
+                "min": 1
+              },
+              {
+                "class": "[A-Za-z_]"
+              },
+              {
+                "repeat": "[A-Za-z0-9_]"
+              }
+            ]
+          },
+          "scope": "invalid",
+          "notAfterWord": true
+        },
+        {
+          "match": {
+            "seq": [
+              {
+                "opt": {
+                  "literal": "-"
+                }
+              },
+              {
+                "repeat": "[0-9]",
+                "min": 1
+              },
+              {
+                "opt": {
+                  "seq": [
+                    {
+                      "literal": "."
+                    },
+                    {
+                      "repeat": "[0-9]",
+                      "min": 1
+                    }
+                  ]
+                }
+              },
+              {
+                "opt": {
+                  "seq": [
+                    {
+                      "class": "[eE]"
+                    },
+                    {
+                      "opt": {
+                        "class": "[+-]"
+                      }
+                    },
+                    {
+                      "repeat": "[0-9]",
+                      "min": 1
+                    }
+                  ]
+                }
+              }
+            ]
+          },
+          "scope": "constant.numeric",
+          "notAfterWord": true
+        },
+        {
+          "match": {
+            "words": [
+              "true",
+              "false",
+              "null"
+            ]
+          },
+          "scope": "constant.language"
+        },
+        {
+          "match": {
+            "class": "[{}\\[\\],:]"
+          },
+          "scope": "punctuation"
+        }
+      ]
+    },
+    "string": {
+      "scope": "string.quoted",
+      "endsAtEOL": true,
+      "rules": [
+        {
+          "match": {
+            "seq": [
+              {
+                "literal": "\\u"
+              },
+              {
+                "repeat": "[0-9A-Fa-f]",
+                "min": 4,
+                "max": 4
+              }
+            ]
+          },
+          "scope": "constant.character.escape"
+        },
+        {
+          "match": {
+            "seq": [
+              {
+                "literal": "\\"
+              },
+              {
+                "class": "[\"\\\\/bfnrt]"
+              }
+            ]
+          },
+          "scope": "constant.character.escape"
+        },
+        {
+          "match": {
+            "literal": "\\"
+          },
+          "scope": "invalid"
+        },
+        {
+          "match": {
+            "literal": "\""
+          },
+          "pop": true
+        }
+      ]
+    }
+  }
+}

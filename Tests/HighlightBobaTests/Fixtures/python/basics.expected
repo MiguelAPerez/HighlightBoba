@@ -1,0 +1,45 @@
+# comment with "quotes"
+^^^^^^^^^^^^^^^^^^^^^^^ comment.line
+import os
+^^^^^^ keyword
+from typing import Optional
+^^^^ keyword
+            ^^^^^^ keyword
+                   ^^^^^^^^ entity.name.type
+
+@dataclass(frozen=True)
+^^^^^^^^^^ entity.other.attribute
+                  ^^^^ constant.language
+class Store(Base):
+^^^^^ keyword
+      ^^^^^ entity.name.type
+            ^^^^ entity.name.type
+    def load(self, ident: int = 0x1F) -> Optional[str]:
+    ^^^ keyword
+             ^^^^ variable.language
+                          ^^^ support.function
+                                ^^^^ constant.numeric
+                                         ^^^^^^^^ entity.name.type
+                                                  ^^^ support.function
+        if ident is None or not self.items:
+        ^^ keyword
+                 ^^ keyword
+                    ^^^^ constant.language
+                         ^^ keyword
+                            ^^^ keyword
+                                ^^^^ variable.language
+            return None
+            ^^^^^^ keyword
+                   ^^^^ constant.language
+        print(len(range(10)), 3.14, 1_000, 2e10)
+        ^^^^^ support.function
+              ^^^ support.function
+                  ^^^^^ support.function
+                        ^^ constant.numeric
+                              ^^^^ constant.numeric
+                                    ^^^^^ constant.numeric
+                                           ^^^^ constant.numeric
+        return True
+        ^^^^^^ keyword
+               ^^^^ constant.language
+

@@ -1,0 +1,7 @@
+a = f"hello {name}!"
+b = f"{x!r:>10} and {{literal}} braces"
+c = f"nested {d["key"]} and {f'{inner}'} done"
+d = f"call {fn(a, [1, 2], {'k': v})} end"
+e = rf"raw {path} \d+"
+g = f"""multi
+{value} line"""

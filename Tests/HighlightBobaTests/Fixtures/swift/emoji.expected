@@ -1,0 +1,8 @@
+let 🧋 = "boba 🧋 \(👩‍💻)" // 🍵
+^^^ keyword
+        ^^^^^^^^ string.quoted
+                ^^ punctuation.section.embedded
+                   ^ punctuation.section.embedded
+                    ^ string.quoted
+                      ^^^^ comment.line
+

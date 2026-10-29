@@ -1,0 +1,12 @@
+{"a": 1,
+^ punctuation
+ ^^^ string.quoted
+    ^ punctuation
+      ^ constant.numeric
+       ^ punctuation
+ "b": "x"}
+ ^^^ string.quoted
+    ^ punctuation
+      ^^^ string.quoted
+         ^ punctuation
+

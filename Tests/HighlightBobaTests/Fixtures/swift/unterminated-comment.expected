@@ -1,0 +1,5 @@
+/* never closed
+^^^^^^^^^^^^^^^ comment.block
+let x = "still comment"
+^^^^^^^^^^^^^^^^^^^^^^^ comment.block
+

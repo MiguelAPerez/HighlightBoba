@@ -1,0 +1,14 @@
+import Foundation
+
+@MainActor
+public final class Store: ObservableObject {
+    private var count = 0x1F + 1_000 + 2.5e3
+    func load(_ id: Int?) async throws -> [String] {
+        guard let id, id > 0 else { return [] }
+        return self.items.map { $0.name } ?? nil
+    }
+}
+let range = 1..<5
+#if DEBUG
+let lookup = #selector(Store.load)
+#endif
