@@ -1,0 +1,77 @@
+# Step 1 of 2: bump the version with Commitizen and open a PR against main.
+# Merging that PR triggers release.yml, which tags the version and publishes the GitHub release.
+name: Release PR
+
+on:
+  workflow_dispatch:
+    inputs:
+      increment:
+        description: Semver bump (AUTO reads conventional commits since the last tag)
+        required: true
+        type: choice
+        default: AUTO
+        options: [AUTO, PATCH, MINOR, MAJOR]
+      dry_run:
+        description: Preview the bump only; no branch or PR
+        type: boolean
+        default: true
+
+permissions:
+  contents: write
+  pull-requests: write
+
+concurrency:
+  group: release-pr
+  cancel-in-progress: false
+
+jobs:
+  bump-and-pr:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: pip install -r requirements-release.txt
+      - name: Configure git
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898583+github-actions[bot]@users.noreply.github.com"
+      - name: Bump with Commitizen
+        id: bump
+        env:
+          INCREMENT: ${{ inputs.increment }}
+          DRY_RUN: ${{ inputs.dry_run }}
+        run: |
+          set -euo pipefail
+          BEFORE="$(grep '^  version:' cz.yaml | awk '{print $2}')"
+          ARGS=(bump --yes)
+          [[ "${INCREMENT}" != "AUTO" ]] && ARGS+=("--increment=${INCREMENT}")
+          [[ "${DRY_RUN}" == "true" ]] && ARGS+=(--dry-run)
+          cz "${ARGS[@]}" 2>&1 | tee bump.log || true
+          if [[ "${DRY_RUN}" == "true" ]]; then
+            AFTER="$(sed -nE 's/^bump: version [^ ]+ → ([^ ]+)$/\1/p' bump.log | head -1)"
+            AFTER="${AFTER:-$BEFORE}"
+          else
+            AFTER="$(grep '^  version:' cz.yaml | awk '{print $2}')"
+          fi
+          echo "version=${AFTER}" >> "$GITHUB_OUTPUT"
+          [[ "${BEFORE}" != "${AFTER}" ]] && echo "bumped=true" >> "$GITHUB_OUTPUT" || echo "bumped=false" >> "$GITHUB_OUTPUT"
+      - name: Push release branch and open PR
+        if: inputs.dry_run == false && steps.bump.outputs.bumped == 'true'
+        env:
+          GH_TOKEN: ${{ github.token }}
+          VERSION: ${{ steps.bump.outputs.version }}
+        run: |
+          set -euo pipefail
+          BRANCH="release/${VERSION}"
+          git tag -d "${VERSION}" 2>/dev/null || true
+          git checkout -b "${BRANCH}"
+          git push --force origin "${BRANCH}"
+          gh pr create --base main --head "${BRANCH}" \
+            --title "chore(release): bump to ${VERSION}" \
+            --body "Merging this PR tags \`${VERSION}\` and publishes the GitHub release." \
+            || gh pr edit "${BRANCH}" --title "chore(release): bump to ${VERSION}"

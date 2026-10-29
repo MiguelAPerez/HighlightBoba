@@ -1,0 +1,37 @@
+# Step 2 of 2: when the bump commit lands on main, tag the version and publish the release.
+# One workflow, because a tag pushed with GITHUB_TOKEN does not trigger other workflows.
+name: Release Publish
+
+on:
+  push:
+    branches: [main]
+    paths: [cz.yaml]
+
+permissions:
+  contents: write
+
+concurrency:
+  group: release-publish
+  cancel-in-progress: false
+
+jobs:
+  tag-and-publish:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Tag and publish
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          VERSION="$(grep '^  version:' cz.yaml | awk '{print $2}')"
+          if git ls-remote --tags origin "refs/tags/${VERSION}" | grep -q .; then
+            echo "Tag ${VERSION} already exists; skipping."; exit 0
+          fi
+          awk -v v="## ${VERSION}" 'index($0, v)==1{p=1;next} /^## /{if(p)exit} p' CHANGELOG.md > notes.md
+          git tag "${VERSION}"
+          git push origin "refs/tags/${VERSION}"
+          gh release create "${VERSION}" --title "${VERSION}" --notes-file notes.md --verify-tag

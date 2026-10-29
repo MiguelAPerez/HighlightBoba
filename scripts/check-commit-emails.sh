@@ -4,7 +4,7 @@
 set -euo pipefail
 range="${1:-HEAD}"
 blocked='miguelaperez\.dev'
-allowed='^([0-9]+\+)?[A-Za-z0-9-]+@users\.noreply\.github\.com$|^noreply@github\.com$'
+allowed='^([0-9]+\+)?[A-Za-z0-9-]+(\[bot\])?@users\.noreply\.github\.com$|^noreply@github\.com$'
 fail=0
 while IFS=$'\t' read -r sha ae ce; do
   for e in "$ae" "$ce"; do
