@@ -46,6 +46,7 @@ It is **not** a regex engine and not a parser. Matchers come from a small closed
 | `rules` | Ordered rules. The first match wins. |
 | `scope` | Optional. Text no rule matches gets this scope; rules without their own `scope` inherit it. |
 | `endsAtEOL` | Optional. The state is popped at a line break (single-line strings). Other states carry across lines. |
+| `endsAtDedent` | Optional. Pushed with `rememberIndent`; popped before any non-blank line indented no deeper than the line that pushed it (YAML block scalars). Blank lines don't end it. |
 
 ## Rules
 
@@ -56,6 +57,11 @@ It is **not** a regex engine and not a parser. Matchers come from a small closed
 | `push` | A state to push after matching. |
 | `pop` | `true` or a count of states to pop. Never pops the initial state. |
 | `notAfterWord` | Only match when the previous character is not a word character. |
+| `notAfter` | A class: only match when the previous non-blank character on the line is not in it. The line start counts as not-after. Tells a JS regex from division: `"notAfter": "[A-Za-z0-9_$)\\]]"`. |
+| `captures` | For a `seq` matcher: one scope (or `null` for the rule's scope) per part. `func load` → `["keyword", null, "entity.name.function"]`. |
+| `remember` | On a push: save the match (`true`) or one `seq` part (its index) on the new state, for `remembered` to close on. |
+| `rememberIndent` | On a push: save the line's indentation, for `endsAtDedent`. |
+| `embed` / `embedPart` | On a push: highlight the new state's text with another grammar, named directly (`"embed": "swift"`) or by a `seq` part's text (a fence's language tag). Names and file extensions both resolve. The pushed state's own rules are tried first at every position, so they act as the terminator. An unknown name falls back to the state's scope. |
 | `include` | Instead of `match`: splice in another state's rules here. |
 
 A rule that matches empty text is skipped unless it only pops, so a grammar can't loop.
@@ -74,8 +80,18 @@ Each matcher is an object with exactly one of these keys:
 | `{ "words": ["if", "else"] }` | One of those whole words (word boundaries on both sides). |
 | `{ "wordStarting": "[A-Z]" }` | A whole word whose first character is in the class. |
 | `{ "eol": true }` | Empty, at the end of a line. |
+| `{ "bol": true }` | Empty, at the start of a line. |
+| `{ "anyOf": [m1, m2] }` | The first alternative that matches. It commits: a later failure in the enclosing `seq` doesn't try the next alternative. |
+| `{ "followedBy": m }` / `{ "notFollowedBy": m }` | Empty; succeeds if `m` does (or doesn't) match here. Nothing is consumed. |
+| `{ "remembered": true }` | The text the current state's push rule saved with `remember`: heredoc terminators, Swift `#"…"#` hash counts, Markdown fence lengths. |
 
-There's no alternation inside a matcher (write two rules instead), no backreferences and no lookaround.
+Nothing ever backtracks: `repeat` keeps its whole run, and `anyOf` keeps its first match. So `{"seq": [{"repeat": "[a-z]"}, {"literal": "ing"}]}` never matches `running`; write `followedBy` or split the rule instead.
+
+### Patterns
+
+- **Heredoc:** `{"seq":[{"literal":"<<"},{"opt":{"literal":"-"}},{"wordStarting":"[A-Za-z_]"}]}` with `"push":"heredoc","remember":2`, closed in `heredoc` by `{"seq":[{"bol":true},{"repeat":"[\\t]"},{"remembered":true},{"eol":true}]}`.
+- **Fenced code:** remember the backtick run, `embedPart` the language tag, and close with `bol`, up to three spaces, `remembered`, then `{"repeat":"[`]"}` so a longer fence also closes it.
+- **Keys vs values:** use states, not lookahead. JSON's grammar has `object`, `member` and `array` states, so a string is a key exactly when it appears where a key belongs.
 
 ## Scopes
 
@@ -102,5 +118,7 @@ Columns count characters, so carets line up under emoji. Ranges in the API are U
 
 ## Known limits
 
-- Swift raw strings (`#"…"#`) and Python's line-continuation backslash inside single-quoted strings aren't modelled yet; they need the planned hand-written scanner escape hatch.
+- Python's line-continuation backslash inside single-quoted strings isn't modelled yet.
+- Look-behind is limited to the current line: `notAfter` can't see a token on the previous line.
+- Embedding nests at most four grammars deep, and a remembered delimiter is capped at 256 UTF-16 units.
 - Interpolation inside a single-line string doesn't end at the line break; the string resumes after it.

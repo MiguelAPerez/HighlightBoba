@@ -16,7 +16,14 @@ import Testing
         ("python", "f-string braces", { "f\"" + String(repeating: "{", count: $0) }),
         ("python", "quote soup", { String(repeating: "'\"", count: $0 / 2) }),
         ("json", "number then letters", { String(repeating: "9", count: $0) + "x" }),
-        ("json", "many short lines", { String(repeating: "[1,\n", count: $0 / 4) })
+        ("json", "many short lines", { String(repeating: "[1,\n", count: $0 / 4) }),
+        ("json", "key lookahead that never finds a colon", { "{\"a\": 1, " + String(repeating: "\"", count: $0) }),
+        ("swift", "raw string hash runs", { String(repeating: "#", count: $0) + "\"" + String(repeating: "\"#", count: $0 / 4) }),
+        ("swift", "func captures", { String(repeating: "func ", count: $0 / 5) }),
+        ("heredoc", "heredoc openers", { String(repeating: "<<EOF\n", count: $0 / 6) }),
+        ("heredoc", "long delimiter, near misses", { "<<" + String(repeating: "A", count: 200) + "\n" + String(repeating: String(repeating: "A", count: 199) + "\n", count: $0 / 200) }),
+        ("markdown", "fence spam", { String(repeating: "```swift\n", count: $0 / 9) }),
+        ("block", "deep indentation", { String(repeating: "a: |\n" + String(repeating: " ", count: 40) + "x\n", count: $0 / 48) })
     ]
 
     static func steps(_ grammar: Grammar, _ text: String) -> Int {
@@ -26,7 +33,7 @@ import Testing
     @Test(arguments: hostile.indices)
     func hostileInputStaysLinear(_ index: Int) throws {
         let (language, name, make) = Self.hostile[index]
-        let grammar = try Grammar.bundled(language)
+        let grammar = try IncrementalTests.grammar(language)
         let small = Self.steps(grammar, make(20_000))
         let large = Self.steps(grammar, make(80_000))
         let ratio = Double(large) / Double(max(small, 1))

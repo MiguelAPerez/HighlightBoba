@@ -18,6 +18,7 @@ public final class Store: ObservableObject {
                                        ^^^^^ constant.numeric
     func load(_ id: Int?) async throws -> [String] {
     ^^^^ keyword
+         ^^^^ entity.name.function
                     ^^^ entity.name.type
                           ^^^^^ keyword
                                 ^^^^^^ keyword

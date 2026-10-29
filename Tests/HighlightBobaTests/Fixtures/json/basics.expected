@@ -1,22 +1,22 @@
 {"name": "HighlightBoba", "stars": 42, "ratio": -1.5e+3, "ok": true, "none": null}
 ^ punctuation
- ^^^^^^ string.quoted
+ ^^^^^^ support.type.property-name
        ^ punctuation
          ^^^^^^^^^^^^^^^ string.quoted
                         ^ punctuation
-                          ^^^^^^^ string.quoted
+                          ^^^^^^^ support.type.property-name
                                  ^ punctuation
                                    ^^ constant.numeric
                                      ^ punctuation
-                                       ^^^^^^^ string.quoted
+                                       ^^^^^^^ support.type.property-name
                                               ^ punctuation
                                                 ^^^^^^^ constant.numeric
                                                        ^ punctuation
-                                                         ^^^^ string.quoted
+                                                         ^^^^ support.type.property-name
                                                              ^ punctuation
                                                                ^^^^ constant.language
                                                                    ^ punctuation
-                                                                     ^^^^^^ string.quoted
+                                                                     ^^^^^^ support.type.property-name
                                                                            ^ punctuation
                                                                              ^^^^ constant.language
                                                                                  ^ punctuation

@@ -1,20 +1,20 @@
 {"emoji": "🧋 boba", "ok": 1}
 ^ punctuation
- ^^^^^^^ string.quoted
+ ^^^^^^^ support.type.property-name
         ^ punctuation
           ^^^^^^^^ string.quoted
                   ^ punctuation
-                    ^^^^ string.quoted
+                    ^^^^ support.type.property-name
                         ^ punctuation
                           ^ constant.numeric
                            ^ punctuation
 {"zwj": "👩‍💻", "n": 2}
 ^ punctuation
- ^^^^^ string.quoted
+ ^^^^^ support.type.property-name
       ^ punctuation
         ^^^ string.quoted
            ^ punctuation
-             ^^^ string.quoted
+             ^^^ support.type.property-name
                 ^ punctuation
                   ^ constant.numeric
                    ^ punctuation

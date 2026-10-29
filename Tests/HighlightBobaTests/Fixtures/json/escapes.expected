@@ -1,6 +1,6 @@
 {"path": "C:\\dir\n", "quote": "say \"hi\"", "snow": "\u2603", "bad": "\q", "short": "\u12"}
 ^ punctuation
- ^^^^^^ string.quoted
+ ^^^^^^ support.type.property-name
        ^ punctuation
          ^^^ string.quoted
             ^^ constant.character.escape
@@ -8,7 +8,7 @@
                  ^^ constant.character.escape
                    ^ string.quoted
                     ^ punctuation
-                      ^^^^^^^ string.quoted
+                      ^^^^^^^ support.type.property-name
                              ^ punctuation
                                ^^^^^ string.quoted
                                     ^^ constant.character.escape
@@ -16,19 +16,19 @@
                                         ^^ constant.character.escape
                                           ^ string.quoted
                                            ^ punctuation
-                                             ^^^^^^ string.quoted
+                                             ^^^^^^ support.type.property-name
                                                    ^ punctuation
                                                      ^ string.quoted
                                                       ^^^^^^ constant.character.escape
                                                             ^ string.quoted
                                                              ^ punctuation
-                                                               ^^^^^ string.quoted
+                                                               ^^^^^ support.type.property-name
                                                                     ^ punctuation
                                                                       ^ string.quoted
                                                                        ^ invalid
                                                                         ^^ string.quoted
                                                                           ^ punctuation
-                                                                            ^^^^^^^ string.quoted
+                                                                            ^^^^^^^ support.type.property-name
                                                                                    ^ punctuation
                                                                                      ^ string.quoted
                                                                                       ^ invalid

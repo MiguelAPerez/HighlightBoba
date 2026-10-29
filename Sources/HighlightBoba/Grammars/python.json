@@ -55,13 +55,21 @@
                 }
               },
               {
-                "literal": "\"\"\""
+                "anyOf": [
+                  {
+                    "literal": "\"\"\""
+                  },
+                  {
+                    "literal": "'''"
+                  }
+                ]
               }
             ]
           },
           "scope": "string.quoted",
-          "push": "fTripleDouble",
-          "notAfterWord": true
+          "push": "fTriple",
+          "notAfterWord": true,
+          "remember": 3
         },
         {
           "match": {
@@ -80,63 +88,21 @@
                 }
               },
               {
-                "literal": "'''"
-              }
-            ]
-          },
-          "scope": "string.quoted",
-          "push": "fTripleSingle",
-          "notAfterWord": true
-        },
-        {
-          "match": {
-            "seq": [
-              {
-                "opt": {
-                  "class": "[rRbB]"
-                }
-              },
-              {
-                "class": "[fF]"
-              },
-              {
-                "opt": {
-                  "class": "[rR]"
-                }
-              },
-              {
-                "literal": "\""
-              }
-            ]
-          },
-          "scope": "string.quoted",
-          "push": "fDouble",
-          "notAfterWord": true
-        },
-        {
-          "match": {
-            "seq": [
-              {
-                "opt": {
-                  "class": "[rRbB]"
-                }
-              },
-              {
-                "class": "[fF]"
-              },
-              {
-                "opt": {
-                  "class": "[rR]"
-                }
-              },
-              {
-                "literal": "'"
+                "anyOf": [
+                  {
+                    "literal": "\""
+                  },
+                  {
+                    "literal": "'"
+                  }
+                ]
               }
             ]
           },
           "scope": "string.quoted",
           "push": "fSingle",
-          "notAfterWord": true
+          "notAfterWord": true,
+          "remember": 3
         },
         {
           "match": {
@@ -155,13 +121,21 @@
                 }
               },
               {
-                "literal": "\"\"\""
+                "anyOf": [
+                  {
+                    "literal": "\"\"\""
+                  },
+                  {
+                    "literal": "'''"
+                  }
+                ]
               }
             ]
           },
           "scope": "string.quoted",
-          "push": "rawTripleDouble",
-          "notAfterWord": true
+          "push": "rawTriple",
+          "notAfterWord": true,
+          "remember": 3
         },
         {
           "match": {
@@ -180,63 +154,21 @@
                 }
               },
               {
-                "literal": "'''"
-              }
-            ]
-          },
-          "scope": "string.quoted",
-          "push": "rawTripleSingle",
-          "notAfterWord": true
-        },
-        {
-          "match": {
-            "seq": [
-              {
-                "opt": {
-                  "class": "[bBuU]"
-                }
-              },
-              {
-                "class": "[rR]"
-              },
-              {
-                "opt": {
-                  "class": "[bB]"
-                }
-              },
-              {
-                "literal": "\""
-              }
-            ]
-          },
-          "scope": "string.quoted",
-          "push": "rawDouble",
-          "notAfterWord": true
-        },
-        {
-          "match": {
-            "seq": [
-              {
-                "opt": {
-                  "class": "[bBuU]"
-                }
-              },
-              {
-                "class": "[rR]"
-              },
-              {
-                "opt": {
-                  "class": "[bB]"
-                }
-              },
-              {
-                "literal": "'"
+                "anyOf": [
+                  {
+                    "literal": "\""
+                  },
+                  {
+                    "literal": "'"
+                  }
+                ]
               }
             ]
           },
           "scope": "string.quoted",
           "push": "rawSingle",
-          "notAfterWord": true
+          "notAfterWord": true,
+          "remember": 3
         },
         {
           "match": {
@@ -247,13 +179,21 @@
                 }
               },
               {
-                "literal": "\"\"\""
+                "anyOf": [
+                  {
+                    "literal": "\"\"\""
+                  },
+                  {
+                    "literal": "'''"
+                  }
+                ]
               }
             ]
           },
           "scope": "string.quoted",
-          "push": "plainTripleDouble",
-          "notAfterWord": true
+          "push": "plainTriple",
+          "notAfterWord": true,
+          "remember": 1
         },
         {
           "match": {
@@ -264,47 +204,21 @@
                 }
               },
               {
-                "literal": "'''"
-              }
-            ]
-          },
-          "scope": "string.quoted",
-          "push": "plainTripleSingle",
-          "notAfterWord": true
-        },
-        {
-          "match": {
-            "seq": [
-              {
-                "opt": {
-                  "class": "[bBuU]"
-                }
-              },
-              {
-                "literal": "\""
-              }
-            ]
-          },
-          "scope": "string.quoted",
-          "push": "plainDouble",
-          "notAfterWord": true
-        },
-        {
-          "match": {
-            "seq": [
-              {
-                "opt": {
-                  "class": "[bBuU]"
-                }
-              },
-              {
-                "literal": "'"
+                "anyOf": [
+                  {
+                    "literal": "\""
+                  },
+                  {
+                    "literal": "'"
+                  }
+                ]
               }
             ]
           },
           "scope": "string.quoted",
           "push": "plainSingle",
-          "notAfterWord": true
+          "notAfterWord": true,
+          "remember": 1
         },
         {
           "match": {
@@ -350,6 +264,52 @@
             ]
           },
           "scope": "variable.language"
+        },
+        {
+          "match": {
+            "seq": [
+              {
+                "words": [
+                  "def"
+                ]
+              },
+              {
+                "repeat": "[ \\t]",
+                "min": 1
+              },
+              {
+                "wordStarting": "[A-Za-z_]"
+              }
+            ]
+          },
+          "captures": [
+            "keyword",
+            null,
+            "entity.name.function"
+          ]
+        },
+        {
+          "match": {
+            "seq": [
+              {
+                "words": [
+                  "class"
+                ]
+              },
+              {
+                "repeat": "[ \\t]",
+                "min": 1
+              },
+              {
+                "wordStarting": "[A-Za-z_]"
+              }
+            ]
+          },
+          "captures": [
+            "keyword",
+            null,
+            "entity.name.type"
+          ]
         },
         {
           "match": {
@@ -509,24 +469,6 @@
         }
       ]
     },
-    "fDouble": {
-      "scope": "string.quoted",
-      "endsAtEOL": true,
-      "rules": [
-        {
-          "include": "escapes"
-        },
-        {
-          "include": "fieldBraces"
-        },
-        {
-          "match": {
-            "literal": "\""
-          },
-          "pop": true
-        }
-      ]
-    },
     "fSingle": {
       "scope": "string.quoted",
       "endsAtEOL": true,
@@ -539,13 +481,13 @@
         },
         {
           "match": {
-            "literal": "'"
+            "remembered": true
           },
           "pop": true
         }
       ]
     },
-    "fTripleDouble": {
+    "fTriple": {
       "scope": "string.quoted",
       "rules": [
         {
@@ -556,24 +498,7 @@
         },
         {
           "match": {
-            "literal": "\"\"\""
-          },
-          "pop": true
-        }
-      ]
-    },
-    "fTripleSingle": {
-      "scope": "string.quoted",
-      "rules": [
-        {
-          "include": "escapes"
-        },
-        {
-          "include": "fieldBraces"
-        },
-        {
-          "match": {
-            "literal": "'''"
+            "remembered": true
           },
           "pop": true
         }
@@ -641,21 +566,6 @@
         }
       ]
     },
-    "plainDouble": {
-      "scope": "string.quoted",
-      "endsAtEOL": true,
-      "rules": [
-        {
-          "include": "escapes"
-        },
-        {
-          "match": {
-            "literal": "\""
-          },
-          "pop": true
-        }
-      ]
-    },
     "plainSingle": {
       "scope": "string.quoted",
       "endsAtEOL": true,
@@ -665,13 +575,13 @@
         },
         {
           "match": {
-            "literal": "'"
+            "remembered": true
           },
           "pop": true
         }
       ]
     },
-    "plainTripleDouble": {
+    "plainTriple": {
       "scope": "string.quoted",
       "rules": [
         {
@@ -679,45 +589,7 @@
         },
         {
           "match": {
-            "literal": "\"\"\""
-          },
-          "pop": true
-        }
-      ]
-    },
-    "plainTripleSingle": {
-      "scope": "string.quoted",
-      "rules": [
-        {
-          "include": "escapes"
-        },
-        {
-          "match": {
-            "literal": "'''"
-          },
-          "pop": true
-        }
-      ]
-    },
-    "rawDouble": {
-      "scope": "string.quoted",
-      "endsAtEOL": true,
-      "rules": [
-        {
-          "match": {
-            "seq": [
-              {
-                "literal": "\\"
-              },
-              {
-                "class": "[^\\r\\n]"
-              }
-            ]
-          }
-        },
-        {
-          "match": {
-            "literal": "\""
+            "remembered": true
           },
           "pop": true
         }
@@ -741,13 +613,13 @@
         },
         {
           "match": {
-            "literal": "'"
+            "remembered": true
           },
           "pop": true
         }
       ]
     },
-    "rawTripleDouble": {
+    "rawTriple": {
       "scope": "string.quoted",
       "rules": [
         {
@@ -764,30 +636,7 @@
         },
         {
           "match": {
-            "literal": "\"\"\""
-          },
-          "pop": true
-        }
-      ]
-    },
-    "rawTripleSingle": {
-      "scope": "string.quoted",
-      "rules": [
-        {
-          "match": {
-            "seq": [
-              {
-                "literal": "\\"
-              },
-              {
-                "class": "[^\\r\\n]"
-              }
-            ]
-          }
-        },
-        {
-          "match": {
-            "literal": "'''"
+            "remembered": true
           },
           "pop": true
         }

@@ -17,18 +17,32 @@ struct SeededGenerator: RandomNumberGenerator {
 @Suite struct IncrementalTests {
     /// Fragments that open and close states, so random edits keep changing what later lines mean.
     static let fragments: [String: [String]] = [
-        "swift": ["/*", "*/", "\"", "\"\"\"", "\\(", ")", "(", "let ", "x", " ", "\n", "\r\n", "// c", "1.5", "🧋", "\\n", "Type"],
+        "swift": ["/*", "*/", "\"", "\"\"\"", "\\(", ")", "(", "let ", "x", " ", "\n", "\r\n", "// c", "1.5", "🧋", "\\n", "Type",
+                  "#", "##", "\\#(", "func f"],
         "python": ["\"", "'''", "\"\"\"", "f\"", "{", "}", "#", "def ", "x", " ", "\n", "\r\n", "r'", "\\", "🧋", "1e3", "None"],
-        "json": ["\"", "{", "}", "[", "]", ":", ",", "\\", "\\u00e9", "true", "-1.5", " ", "\n", "🧋"]
+        "json": ["\"", "{", "}", "[", "]", ":", ",", "\\", "\\u00e9", "true", "-1.5", " ", "\n", "🧋", "\"k\":"],
+        "heredoc": ["<<EOF", "<<-'END'", "EOF", "END", "\t", "\n", "x", " ", "EOFX", "\r\n"],
+        "markdown": ["```", "````", "swift", "json", "\n", " ", "/*", "*/", "\"", "let", "x", "cobol"],
+        "block": ["key:", " |", " >", "\n", "  ", "    ", "line", "\n\n", "a"]
     ]
+
+    /// Bundled grammars, plus the inline v1 grammars that exercise remembered delimiters, embedding and indentation.
+    static func grammar(_ name: String) throws -> Grammar {
+        switch name {
+        case "heredoc": return try FormatV1Tests.grammar(FormatV1Tests.heredoc)
+        case "markdown": return try FormatV1Tests.grammar(FormatV1Tests.markdown, initial: "text")
+        case "block": return try FormatV1Tests.grammar(FormatV1Tests.blockScalar)
+        default: return try Grammar.bundled(name)
+        }
+    }
 
     static func randomText(_ pieces: [String], count: Int, using rng: inout SeededGenerator) -> String {
         (0..<count).map { _ in pieces.randomElement(using: &rng)! }.joined()
     }
 
-    @Test(arguments: ["swift", "python", "json"])
+    @Test(arguments: ["swift", "python", "json", "heredoc", "markdown", "block"])
     func incrementalMatchesFullRehighlight(_ language: String) throws {
-        let grammar = try Grammar.bundled(language)
+        let grammar = try Self.grammar(language)
         let pieces = Self.fragments[language]!
         for seed in UInt64(1)...40 {
             var rng = SeededGenerator(state: seed)

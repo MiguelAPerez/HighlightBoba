@@ -30,6 +30,38 @@
         },
         {
           "match": {
+            "seq": [
+              {
+                "repeat": "[#]",
+                "min": 1
+              },
+              {
+                "literal": "\"\"\""
+              }
+            ]
+          },
+          "scope": "string.quoted",
+          "push": "rawMultilineString",
+          "remember": 0
+        },
+        {
+          "match": {
+            "seq": [
+              {
+                "repeat": "[#]",
+                "min": 1
+              },
+              {
+                "literal": "\""
+              }
+            ]
+          },
+          "scope": "string.quoted",
+          "push": "rawString",
+          "remember": 0
+        },
+        {
+          "match": {
             "literal": "\"\"\""
           },
           "scope": "string.quoted",
@@ -123,6 +155,29 @@
             ]
           },
           "scope": "variable.language"
+        },
+        {
+          "match": {
+            "seq": [
+              {
+                "words": [
+                  "func"
+                ]
+              },
+              {
+                "repeat": "[ \\t]",
+                "min": 1
+              },
+              {
+                "wordStarting": "[A-Za-z_]"
+              }
+            ]
+          },
+          "captures": [
+            "keyword",
+            null,
+            "entity.name.function"
+          ]
         },
         {
           "match": {
@@ -343,6 +398,110 @@
         },
         {
           "include": "code"
+        }
+      ]
+    },
+    "rawEscapes": {
+      "rules": [
+        {
+          "match": {
+            "seq": [
+              {
+                "literal": "\\"
+              },
+              {
+                "remembered": true
+              },
+              {
+                "literal": "("
+              }
+            ]
+          },
+          "scope": "punctuation.section.embedded",
+          "push": "interpolation"
+        },
+        {
+          "match": {
+            "seq": [
+              {
+                "literal": "\\"
+              },
+              {
+                "remembered": true
+              },
+              {
+                "literal": "u{"
+              },
+              {
+                "repeat": "[0-9A-Fa-f]",
+                "min": 1,
+                "max": 8
+              },
+              {
+                "literal": "}"
+              }
+            ]
+          },
+          "scope": "constant.character.escape"
+        },
+        {
+          "match": {
+            "seq": [
+              {
+                "literal": "\\"
+              },
+              {
+                "remembered": true
+              },
+              {
+                "class": "[0\\\\tnr\"']"
+              }
+            ]
+          },
+          "scope": "constant.character.escape"
+        }
+      ]
+    },
+    "rawString": {
+      "scope": "string.quoted",
+      "endsAtEOL": true,
+      "rules": [
+        {
+          "include": "rawEscapes"
+        },
+        {
+          "match": {
+            "seq": [
+              {
+                "literal": "\""
+              },
+              {
+                "remembered": true
+              }
+            ]
+          },
+          "pop": true
+        }
+      ]
+    },
+    "rawMultilineString": {
+      "scope": "string.quoted",
+      "rules": [
+        {
+          "include": "rawEscapes"
+        },
+        {
+          "match": {
+            "seq": [
+              {
+                "literal": "\"\"\""
+              },
+              {
+                "remembered": true
+              }
+            ]
+          },
+          "pop": true
         }
       ]
     }

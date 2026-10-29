@@ -16,6 +16,7 @@ class Store(Base):
             ^^^^ entity.name.type
     def load(self, ident: int = 0x1F) -> Optional[str]:
     ^^^ keyword
+        ^^^^ entity.name.function
              ^^^^ variable.language
                           ^^^ support.function
                                 ^^^^ constant.numeric
