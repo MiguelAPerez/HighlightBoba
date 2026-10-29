@@ -18,6 +18,8 @@ public struct HighlightToken: Hashable, Sendable {
 /// so typing inside a function re-scans a line or two, not the file.
 public final class Highlighter {
     public let grammar: Grammar
+    /// Where embedded grammars (a Markdown fence's language) are looked up.
+    public let registry: GrammarRegistry
     private(set) var units: [UInt16]
     private var lines: [Line]
     /// Scanner work done by the last full highlight or edit, for the linearity tests.
@@ -28,28 +30,31 @@ public final class Highlighter {
         var contentLength: Int
         var terminatorLength: Int
         var tokens: [LineToken]
-        var endStack: [Int]
+        var endStack: [Frame]
     }
 
-    public init(grammar: Grammar, text: String) {
+    public init(grammar: Grammar, text: String, registry: GrammarRegistry = .shared) {
         self.grammar = grammar
+        self.registry = registry
         units = Array(text.utf16)
         lines = []
-        lines = scan(from: 0, stack: [grammar.initial]) { _, _ in false }.lines
+        lines = scan(from: 0, stack: initialStack) { _, _ in false }.lines
     }
 
     /// One-shot highlight of `text`.
-    public static func highlight(_ text: String, grammar: Grammar) -> [HighlightToken] {
-        Highlighter(grammar: grammar, text: text).tokens
+    public static func highlight(_ text: String, grammar: Grammar, registry: GrammarRegistry = .shared) -> [HighlightToken] {
+        Highlighter(grammar: grammar, text: text, registry: registry).tokens
     }
+
+    private var initialStack: [Frame] { [Frame(state: grammar.initial)] }
 
     public var text: String { String(decoding: units, as: UTF16.self) }
 
     public var tokens: [HighlightToken] {
-        lines.flatMap { line in
+        let names = Scopes.Table.shared.allNames
+        return lines.flatMap { line in
             line.tokens.map {
-                HighlightToken(range: NSRange(location: line.start + $0.offset, length: $0.length),
-                               scope: grammar.scopes[$0.scope])
+                HighlightToken(range: NSRange(location: line.start + $0.offset, length: $0.length), scope: names[$0.scope])
             }
         }
     }
@@ -68,13 +73,13 @@ public final class Highlighter {
         // Start one line early: joining "\r" and "\n" or deleting a line break changes the line before.
         let first = max(0, lineIndex(containing: range.location) - 1)
         let start = lines[first].start
-        let startStack = first == 0 ? [grammar.initial] : lines[first - 1].endStack
+        let startStack = first == 0 ? initialStack : lines[first - 1].endStack
 
         var resume: Int?
         let (scanned, stoppedAt) = scan(from: start, stack: startStack) { newStart, stack in
             let oldStart = newStart - delta
             guard oldStart >= oldEditEnd, let index = self.lineIndex(startingAt: oldStart), index >= first else { return false }
-            let oldStack = index == 0 ? [self.grammar.initial] : self.lines[index - 1].endStack
+            let oldStack = index == 0 ? self.initialStack : self.lines[index - 1].endStack
             guard oldStack == stack else { return false }
             resume = index
             return true
@@ -108,8 +113,8 @@ public final class Highlighter {
     }
 
     /// Scans lines from `start` until the text ends or `shouldStop` accepts a line start.
-    private func scan(from start: Int, stack initial: [Int],
-                      until shouldStop: (Int, [Int]) -> Bool) -> (lines: [Line], stoppedAt: Int?) {
+    private func scan(from start: Int, stack initial: [Frame],
+                      until shouldStop: (Int, [Frame]) -> Bool) -> (lines: [Line], stoppedAt: Int?) {
         var result: [Line] = []
         var stack = initial
         var position = start
@@ -122,8 +127,8 @@ public final class Highlighter {
             if end < units.count {
                 terminator = units[end] == 13 && end + 1 < units.count && units[end + 1] == 10 ? 2 : 1
             }
-            var scanner = LineScanner(grammar: grammar, units: units, lineStart: position, limit: end)
-            let tokens = scanner.scan(stack: &stack)
+            var scanner = LineScanner(units: units, lineStart: position, limit: end, registry: registry)
+            let tokens = scanner.scan(grammar, stack: &stack)
             steps += scanner.steps + (end - position) + 1
             result.append(Line(start: position, contentLength: end - position, terminatorLength: terminator,
                                tokens: tokens, endStack: stack))

@@ -1,0 +1,36 @@
+{
+^ punctuation
+  "nested": {"list": [{"k": "v"}, "s"]},
+  ^^^^^^^^ support.type.property-name
+          ^ punctuation
+            ^ punctuation
+             ^^^^^^ support.type.property-name
+                   ^ punctuation
+                     ^^ punctuation
+                       ^^^ support.type.property-name
+                          ^ punctuation
+                            ^^^ string.quoted
+                               ^^ punctuation
+                                  ^^^ string.quoted
+                                     ^^^ punctuation
+  "multi":
+  ^^^^^^^ support.type.property-name
+         ^ punctuation
+    "line value",
+    ^^^^^^^^^^^^ string.quoted
+                ^ punctuation
+  "after": [1, {"x": [2]}]
+  ^^^^^^^ support.type.property-name
+         ^ punctuation
+           ^ punctuation
+            ^ constant.numeric
+             ^ punctuation
+               ^ punctuation
+                ^^^ support.type.property-name
+                   ^ punctuation
+                     ^ punctuation
+                      ^ constant.numeric
+                       ^^^ punctuation
+}
+^ punctuation
+

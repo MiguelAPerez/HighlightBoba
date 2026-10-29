@@ -5,7 +5,220 @@
   ],
   "initial": "value",
   "states": {
+    "array": {
+      "rules": [
+        {
+          "match": {
+            "literal": "]"
+          },
+          "scope": "punctuation",
+          "pop": true
+        },
+        {
+          "match": {
+            "literal": ","
+          },
+          "scope": "punctuation"
+        },
+        {
+          "include": "values"
+        }
+      ]
+    },
+    "key": {
+      "scope": "support.type.property-name",
+      "endsAtEOL": true,
+      "rules": [
+        {
+          "match": {
+            "seq": [
+              {
+                "literal": "\\u"
+              },
+              {
+                "repeat": "[0-9A-Fa-f]",
+                "min": 4,
+                "max": 4
+              }
+            ]
+          },
+          "scope": "constant.character.escape"
+        },
+        {
+          "match": {
+            "seq": [
+              {
+                "literal": "\\"
+              },
+              {
+                "class": "[\"\\\\/bfnrt]"
+              }
+            ]
+          },
+          "scope": "constant.character.escape"
+        },
+        {
+          "match": {
+            "literal": "\\"
+          },
+          "scope": "invalid"
+        },
+        {
+          "match": {
+            "literal": "\""
+          },
+          "pop": true
+        }
+      ]
+    },
+    "member": {
+      "rules": [
+        {
+          "match": {
+            "literal": ","
+          },
+          "scope": "punctuation",
+          "pop": true
+        },
+        {
+          "match": {
+            "literal": "}"
+          },
+          "scope": "punctuation",
+          "pop": 2
+        },
+        {
+          "match": {
+            "seq": [
+              {
+                "literal": "\""
+              },
+              {
+                "followedBy": {
+                  "seq": [
+                    {
+                      "repeat": "[^\"\\\\\\r\\n]"
+                    },
+                    {
+                      "literal": "\""
+                    },
+                    {
+                      "repeat": "[ \\t]"
+                    },
+                    {
+                      "literal": ":"
+                    }
+                  ]
+                }
+              }
+            ]
+          },
+          "scope": "support.type.property-name",
+          "pop": 1,
+          "push": "key"
+        },
+        {
+          "match": {
+            "literal": ":"
+          },
+          "scope": "punctuation"
+        },
+        {
+          "include": "values"
+        }
+      ]
+    },
+    "object": {
+      "rules": [
+        {
+          "match": {
+            "literal": "}"
+          },
+          "scope": "punctuation",
+          "pop": true
+        },
+        {
+          "match": {
+            "literal": "\""
+          },
+          "scope": "support.type.property-name",
+          "push": "key"
+        },
+        {
+          "match": {
+            "literal": ":"
+          },
+          "scope": "punctuation",
+          "push": "member"
+        },
+        {
+          "match": {
+            "literal": ","
+          },
+          "scope": "punctuation"
+        }
+      ]
+    },
+    "string": {
+      "scope": "string.quoted",
+      "endsAtEOL": true,
+      "rules": [
+        {
+          "match": {
+            "seq": [
+              {
+                "literal": "\\u"
+              },
+              {
+                "repeat": "[0-9A-Fa-f]",
+                "min": 4,
+                "max": 4
+              }
+            ]
+          },
+          "scope": "constant.character.escape"
+        },
+        {
+          "match": {
+            "seq": [
+              {
+                "literal": "\\"
+              },
+              {
+                "class": "[\"\\\\/bfnrt]"
+              }
+            ]
+          },
+          "scope": "constant.character.escape"
+        },
+        {
+          "match": {
+            "literal": "\\"
+          },
+          "scope": "invalid"
+        },
+        {
+          "match": {
+            "literal": "\""
+          },
+          "pop": true
+        }
+      ]
+    },
     "value": {
+      "rules": [
+        {
+          "include": "values"
+        },
+        {
+          "match": {
+            "class": "[}\\],:]"
+          },
+          "scope": "punctuation"
+        }
+      ]
+    },
+    "values": {
       "rules": [
         {
           "match": {
@@ -97,55 +310,17 @@
         },
         {
           "match": {
-            "class": "[{}\\[\\],:]"
+            "literal": "{"
           },
-          "scope": "punctuation"
-        }
-      ]
-    },
-    "string": {
-      "scope": "string.quoted",
-      "endsAtEOL": true,
-      "rules": [
-        {
-          "match": {
-            "seq": [
-              {
-                "literal": "\\u"
-              },
-              {
-                "repeat": "[0-9A-Fa-f]",
-                "min": 4,
-                "max": 4
-              }
-            ]
-          },
-          "scope": "constant.character.escape"
+          "scope": "punctuation",
+          "push": "object"
         },
         {
           "match": {
-            "seq": [
-              {
-                "literal": "\\"
-              },
-              {
-                "class": "[\"\\\\/bfnrt]"
-              }
-            ]
+            "literal": "["
           },
-          "scope": "constant.character.escape"
-        },
-        {
-          "match": {
-            "literal": "\\"
-          },
-          "scope": "invalid"
-        },
-        {
-          "match": {
-            "literal": "\""
-          },
-          "pop": true
+          "scope": "punctuation",
+          "push": "array"
         }
       ]
     }

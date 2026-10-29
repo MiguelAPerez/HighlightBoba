@@ -1,0 +1,6 @@
+{
+  "nested": {"list": [{"k": "v"}, "s"]},
+  "multi":
+    "line value",
+  "after": [1, {"x": [2]}]
+}

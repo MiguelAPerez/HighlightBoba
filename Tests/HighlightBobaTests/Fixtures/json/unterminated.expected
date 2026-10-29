@@ -1,10 +1,10 @@
 {"open": "never closed
 ^ punctuation
- ^^^^^^ string.quoted
+ ^^^^^^ support.type.property-name
        ^ punctuation
          ^^^^^^^^^^^^^ string.quoted
 "next": 1}
-^^^^^^ string.quoted
+^^^^^^ support.type.property-name
       ^ punctuation
         ^ constant.numeric
          ^ punctuation

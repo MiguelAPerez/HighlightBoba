@@ -1,0 +1,6 @@
+let a = #"C:\path "quoted" \(not) \#(name)"#
+let b = ##"one "# two"## + #"x"#
+let c = #"""
+    raw "multi" \#n line
+    """#
+#if DEBUG

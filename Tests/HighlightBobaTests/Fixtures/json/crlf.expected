@@ -1,11 +1,11 @@
 {"a": 1,
 ^ punctuation
- ^^^ string.quoted
+ ^^^ support.type.property-name
     ^ punctuation
       ^ constant.numeric
        ^ punctuation
  "b": "x"}
- ^^^ string.quoted
+ ^^^ support.type.property-name
     ^ punctuation
       ^^^ string.quoted
          ^ punctuation
