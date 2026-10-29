@@ -76,6 +76,8 @@ struct FlatRule: Sendable {
     var notAfterWord: Bool
     var rememberIndent: Bool
     var needsParts: Bool
+    /// The push takes effect at the end of the line (heredoc bodies start on the next line).
+    var pushAtNextLine: Bool
 }
 
 struct FlatState: Sendable {
@@ -112,11 +114,12 @@ final class Rule: Sendable {
     let remember: MatchSlice?
     let rememberIndent: Bool
     let embed: EmbedSource?
+    let pushAtNextLine: Bool
     /// Whether matching must record where each `seq` part ends.
     let needsParts: Bool
 
     init(matcher: Matcher, scope: Int?, push: Int?, pop: Int, notAfterWord: Bool, notAfter: Int?,
-         captures: [Int?]?, remember: MatchSlice?, rememberIndent: Bool, embed: EmbedSource?) {
+         captures: [Int?]?, remember: MatchSlice?, rememberIndent: Bool, embed: EmbedSource?, pushAtNextLine: Bool) {
         self.matcher = matcher
         self.scope = scope
         self.push = push
@@ -127,6 +130,7 @@ final class Rule: Sendable {
         self.remember = remember
         self.rememberIndent = rememberIndent
         self.embed = embed
+        self.pushAtNextLine = pushAtNextLine
         var parts = captures != nil
         if case .part = remember { parts = true }
         if case .part = embed { parts = true }
@@ -222,7 +226,7 @@ public final class Grammar: Sendable {
                     continue
                 }
                 try Self.checkKeys(rule, allowed: ["match", "scope", "push", "pop", "notAfterWord", "notAfter", "captures",
-                                                   "remember", "rememberIndent", "embed", "embedPart"], at: at)
+                                                   "remember", "rememberIndent", "embed", "embedPart", "pushAtNextLine"], at: at)
                 guard let match = rule["match"] else { throw GrammarError("\(at) needs \"match\" or \"include\"") }
                 let matcher = try builder.matcher(match, at: at)
                 var push: Int?
@@ -272,13 +276,15 @@ public final class Grammar: Sendable {
                     embed = .part(try partIndex("embedPart"))
                 }
                 let rememberIndent = rule["rememberIndent"] as? Bool ?? false
-                if push == nil, remember != nil || embed != nil || rememberIndent {
-                    throw GrammarError("\(at): \"remember\", \"rememberIndent\" and \"embed\" store on the pushed state, so the rule needs \"push\"")
+                let pushAtNextLine = rule["pushAtNextLine"] as? Bool ?? false
+                if push == nil, remember != nil || embed != nil || rememberIndent || pushAtNextLine {
+                    throw GrammarError("\(at): \"remember\", \"rememberIndent\", \"embed\" and \"pushAtNextLine\" act on the pushed state, so the rule needs \"push\"")
                 }
                 let notAfter = try (rule["notAfter"] as? String).map { try builder.internClass($0) }
                 parsed.append(.rule(Rule(matcher: matcher, scope: scope, push: push, pop: pop,
                                          notAfterWord: rule["notAfterWord"] as? Bool ?? false, notAfter: notAfter,
-                                         captures: captures, remember: remember, rememberIndent: rememberIndent, embed: embed)))
+                                         captures: captures, remember: remember, rememberIndent: rememberIndent, embed: embed,
+                                         pushAtNextLine: pushAtNextLine)))
             }
             rawRules.append(parsed)
         }
@@ -337,7 +343,8 @@ public final class Grammar: Sendable {
             var flat = FlatRule(matcher: compile(rule.matcher), scope: Int32(rule.scope ?? -1), push: Int32(rule.push ?? -1),
                                 pop: Int32(rule.pop), notAfter: Int32(rule.notAfter ?? -1), capturesStart: 0, capturesCount: 0,
                                 remember: -2, embedPart: -1, embedName: -1, notAfterWord: rule.notAfterWord,
-                                rememberIndent: rule.rememberIndent, needsParts: rule.needsParts)
+                                rememberIndent: rule.rememberIndent, needsParts: rule.needsParts,
+                                pushAtNextLine: rule.pushAtNextLine)
             if let captures = rule.captures {
                 flat.capturesStart = Int32(capturePool.count)
                 flat.capturesCount = Int32(captures.count)

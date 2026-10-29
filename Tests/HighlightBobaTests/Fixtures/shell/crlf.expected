@@ -1,0 +1,10 @@
+cat <<EOF
+    ^^^^^ keyword
+body $x
+^^^^^ string.quoted
+     ^^ variable.other
+EOF
+^^^ keyword
+echo ok
+^^^^ support.function
+

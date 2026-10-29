@@ -1,0 +1,10 @@
+interface User { readonly id: number; name?: string }
+type Pair<T> = [T, T];
+export abstract class Repo<T extends object> implements Store {
+  private cache: Map<string, T> = new Map();
+  async find(id: string): Promise<T | undefined> { return this.cache.get(id) as T; }
+}
+enum Color { Red, Green }
+declare const x: unknown, y: never, z: any;
+const v = value satisfies Config;
+function isUser(u: unknown): u is User { return typeof u === "object"; }

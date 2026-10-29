@@ -20,7 +20,14 @@ public enum Scopes {
         "support.function",
         "punctuation",
         "punctuation.section.embedded",
-        "invalid"
+        "invalid",
+        "string.regexp",
+        "variable.other",
+        "markup.heading",
+        "markup.bold",
+        "markup.italic",
+        "markup.raw",
+        "markup.link"
     ]
 
     /// Every scope name any loaded grammar uses, interned so tokens carry an `Int` instead of a `String`.

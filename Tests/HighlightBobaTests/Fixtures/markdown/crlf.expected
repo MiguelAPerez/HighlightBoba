@@ -1,0 +1,14 @@
+```json
+^^^ punctuation
+   ^^^^ keyword
+{"a": 1}
+^ punctuation
+ ^^^ support.type.property-name
+    ^ punctuation
+      ^ constant.numeric
+       ^ punctuation
+```
+^^^ punctuation
+**b**
+^^^^^ markup.bold
+

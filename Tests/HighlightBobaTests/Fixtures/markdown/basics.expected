@@ -1,0 +1,43 @@
+# Heading *one*
+^^^^^^^^^^^^^^^ markup.heading
+Some **bold**, *italic*, __also bold__, _also italic_ and `code` text.
+     ^^^^^^^^ markup.bold
+               ^^^^^^^^ markup.italic
+                         ^^^^^^^^^^^^^ markup.bold
+                                        ^^^^^^^^^^^^^ markup.italic
+                                                          ^^^^^^ markup.raw
+snake_case_word stays plain, and so does 2 * 3 * 4.
+A [link](https://example.com "Title") and <https://auto.link>.
+       ^^ punctuation
+         ^^^^^^^^^^^^^^^^^^^ markup.link
+                            ^^^^^^^^ string.quoted
+                                    ^ punctuation
+                                          ^^^^^^^^^^^^^^^^^^^ markup.link
+Escaped \*not italic\* and ``double `tick` code``.
+        ^^ constant.character.escape
+                    ^^ constant.character.escape
+                           ^^^^^^^^^^^^^^^^^^^^^^ markup.raw
+
+> quoted line
+^ punctuation
+- item
+^ punctuation
+* another
+^ punctuation
+1. numbered
+^^ punctuation
+10) also numbered
+^^^ punctuation
+
+---
+^^^ punctuation
+***
+^^^ punctuation
+###### six
+^^^^^^^^^^ markup.heading
+####### seven is text
+* * *
+^^^^^ punctuation
+- - - -
+^^^^^^^ punctuation
+

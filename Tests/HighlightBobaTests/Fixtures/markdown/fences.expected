@@ -1,0 +1,56 @@
+```swift
+^^^ punctuation
+   ^^^^^ keyword
+let x = "```" // not a fence end
+^^^ keyword
+        ^^^^^ string.quoted
+              ^^^^^^^^^^^^^^^^^^ comment.line
+```
+^^^ punctuation
+~~~python
+^^^ punctuation
+   ^^^^^^ keyword
+def f(): return None
+^^^ keyword
+    ^ entity.name.function
+         ^^^^^^ keyword
+                ^^^^ constant.language
+~~~
+^^^ punctuation
+````json
+^^^^ punctuation
+    ^^^^ keyword
+{"a": [1, true]}
+^ punctuation
+ ^^^ support.type.property-name
+    ^ punctuation
+      ^ punctuation
+       ^ constant.numeric
+        ^ punctuation
+          ^^^^ constant.language
+              ^^ punctuation
+`````
+^^^^^ punctuation
+```
+^^^ punctuation
+plain block
+^^^^^^^^^^^ markup.raw
+```
+^^^ punctuation
+```cobol
+^^^ punctuation
+   ^^^^^ keyword
+MOVE A TO B
+^^^^^^^^^^^ markup.raw
+```
+^^^ punctuation
+```yaml
+^^^ punctuation
+   ^^^^ keyword
+key: value
+^^^ support.type.property-name
+   ^ punctuation
+```
+^^^ punctuation
+after
+

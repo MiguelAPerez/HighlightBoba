@@ -82,6 +82,20 @@ import Testing
         ])
     }
 
+    @Test func pushAtNextLineKeepsTheRestOfTheOpenerLineInCode() throws {
+        let grammar = try Self.grammar(#"""
+        {"code":{"rules":[
+          {"match":{"seq":[{"literal":"<<"},{"wordStarting":"[A-Za-z_]"}]},"scope":"keyword","push":"body","remember":1,"pushAtNextLine":true},
+          {"match":{"words":["grep"]},"scope":"support.function"}]},
+         "body":{"scope":"string.quoted","rules":[
+          {"match":{"seq":[{"bol":true},{"remembered":true},{"eol":true}]},"scope":"keyword","pop":true}]}}
+        """#)
+        #expect(Self.tokens("cat <<A <<B | grep x\none\nA\ntwo\nB\ngrep", grammar) == [
+            "keyword:<<A", "keyword:<<B", "support.function:grep", "string.quoted:one", "keyword:A",
+            "string.quoted:two", "keyword:B", "support.function:grep"
+        ], "bodies start on the next line, in the order their openers appeared")
+    }
+
     @Test func unterminatedHeredocRunsToEOF() throws {
         let grammar = try Self.grammar(Self.heredoc)
         #expect(Self.tokens("x <<A\nB\nAA", grammar) == ["keyword:<<A", "string.quoted:B", "string.quoted:AA"])

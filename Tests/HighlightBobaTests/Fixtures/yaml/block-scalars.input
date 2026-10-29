@@ -1,0 +1,13 @@
+script: |
+  echo "not a key: no"
+  # not a comment
+
+  still: inside
+folded: >-
+    long text
+    continues
+next: 1
+list:
+  - |
+    item body
+  - plain

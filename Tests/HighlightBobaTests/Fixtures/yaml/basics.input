@@ -1,0 +1,27 @@
+# config
+---
+name: GitBoba
+version: 1.2.3
+count: 42
+ratio: -0.5
+enabled: true
+nothing: ~
+empty: null
+"quoted key": value
+'single': 'it''s'
+url: http://example.com:8080/path
+list:
+  - first
+  - "second\n"
+  - &anchor { a: 1, b: [2, 3] }
+  - *anchor
+tagged: !!str 123
+not-a-number: 1.2.3-beta
+plain: value # trailing comment
+hash: a#b
+...
+hex: 0x1F
+exp: 1.5e-3
+version: 1.2.3
+phrase: this is true
+flow: [1, x2, -3]

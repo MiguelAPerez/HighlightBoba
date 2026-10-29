@@ -1,0 +1,9 @@
+// comment
+import { readFile } from "fs/promises";
+export async function load(path, retries = 3) {
+  const data = await readFile(path, 'utf8') /* inline */;
+  return data.length > 0x1F ? null : undefined;
+}
+class Store extends Base { static #count = 1_000; get size() { return this.items.length; } }
+@decorator
+const big = 10n + 1.5e3;

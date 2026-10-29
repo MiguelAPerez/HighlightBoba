@@ -1,0 +1,59 @@
+package main
+^^^^^^^ keyword
+
+import (
+^^^^^^ keyword
+	"fmt"
+ ^^^^^ string.quoted
+	"strings"
+ ^^^^^^^^^ string.quoted
+)
+
+// Point is a coordinate.
+^^^^^^^^^^^^^^^^^^^^^^^^^ comment.line
+type Point struct{ X, Y int }
+^^^^ keyword
+     ^^^^^ entity.name.type
+           ^^^^^^ keyword
+                        ^^^ entity.name.type
+
+func (p *Point) Scale(f float64) Point {
+^^^^ keyword
+                ^^^^^ entity.name.function
+                        ^^^^^^^ entity.name.type
+	return Point{int(float64(p.X) * f), 0x1F}
+ ^^^^^^ keyword
+              ^^^ entity.name.type
+                  ^^^^^^^ entity.name.type
+                                     ^^^^ constant.numeric
+}
+
+func main() {
+^^^^ keyword
+     ^^^^ entity.name.function
+	s := `raw \n string
+      ^^^^^^^^^^^^^^ string.quoted
+spanning lines`
+^^^^^^^^^^^^^^^ string.quoted
+	r := '\n'
+      ^ string.quoted
+       ^^ constant.character.escape
+         ^ string.quoted
+	fmt.Println("hi\t\"there\"", len(s), r, nil, iota, 3.14, 1e9, 2i)
+             ^^^ string.quoted
+                ^^^^ constant.character.escape
+                    ^^^^^ string.quoted
+                         ^^ constant.character.escape
+                           ^ string.quoted
+                              ^^^ support.function
+                                         ^^^ constant.language
+                                              ^^^^ constant.language
+                                                    ^^^^ constant.numeric
+                                                          ^^^ constant.numeric
+                                                               ^^ constant.numeric
+	defer close(ch) /* done */
+ ^^^^^ keyword
+       ^^^^^ support.function
+                 ^^^^^^^^^^ comment.block
+}
+

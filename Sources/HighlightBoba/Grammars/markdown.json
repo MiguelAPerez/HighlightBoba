@@ -1,0 +1,562 @@
+{
+  "name": "markdown",
+  "fileExtensions": [
+    "md",
+    "markdown",
+    "mdown"
+  ],
+  "initial": "text",
+  "states": {
+    "bold": {
+      "scope": "markup.bold",
+      "endsAtEOL": true,
+      "rules": [
+        {
+          "match": {
+            "literal": "**"
+          },
+          "pop": true
+        },
+        {
+          "include": "inline"
+        }
+      ]
+    },
+    "boldUnderscore": {
+      "scope": "markup.bold",
+      "endsAtEOL": true,
+      "rules": [
+        {
+          "match": {
+            "literal": "__"
+          },
+          "pop": true
+        },
+        {
+          "include": "inline"
+        }
+      ]
+    },
+    "fence": {
+      "scope": "markup.raw",
+      "rules": [
+        {
+          "match": {
+            "seq": [
+              {
+                "bol": true
+              },
+              {
+                "repeat": "[ ]",
+                "max": 3
+              },
+              {
+                "remembered": true
+              },
+              {
+                "repeat": "[`~]"
+              },
+              {
+                "repeat": "[ \\t]"
+              },
+              {
+                "eol": true
+              }
+            ]
+          },
+          "scope": "punctuation",
+          "pop": true
+        }
+      ]
+    },
+    "inline": {
+      "rules": [
+        {
+          "match": {
+            "seq": [
+              {
+                "literal": "\\"
+              },
+              {
+                "class": "[!-/:-@\\[-`{-~]"
+              }
+            ]
+          },
+          "scope": "constant.character.escape"
+        },
+        {
+          "match": {
+            "repeat": "[`]",
+            "min": 1
+          },
+          "scope": "markup.raw",
+          "push": "inlineCode",
+          "remember": true
+        },
+        {
+          "match": {
+            "seq": [
+              {
+                "literal": "<"
+              },
+              {
+                "anyOf": [
+                  {
+                    "literal": "https://"
+                  },
+                  {
+                    "literal": "http://"
+                  },
+                  {
+                    "literal": "mailto:"
+                  }
+                ]
+              },
+              {
+                "repeat": "[^>\\s]",
+                "min": 1
+              },
+              {
+                "literal": ">"
+              }
+            ]
+          },
+          "scope": "markup.link"
+        },
+        {
+          "match": {
+            "seq": [
+              {
+                "literal": "]("
+              },
+              {
+                "repeat": "[^)\\s]"
+              },
+              {
+                "opt": {
+                  "seq": [
+                    {
+                      "repeat": "[ \\t]",
+                      "min": 1
+                    },
+                    {
+                      "literal": "\""
+                    },
+                    {
+                      "repeat": "[^\"\\r\\n]"
+                    },
+                    {
+                      "literal": "\""
+                    }
+                  ]
+                }
+              },
+              {
+                "literal": ")"
+              }
+            ]
+          },
+          "captures": [
+            "punctuation",
+            "markup.link",
+            "string.quoted",
+            "punctuation"
+          ]
+        },
+        {
+          "match": {
+            "seq": [
+              {
+                "literal": "**"
+              },
+              {
+                "notFollowedBy": {
+                  "class": "[ \\t]"
+                }
+              }
+            ]
+          },
+          "scope": "markup.bold",
+          "push": "bold"
+        },
+        {
+          "match": {
+            "seq": [
+              {
+                "literal": "__"
+              },
+              {
+                "notFollowedBy": {
+                  "class": "[ \\t]"
+                }
+              }
+            ]
+          },
+          "scope": "markup.bold",
+          "push": "boldUnderscore",
+          "notAfterWord": true
+        },
+        {
+          "match": {
+            "seq": [
+              {
+                "literal": "*"
+              },
+              {
+                "notFollowedBy": {
+                  "class": "[ \\t*]"
+                }
+              }
+            ]
+          },
+          "scope": "markup.italic",
+          "push": "italic"
+        },
+        {
+          "match": {
+            "seq": [
+              {
+                "literal": "_"
+              },
+              {
+                "notFollowedBy": {
+                  "class": "[ \\t_]"
+                }
+              }
+            ]
+          },
+          "scope": "markup.italic",
+          "push": "italicUnderscore",
+          "notAfterWord": true
+        }
+      ]
+    },
+    "inlineCode": {
+      "scope": "markup.raw",
+      "endsAtEOL": true,
+      "rules": [
+        {
+          "match": {
+            "seq": [
+              {
+                "remembered": true
+              },
+              {
+                "notFollowedBy": {
+                  "literal": "`"
+                }
+              }
+            ]
+          },
+          "pop": true
+        }
+      ]
+    },
+    "italic": {
+      "scope": "markup.italic",
+      "endsAtEOL": true,
+      "rules": [
+        {
+          "match": {
+            "literal": "*"
+          },
+          "pop": true
+        },
+        {
+          "include": "inline"
+        }
+      ]
+    },
+    "italicUnderscore": {
+      "scope": "markup.italic",
+      "endsAtEOL": true,
+      "rules": [
+        {
+          "match": {
+            "literal": "_"
+          },
+          "pop": true
+        },
+        {
+          "include": "inline"
+        }
+      ]
+    },
+    "text": {
+      "rules": [
+        {
+          "match": {
+            "seq": [
+              {
+                "bol": true
+              },
+              {
+                "repeat": "[ ]",
+                "max": 3
+              },
+              {
+                "repeat": "[`]",
+                "min": 3
+              },
+              {
+                "repeat": "[ \\t]"
+              },
+              {
+                "repeat": "[A-Za-z0-9_+.#-]"
+              },
+              {
+                "repeat": "[^\\r\\n]"
+              }
+            ]
+          },
+          "captures": [
+            null,
+            null,
+            "punctuation",
+            null,
+            "keyword",
+            null
+          ],
+          "push": "fence",
+          "remember": 2,
+          "embedPart": 4
+        },
+        {
+          "match": {
+            "seq": [
+              {
+                "bol": true
+              },
+              {
+                "repeat": "[ ]",
+                "max": 3
+              },
+              {
+                "repeat": "[~]",
+                "min": 3
+              },
+              {
+                "repeat": "[ \\t]"
+              },
+              {
+                "repeat": "[A-Za-z0-9_+.#-]"
+              },
+              {
+                "repeat": "[^\\r\\n]"
+              }
+            ]
+          },
+          "captures": [
+            null,
+            null,
+            "punctuation",
+            null,
+            "keyword",
+            null
+          ],
+          "push": "fence",
+          "remember": 2,
+          "embedPart": 4
+        },
+        {
+          "match": {
+            "seq": [
+              {
+                "bol": true
+              },
+              {
+                "repeat": "[ ]",
+                "max": 3
+              },
+              {
+                "repeat": "[#]",
+                "min": 1,
+                "max": 6
+              },
+              {
+                "followedBy": {
+                  "anyOf": [
+                    {
+                      "class": "[ \\t]"
+                    },
+                    {
+                      "eol": true
+                    }
+                  ]
+                }
+              },
+              {
+                "repeat": "[^\\r\\n]"
+              }
+            ]
+          },
+          "scope": "markup.heading"
+        },
+        {
+          "match": {
+            "seq": [
+              {
+                "bol": true
+              },
+              {
+                "repeat": "[ ]",
+                "max": 3
+              },
+              {
+                "anyOf": [
+                  {
+                    "seq": [
+                      {
+                        "literal": "-"
+                      },
+                      {
+                        "repeat": "[ ]"
+                      },
+                      {
+                        "literal": "-"
+                      },
+                      {
+                        "repeat": "[ ]"
+                      },
+                      {
+                        "literal": "-"
+                      },
+                      {
+                        "repeat": "[ -]"
+                      }
+                    ]
+                  },
+                  {
+                    "seq": [
+                      {
+                        "literal": "*"
+                      },
+                      {
+                        "repeat": "[ ]"
+                      },
+                      {
+                        "literal": "*"
+                      },
+                      {
+                        "repeat": "[ ]"
+                      },
+                      {
+                        "literal": "*"
+                      },
+                      {
+                        "repeat": "[ *]"
+                      }
+                    ]
+                  },
+                  {
+                    "seq": [
+                      {
+                        "literal": "_"
+                      },
+                      {
+                        "repeat": "[ ]"
+                      },
+                      {
+                        "literal": "_"
+                      },
+                      {
+                        "repeat": "[ ]"
+                      },
+                      {
+                        "literal": "_"
+                      },
+                      {
+                        "repeat": "[ _]"
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "repeat": "[ \\t]"
+              },
+              {
+                "eol": true
+              }
+            ]
+          },
+          "scope": "punctuation"
+        },
+        {
+          "match": {
+            "seq": [
+              {
+                "bol": true
+              },
+              {
+                "repeat": "[ ]",
+                "max": 3
+              },
+              {
+                "repeat": "[>]",
+                "min": 1
+              }
+            ]
+          },
+          "captures": [
+            null,
+            null,
+            "punctuation"
+          ]
+        },
+        {
+          "match": {
+            "seq": [
+              {
+                "bol": true
+              },
+              {
+                "repeat": "[ \\t]"
+              },
+              {
+                "anyOf": [
+                  {
+                    "class": "[-*+]"
+                  },
+                  {
+                    "seq": [
+                      {
+                        "repeat": "[0-9]",
+                        "min": 1,
+                        "max": 9
+                      },
+                      {
+                        "class": "[.)]"
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "followedBy": {
+                  "anyOf": [
+                    {
+                      "class": "[ \\t]"
+                    },
+                    {
+                      "eol": true
+                    }
+                  ]
+                }
+              }
+            ]
+          },
+          "captures": [
+            null,
+            null,
+            "punctuation",
+            null
+          ]
+        },
+        {
+          "include": "inline"
+        }
+      ]
+    }
+  }
+}

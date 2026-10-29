@@ -1,0 +1,34 @@
+script: |
+^^^^^^ support.type.property-name
+      ^ punctuation
+        ^ punctuation
+  echo "not a key: no"
+^^^^^^^^^^^^^^^^^^^^^^ string.quoted
+  # not a comment
+^^^^^^^^^^^^^^^^^ string.quoted
+
+  still: inside
+^^^^^^^^^^^^^^^ string.quoted
+folded: >-
+^^^^^^ support.type.property-name
+      ^ punctuation
+        ^^ punctuation
+    long text
+^^^^^^^^^^^^^ string.quoted
+    continues
+^^^^^^^^^^^^^ string.quoted
+next: 1
+^^^^ support.type.property-name
+    ^ punctuation
+      ^ constant.numeric
+list:
+^^^^ support.type.property-name
+    ^ punctuation
+  - |
+  ^ punctuation
+    ^ punctuation
+    item body
+^^^^^^^^^^^^^ string.quoted
+  - plain
+  ^ punctuation
+

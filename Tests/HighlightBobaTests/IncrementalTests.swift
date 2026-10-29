@@ -21,8 +21,14 @@ struct SeededGenerator: RandomNumberGenerator {
                   "#", "##", "\\#(", "func f"],
         "python": ["\"", "'''", "\"\"\"", "f\"", "{", "}", "#", "def ", "x", " ", "\n", "\r\n", "r'", "\\", "🧋", "1e3", "None"],
         "json": ["\"", "{", "}", "[", "]", ":", ",", "\\", "\\u00e9", "true", "-1.5", " ", "\n", "🧋", "\"k\":"],
+        "javascript": ["`", "${", "}", "/", "/re/g", "x", "return ", "//", "/*", "*/", "\"", "'", "\n", "(", ")", "[", "]", "🧋"],
+        "typescript": ["interface ", "T", "<", ">", "`", "${", "}", "/", "x", "\n", "\"", "as ", "{"],
+        "go": ["`", "\"", "'", "\\", "func ", "(p *T) ", "f", "/*", "*/", "//", "\n", "x"],
+        "yaml": ["key: ", "- ", "|", ">-", "\n", "  ", "    ", "\"", "'", "#", "true", "1.5", "&a", "[", "]"],
+        "markdown": ["```", "````", "~~~", "swift", "json", "yaml", "\n", " ", "**", "*", "_", "`", "# ", "> ", "- ", "/*", "\"", "x"],
+        "shell": ["<<EOF", "<<'R'", "<<-T", "EOF", "R", "\tT", "\n", "$x", "${", "}", "$(", ")", "\"", "'", "#", "x", " "],
         "heredoc": ["<<EOF", "<<-'END'", "EOF", "END", "\t", "\n", "x", " ", "EOFX", "\r\n"],
-        "markdown": ["```", "````", "swift", "json", "\n", " ", "/*", "*/", "\"", "let", "x", "cobol"],
+        "fence": ["```", "````", "swift", "json", "\n", " ", "/*", "*/", "\"", "let", "x", "cobol"],
         "block": ["key:", " |", " >", "\n", "  ", "    ", "line", "\n\n", "a"]
     ]
 
@@ -30,7 +36,7 @@ struct SeededGenerator: RandomNumberGenerator {
     static func grammar(_ name: String) throws -> Grammar {
         switch name {
         case "heredoc": return try FormatV1Tests.grammar(FormatV1Tests.heredoc)
-        case "markdown": return try FormatV1Tests.grammar(FormatV1Tests.markdown, initial: "text")
+        case "fence": return try FormatV1Tests.grammar(FormatV1Tests.markdown, initial: "text")
         case "block": return try FormatV1Tests.grammar(FormatV1Tests.blockScalar)
         default: return try Grammar.bundled(name)
         }
@@ -40,7 +46,7 @@ struct SeededGenerator: RandomNumberGenerator {
         (0..<count).map { _ in pieces.randomElement(using: &rng)! }.joined()
     }
 
-    @Test(arguments: ["swift", "python", "json", "heredoc", "markdown", "block"])
+    @Test(arguments: ["swift", "python", "json", "javascript", "typescript", "go", "yaml", "markdown", "shell", "heredoc", "fence", "block"])
     func incrementalMatchesFullRehighlight(_ language: String) throws {
         let grammar = try Self.grammar(language)
         let pieces = Self.fragments[language]!

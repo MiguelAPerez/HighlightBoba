@@ -1,0 +1,5 @@
+const s = `Hello ${user.name}, you have ${items.filter(i => { return i.done }).length} done`;
+const multi = `line one
+  line ${two} and \u00e9 \` still`;
+const nested = `outer ${`inner ${deep}`} end`;
+const quote = "it's \"fine\"\n" + 'say \'hi\'';

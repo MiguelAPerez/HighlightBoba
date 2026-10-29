@@ -1,0 +1,70 @@
+#!/usr/bin/env bash
+^^^^^^^^^^^^^^^^^^^ comment.line
+# comment
+^^^^^^^^^ comment.line
+set -euo pipefail
+^^^ support.function
+name="world $USER ${HOME}/x \$literal"
+     ^^^^^^^ string.quoted
+            ^^^^^ variable.other
+                 ^ string.quoted
+                  ^^^^^^^ variable.other
+                         ^^^ string.quoted
+                            ^^ constant.character.escape
+                              ^^^^^^^^ string.quoted
+echo 'single $not' "$1 $@ $#" $'tab\there'
+^^^^ support.function
+     ^^^^^^^^^^^^^ string.quoted
+                   ^ string.quoted
+                    ^^ variable.language
+                      ^ string.quoted
+                       ^^ variable.language
+                         ^ string.quoted
+                          ^^ variable.language
+                            ^ string.quoted
+                              ^^^^^ string.quoted
+                                   ^^ constant.character.escape
+                                     ^^^^^ string.quoted
+greet() { local who=${1:-you}; printf "%s\n" "Hi $who"; }
+^^^^^ entity.name.function
+          ^^^^^ keyword
+                    ^^^^^^^^^ variable.other
+                               ^^^^^^ support.function
+                                      ^^^^^^ string.quoted
+                                             ^^^^ string.quoted
+                                                 ^^^^ variable.other
+                                                     ^ string.quoted
+function cleanup { rm -rf "$tmp"; }
+^^^^^^^^ keyword
+         ^^^^^^^ entity.name.function
+                          ^ string.quoted
+                           ^^^^ variable.other
+                               ^ string.quoted
+files=$(ls "$dir" | grep -v '^\.') count=$(( ${#arr[@]} + 1 ))
+      ^^ punctuation.section.embedded
+           ^ string.quoted
+            ^^^^ variable.other
+                ^ string.quoted
+                            ^^^^^ string.quoted
+                                 ^ punctuation.section.embedded
+                                         ^^^ punctuation.section.embedded
+                                             ^^^^^^^^^^ variable.other
+                                                            ^^ punctuation.section.embedded
+for f in *.txt; do if [ -f "$f" ]; then echo `basename $f`; fi; done
+^^^ keyword
+      ^^ keyword
+                ^^ keyword
+                   ^^ keyword
+                           ^ string.quoted
+                            ^^ variable.other
+                              ^ string.quoted
+                                   ^^^^ keyword
+                                        ^^^^ support.function
+                                             ^ punctuation.section.embedded
+                                                       ^^ variable.other
+                                                         ^ punctuation.section.embedded
+                                                            ^^ keyword
+                                                                ^^^^ keyword
+url=http://host/a#b # real comment
+                    ^^^^^^^^^^^^^^ comment.line
+

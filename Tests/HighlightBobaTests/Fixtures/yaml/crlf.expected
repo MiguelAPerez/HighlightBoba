@@ -1,0 +1,11 @@
+a: |
+^ support.type.property-name
+ ^ punctuation
+   ^ punctuation
+  body
+^^^^^^ string.quoted
+b: 1
+^ support.type.property-name
+ ^ punctuation
+   ^ constant.numeric
+

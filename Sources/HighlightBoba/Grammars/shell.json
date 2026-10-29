@@ -1,0 +1,501 @@
+{
+  "name": "shell",
+  "fileExtensions": [
+    "sh",
+    "bash",
+    "zsh",
+    "ksh",
+    "shell"
+  ],
+  "initial": "code",
+  "states": {
+    "ansiString": {
+      "scope": "string.quoted",
+      "rules": [
+        {
+          "match": {
+            "seq": [
+              {
+                "literal": "\\"
+              },
+              {
+                "class": "[^\\r\\n]"
+              }
+            ]
+          },
+          "scope": "constant.character.escape"
+        },
+        {
+          "match": {
+            "literal": "'"
+          },
+          "pop": true
+        }
+      ]
+    },
+    "arithmetic": {
+      "rules": [
+        {
+          "match": {
+            "literal": "))"
+          },
+          "scope": "punctuation.section.embedded",
+          "pop": true
+        },
+        {
+          "match": {
+            "literal": "("
+          },
+          "push": "parens"
+        },
+        {
+          "include": "code"
+        }
+      ]
+    },
+    "backtick": {
+      "rules": [
+        {
+          "match": {
+            "literal": "`"
+          },
+          "scope": "punctuation.section.embedded",
+          "pop": true
+        },
+        {
+          "include": "code"
+        }
+      ]
+    },
+    "braceVariable": {
+      "scope": "variable.other",
+      "rules": [
+        {
+          "match": {
+            "literal": "}"
+          },
+          "pop": true
+        },
+        {
+          "include": "variables"
+        }
+      ]
+    },
+    "code": {
+      "rules": [
+        {
+          "match": {
+            "seq": [
+              {
+                "literal": "#"
+              },
+              {
+                "repeat": "[^\\r\\n]"
+              }
+            ]
+          },
+          "scope": "comment.line",
+          "notAfterWord": true
+        },
+        {
+          "match": {
+            "literal": "<<<"
+          },
+          "scope": "keyword"
+        },
+        {
+          "match": {
+            "seq": [
+              {
+                "literal": "<<"
+              },
+              {
+                "opt": {
+                  "literal": "-"
+                }
+              },
+              {
+                "repeat": "[ \\t]"
+              },
+              {
+                "class": "['\"]"
+              },
+              {
+                "wordStarting": "[A-Za-z_]"
+              },
+              {
+                "class": "['\"]"
+              }
+            ]
+          },
+          "scope": "keyword",
+          "push": "rawHeredoc",
+          "remember": 4,
+          "pushAtNextLine": true
+        },
+        {
+          "match": {
+            "seq": [
+              {
+                "literal": "<<"
+              },
+              {
+                "opt": {
+                  "literal": "-"
+                }
+              },
+              {
+                "repeat": "[ \\t]"
+              },
+              {
+                "wordStarting": "[A-Za-z_]"
+              }
+            ]
+          },
+          "scope": "keyword",
+          "push": "heredoc",
+          "remember": 3,
+          "pushAtNextLine": true
+        },
+        {
+          "match": {
+            "literal": "$'"
+          },
+          "scope": "string.quoted",
+          "push": "ansiString"
+        },
+        {
+          "match": {
+            "literal": "'"
+          },
+          "scope": "string.quoted",
+          "push": "singleString"
+        },
+        {
+          "match": {
+            "literal": "\""
+          },
+          "scope": "string.quoted",
+          "push": "doubleString"
+        },
+        {
+          "include": "variables"
+        },
+        {
+          "match": {
+            "seq": [
+              {
+                "wordStarting": "[A-Za-z_]"
+              },
+              {
+                "repeat": "[ \\t]"
+              },
+              {
+                "literal": "("
+              },
+              {
+                "repeat": "[ \\t]"
+              },
+              {
+                "literal": ")"
+              }
+            ]
+          },
+          "captures": [
+            "entity.name.function",
+            null,
+            null,
+            null,
+            null
+          ]
+        },
+        {
+          "match": {
+            "seq": [
+              {
+                "words": [
+                  "function"
+                ]
+              },
+              {
+                "repeat": "[ \\t]",
+                "min": 1
+              },
+              {
+                "wordStarting": "[A-Za-z_]"
+              }
+            ]
+          },
+          "captures": [
+            "keyword",
+            null,
+            "entity.name.function"
+          ]
+        },
+        {
+          "match": {
+            "words": [
+              "if",
+              "then",
+              "else",
+              "elif",
+              "fi",
+              "case",
+              "esac",
+              "for",
+              "while",
+              "until",
+              "do",
+              "done",
+              "in",
+              "function",
+              "select",
+              "time",
+              "coproc",
+              "return",
+              "exit",
+              "break",
+              "continue",
+              "local",
+              "export",
+              "readonly",
+              "declare",
+              "typeset",
+              "unset",
+              "shift",
+              "source",
+              "alias"
+            ]
+          },
+          "scope": "keyword"
+        },
+        {
+          "match": {
+            "words": [
+              "echo",
+              "printf",
+              "read",
+              "cd",
+              "pwd",
+              "test",
+              "eval",
+              "exec",
+              "trap",
+              "set",
+              "wait",
+              "kill",
+              "getopts",
+              "command",
+              "builtin",
+              "type",
+              "hash",
+              "ulimit",
+              "umask",
+              "true",
+              "false"
+            ]
+          },
+          "scope": "support.function"
+        },
+        {
+          "match": {
+            "literal": "("
+          },
+          "push": "parens"
+        }
+      ]
+    },
+    "doubleString": {
+      "scope": "string.quoted",
+      "rules": [
+        {
+          "match": {
+            "seq": [
+              {
+                "literal": "\\"
+              },
+              {
+                "class": "[\\\\\"$`\\r\\n]"
+              }
+            ]
+          },
+          "scope": "constant.character.escape"
+        },
+        {
+          "include": "variables"
+        },
+        {
+          "match": {
+            "literal": "\""
+          },
+          "pop": true
+        }
+      ]
+    },
+    "heredoc": {
+      "scope": "string.quoted",
+      "rules": [
+        {
+          "match": {
+            "seq": [
+              {
+                "bol": true
+              },
+              {
+                "repeat": "[\\t]"
+              },
+              {
+                "remembered": true
+              },
+              {
+                "eol": true
+              }
+            ]
+          },
+          "scope": "keyword",
+          "pop": true
+        },
+        {
+          "match": {
+            "seq": [
+              {
+                "literal": "\\"
+              },
+              {
+                "class": "[\\\\$`]"
+              }
+            ]
+          },
+          "scope": "constant.character.escape"
+        },
+        {
+          "include": "variables"
+        }
+      ]
+    },
+    "parens": {
+      "rules": [
+        {
+          "match": {
+            "literal": ")"
+          },
+          "pop": true
+        },
+        {
+          "include": "code"
+        }
+      ]
+    },
+    "rawHeredoc": {
+      "scope": "string.quoted",
+      "rules": [
+        {
+          "match": {
+            "seq": [
+              {
+                "bol": true
+              },
+              {
+                "repeat": "[\\t]"
+              },
+              {
+                "remembered": true
+              },
+              {
+                "eol": true
+              }
+            ]
+          },
+          "scope": "keyword",
+          "pop": true
+        }
+      ]
+    },
+    "singleString": {
+      "scope": "string.quoted",
+      "rules": [
+        {
+          "match": {
+            "literal": "'"
+          },
+          "pop": true
+        }
+      ]
+    },
+    "substitution": {
+      "rules": [
+        {
+          "match": {
+            "literal": ")"
+          },
+          "scope": "punctuation.section.embedded",
+          "pop": true
+        },
+        {
+          "include": "code"
+        }
+      ]
+    },
+    "variables": {
+      "rules": [
+        {
+          "match": {
+            "literal": "${"
+          },
+          "scope": "variable.other",
+          "push": "braceVariable"
+        },
+        {
+          "match": {
+            "literal": "$(("
+          },
+          "scope": "punctuation.section.embedded",
+          "push": "arithmetic"
+        },
+        {
+          "match": {
+            "literal": "$("
+          },
+          "scope": "punctuation.section.embedded",
+          "push": "substitution"
+        },
+        {
+          "match": {
+            "seq": [
+              {
+                "literal": "$"
+              },
+              {
+                "class": "[A-Za-z_]"
+              },
+              {
+                "repeat": "[A-Za-z0-9_]"
+              }
+            ]
+          },
+          "scope": "variable.other"
+        },
+        {
+          "match": {
+            "seq": [
+              {
+                "literal": "$"
+              },
+              {
+                "class": "[0-9@#?$!*\\-]"
+              }
+            ]
+          },
+          "scope": "variable.language"
+        },
+        {
+          "match": {
+            "literal": "`"
+          },
+          "scope": "punctuation.section.embedded",
+          "push": "backtick"
+        }
+      ]
+    }
+  }
+}

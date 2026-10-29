@@ -1,0 +1,525 @@
+{
+  "name": "typescript",
+  "fileExtensions": [
+    "ts",
+    "mts",
+    "cts",
+    "tsx"
+  ],
+  "initial": "code",
+  "wordCharacters": "[A-Za-z0-9_$]",
+  "states": {
+    "blockComment": {
+      "scope": "comment.block",
+      "rules": [
+        {
+          "match": {
+            "literal": "*/"
+          },
+          "pop": true
+        }
+      ]
+    },
+    "braces": {
+      "rules": [
+        {
+          "match": {
+            "literal": "}"
+          },
+          "pop": true
+        },
+        {
+          "include": "code"
+        }
+      ]
+    },
+    "code": {
+      "rules": [
+        {
+          "match": {
+            "seq": [
+              {
+                "literal": "//"
+              },
+              {
+                "repeat": "[^\\r\\n]"
+              }
+            ]
+          },
+          "scope": "comment.line"
+        },
+        {
+          "match": {
+            "literal": "/*"
+          },
+          "scope": "comment.block",
+          "push": "blockComment"
+        },
+        {
+          "match": {
+            "literal": "\""
+          },
+          "scope": "string.quoted",
+          "push": "doubleString"
+        },
+        {
+          "match": {
+            "literal": "'"
+          },
+          "scope": "string.quoted",
+          "push": "singleString"
+        },
+        {
+          "match": {
+            "literal": "`"
+          },
+          "scope": "string.quoted",
+          "push": "template"
+        },
+        {
+          "match": {
+            "seq": [
+              {
+                "words": [
+                  "return",
+                  "typeof",
+                  "case",
+                  "in",
+                  "of",
+                  "delete",
+                  "void",
+                  "throw",
+                  "new",
+                  "yield",
+                  "await",
+                  "instanceof"
+                ]
+              },
+              {
+                "repeat": "[ \\t]"
+              },
+              {
+                "literal": "/"
+              }
+            ]
+          },
+          "captures": [
+            "keyword",
+            null,
+            "string.regexp"
+          ],
+          "push": "regex"
+        },
+        {
+          "match": {
+            "literal": "/"
+          },
+          "scope": "string.regexp",
+          "push": "regex",
+          "notAfter": "[A-Za-z0-9_$)\\]]"
+        },
+        {
+          "match": {
+            "seq": [
+              {
+                "literal": "@"
+              },
+              {
+                "class": "[A-Za-z_$]"
+              },
+              {
+                "repeat": "[A-Za-z0-9_$.]"
+              }
+            ]
+          },
+          "scope": "entity.other.attribute",
+          "notAfterWord": true
+        },
+        {
+          "match": {
+            "seq": [
+              {
+                "class": "[0-9]"
+              },
+              {
+                "repeat": "[0-9A-Za-z_]"
+              },
+              {
+                "opt": {
+                  "seq": [
+                    {
+                      "literal": "."
+                    },
+                    {
+                      "class": "[0-9]"
+                    },
+                    {
+                      "repeat": "[0-9A-Za-z_]"
+                    }
+                  ]
+                }
+              }
+            ]
+          },
+          "scope": "constant.numeric",
+          "notAfterWord": true
+        },
+        {
+          "match": {
+            "words": [
+              "true",
+              "false",
+              "null",
+              "undefined",
+              "NaN",
+              "Infinity"
+            ]
+          },
+          "scope": "constant.language"
+        },
+        {
+          "match": {
+            "words": [
+              "this",
+              "super"
+            ]
+          },
+          "scope": "variable.language"
+        },
+        {
+          "match": {
+            "seq": [
+              {
+                "words": [
+                  "function"
+                ]
+              },
+              {
+                "repeat": "[ \\t]",
+                "min": 1
+              },
+              {
+                "wordStarting": "[A-Za-z_$]"
+              }
+            ]
+          },
+          "captures": [
+            "keyword",
+            null,
+            "entity.name.function"
+          ]
+        },
+        {
+          "match": {
+            "seq": [
+              {
+                "words": [
+                  "class"
+                ]
+              },
+              {
+                "repeat": "[ \\t]",
+                "min": 1
+              },
+              {
+                "wordStarting": "[A-Za-z_$]"
+              }
+            ]
+          },
+          "captures": [
+            "keyword",
+            null,
+            "entity.name.type"
+          ]
+        },
+        {
+          "match": {
+            "words": [
+              "any",
+              "unknown",
+              "never",
+              "void",
+              "string",
+              "number",
+              "boolean",
+              "bigint",
+              "symbol",
+              "object"
+            ]
+          },
+          "scope": "entity.name.type"
+        },
+        {
+          "match": {
+            "words": [
+              "break",
+              "case",
+              "catch",
+              "class",
+              "const",
+              "continue",
+              "debugger",
+              "default",
+              "delete",
+              "do",
+              "else",
+              "export",
+              "extends",
+              "finally",
+              "for",
+              "from",
+              "function",
+              "if",
+              "import",
+              "in",
+              "instanceof",
+              "let",
+              "new",
+              "of",
+              "return",
+              "static",
+              "switch",
+              "throw",
+              "try",
+              "typeof",
+              "var",
+              "void",
+              "while",
+              "with",
+              "yield",
+              "async",
+              "await",
+              "get",
+              "set",
+              "interface",
+              "type",
+              "enum",
+              "implements",
+              "declare",
+              "namespace",
+              "module",
+              "abstract",
+              "readonly",
+              "private",
+              "protected",
+              "public",
+              "keyof",
+              "infer",
+              "is",
+              "asserts",
+              "satisfies",
+              "as",
+              "override",
+              "accessor",
+              "unique"
+            ]
+          },
+          "scope": "keyword"
+        },
+        {
+          "match": {
+            "wordStarting": "[A-Z]"
+          },
+          "scope": "entity.name.type"
+        },
+        {
+          "match": {
+            "literal": "{"
+          },
+          "push": "braces"
+        }
+      ]
+    },
+    "doubleString": {
+      "scope": "string.quoted",
+      "endsAtEOL": true,
+      "rules": [
+        {
+          "include": "escapes"
+        },
+        {
+          "match": {
+            "literal": "\""
+          },
+          "pop": true
+        }
+      ]
+    },
+    "escapes": {
+      "rules": [
+        {
+          "match": {
+            "seq": [
+              {
+                "literal": "\\u{"
+              },
+              {
+                "repeat": "[0-9A-Fa-f]",
+                "min": 1,
+                "max": 6
+              },
+              {
+                "literal": "}"
+              }
+            ]
+          },
+          "scope": "constant.character.escape"
+        },
+        {
+          "match": {
+            "seq": [
+              {
+                "literal": "\\u"
+              },
+              {
+                "repeat": "[0-9A-Fa-f]",
+                "min": 4,
+                "max": 4
+              }
+            ]
+          },
+          "scope": "constant.character.escape"
+        },
+        {
+          "match": {
+            "seq": [
+              {
+                "literal": "\\x"
+              },
+              {
+                "repeat": "[0-9A-Fa-f]",
+                "min": 2,
+                "max": 2
+              }
+            ]
+          },
+          "scope": "constant.character.escape"
+        },
+        {
+          "match": {
+            "seq": [
+              {
+                "literal": "\\"
+              },
+              {
+                "class": "[^\\r\\n]"
+              }
+            ]
+          },
+          "scope": "constant.character.escape"
+        }
+      ]
+    },
+    "regex": {
+      "scope": "string.regexp",
+      "endsAtEOL": true,
+      "rules": [
+        {
+          "match": {
+            "seq": [
+              {
+                "literal": "\\"
+              },
+              {
+                "class": "[^\\r\\n]"
+              }
+            ]
+          }
+        },
+        {
+          "match": {
+            "literal": "["
+          },
+          "push": "regexClass"
+        },
+        {
+          "match": {
+            "seq": [
+              {
+                "literal": "/"
+              },
+              {
+                "repeat": "[a-z]"
+              }
+            ]
+          },
+          "pop": true
+        }
+      ]
+    },
+    "regexClass": {
+      "scope": "string.regexp",
+      "endsAtEOL": true,
+      "rules": [
+        {
+          "match": {
+            "seq": [
+              {
+                "literal": "\\"
+              },
+              {
+                "class": "[^\\r\\n]"
+              }
+            ]
+          }
+        },
+        {
+          "match": {
+            "literal": "]"
+          },
+          "pop": true
+        }
+      ]
+    },
+    "singleString": {
+      "scope": "string.quoted",
+      "endsAtEOL": true,
+      "rules": [
+        {
+          "include": "escapes"
+        },
+        {
+          "match": {
+            "literal": "'"
+          },
+          "pop": true
+        }
+      ]
+    },
+    "template": {
+      "scope": "string.quoted",
+      "rules": [
+        {
+          "include": "escapes"
+        },
+        {
+          "match": {
+            "literal": "${"
+          },
+          "scope": "punctuation.section.embedded",
+          "push": "templateExpression"
+        },
+        {
+          "match": {
+            "literal": "`"
+          },
+          "pop": true
+        }
+      ]
+    },
+    "templateExpression": {
+      "rules": [
+        {
+          "match": {
+            "literal": "}"
+          },
+          "scope": "punctuation.section.embedded",
+          "pop": true
+        },
+        {
+          "include": "code"
+        }
+      ]
+    }
+  }
+}

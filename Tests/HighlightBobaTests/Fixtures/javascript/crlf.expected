@@ -1,0 +1,8 @@
+const s = `a
+^^^^^ keyword
+          ^^ string.quoted
+${b}`;
+^^ punctuation.section.embedded
+   ^ punctuation.section.embedded
+    ^ string.quoted
+

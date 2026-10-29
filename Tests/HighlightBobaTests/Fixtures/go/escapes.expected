@@ -1,0 +1,17 @@
+var bad = "\q"
+^^^ keyword
+          ^ string.quoted
+           ^ invalid
+            ^^ string.quoted
+var e = "🧋 \u00e9 \U0001F9CB \101 \xff"
+^^^ keyword
+        ^^^ string.quoted
+           ^^^^^^ constant.character.escape
+                 ^ string.quoted
+                  ^^^^^^^^^^ constant.character.escape
+                            ^ string.quoted
+                             ^^^^ constant.character.escape
+                                 ^ string.quoted
+                                  ^^^^ constant.character.escape
+                                      ^ string.quoted
+
