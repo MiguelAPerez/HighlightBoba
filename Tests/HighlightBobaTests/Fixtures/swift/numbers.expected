@@ -11,4 +11,11 @@ let b = t.0.1 + x2 + 1.description.count
 ^^^ keyword
           ^^^ constant.numeric
                      ^ constant.numeric
+let c = 0xFF.description + 0b1.bitWidth + 0o7.words + 0xDEAD.bitWidth + 0x1.8p3
+^^^ keyword
+        ^^^^ constant.numeric
+                           ^^^ constant.numeric
+                                          ^^^ constant.numeric
+                                                      ^^^^^^ constant.numeric
+                                                                        ^^^^^^^ constant.numeric
 

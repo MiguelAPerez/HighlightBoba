@@ -1,2 +1,3 @@
 let a = [1_000, 0xFF, 0x1.8p-3, 0b1010, 0o17, 2.5e+10, 1e-9]
 let b = t.0.1 + x2 + 1.description.count
+let c = 0xFF.description + 0b1.bitWidth + 0o7.words + 0xDEAD.bitWidth + 0x1.8p3

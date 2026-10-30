@@ -24,7 +24,6 @@ func Sum[T Number](xs ...T) (total T) {
      ^^^ entity.name.function
 	for _, x := range xs {
  ^^^ keyword
-     ^ constant.numeric
              ^^^^^ keyword
 		total += x
 	}
@@ -128,10 +127,8 @@ end:
                            ^^^^^^ constant.character.escape
                                  ^ string.quoted
 	_ = "unterminated
- ^ constant.numeric
      ^^^^^^^^^^^^^ string.quoted
 	_ = true && false
- ^ constant.numeric
      ^^^^ constant.language
              ^^^^^ constant.language
 	return nil

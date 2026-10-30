@@ -13,4 +13,11 @@ const b = x2 + a.b5 + cond ?.5 : 1;
 ^^^^^ keyword
                             ^^ constant.numeric
                                  ^ constant.numeric
+const c = [5., 1.e3, 1..toString(), 0xFF.toString(16)];
+^^^^^ keyword
+           ^^ constant.numeric
+               ^^^^ constant.numeric
+                     ^^ constant.numeric
+                                    ^^^^ constant.numeric
+                                                  ^^ constant.numeric
 

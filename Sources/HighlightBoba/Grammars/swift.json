@@ -116,7 +116,7 @@
                     "literal": "0"
                   },
                   {
-                    "class": "[xXbBoO]"
+                    "class": "[xX]"
                   },
                   {
                     "repeat": "[0-9A-Fa-f_]"
@@ -137,22 +137,68 @@
                     }
                   },
                   {
-                    "opt": {
-                      "seq": [
-                        {
-                          "class": "[pP]"
-                        },
-                        {
-                          "opt": {
-                            "class": "[+-]"
-                          }
-                        },
-                        {
-                          "repeat": "[0-9_]",
-                          "min": 1
+                    "seq": [
+                      {
+                        "class": "[pP]"
+                      },
+                      {
+                        "opt": {
+                          "class": "[+-]"
                         }
-                      ]
-                    }
+                      },
+                      {
+                        "repeat": "[0-9_]",
+                        "min": 1
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "seq": [
+                  {
+                    "literal": "0"
+                  },
+                  {
+                    "class": "[xX]"
+                  },
+                  {
+                    "class": "[0-9A-Fa-f]"
+                  },
+                  {
+                    "repeat": "[0-9A-Fa-f_]"
+                  }
+                ]
+              },
+              {
+                "seq": [
+                  {
+                    "literal": "0"
+                  },
+                  {
+                    "class": "[bB]"
+                  },
+                  {
+                    "class": "[01]"
+                  },
+                  {
+                    "repeat": "[01_]"
+                  }
+                ]
+              },
+              {
+                "seq": [
+                  {
+                    "literal": "0"
+                  },
+                  {
+                    "class": "[oO]"
+                  },
+                  {
+                    "class": "[0-7]"
+                  },
+                  {
+                    "repeat": "[0-7_]"
                   }
                 ]
               },
