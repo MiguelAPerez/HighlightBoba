@@ -128,7 +128,9 @@ Columns count characters, so carets line up under emoji. Ranges in the API are U
 - An unterminated YAML quote runs on until the next matching quote, because YAML quoted strings may span lines.
 - Markdown strikethrough, tables and entities, and YAML timestamps, have no scope in the vocabulary, so they stay plain.
 - Swift: a custom operator ending in `/` at the end of a line (`infix operator /+/`) colours that last `/` as a regex opener.
+- Swift: a `/` right after `!` or `?` with no space (`x!/2`) reads as a regex opener, because `!/x/` (negated regex) looks the same one character back; spaced division (`x! / 2`) is fine.
 - JavaScript/TypeScript: `default` before `:` stays a keyword (a `switch` needs it), so `{ default: 1 }` scopes it; a keyword-like variable in a ternary (`a ? get : set`) reads as a keyword; and in TypeScript `void` is always a type, so the `void 0` operator and a `{ void: 1 }` key read as one.
 - Python: `match (x)` and `match [x]` at the start of a statement read as a match statement, though they may be a call or an index.
-- JSON numbers are checked only for trailing letters: `01`, `1.` and `.5` aren't flagged invalid.
+- Python: `type` only starts an alias before an ASCII identifier, so `type Σ = int` stays plain; and `match not in xs` / `case not in xs` at the start of a statement read as a match statement.
+- JSON numbers are checked only for trailing ASCII letters: `1é` isn't flagged, and neither is a bare `-x`. Also unflagged: `01`, `1.` and `.5`.
 - Embedding nests at most four grammars deep, and a remembered delimiter is capped at 256 UTF-16 units.
