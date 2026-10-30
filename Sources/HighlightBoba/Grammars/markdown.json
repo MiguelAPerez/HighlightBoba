@@ -167,6 +167,26 @@
           "match": {
             "seq": [
               {
+                "literal": "]["
+              },
+              {
+                "repeat": "[^\\]\\r\\n]"
+              },
+              {
+                "literal": "]"
+              }
+            ]
+          },
+          "captures": [
+            "punctuation",
+            "markup.link",
+            "punctuation"
+          ]
+        },
+        {
+          "match": {
+            "seq": [
+              {
                 "literal": "**"
               },
               {
@@ -554,7 +574,595 @@
           ]
         },
         {
+          "match": {
+            "seq": [
+              {
+                "bol": true
+              },
+              {
+                "repeat": "[ ]",
+                "max": 3
+              },
+              {
+                "literal": "<!--"
+              }
+            ]
+          },
+          "push": "htmlComment"
+        },
+        {
+          "match": {
+            "seq": [
+              {
+                "bol": true
+              },
+              {
+                "repeat": "[ ]",
+                "max": 3
+              },
+              {
+                "literal": "<?"
+              }
+            ]
+          },
+          "push": "htmlPI"
+        },
+        {
+          "match": {
+            "seq": [
+              {
+                "bol": true
+              },
+              {
+                "repeat": "[ ]",
+                "max": 3
+              },
+              {
+                "literal": "<![CDATA["
+              }
+            ]
+          },
+          "push": "htmlCdata"
+        },
+        {
+          "match": {
+            "seq": [
+              {
+                "bol": true
+              },
+              {
+                "repeat": "[ ]",
+                "max": 3
+              },
+              {
+                "literal": "<!"
+              },
+              {
+                "class": "[A-Za-z]"
+              }
+            ]
+          },
+          "push": "htmlDecl"
+        },
+        {
+          "match": {
+            "seq": [
+              {
+                "bol": true
+              },
+              {
+                "repeat": "[ ]",
+                "max": 3
+              },
+              {
+                "literal": "<"
+              },
+              {
+                "words": [
+                  "PRE",
+                  "Pre",
+                  "SCRIPT",
+                  "STYLE",
+                  "Script",
+                  "Style",
+                  "TEXTAREA",
+                  "Textarea",
+                  "pre",
+                  "script",
+                  "style",
+                  "textarea"
+                ]
+              },
+              {
+                "followedBy": {
+                  "anyOf": [
+                    {
+                      "class": "[ \\t>]"
+                    },
+                    {
+                      "literal": "/>"
+                    },
+                    {
+                      "eol": true
+                    }
+                  ]
+                }
+              }
+            ]
+          },
+          "push": "htmlRaw"
+        },
+        {
+          "match": {
+            "seq": [
+              {
+                "bol": true
+              },
+              {
+                "repeat": "[ ]",
+                "max": 3
+              },
+              {
+                "literal": "<"
+              },
+              {
+                "opt": {
+                  "literal": "/"
+                }
+              },
+              {
+                "words": [
+                  "ADDRESS",
+                  "ARTICLE",
+                  "ASIDE",
+                  "Address",
+                  "Article",
+                  "Aside",
+                  "BASE",
+                  "BASEFONT",
+                  "BLOCKQUOTE",
+                  "BODY",
+                  "Base",
+                  "Basefont",
+                  "Blockquote",
+                  "Body",
+                  "CAPTION",
+                  "CENTER",
+                  "COL",
+                  "COLGROUP",
+                  "Caption",
+                  "Center",
+                  "Col",
+                  "Colgroup",
+                  "DD",
+                  "DETAILS",
+                  "DIALOG",
+                  "DIR",
+                  "DIV",
+                  "DL",
+                  "DT",
+                  "Dd",
+                  "Details",
+                  "Dialog",
+                  "Dir",
+                  "Div",
+                  "Dl",
+                  "Dt",
+                  "FIELDSET",
+                  "FIGCAPTION",
+                  "FIGURE",
+                  "FOOTER",
+                  "FORM",
+                  "FRAME",
+                  "FRAMESET",
+                  "Fieldset",
+                  "Figcaption",
+                  "Figure",
+                  "Footer",
+                  "Form",
+                  "Frame",
+                  "Frameset",
+                  "H1",
+                  "H2",
+                  "H3",
+                  "H4",
+                  "H5",
+                  "H6",
+                  "HEAD",
+                  "HEADER",
+                  "HR",
+                  "HTML",
+                  "Head",
+                  "Header",
+                  "Hr",
+                  "Html",
+                  "IFRAME",
+                  "Iframe",
+                  "LEGEND",
+                  "LI",
+                  "LINK",
+                  "Legend",
+                  "Li",
+                  "Link",
+                  "MAIN",
+                  "MENU",
+                  "MENUITEM",
+                  "Main",
+                  "Menu",
+                  "Menuitem",
+                  "NAV",
+                  "NOFRAMES",
+                  "Nav",
+                  "Noframes",
+                  "OL",
+                  "OPTGROUP",
+                  "OPTION",
+                  "Ol",
+                  "Optgroup",
+                  "Option",
+                  "P",
+                  "PARAM",
+                  "Param",
+                  "SEARCH",
+                  "SECTION",
+                  "SUMMARY",
+                  "Search",
+                  "Section",
+                  "Summary",
+                  "TABLE",
+                  "TBODY",
+                  "TD",
+                  "TFOOT",
+                  "TH",
+                  "THEAD",
+                  "TITLE",
+                  "TR",
+                  "TRACK",
+                  "Table",
+                  "Tbody",
+                  "Td",
+                  "Tfoot",
+                  "Th",
+                  "Thead",
+                  "Title",
+                  "Tr",
+                  "Track",
+                  "UL",
+                  "Ul",
+                  "address",
+                  "article",
+                  "aside",
+                  "base",
+                  "basefont",
+                  "blockquote",
+                  "body",
+                  "caption",
+                  "center",
+                  "col",
+                  "colgroup",
+                  "dd",
+                  "details",
+                  "dialog",
+                  "dir",
+                  "div",
+                  "dl",
+                  "dt",
+                  "fieldset",
+                  "figcaption",
+                  "figure",
+                  "footer",
+                  "form",
+                  "frame",
+                  "frameset",
+                  "h1",
+                  "h2",
+                  "h3",
+                  "h4",
+                  "h5",
+                  "h6",
+                  "head",
+                  "header",
+                  "hr",
+                  "html",
+                  "iframe",
+                  "legend",
+                  "li",
+                  "link",
+                  "main",
+                  "menu",
+                  "menuitem",
+                  "nav",
+                  "noframes",
+                  "ol",
+                  "optgroup",
+                  "option",
+                  "p",
+                  "param",
+                  "search",
+                  "section",
+                  "summary",
+                  "table",
+                  "tbody",
+                  "td",
+                  "tfoot",
+                  "th",
+                  "thead",
+                  "title",
+                  "tr",
+                  "track",
+                  "ul"
+                ]
+              },
+              {
+                "followedBy": {
+                  "anyOf": [
+                    {
+                      "class": "[ \\t>]"
+                    },
+                    {
+                      "literal": "/>"
+                    },
+                    {
+                      "eol": true
+                    }
+                  ]
+                }
+              }
+            ]
+          },
+          "push": "htmlBlock"
+        },
+        {
+          "match": {
+            "seq": [
+              {
+                "bol": true
+              },
+              {
+                "repeat": "[ ]",
+                "max": 3
+              },
+              {
+                "literal": "["
+              },
+              {
+                "class": "[^\\]^ \\t\\r\\n]"
+              },
+              {
+                "repeat": "[^\\]\\r\\n]"
+              },
+              {
+                "literal": "]:"
+              },
+              {
+                "repeat": "[ \\t]"
+              },
+              {
+                "repeat": "[^ \\t\\r\\n]",
+                "min": 1
+              },
+              {
+                "opt": {
+                  "seq": [
+                    {
+                      "repeat": "[ \\t]",
+                      "min": 1
+                    },
+                    {
+                      "anyOf": [
+                        {
+                          "seq": [
+                            {
+                              "literal": "\""
+                            },
+                            {
+                              "repeat": "[^\"\\r\\n]"
+                            },
+                            {
+                              "literal": "\""
+                            }
+                          ]
+                        },
+                        {
+                          "seq": [
+                            {
+                              "literal": "'"
+                            },
+                            {
+                              "repeat": "[^'\\r\\n]"
+                            },
+                            {
+                              "literal": "'"
+                            }
+                          ]
+                        },
+                        {
+                          "seq": [
+                            {
+                              "literal": "("
+                            },
+                            {
+                              "repeat": "[^)\\r\\n]"
+                            },
+                            {
+                              "literal": ")"
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  ]
+                }
+              },
+              {
+                "repeat": "[ \\t]"
+              },
+              {
+                "eol": true
+              }
+            ]
+          },
+          "captures": [
+            null,
+            null,
+            "punctuation",
+            null,
+            null,
+            "punctuation",
+            null,
+            "markup.link",
+            "string.quoted",
+            null,
+            null
+          ]
+        },
+        {
+          "match": {
+            "seq": [
+              {
+                "bol": true
+              },
+              {
+                "repeat": "[ ]",
+                "max": 3
+              },
+              {
+                "repeat": "[=]",
+                "min": 1
+              },
+              {
+                "repeat": "[ \\t]"
+              },
+              {
+                "eol": true
+              }
+            ]
+          },
+          "scope": "markup.heading"
+        },
+        {
           "include": "inline"
+        }
+      ]
+    },
+    "htmlBlock": {
+      "rules": [
+        {
+          "match": {
+            "seq": [
+              {
+                "bol": true
+              },
+              {
+                "repeat": "[ \\t]"
+              },
+              {
+                "eol": true
+              }
+            ]
+          },
+          "pop": true
+        }
+      ]
+    },
+    "htmlComment": {
+      "rules": [
+        {
+          "match": {
+            "seq": [
+              {
+                "literal": "-->"
+              },
+              {
+                "repeat": "[^\\r\\n]"
+              }
+            ]
+          },
+          "pop": true
+        }
+      ]
+    },
+    "htmlRaw": {
+      "rules": [
+        {
+          "match": {
+            "seq": [
+              {
+                "literal": "</"
+              },
+              {
+                "words": [
+                  "PRE",
+                  "Pre",
+                  "SCRIPT",
+                  "STYLE",
+                  "Script",
+                  "Style",
+                  "TEXTAREA",
+                  "Textarea",
+                  "pre",
+                  "script",
+                  "style",
+                  "textarea"
+                ]
+              },
+              {
+                "repeat": "[^\\r\\n]"
+              }
+            ]
+          },
+          "pop": true
+        }
+      ]
+    },
+    "htmlPI": {
+      "rules": [
+        {
+          "match": {
+            "seq": [
+              {
+                "literal": "?>"
+              },
+              {
+                "repeat": "[^\\r\\n]"
+              }
+            ]
+          },
+          "pop": true
+        }
+      ]
+    },
+    "htmlCdata": {
+      "rules": [
+        {
+          "match": {
+            "seq": [
+              {
+                "literal": "]]>"
+              },
+              {
+                "repeat": "[^\\r\\n]"
+              }
+            ]
+          },
+          "pop": true
+        }
+      ]
+    },
+    "htmlDecl": {
+      "rules": [
+        {
+          "match": {
+            "seq": [
+              {
+                "literal": ">"
+              },
+              {
+                "repeat": "[^\\r\\n]"
+              }
+            ]
+          },
+          "pop": true
         }
       ]
     }

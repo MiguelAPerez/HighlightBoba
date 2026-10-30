@@ -1,0 +1,30 @@
+<div.x>*is block? no*
+       ^^^^^^^^^^^^^^ markup.italic
+
+<div:x>*is block? no*
+       ^^^^^^^^^^^^^^ markup.italic
+
+<div/>*block*
+
+<div x=1>*block*
+
+*after*
+^^^^^^^ markup.italic
+<p_x>*not block*
+     ^^^^^^^^^^^ markup.italic
+
+<![CDATA[
+*raw cdata*
+]]>
+*after cdata*
+^^^^^^^^^^^^^ markup.italic
+<?php
+*raw php*
+?>
+*after php*
+^^^^^^^^^^^ markup.italic
+<!DOCTYPE
+html>
+*after doctype*
+^^^^^^^^^^^^^^^ markup.italic
+

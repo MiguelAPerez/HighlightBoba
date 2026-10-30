@@ -1,0 +1,102 @@
+%YAML 1.2
+^^^^^^^^^ meta.preprocessor
+--- !config
+^^^ punctuation
+    ^^^^^^^ keyword
+? complex key
+^ punctuation
+: complex value
+^ punctuation
+nested:
+^^^^^^ support.type.property-name
+      ^ punctuation
+  - name: a
+  ^ punctuation
+    ^^^^ support.type.property-name
+        ^ punctuation
+    value: 1
+    ^^^^^ support.type.property-name
+         ^ punctuation
+           ^ constant.numeric
+  - name: b
+  ^ punctuation
+    ^^^^ support.type.property-name
+        ^ punctuation
+    items:
+    ^^^^^ support.type.property-name
+         ^ punctuation
+      - x
+      ^ punctuation
+      - [y, {z: 1}]
+      ^ punctuation
+        ^ punctuation
+          ^ punctuation
+            ^ punctuation
+             ^ support.type.property-name
+              ^ punctuation
+                ^ constant.numeric
+                 ^^ punctuation
+multi: "double quoted
+^^^^^ support.type.property-name
+     ^ punctuation
+       ^^^^^^^^^^^^^^ string.quoted
+  continues here"
+^^^^^^^^^^^^^^^^^ string.quoted
+plain multi line
+  scalar continues
+keep: |+
+^^^^ support.type.property-name
+    ^ punctuation
+      ^^ punctuation
+  trailing newlines kept
+^^^^^^^^^^^^^^^^^^^^^^^^ string.quoted
+
+strip: >2-
+^^^^^ support.type.property-name
+     ^ punctuation
+       ^^^ punctuation
+    indented by two extra
+^^^^^^^^^^^^^^^^^^^^^^^^^ string.quoted
+tag: !custom value
+^^^ support.type.property-name
+   ^ punctuation
+     ^^^^^^^ keyword
+merge:
+^^^^^ support.type.property-name
+     ^ punctuation
+  <<: *anchor
+  ^^ support.type.property-name
+    ^ punctuation
+      ^^^^^^^ entity.other.attribute
+date: 2026-10-30
+^^^^ support.type.property-name
+    ^ punctuation
+time: 12:30:45
+^^^^ support.type.property-name
+    ^ punctuation
+octal: 0o17
+^^^^^ support.type.property-name
+     ^ punctuation
+       ^^^^ constant.numeric
+inf: .inf
+^^^ support.type.property-name
+   ^ punctuation
+     ^^^^ constant.numeric
+nan: .NaN
+^^^ support.type.property-name
+   ^ punctuation
+     ^^^^ constant.numeric
+yes: yes
+^^^ support.type.property-name
+   ^ punctuation
+key with spaces: value
+^^^^^^^^^^^^^^^ support.type.property-name
+               ^ punctuation
+"key": "value with # not a comment"
+^^^^^ support.type.property-name
+     ^ punctuation
+       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^ string.quoted
+- top level item # comment
+^ punctuation
+                 ^^^^^^^^^ comment.line
+
