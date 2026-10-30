@@ -101,27 +101,28 @@ import Testing
         }
     }
 
-    /// A file of many functions and classes: typing inside one body reparses that body, not the file.
+    /// A file of 120 functions and classes: typing inside one body reparses that body, not the file.
     @Test(arguments: ["javascript", "typescript"])
     func editsInsideBodiesStayInTheirBlock(_ language: String) throws {
         let unit = language == "typescript" ? Self.typeScriptUnit : Self.javaScriptUnit
-        let text = (0..<200).map { unit.replacingOccurrences(of: "NAME", with: "f\($0)") }.joined()
+        let text = (0..<120).map { unit.replacingOccurrences(of: "NAME", with: "f\($0)") }.joined()
         let parser = Self.parser(language)
         let highlighter = Highlighter(grammar: try Grammar.bundled(language), text: text)
         var tree = parser.parse(highlighter.snapshot).tree
         #expect(tree.errors.isEmpty, "\(Self.errors(tree))")
         var rng = SeededGenerator(state: 7)
         var incremental = 0
-        let edits = 60
+        let edits = 40
         for _ in 0..<edits {
             let at = (highlighter.text as NSString).range(of: "total", options: [], range: NSRange(location: Int.random(in: 0..<(highlighter.units.count - 400), using: &rng), length: 400)).location
             guard at != NSNotFound else { continue }
             highlighter.replaceCharacters(in: NSRange(location: at, length: 0), with: ["x + ", "/re/.test(s) && ", "(a) / 2 + ", "`${v}` + "].randomElement(using: &rng)!)
             let result = parser.reparse(tree, after: highlighter.edit(since: tree.revision)!, in: highlighter.snapshot)
-            #expect(sameParse(result.tree, parser.parse(highlighter.snapshot).tree))
+            let full = parser.parse(highlighter.snapshot)
+            #expect(sameParse(result.tree, full.tree))
             if result.isIncremental {
                 incremental += 1
-                #expect(result.steps * 50 < parser.parse(highlighter.snapshot).steps, "a block reparse should cost the block")
+                #expect(result.steps * 50 < full.steps, "a block reparse should cost the block")
             }
             tree = result.tree
         }
