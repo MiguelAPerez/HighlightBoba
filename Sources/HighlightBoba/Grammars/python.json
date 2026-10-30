@@ -411,6 +411,20 @@
           "match": {
             "seq": [
               {
+                "literal": "\\"
+              },
+              {
+                "eol": true
+              }
+            ]
+          },
+          "scope": "constant.character.escape",
+          "continuesLine": true
+        },
+        {
+          "match": {
+            "seq": [
+              {
                 "literal": "\\x"
               },
               {
@@ -505,6 +519,7 @@
       ]
     },
     "field": {
+      "spansLines": true,
       "rules": [
         {
           "match": {
@@ -599,6 +614,19 @@
       "scope": "string.quoted",
       "endsAtEOL": true,
       "rules": [
+        {
+          "match": {
+            "seq": [
+              {
+                "literal": "\\"
+              },
+              {
+                "eol": true
+              }
+            ]
+          },
+          "continuesLine": true
+        },
         {
           "match": {
             "seq": [

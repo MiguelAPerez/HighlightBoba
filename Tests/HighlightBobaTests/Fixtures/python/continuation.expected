@@ -1,0 +1,40 @@
+a = 'one \
+    ^^^^^ string.quoted
+         ^ constant.character.escape
+two' + 1
+^^^^ string.quoted
+       ^ constant.numeric
+b = "esc \\
+    ^^^^^ string.quoted
+         ^^ constant.character.escape
+c = 2
+    ^ constant.numeric
+r = r'raw \
+    ^^^^^^^ string.quoted
+still' + 3
+^^^^^^ string.quoted
+         ^ constant.numeric
+f = f'{x} \
+    ^^ string.quoted
+      ^ punctuation.section.embedded
+        ^ punctuation.section.embedded
+         ^ string.quoted
+          ^ constant.character.escape
+{y}'
+^ punctuation.section.embedded
+  ^ punctuation.section.embedded
+   ^ string.quoted
+s = 'plain
+    ^^^^^^ string.quoted
+d = 4
+    ^ constant.numeric
+g = f"{x
+    ^^ string.quoted
+      ^ punctuation.section.embedded
++ 1} end"
+  ^ constant.numeric
+   ^ punctuation.section.embedded
+    ^^^^^ string.quoted
+h = 5
+    ^ constant.numeric
+

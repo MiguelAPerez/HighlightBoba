@@ -45,7 +45,8 @@ It is **not** a regex engine and not a parser. Matchers come from a small closed
 |-----|---------|
 | `rules` | Ordered rules. The first match wins. |
 | `scope` | Optional. Text no rule matches gets this scope; rules without their own `scope` inherit it. |
-| `endsAtEOL` | Optional. The state is popped at a line break (single-line strings). Other states carry across lines. |
+| `endsAtEOL` | Optional. The state ends at a line break (single-line strings), and so does everything nested in it: an unclosed Swift `"\(` interpolation ends with its string. Other states carry across lines. |
+| `spansLines` | Optional. Shields the states below it from `endsAtEOL`: a Python f-string field may cross a line break, so its string survives one too. States nested in it still end at the break if they are `endsAtEOL`. |
 | `endsAtDedent` | Optional. Pushed with `rememberIndent`; popped before any non-blank line indented no deeper than the line that pushed it (YAML block scalars). Blank lines don't end it. |
 
 ## Rules
@@ -63,6 +64,7 @@ It is **not** a regex engine and not a parser. Matchers come from a small closed
 | `rememberIndent` | On a push: save the line's indentation, for `endsAtDedent`. |
 | `embed` / `embedPart` | On a push: highlight the new state's text with another grammar, named directly (`"embed": "swift"`) or by a `seq` part's text (a fence's language tag). Names and file extensions both resolve. The pushed state's own rules are tried first at every position, so they act as the terminator. An unknown name falls back to the state's scope. |
 | `pushAtNextLine` | On a push: enter the state at the end of this line instead of now, so the rest of the line stays in the current state. Several on one line are entered in the order they appeared (`cat <<A <<B`: A's body, then B's). |
+| `continuesLine` | When the match reaches the line end, the line break doesn't end `endsAtEOL` states: backslash continuation, `{"seq":[{"literal":"\\"},{"eol":true}]}`. |
 | `include` | Instead of `match`: splice in another state's rules here. |
 
 A rule that matches empty text is skipped unless it only pops, so a grammar can't loop.
@@ -119,8 +121,6 @@ Columns count characters, so carets line up under emoji. Ranges in the API are U
 
 ## Known limits
 
-- Python's line-continuation backslash inside single-quoted strings isn't modelled yet.
 - Look-behind is limited to the current line: `notAfter` can't see a token on the previous line (so a JS regex that starts a continuation line is read as division only if the `/` follows an identifier on the same line).
 - Lexers don't know command position: shell keywords like `done` are highlighted as arguments too (`echo done`). The parser layer fixes this for languages that get one.
 - Embedding nests at most four grammars deep, and a remembered delimiter is capped at 256 UTF-16 units.
-- Interpolation inside a single-line string doesn't end at the line break; the string resumes after it.

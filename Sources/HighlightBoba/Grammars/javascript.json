@@ -313,6 +313,20 @@
           "match": {
             "seq": [
               {
+                "literal": "\\"
+              },
+              {
+                "eol": true
+              }
+            ]
+          },
+          "scope": "constant.character.escape",
+          "continuesLine": true
+        },
+        {
+          "match": {
+            "seq": [
+              {
                 "literal": "\\u{"
               },
               {
