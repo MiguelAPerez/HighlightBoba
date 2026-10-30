@@ -91,6 +91,8 @@ public final class TreeBuilder {
         /// Where the cursor was.
         let position: Int
         let start: Int
+        /// Where lookahead had read to, which the wrapper records as its own.
+        let lookedTo: Int
     }
 
     /// `tokens` must tile `text`, as `Highlighter.syntaxTokens` does: in order, no gaps, none empty.
@@ -203,6 +205,34 @@ public final class TreeBuilder {
         String(decoding: units[token.location..<token.end], as: UTF16.self)
     }
 
+    // MARK: Lines
+
+    /// The spaces and tabs in front of `token` on its line, when `token` starts a fresh line: it is
+    /// the first thing on its line, and the line doesn't continue a token from the line before (a
+    /// multi-line string). `nil` otherwise. For languages where line breaks and indentation are
+    /// syntax: trivia never reaches a parser, so this is how it sees them. It reads the text, so
+    /// it works for a block reparse's first token too.
+    public func indentation(of token: SyntaxToken) -> Substring? {
+        var start = token.location
+        while start > 0, units[start - 1] == 32 || units[start - 1] == 9 { start -= 1 }
+        guard start == 0 || units[start - 1] == 10 || units[start - 1] == 13 else { return nil }
+        if let lexing, start > 0, lexing.startStack(ofLine: lexing.lineIndex(containing: start)) != lexing.initialStack {
+            return nil
+        }
+        return Substring(String(decoding: units[start..<token.location], as: UTF16.self))
+    }
+
+    /// The last significant token added to the tree, if any: what the line before the next token ended with.
+    public var previous: SyntaxToken? { head.last { !$0.isTrivia } }
+
+    /// In a block reparse, whether every token of the block has been consumed; `false` in a whole
+    /// parse. A block that ends at a token outside it, as a Python suite ends at the next line
+    /// indented less, can't look at that token in a reparse: lookahead past the block makes it
+    /// fall back. When the parser is where only that token's line decides whether the block goes
+    /// on, it asks this first. The reparse only stands if the block ends exactly where it did
+    /// before, and the text from there on is unchanged, so that line ends the block again.
+    public var isAtBlockEnd: Bool { window != nil && tailSignificant.isEmpty }
+
     /// Whether the next significant token is `text`, or a run of adjacent tokens with no trivia
     /// between them spells it: `->` and `===` arrive as one-character symbols.
     public func at(_ text: String) -> Bool { end(ofSpelling: text) != nil }
@@ -264,7 +294,8 @@ public final class TreeBuilder {
     /// wrapper, and taking a checkpoint adds nothing to the tree, so one that is never used changes nothing.
     public func checkpoint() -> Checkpoint {
         let top = frames[frames.count - 1]
-        return Checkpoint(frameID: top.id, childIndex: top.children.count, position: head.count, start: nextLocation)
+        let start = nextLocation
+        return Checkpoint(frameID: top.id, childIndex: top.children.count, position: head.count, start: start, lookedTo: lookedTo)
     }
 
     /// Starts a node holding everything added to the open node since `checkpoint`.
@@ -288,6 +319,9 @@ public final class TreeBuilder {
         let wrapped = Array(frames[top].children[first...])
         frames[top].children.removeSubrange(first...)
         var frame = makeFrame(kind, start: checkpoint.start, children: wrapped)
+        // As far as lookahead had read at the checkpoint: what it read since belongs to the
+        // wrapped children, so peeking at what follows them doesn't change the wrapper.
+        frame.lookedTo = checkpoint.lookedTo
         // Its children were parsed before it was started, so it can't be reparsed as a block.
         frame.firstError = -1
         frame.firstRelex = -1

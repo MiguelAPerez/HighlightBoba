@@ -10,19 +10,23 @@ import os.path as osp
                ^^ keyword
 @dataclass(frozen=True)
 ^^^^^^^^^^ entity.other.attribute
+           ^^^^^^ variable.parameter
                   ^^^^ constant.language
 class Point(Base, metaclass=Meta):
 ^^^^^ keyword
       ^^^^^ entity.name.type
             ^^^^ entity.name.type
+                  ^^^^^^^^^ variable.parameter
                             ^^^^ entity.name.type
     x: int = 0
-       ^^^ support.function
+       ^^^ entity.name.type
              ^ constant.numeric
     def __init__(self, *args, **kwargs) -> None:
     ^^^ keyword
         ^^^^^^^^ entity.name.function
                  ^^^^ variable.language
+                        ^^^^ variable.parameter
+                                ^^^^^^ variable.parameter
                                            ^^^^ constant.language
         super().__init__(*args, **kwargs)
         ^^^^^ support.function
@@ -31,11 +35,12 @@ class Point(Base, metaclass=Meta):
           ^^^ keyword
               ^^^^^ entity.name.function
                     ^^^^ variable.language
-                               ^^^ support.function
-                                       ^^^^ support.function
-                                            ^^^ support.function
-                                                 ^^^^ support.function
-                                                      ^^^ support.function
+                          ^^^ variable.parameter
+                               ^^^ entity.name.type
+                                       ^^^^ entity.name.type
+                                            ^^^ entity.name.type
+                                                 ^^^^ entity.name.type
+                                                      ^^^ entity.name.type
         async with session.get(url) as r:
         ^^^^^ keyword
               ^^^^ keyword
@@ -46,7 +51,8 @@ class Point(Base, metaclass=Meta):
 def gen(n: int | None = None):
 ^^^ keyword
     ^^^ entity.name.function
-           ^^^ support.function
+        ^ variable.parameter
+           ^^^ entity.name.type
                  ^^^^ constant.language
                         ^^^^ constant.language
     yield from range(n or 0)
@@ -57,7 +63,10 @@ def gen(n: int | None = None):
                           ^ constant.numeric
 lambda x, /, y=1, *, z: x if y else z
 ^^^^^^ keyword
+       ^ variable.parameter
+             ^ variable.parameter
                ^ constant.numeric
+                     ^ variable.parameter
                           ^^ keyword
                                ^^^^ keyword
 match command.split():
@@ -75,21 +84,25 @@ match command.split():
     case Point(x=0) | _:
     ^^^^ keyword
          ^^^^^ entity.name.type
+               ^ variable.parameter
                  ^ constant.numeric
+                      ^ keyword
         raise ValueError(f"bad {value!r:>{width}}") from None
         ^^^^^ keyword
               ^^^^^^^^^^ entity.name.type
                          ^^^^^^ string.quoted
                                ^ punctuation.section.embedded
-                                                ^ punctuation.section.embedded
+                                        ^ string.quoted
+                                         ^ punctuation.section.embedded
+                                               ^^ punctuation.section.embedded
                                                  ^ string.quoted
                                                     ^^^^ keyword
                                                          ^^^^ constant.language
 type Alias = list[int]
 ^^^^ keyword
      ^^^^^ entity.name.type
-             ^^^^ support.function
-                  ^^^ support.function
+             ^^^^ entity.name.type
+                  ^^^ entity.name.type
 if (n := len(items)) > 10 and not done or x is not None:
 ^^ keyword
          ^^^ support.function
@@ -118,6 +131,7 @@ except* (OSError, KeyError) as e:
                             ^^ keyword
     print(e, end="")
     ^^^^^ support.function
+             ^^^ variable.parameter
                  ^^ string.quoted
 finally:
 ^^^^^^^ keyword
@@ -155,6 +169,7 @@ print(f'{"nested" + f"{inner}"}', end='')
                              ^ string.quoted
                               ^ punctuation.section.embedded
                                ^ string.quoted
+                                  ^^^ variable.parameter
                                       ^^ string.quoted
 x = 1 @ matrix; y = a // b ** 2 % 3; z = ~a ^ b & c | d << 1 >> 2
     ^ constant.numeric
@@ -165,7 +180,7 @@ x = 1 @ matrix; y = a // b ** 2 % 3; z = ~a ^ b & c | d << 1 >> 2
 match = 5; case = match + 1; type = "soft keywords as names"
         ^ constant.numeric
                           ^ constant.numeric
-                             ^^^^ support.function
+                             ^^^^ variable.other
                                     ^^^^^^^^^^^^^^^^^^^^^^^^ string.quoted
 r = rf"\d{x}\'" + FR'''{y}\n''' + Rf'c'
     ^^^^^ string.quoted

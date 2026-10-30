@@ -1,0 +1,10 @@
+a = f"{x!r:>{width}.{precision}} {y=} {z = !s:^10} {{escaped}}"
+b = f"{'nested' + f'{inner:{spec}}'}"
+c = f"{d['key']:%Y-%m-%d} {[i for i in range(3)]} {(lambda: 1)}"
+d = rf"\d{n}" F'{v:x}' "plain"
+e = f"""{
+    first +
+    second
+}"""
+f = f"{match} {case} {type} {_}"
+g = f"{x:{'>' if right else '<'}10}"

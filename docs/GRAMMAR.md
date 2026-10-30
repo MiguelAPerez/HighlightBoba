@@ -129,7 +129,6 @@ These are the lexer's. Where a language has a parser ([PARSER.md](PARSER.md#bund
 - Markdown has no look-ahead to a closing delimiter, so an unclosed `*`, `_` or `` ` `` colours to the end of the line; setext heading text (the line above `===`) isn't scoped, only the underline; and indented code isn't told apart from list continuation. Without the previous line, a lone `===` after a blank line still reads as a setext underline, `a[i][j]` in prose reads as a reference link, and an HTML block inside a blockquote (`> <div>`) isn't recognised. HTML block tag names are matched in lower, UPPER or Title case only, so a mixed-case `<dIv>` reads as inline HTML.
 - An unterminated YAML quote runs on until the next matching quote, because YAML quoted strings may span lines.
 - Markdown strikethrough, tables and entities, and YAML timestamps, have no scope in the vocabulary, so they stay plain.
-- Python: `match (x)` and `match [x]` at the start of a statement read as a match statement, though they may be a call or an index.
-- Python: `type` only starts an alias before an ASCII identifier, so `type Σ = int` stays plain; and `match not in xs` / `case not in xs` at the start of a statement read as a match statement.
+- Python: an f-string field left open (`f"{a`) runs on to the next `}`, past its line. Soft keywords are guessed from the line alone; the parser decides them (see [PARSER.md](PARSER.md#python)).
 - JSON numbers are checked only for trailing ASCII letters: `1é` isn't flagged, and neither is a bare `-x`. Also unflagged: `01`, `1.` and `.5`.
 - Embedding nests at most four grammars deep, and a remembered delimiter is capped at 256 UTF-16 units.

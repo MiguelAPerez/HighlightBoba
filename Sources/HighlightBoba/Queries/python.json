@@ -1,0 +1,37 @@
+{
+  "format": 1,
+  "language": "python",
+  "queries": [
+    { "text": "match", "in": "match_statement", "index": 0, "scope": "keyword" },
+    { "text": "case", "in": "case_clause", "index": 0, "scope": "keyword" },
+    { "text": "type", "in": "type_alias", "index": 0, "scope": "keyword" },
+    { "text": "_", "kind": "word", "inside": "case_pattern", "notInside": ["value_pattern", "fstring_field"], "scope": "keyword" },
+
+    { "in": "function", "after": "def", "scope": "entity.name.function" },
+    { "in": "class", "after": "class", "scope": "entity.name.type" },
+    { "in": "type_alias", "index": 1, "scope": "entity.name.type" },
+    { "kind": "word", "in": "type_parameter", "scope": "entity.name.type" },
+    { "lexerScope": "support.function", "in": "type_parameter", "scope": "entity.name.type" },
+    { "kind": "word", "in": ["value_pattern", "class_pattern"], "index": -1, "scope": "entity.name.type" },
+    { "lexerScope": "support.function", "in": ["value_pattern", "class_pattern"], "index": -1, "scope": "entity.name.type" },
+
+    { "in": "keyword_argument", "index": 0, "scope": "variable.parameter" },
+    { "in": "keyword_pattern", "index": 0, "scope": "variable.parameter" },
+
+    { "kind": "word", "in": "parameter", "scope": "variable.parameter" },
+    { "lexerScope": "support.function", "in": "parameter", "scope": "variable.parameter" },
+    { "lexerScope": "entity.name.type", "in": "parameter", "scope": "variable.parameter" },
+
+    { "lexerScope": "support.function", "inside": "target", "notInside": ["subscript", "attribute", "call", "slice"], "scope": "variable.other" },
+
+    { "text": "@", "kind": "symbol", "in": "decorator", "scope": "entity.other.attribute" },
+    { "kind": "word", "in": "decorator", "scope": "entity.other.attribute" },
+    { "kind": "word", "in": ["attribute", "decorator"], "scope": "entity.other.attribute" },
+    { "kind": "word", "in": ["attribute", "attribute", "decorator"], "scope": "entity.other.attribute" },
+    { "kind": "word", "in": ["call", "decorator"], "index": 0, "scope": "entity.other.attribute" },
+    { "kind": "word", "in": ["attribute", "call", "decorator"], "scope": "entity.other.attribute" },
+
+    { "kind": "word", "inside": "annotation", "notInside": ["arguments", "string", "lambda"], "scope": "entity.name.type" },
+    { "lexerScope": "support.function", "inside": "annotation", "notInside": ["arguments", "string", "lambda"], "scope": "entity.name.type" }
+  ]
+}

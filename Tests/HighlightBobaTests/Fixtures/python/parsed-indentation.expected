@@ -1,0 +1,84 @@
+def f(a,
+^^^ keyword
+    ^ entity.name.function
+      ^ variable.parameter
+      b):
+      ^ variable.parameter
+    total = (a +
+  b)
+
+    # a comment at column 0 below
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ comment.line
+
+# and one at column 0
+^^^^^^^^^^^^^^^^^^^^^ comment.line
+    if total:
+    ^^ keyword
+	    return [
+     ^^^^^^ keyword
+1,
+^ constant.numeric
+2,
+^ constant.numeric
+]
+    else: \
+    ^^^^ keyword
+        return \
+        ^^^^^^ keyword
+            0
+            ^ constant.numeric
+
+
+class C:
+^^^^^ keyword
+      ^ entity.name.type
+
+    def m(self): pass
+    ^^^ keyword
+        ^ entity.name.function
+          ^^^^ variable.language
+                 ^^^^ keyword
+    def n(self):
+    ^^^ keyword
+        ^ entity.name.function
+          ^^^^ variable.language
+        if self:
+        ^^ keyword
+           ^^^^ variable.language
+            x = {
+                "k": 1,
+                ^^^ string.quoted
+                     ^ constant.numeric
+            }
+        y = 2
+            ^ constant.numeric
+      # comment at an odd indentation
+      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ comment.line
+    z = 3
+        ^ constant.numeric
+s = """
+    ^^^ string.quoted
+not code: def x(
+^^^^^^^^^^^^^^^^ string.quoted
+"""
+^^^ string.quoted
+t = f"""{
+    ^^^^ string.quoted
+        ^ punctuation.section.embedded
+    a +
+b
+}"""
+^ punctuation.section.embedded
+ ^^^ string.quoted
+expected = (
+"first line, "
+^^^^^^^^^^^^^^ string.quoted
+"second line")
+^^^^^^^^^^^^^ string.quoted
+match ...:
+^^^^^ keyword
+    case _: pass
+    ^^^^ keyword
+         ^ keyword
+            ^^^^ keyword
+

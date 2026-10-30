@@ -1,0 +1,60 @@
+import os.path as p, sys
+from . import (a, b as c)
+from ..x import *
+
+@dataclass
+@functools.wraps(f)
+class Point[T: int, *Ts, **P](Base, metaclass=Meta):
+    x: int = 0
+    def __init__(self, x, /, y=2, *, z: list[str] | None = None) -> None:
+        self.x = x
+        self.format = "{}".format(x)
+        super().__init__()
+
+async def main():
+    async with a as b, c:
+        await x
+    async for i in range(10):
+        print(i, end="")
+    result = [x ** 2 for x in data if x > 0]
+    d = {k: v for k, v in items}
+    s = {1, 2, *rest}
+    if (n := len(a)) > 10:
+        pass
+    elif n:
+        ...
+    else:
+        raise ValueError("bad") from None
+    try:
+        pass
+    except* (TypeError, KeyError) as e:
+        del e
+    finally:
+        return lambda x, y=1: x + y
+    type Alias[K] = dict[K, int]
+    match command.split():
+        case [action]:
+            pass
+        case [Point(x=0, y=_), *rest] if rest:
+            pass
+        case {"k": 1, **kw} | None as y:
+            pass
+        case -1 | 1+2j | "s" | Color.RED:
+            pass
+        case _:
+            pass
+    x = f"{name!r:>{width}} and {a=} {b:%Y-%m}"
+    while not x and y or z is not None:
+        break
+    global g
+    nonlocal n
+    assert x, "msg"
+    match = 3
+    match(x)
+    match[x]
+    type = 5
+    print(type(x))
+    m = a @ b
+    m = a @b
+    x = 1 if y else \
+        2

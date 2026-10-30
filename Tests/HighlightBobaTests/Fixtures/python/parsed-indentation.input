@@ -1,0 +1,41 @@
+def f(a,
+      b):
+    total = (a +
+  b)
+
+    # a comment at column 0 below
+
+# and one at column 0
+    if total:
+	    return [
+1,
+2,
+]
+    else: \
+        return \
+            0
+
+
+class C:
+
+    def m(self): pass
+    def n(self):
+        if self:
+            x = {
+                "k": 1,
+            }
+        y = 2
+      # comment at an odd indentation
+    z = 3
+s = """
+not code: def x(
+"""
+t = f"""{
+    a +
+b
+}"""
+expected = (
+"first line, "
+"second line")
+match ...:
+    case _: pass

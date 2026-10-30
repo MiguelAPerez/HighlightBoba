@@ -53,6 +53,17 @@ let tree = builder.finish()
 (UTF-16), `text`, `parent`, `children`, `childNodes` and `tokens`. Kinds are names
 (`SyntaxKind("call")`) that each parser declares, and highlight queries match on those names.
 
+## Lines and indentation
+
+Trivia never reaches a parser, so a language where line breaks or indentation are syntax asks the
+builder about them:
+
+| Member | Gives |
+|--------|-------|
+| `indentation(of: token)` | The spaces and tabs in front of `token` when it starts a fresh line: first on its line, and the line doesn't continue a token from the one before (a multi-line string). `nil` otherwise. It reads the text, so it works on a block reparse's first token too. |
+| `previous` | The last significant token added to the tree: what the line before the next token ended with. |
+| `isAtBlockEnd` | In a block reparse, whether every token of the block is consumed; always `false` in a whole parse. See [below](#when-a-block-is-enough). |
+
 ## Highlight queries
 
 Highlight queries are data that map tree patterns (a node kind, a child's position, its ancestors,
@@ -178,6 +189,12 @@ where every one of these holds. If none does, it parses the whole text.
   line hands the next one the same state. Opening a string that runs past the block falls back.
 - Re-lexing stays inside: the block's own requests re-scan no line past its last, no request made
   outside it re-scanned the edited text, and the whole parse stays inside its re-lex budget.
+
+A block that ends at a token outside it, as a Python suite ends at the first line indented less,
+can't look at that token in a reparse: looking past the block falls back. Where only that token's
+line decides whether the block goes on, the parser asks `isAtBlockEnd` first. The block ended there
+before and what follows is unchanged, so the line after it ends it again; if the block's parse now
+wants to read on (an unclosed bracket), it looks, and falls back.
 
 Then everything after the block parses as before, so its nodes are moved by the edit's length, not
 rebuilt. The tree stores what the checks need on each node (its depth, how far lookahead had read,
@@ -325,3 +342,32 @@ Editing a heredoc's delimiter re-lexes the lines after it, so the lexer check se
 bigger block or a whole parse.
 
 Nesting stops at 64 open nodes, or sooner when less than 160 KB of the thread's stack is left.
+
+### Python
+
+`PythonParser` covers Python 3 up to 3.14, except template strings (`t"…"`), which the lexer
+doesn't know yet: definitions with decorators, PEP 695 type parameters and `type`
+aliases, every statement including `match` with its patterns, the full expression grammar with
+lambdas, comprehensions, `:=` and star arguments, annotations, and f-string replacement fields with
+their conversions and format specs.
+
+- **Logical lines.** A token that starts a line ends the logical line, unless brackets are open or a
+  backslash continues it. A line break inside a multi-line string or f-string field isn't a line
+  start at all. Indentation opens and closes `block` nodes; a tab counts to the next multiple of 8.
+- **Recovery.** Inside brackets, a keyword that only starts a statement (`def`, `return`, `elif`…)
+  at the start of a line ends them, as does a line no deeper than the statement's when the line
+  before didn't end in a comma, operator or opening bracket. So a half-typed `f(1, 2` costs its
+  own statement, not the rest of the file. A missing `:` or `)` is reported and the block after
+  it still parses.
+- **Soft keywords.** `match` starts a match statement only when its logical line ends in `:`;
+  `case` only in a match block; `type` only before a name and `=` or `[`; `_` is a keyword only as
+  a wildcard pattern. A `match` or `case` the lexer took for a keyword elsewhere is re-lexed as a
+  name (state `softKeywordName`), as are builtins and `self` after a `.` (`identifier`), and `@b`
+  in `a @b` (`matmulOperator`).
+- **Reparse boundaries:** `block` (an indented suite) and `case_block` (a match statement's cases).
+  An edit to a block's first or last line, or one that moves the line after it, reparses the
+  block around it.
+- **Queries** colour function, class, alias and type-parameter names; parameters and keyword
+  argument names (`variable.parameter`, as in Swift), with `self` and `cls` kept; decorators; names in annotations
+  and type positions (`entity.name.type`); a builtin bound by an assignment, `for`, `as` or
+  parameter as a variable; format specs as string text.

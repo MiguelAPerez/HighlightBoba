@@ -1,0 +1,213 @@
+import os.path as p, sys
+^^^^^^ keyword
+               ^^ keyword
+from . import (a, b as c)
+^^^^ keyword
+       ^^^^^^ keyword
+                    ^^ keyword
+from ..x import *
+^^^^ keyword
+         ^^^^^^ keyword
+
+@dataclass
+^^^^^^^^^^ entity.other.attribute
+@functools.wraps(f)
+^^^^^^^^^^^^^^^^ entity.other.attribute
+class Point[T: int, *Ts, **P](Base, metaclass=Meta):
+^^^^^ keyword
+      ^^^^^ entity.name.type
+            ^ entity.name.type
+               ^^^ entity.name.type
+                     ^^ entity.name.type
+                           ^ entity.name.type
+                              ^^^^ entity.name.type
+                                    ^^^^^^^^^ variable.parameter
+                                              ^^^^ entity.name.type
+    x: int = 0
+       ^^^ entity.name.type
+             ^ constant.numeric
+    def __init__(self, x, /, y=2, *, z: list[str] | None = None) -> None:
+    ^^^ keyword
+        ^^^^^^^^ entity.name.function
+                 ^^^^ variable.language
+                       ^ variable.parameter
+                             ^ variable.parameter
+                               ^ constant.numeric
+                                     ^ variable.parameter
+                                        ^^^^ entity.name.type
+                                             ^^^ entity.name.type
+                                                    ^^^^ constant.language
+                                                           ^^^^ constant.language
+                                                                    ^^^^ constant.language
+        self.x = x
+        ^^^^ variable.language
+        self.format = "{}".format(x)
+        ^^^^ variable.language
+                      ^^^^ string.quoted
+        super().__init__()
+        ^^^^^ support.function
+
+async def main():
+^^^^^ keyword
+      ^^^ keyword
+          ^^^^ entity.name.function
+    async with a as b, c:
+    ^^^^^ keyword
+          ^^^^ keyword
+                 ^^ keyword
+        await x
+        ^^^^^ keyword
+    async for i in range(10):
+    ^^^^^ keyword
+          ^^^ keyword
+                ^^ keyword
+                   ^^^^^ support.function
+                         ^^ constant.numeric
+        print(i, end="")
+        ^^^^^ support.function
+                 ^^^ variable.parameter
+                     ^^ string.quoted
+    result = [x ** 2 for x in data if x > 0]
+                   ^ constant.numeric
+                     ^^^ keyword
+                           ^^ keyword
+                                   ^^ keyword
+                                          ^ constant.numeric
+    d = {k: v for k, v in items}
+              ^^^ keyword
+                       ^^ keyword
+    s = {1, 2, *rest}
+         ^ constant.numeric
+            ^ constant.numeric
+    if (n := len(a)) > 10:
+    ^^ keyword
+             ^^^ support.function
+                       ^^ constant.numeric
+        pass
+        ^^^^ keyword
+    elif n:
+    ^^^^ keyword
+        ...
+    else:
+    ^^^^ keyword
+        raise ValueError("bad") from None
+        ^^^^^ keyword
+              ^^^^^^^^^^ entity.name.type
+                         ^^^^^ string.quoted
+                                ^^^^ keyword
+                                     ^^^^ constant.language
+    try:
+    ^^^ keyword
+        pass
+        ^^^^ keyword
+    except* (TypeError, KeyError) as e:
+    ^^^^^^ keyword
+             ^^^^^^^^^ entity.name.type
+                        ^^^^^^^^ entity.name.type
+                                  ^^ keyword
+        del e
+        ^^^ keyword
+    finally:
+    ^^^^^^^ keyword
+        return lambda x, y=1: x + y
+        ^^^^^^ keyword
+               ^^^^^^ keyword
+                      ^ variable.parameter
+                         ^ variable.parameter
+                           ^ constant.numeric
+    type Alias[K] = dict[K, int]
+    ^^^^ keyword
+         ^^^^^ entity.name.type
+               ^ entity.name.type
+                    ^^^^ entity.name.type
+                         ^ entity.name.type
+                            ^^^ entity.name.type
+    match command.split():
+    ^^^^^ keyword
+        case [action]:
+        ^^^^ keyword
+            pass
+            ^^^^ keyword
+        case [Point(x=0, y=_), *rest] if rest:
+        ^^^^ keyword
+              ^^^^^ entity.name.type
+                    ^ variable.parameter
+                      ^ constant.numeric
+                         ^ variable.parameter
+                           ^ keyword
+                                      ^^ keyword
+            pass
+            ^^^^ keyword
+        case {"k": 1, **kw} | None as y:
+        ^^^^ keyword
+              ^^^ string.quoted
+                   ^ constant.numeric
+                              ^^^^ constant.language
+                                   ^^ keyword
+            pass
+            ^^^^ keyword
+        case -1 | 1+2j | "s" | Color.RED:
+        ^^^^ keyword
+              ^ constant.numeric
+                  ^ constant.numeric
+                    ^^ constant.numeric
+                         ^^^ string.quoted
+                               ^^^^^ entity.name.type
+                                     ^^^ entity.name.type
+            pass
+            ^^^^ keyword
+        case _:
+        ^^^^ keyword
+             ^ keyword
+            pass
+            ^^^^ keyword
+    x = f"{name!r:>{width}} and {a=} {b:%Y-%m}"
+        ^^ string.quoted
+          ^ punctuation.section.embedded
+                  ^ string.quoted
+                   ^ punctuation.section.embedded
+                         ^^ punctuation.section.embedded
+                           ^^^^^ string.quoted
+                                ^ punctuation.section.embedded
+                                   ^ punctuation.section.embedded
+                                    ^ string.quoted
+                                     ^ punctuation.section.embedded
+                                        ^^^^^ string.quoted
+                                             ^ punctuation.section.embedded
+                                              ^ string.quoted
+    while not x and y or z is not None:
+    ^^^^^ keyword
+          ^^^ keyword
+                ^^^ keyword
+                      ^^ keyword
+                           ^^ keyword
+                              ^^^ keyword
+                                  ^^^^ constant.language
+        break
+        ^^^^^ keyword
+    global g
+    ^^^^^^ keyword
+    nonlocal n
+    ^^^^^^^^ keyword
+    assert x, "msg"
+    ^^^^^^ keyword
+              ^^^^^ string.quoted
+    match = 3
+            ^ constant.numeric
+    match(x)
+    match[x]
+    type = 5
+    ^^^^ variable.other
+           ^ constant.numeric
+    print(type(x))
+    ^^^^^ support.function
+          ^^^^ support.function
+    m = a @ b
+    m = a @b
+    x = 1 if y else \
+        ^ constant.numeric
+          ^^ keyword
+               ^^^^ keyword
+        2
+        ^ constant.numeric
+

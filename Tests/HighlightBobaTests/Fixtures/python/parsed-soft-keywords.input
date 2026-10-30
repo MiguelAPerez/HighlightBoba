@@ -1,0 +1,30 @@
+match (x)
+match [x]
+match(x).y = 1
+match[0]: int = 1
+if match not in xs: pass
+case not in xs
+case(1)
+match = case = type = 0
+print(match, case, type)
+
+match (x):
+    case [a, _]:
+        _ = a
+    case _ if _:
+        pass
+match [x]:
+    case Point(x=_):
+        pass
+match -x:
+    case -1:
+        pass
+match *rest, last:
+    case _:
+        pass
+
+type Σ = int
+type ListOrSet[T] = list[T] | set[T]
+type(x)
+type.mro
+x.match, x.case, x.type
