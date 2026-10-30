@@ -39,6 +39,35 @@
           "match": {
             "seq": [
               {
+                "literal": "..."
+              },
+              {
+                "repeat": "[ \\t]"
+              },
+              {
+                "words": [
+                  "new",
+                  "await",
+                  "typeof",
+                  "void",
+                  "delete",
+                  "yield",
+                  "async",
+                  "import"
+                ]
+              }
+            ]
+          },
+          "captures": [
+            null,
+            null,
+            "keyword"
+          ]
+        },
+        {
+          "match": {
+            "seq": [
+              {
                 "bol": true
               },
               {
@@ -377,7 +406,6 @@
                   "try",
                   "typeof",
                   "var",
-                  "void",
                   "while",
                   "with",
                   "yield",

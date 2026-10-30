@@ -1,0 +1,4 @@
+type T = A extends string ? void : never;
+type U<X> = X extends () => infer R ? R : void;
+const f = ok ? void 0 : 1;
+const o = { readonly: 1, type: 2, as: 3 };
