@@ -42,8 +42,6 @@ public final class SyntaxTree: Sendable {
     /// The highlighter and revision the parse's snapshot came from.
     let highlighter: UUID?
     let revision: Int
-    /// Lines whose tokens the parse may have changed from the highlighter's.
-    let relexedLines: [Range<Int>]
 
     struct RawNode: Sendable {
         var kind: SyntaxKind
@@ -55,7 +53,7 @@ public final class SyntaxTree: Sendable {
     }
 
     init(tokens: [SyntaxToken], units: [UInt16], nodes: [RawNode], children: [Int32], errors: [SyntaxError],
-         lexing: Lexing?, highlighter: UUID?, revision: Int, relexedLines: [Range<Int>]) {
+         lexing: Lexing?, highlighter: UUID?, revision: Int) {
         self.tokens = tokens
         self.units = units
         self.nodes = nodes
@@ -64,7 +62,6 @@ public final class SyntaxTree: Sendable {
         self.lexing = lexing
         self.highlighter = highlighter
         self.revision = revision
-        self.relexedLines = relexedLines
     }
 
     /// Built bottom-up, so the root is the last node.

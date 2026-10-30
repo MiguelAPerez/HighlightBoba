@@ -311,7 +311,6 @@ func scoped(_ highlighter: Highlighter) -> [String] {
         #expect(builder.current.map(builder.text(of:)) == "c", "the block comment is trivia, so the cursor skips it")
         let tree = builder.finish()
         #expect(significant(tree.tokens, in: text) == ["a", "c", "d"])
-        #expect(tree.relexedLines == [0..<3], "line 3 starts with the old state again")
         #expect(highlighter.applyRelexing(of: tree) == [NSRange(location: 0, length: 10)])
         #expect(scoped(highlighter) == ["{:comment.block", "b:comment.block", "}:comment.block"])
         #expect(highlighter.syntaxTokens == tree.tokens)
@@ -341,6 +340,22 @@ func scoped(_ highlighter: Highlighter) -> [String] {
         let third = again.finish()
         #expect(highlighter.applyRelexing(of: third)?.count == 1)
         #expect(highlighter.applyRelexing(of: third) == [])
+    }
+
+    /// Two parses of one text, the second begun before the first was applied: it never saw what the
+    /// first changed, so applying it puts that back, and must say where.
+    @Test func applyingAnotherTreeOfTheSameTextReportsWhatItUndoes() {
+        let highlighter = Highlighter(grammar: relexGrammar, text: "x\nf(a) /re/\ny")
+        let before = scoped(highlighter)
+        let first = TreeBuilder(highlighter: highlighter)
+        let second = TreeBuilder(highlighter: highlighter)
+        for _ in 0..<5 { first.bump() }
+        #expect(first.relex(as: "regexStart"))
+        #expect(highlighter.applyRelexing(of: first.finish()) == [NSRange(location: 2, length: 10)])
+        #expect(scoped(highlighter) != before)
+
+        #expect(highlighter.applyRelexing(of: second.finish()) == [NSRange(location: 2, length: 10)])
+        #expect(scoped(highlighter) == before)
     }
 
     @Test func aTreeFromAnOlderTextIsNotApplied() {

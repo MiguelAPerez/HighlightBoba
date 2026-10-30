@@ -117,15 +117,15 @@ public final class Highlighter {
     public func applyRelexing(of tree: SyntaxTree) -> [NSRange]? {
         guard let parsed = tree.lexing, tree.highlighter == id, tree.revision == revision,
               parsed.lines.count == lines.count else { return nil }
+        // Every line, not just the ones this parse re-lexed: a tree parsed alongside another that was
+        // applied first never saw what that one changed, and applying it puts that back.
         var changed: [NSRange] = []
-        for range in tree.relexedLines {
-            for index in range where parsed.lines[index] != lines[index] {
-                let line = parsed.lines[index]
-                if let last = changed.last, NSMaxRange(last) == line.start {
-                    changed[changed.count - 1].length += line.end - line.start
-                } else {
-                    changed.append(NSRange(location: line.start, length: line.end - line.start))
-                }
+        for index in lines.indices where parsed.lines[index] != lines[index] {
+            let line = parsed.lines[index]
+            if let last = changed.last, NSMaxRange(last) == line.start {
+                changed[changed.count - 1].length += line.end - line.start
+            } else {
+                changed.append(NSRange(location: line.start, length: line.end - line.start))
             }
         }
         lexing = parsed

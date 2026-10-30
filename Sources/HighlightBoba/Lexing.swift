@@ -98,19 +98,17 @@ struct Lexing: Sendable {
     }
 
     /// Drops every override and re-scans the lines that had one.
-    /// - Returns: the line indices re-scanned.
-    mutating func clearOverrides() -> [Range<Int>] {
+    mutating func clearOverrides() {
         let old = overrides
         overrides = []
-        var changed: [Range<Int>] = []
+        var scannedTo = 0
         for override in old {
             let first = lineIndex(containing: override.location)
-            if let last = changed.last, first < last.upperBound { continue }
+            if first < scannedTo { continue }
             let scanned = rescan(fromLine: first).lines
             lines.replaceSubrange(first..<(first + scanned.count), with: scanned)
-            changed.append(first..<(first + scanned.count))
+            scannedTo = first + scanned.count
         }
-        return changed
     }
 
     /// Lines from `first` scanned again under the current overrides, as far as the stack differs

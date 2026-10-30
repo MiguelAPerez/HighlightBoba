@@ -41,7 +41,6 @@ public final class TreeBuilder {
     private var lexing: Lexing?
     private let highlighter: UUID?
     private let revision: Int
-    private var relexedLines: [Range<Int>]
     /// UTF-16 units re-lexing may still re-scan, so a hostile file can't make a parse quadratic.
     private(set) var relexBudget: Int
 
@@ -70,16 +69,16 @@ public final class TreeBuilder {
     /// `tokens` must tile `text`, as `Highlighter.syntaxTokens` does: in order, no gaps, none empty.
     /// A builder made this way can't re-lex.
     public convenience init(tokens: [SyntaxToken], text: String) {
-        self.init(tokens: tokens, units: Array(text.utf16), lexing: nil, highlighter: nil, revision: 0, relexedLines: [])
+        self.init(tokens: tokens, units: Array(text.utf16), lexing: nil, highlighter: nil, revision: 0)
     }
 
     /// Parses a snapshot of a highlighter's text, on any thread. Re-lex requests the last parse
     /// made are dropped first, so this parse makes its own: see `Highlighter.applyRelexing(of:)`.
     public convenience init(snapshot: Highlighter.Snapshot) {
         var lexing = snapshot.lexing
-        let cleared = lexing.clearOverrides()
+        lexing.clearOverrides()
         self.init(tokens: lexing.syntaxTokens(of: lexing.lines), units: lexing.units, lexing: lexing,
-                  highlighter: snapshot.highlighter, revision: snapshot.revision, relexedLines: cleared)
+                  highlighter: snapshot.highlighter, revision: snapshot.revision)
     }
 
     /// Parses `highlighter`'s current text.
@@ -87,8 +86,7 @@ public final class TreeBuilder {
         self.init(snapshot: highlighter.snapshot)
     }
 
-    private init(tokens: [SyntaxToken], units: [UInt16], lexing: Lexing?, highlighter: UUID?, revision: Int,
-                 relexedLines: [Range<Int>]) {
+    private init(tokens: [SyntaxToken], units: [UInt16], lexing: Lexing?, highlighter: UUID?, revision: Int) {
         self.units = units
         var expected = 0
         for token in tokens {
@@ -103,7 +101,6 @@ public final class TreeBuilder {
         self.lexing = lexing
         self.highlighter = highlighter
         self.revision = revision
-        self.relexedLines = relexedLines
         relexBudget = 4 * units.count + 4096
     }
 
@@ -240,7 +237,7 @@ public final class TreeBuilder {
         let root = frames.removeLast()
         _ = makeNode(Frame(kind: root.kind, start: 0, children: root.children), end: units.count)
         return SyntaxTree(tokens: head, units: units, nodes: nodes, children: pool, errors: errors,
-                          lexing: lexing, highlighter: highlighter, revision: revision, relexedLines: relexedLines)
+                          lexing: lexing, highlighter: highlighter, revision: revision)
     }
 
     // MARK: Recovering
@@ -331,7 +328,6 @@ public final class TreeBuilder {
             return false
         }
         lexing!.lines.replaceSubrange(first..<(first + scan.lines.count), with: scan.lines)
-        relexedLines.append(first..<(first + scan.lines.count))
 
         var replaced = 0
         while index + replaced < tokenCount && token(at: index + replaced).location < end { replaced += 1 }
