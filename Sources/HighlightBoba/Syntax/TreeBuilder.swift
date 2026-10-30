@@ -215,6 +215,9 @@ public final class TreeBuilder {
         let top = frames.count - 1
         precondition(checkpoint.frameID == frames[top].id, "a checkpoint must be used in the node it was taken in, while that node is open")
         precondition(checkpoint.childIndex <= frames[top].children.count, "a checkpoint was used twice, or after its children were wrapped")
+        // Wrapping nothing yet: settle the waiting trivia into the open node first, as `startNode(_:)`
+        // does, or the wrapper's first `bump` would take it in.
+        if head.count == checkpoint.position { attachTrivia() }
         // Trivia added since the checkpoint, ahead of its first significant token, goes in front of the
         // wrapper, not into it. Counted now, not when the checkpoint was taken: a re-lex in between can
         // turn the next token into a comment.

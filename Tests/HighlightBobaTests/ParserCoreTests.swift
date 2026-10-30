@@ -201,6 +201,20 @@ func scoped(_ highlighter: Highlighter) -> [String] {
         #expect(builder.finish().errors.isEmpty)
     }
 
+    /// A wrapper started at a checkpoint before anything was consumed: the trivia waiting in front of
+    /// the checkpoint stays outside it, as it does for `startNode(_:)`.
+    @Test func anEmptyCheckpointWrapLeavesTheTriviaOutside() {
+        let builder = Self.builder("x  y")
+        builder.bump()
+        let checkpoint = builder.checkpoint()
+        builder.startNode(SyntaxKind("wrap"), at: checkpoint)
+        builder.bump()
+        builder.finishNode()
+        let tree = builder.finish()
+        #expect(sExpression(tree.root) == "root(x wrap(y))")
+        #expect(tree.root.childNodes.map(\.range) == [NSRange(location: 3, length: 1)])
+    }
+
     @Test func depthCountsOpenNodes() {
         let builder = Self.builder("a")
         #expect(builder.depth == 0)
