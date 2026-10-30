@@ -39,6 +39,22 @@
           "match": {
             "seq": [
               {
+                "bol": true
+              },
+              {
+                "literal": "#!"
+              },
+              {
+                "repeat": "[^\\r\\n]"
+              }
+            ]
+          },
+          "scope": "comment.line"
+        },
+        {
+          "match": {
+            "seq": [
+              {
                 "literal": "//"
               },
               {
@@ -311,6 +327,62 @@
         },
         {
           "match": {
+            "seq": [
+              {
+                "words": [
+                  "break",
+                  "catch",
+                  "class",
+                  "const",
+                  "continue",
+                  "debugger",
+                  "delete",
+                  "do",
+                  "else",
+                  "export",
+                  "extends",
+                  "finally",
+                  "for",
+                  "from",
+                  "function",
+                  "if",
+                  "import",
+                  "in",
+                  "instanceof",
+                  "let",
+                  "new",
+                  "of",
+                  "return",
+                  "static",
+                  "switch",
+                  "throw",
+                  "try",
+                  "typeof",
+                  "var",
+                  "void",
+                  "while",
+                  "with",
+                  "yield",
+                  "async",
+                  "await",
+                  "get",
+                  "set"
+                ]
+              },
+              {
+                "repeat": "[ \\t]"
+              },
+              {
+                "followedBy": {
+                  "literal": ":"
+                }
+              }
+            ]
+          },
+          "notAfter": "[.]"
+        },
+        {
+          "match": {
             "words": [
               "break",
               "case",
@@ -353,7 +425,8 @@
               "set"
             ]
           },
-          "scope": "keyword"
+          "scope": "keyword",
+          "notAfter": "[.]"
         },
         {
           "match": {

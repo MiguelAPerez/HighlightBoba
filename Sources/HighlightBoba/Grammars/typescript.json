@@ -39,6 +39,22 @@
           "match": {
             "seq": [
               {
+                "bol": true
+              },
+              {
+                "literal": "#!"
+              },
+              {
+                "repeat": "[^\\r\\n]"
+              }
+            ]
+          },
+          "scope": "comment.line"
+        },
+        {
+          "match": {
+            "seq": [
+              {
                 "literal": "//"
               },
               {
@@ -324,7 +340,85 @@
               "object"
             ]
           },
-          "scope": "entity.name.type"
+          "scope": "entity.name.type",
+          "notAfter": "[.]"
+        },
+        {
+          "match": {
+            "seq": [
+              {
+                "words": [
+                  "break",
+                  "catch",
+                  "class",
+                  "const",
+                  "continue",
+                  "debugger",
+                  "delete",
+                  "do",
+                  "else",
+                  "export",
+                  "extends",
+                  "finally",
+                  "for",
+                  "from",
+                  "function",
+                  "if",
+                  "import",
+                  "in",
+                  "instanceof",
+                  "let",
+                  "new",
+                  "of",
+                  "return",
+                  "static",
+                  "switch",
+                  "throw",
+                  "try",
+                  "typeof",
+                  "var",
+                  "void",
+                  "while",
+                  "with",
+                  "yield",
+                  "async",
+                  "await",
+                  "get",
+                  "set",
+                  "interface",
+                  "type",
+                  "enum",
+                  "implements",
+                  "declare",
+                  "namespace",
+                  "module",
+                  "abstract",
+                  "readonly",
+                  "private",
+                  "protected",
+                  "public",
+                  "keyof",
+                  "infer",
+                  "is",
+                  "asserts",
+                  "satisfies",
+                  "as",
+                  "override",
+                  "accessor",
+                  "unique"
+                ]
+              },
+              {
+                "repeat": "[ \\t]"
+              },
+              {
+                "followedBy": {
+                  "literal": ":"
+                }
+              }
+            ]
+          },
+          "notAfter": "[.]"
         },
         {
           "match": {
@@ -391,7 +485,8 @@
               "unique"
             ]
           },
-          "scope": "keyword"
+          "scope": "keyword",
+          "notAfter": "[.]"
         },
         {
           "match": {

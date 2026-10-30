@@ -1,0 +1,141 @@
+#!/usr/bin/env node
+^^^^^^^^^^^^^^^^^^^ comment.line
+"use strict";
+^^^^^^^^^^^^ string.quoted
+import fs, { readFile as rf } from "node:fs";
+^^^^^^ keyword
+                              ^^^^ keyword
+                                   ^^^^^^^^^ string.quoted
+export * from './mod.js';
+^^^^^^ keyword
+         ^^^^ keyword
+              ^^^^^^^^^^ string.quoted
+/** @type {number} */
+^^^^^^^^^^^^^^^^^^^^^ comment.block
+class Counter extends Base {
+^^^^^ keyword
+      ^^^^^^^ entity.name.type
+              ^^^^^^^ keyword
+                      ^^^^ entity.name.type
+  #count = 0;
+           ^ constant.numeric
+  static #instances = new Set();
+  ^^^^^^ keyword
+                      ^^^ keyword
+                          ^^^ entity.name.type
+  get value() { return this.#count; }
+  ^^^ keyword
+                ^^^^^^ keyword
+                       ^^^^ variable.language
+  async *items() { yield* this.list; }
+  ^^^^^ keyword
+                   ^^^^^ keyword
+                          ^^^^ variable.language
+  constructor() { super(); new.target; }
+                  ^^^^^ variable.language
+                           ^^^ keyword
+}
+const fn = async ({ a, b = 2, ...rest }, [x, , y]) => a ?? b?.c ?? x?.[0];
+^^^^^ keyword
+           ^^^^^ keyword
+                           ^ constant.numeric
+                                                                       ^ constant.numeric
+let re = /[/\]]+\d{2,}/giu.test(s) ? x / y : (a) / 2;
+^^^ keyword
+         ^^^^^^^^^^^^^^^^^ string.regexp
+                                                   ^ constant.numeric
+const t = tag`raw ${value} and \${not}` + String.raw`\n`;
+^^^^^ keyword
+             ^^^^^ string.quoted
+                  ^^ punctuation.section.embedded
+                         ^ punctuation.section.embedded
+                          ^^^^^ string.quoted
+                               ^^ constant.character.escape
+                                 ^^^^^^ string.quoted
+                                          ^^^^^^ entity.name.type
+                                                    ^ string.quoted
+                                                     ^^ constant.character.escape
+                                                       ^ string.quoted
+for (const [k, v] of Object.entries(o)) if (k in o) continue; else break;
+^^^ keyword
+     ^^^^^ keyword
+                  ^^ keyword
+                     ^^^^^^ entity.name.type
+                                        ^^ keyword
+                                              ^^ keyword
+                                                    ^^^^^^^^ keyword
+                                                              ^^^^ keyword
+                                                                   ^^^^^ keyword
+switch (typeof x) { case "string": default: debugger; }
+^^^^^^ keyword
+        ^^^^^^ keyword
+                    ^^^^ keyword
+                         ^^^^^^^^ string.quoted
+                                   ^^^^^^^ keyword
+                                            ^^^^^^^^ keyword
+try { throw new Error(`fail: ${e.message}`); } catch { } finally { }
+^^^ keyword
+      ^^^^^ keyword
+            ^^^ keyword
+                ^^^^^ entity.name.type
+                      ^^^^^^^ string.quoted
+                             ^^ punctuation.section.embedded
+                                        ^ punctuation.section.embedded
+                                         ^ string.quoted
+                                               ^^^^^ keyword
+                                                         ^^^^^^^ keyword
+label: do { x++; --y; } while (x !== y && !(x >= 3) || x <= -1);
+       ^^ keyword
+                        ^^^^^ keyword
+                                                 ^ constant.numeric
+                                                             ^ constant.numeric
+obj = { get, set, static: 1, async: 2, await: 3, of: 4 };
+        ^^^ keyword
+             ^^^ keyword
+                          ^ constant.numeric
+                                    ^ constant.numeric
+                                              ^ constant.numeric
+                                                     ^ constant.numeric
+const { default: def } = await import("./x.js");
+^^^^^ keyword
+        ^^^^^^^ keyword
+                         ^^^^^ keyword
+                               ^^^^^^ keyword
+                                      ^^^^^^^^ string.quoted
+x ||= 1; y &&= 2; z ??= 3; w **= 2; v >>>= 1;
+      ^ constant.numeric
+               ^ constant.numeric
+                        ^ constant.numeric
+                                 ^ constant.numeric
+                                           ^ constant.numeric
+void 0, delete obj.k, typeof undefined === "undefined";
+^^^^ keyword
+     ^ constant.numeric
+        ^^^^^^ keyword
+                      ^^^^^^ keyword
+                             ^^^^^^^^^ constant.language
+                                           ^^^^^^^^^^^ string.quoted
+arr.map(x => x / 2).filter(Boolean)
+                 ^ constant.numeric
+                           ^^^^^^^ entity.name.type
+const html = `<div>${items.map(i => `<li>${i}</li>`).join("")}</div>`;
+^^^^^ keyword
+             ^^^^^^ string.quoted
+                   ^^ punctuation.section.embedded
+                                    ^^^^^ string.quoted
+                                         ^^ punctuation.section.embedded
+                                            ^ punctuation.section.embedded
+                                             ^^^^^^ string.quoted
+                                                          ^^ string.quoted
+                                                             ^ punctuation.section.embedded
+                                                              ^^^^^^^ string.quoted
+p.then(f).catch(g).finally(h); map.get(k); map.delete(k); x.default; a?.new
+const o2 = { if: 1, class: 2, default: 3 }; switch (x) { default: }
+^^^^^ keyword
+                 ^ constant.numeric
+                           ^ constant.numeric
+                              ^^^^^^^ keyword
+                                       ^ constant.numeric
+                                            ^^^^^^ keyword
+                                                         ^^^^^^^ keyword
+

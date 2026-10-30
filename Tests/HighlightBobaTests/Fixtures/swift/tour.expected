@@ -1,0 +1,178 @@
+import SwiftUI
+^^^^^^ keyword
+       ^^^^^^^ entity.name.type
+#if DEBUG && os(iOS)
+^^^ meta.preprocessor
+    ^^^^^ entity.name.type
+@MainActor @Observable final class Model<T: Hashable>: Sendable where T: Codable {
+^^^^^^^^^^ entity.other.attribute
+           ^^^^^^^^^^^ entity.other.attribute
+                       ^^^^^ keyword
+                             ^^^^^ keyword
+                                   ^^^^^ entity.name.type
+                                         ^ entity.name.type
+                                            ^^^^^^^^ entity.name.type
+                                                       ^^^^^^^^ entity.name.type
+                                                                ^^^^^ keyword
+                                                                      ^ entity.name.type
+                                                                         ^^^^^^^ entity.name.type
+    @Published private(set) var items: [T] = []
+    ^^^^^^^^^^ entity.other.attribute
+               ^^^^^^^ keyword
+                       ^^^ keyword
+                            ^^^ keyword
+                                        ^ entity.name.type
+    nonisolated(unsafe) static var shared: Model?
+    ^^^^^^^^^^^ keyword
+                        ^^^^^^ keyword
+                               ^^^ keyword
+                                           ^^^^^ entity.name.type
+    #endif
+    ^^^^^^ meta.preprocessor
+    func load(_ id: T, `default`: Int = 0) async throws(MyError) -> some View {
+    ^^^^ keyword
+         ^^^^ entity.name.function
+                    ^ entity.name.type
+                                  ^^^ entity.name.type
+                                        ^ constant.numeric
+                                           ^^^^^ keyword
+                                                 ^^^^^^ keyword
+                                                        ^^^^^^^ entity.name.type
+                                                                    ^^^^ keyword
+                                                                         ^^^^ entity.name.type
+        guard let x = try? await fetch(id) else { return EmptyView() }
+        ^^^^^ keyword
+              ^^^ keyword
+                      ^^^ keyword
+                           ^^^^^ keyword
+                                           ^^^^ keyword
+                                                  ^^^^^^ keyword
+                                                         ^^^^^^^^^ entity.name.type
+        let doubled = items.map { $0 }.filter { _ in true }
+        ^^^ keyword
+                                                  ^^ keyword
+                                                     ^^^^ constant.language
+        let pattern = /(?<year>\d+)-(?<month>\d+)/
+        ^^^ keyword
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^ string.regexp
+        let ratio = total / 2 / count
+        ^^^ keyword
+                            ^ constant.numeric
+        let multi = """
+        ^^^ keyword
+                    ^^^ string.quoted
+            line \(x) "quoted"
+^^^^^^^^^^^^^^^^^ string.quoted
+                 ^^ punctuation.section.embedded
+                    ^ punctuation.section.embedded
+                     ^^^^^^^^^ string.quoted
+            """
+^^^^^^^^^^^^^^^ string.quoted
+        let raw = #"no \(escape) here"#
+        ^^^ keyword
+                  ^^^^^^^^^^^^^^^^^^^^^ string.quoted
+        if case .some(let v) = x, v is String { print(v as! String) }
+        ^^ keyword
+           ^^^^ keyword
+                      ^^^ keyword
+                                    ^^ keyword
+                                       ^^^^^^ entity.name.type
+                                                        ^^ keyword
+                                                            ^^^^^^ entity.name.type
+        defer { print(#file, #line, #function) }
+        ^^^^^ keyword
+                      ^^^^^ meta.preprocessor
+                             ^^^^^ meta.preprocessor
+                                    ^^^^^^^^^ meta.preprocessor
+        return x ?? nil
+        ^^^^^^ keyword
+                    ^^^ constant.language
+    }
+}
+@available(iOS 26, *)
+^^^^^^^^^^ entity.other.attribute
+               ^^ constant.numeric
+extension Model: CustomStringConvertible { var description: String { "m" } }
+^^^^^^^^^ keyword
+          ^^^^^ entity.name.type
+                 ^^^^^^^^^^^^^^^^^^^^^^^ entity.name.type
+                                           ^^^ keyword
+                                                            ^^^^^^ entity.name.type
+                                                                     ^^^ string.quoted
+protocol P { associatedtype A; func f() -> any P }
+^^^^^^^^ keyword
+         ^ entity.name.type
+             ^^^^^^^^^^^^^^ keyword
+                            ^ entity.name.type
+                               ^^^^ keyword
+                                    ^ entity.name.function
+                                           ^^^ keyword
+                                               ^ entity.name.type
+enum E: Int { case a = 1, b; indirect case c(E) }
+^^^^ keyword
+     ^ entity.name.type
+        ^^^ entity.name.type
+              ^^^^ keyword
+                       ^ constant.numeric
+                             ^^^^^^^^ keyword
+                                      ^^^^ keyword
+                                             ^ entity.name.type
+let closure: (Int) -> Void = { [weak self] value in self?.use(value) }
+^^^ keyword
+              ^^^ entity.name.type
+                      ^^^^ entity.name.type
+                                ^^^^ keyword
+                                     ^^^^ variable.language
+                                                 ^^ keyword
+                                                    ^^^^ variable.language
+precedencegroup Power { associativity: right }
+^^^^^^^^^^^^^^^ keyword
+                ^^^^^ entity.name.type
+infix operator **: Power
+^^^^^ keyword
+      ^^^^^^^^ keyword
+                   ^^^^^ entity.name.type
+struct S { subscript(i: Int) -> Int { get { i } set {} } }
+^^^^^^ keyword
+       ^ entity.name.type
+           ^^^^^^^^^ keyword
+                        ^^^ entity.name.type
+                                ^^^ entity.name.type
+                                      ^^^ keyword
+                                                ^^^ keyword
+actor A { consuming func take() {} borrowing func look() {} }
+^^^^^ keyword
+      ^ entity.name.type
+          ^^^^^^^^^ keyword
+                    ^^^^ keyword
+                         ^^^^ entity.name.function
+                                   ^^^^^^^^^ keyword
+                                             ^^^^ keyword
+                                                  ^^^^ entity.name.function
+let r2 = #/a/b/#, r3 = f(/x\/y[/]z/), half = a / 2, q = (b) / c
+^^^ keyword
+         ^^^^^^^ string.regexp
+                         ^^^^^^^^^^ string.regexp
+                                                 ^ constant.numeric
+let ext = #/
+^^^ keyword
+          ^^ string.regexp
+  (?<n>\d+) # a number
+^^^^^^^^^^^^^^^^^^^^^^ string.regexp
+  /#
+^^^^ string.regexp
+func g() -> Regex<Substring> { return /ab+/ }
+^^^^ keyword
+     ^ entity.name.function
+            ^^^^^ entity.name.type
+                  ^^^^^^^^^ entity.name.type
+                               ^^^^^^ keyword
+                                      ^^^^^ string.regexp
+let notRegex = x /y
+^^^ keyword
+let m = Optional.some(1), s = super.init, k = .default
+^^^ keyword
+        ^^^^^^^^ entity.name.type
+                      ^ constant.numeric
+                              ^^^^^ variable.language
+

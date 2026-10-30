@@ -35,7 +35,6 @@ export abstract class Repo<T extends object> implements Store {
                                       ^^^^^^^^^ constant.language
                                                    ^^^^^^ keyword
                                                           ^^^^ variable.language
-                                                                     ^^^ keyword
                                                                              ^^ keyword
                                                                                 ^ entity.name.type
 }

@@ -42,6 +42,94 @@
           "match": {
             "seq": [
               {
+                "anyOf": [
+                  {
+                    "seq": [
+                      {
+                        "class": "[fF]"
+                      },
+                      {
+                        "class": "[rR]"
+                      }
+                    ]
+                  },
+                  {
+                    "seq": [
+                      {
+                        "class": "[rR]"
+                      },
+                      {
+                        "class": "[fF]"
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "anyOf": [
+                  {
+                    "literal": "\"\"\""
+                  },
+                  {
+                    "literal": "'''"
+                  }
+                ]
+              }
+            ]
+          },
+          "scope": "string.quoted",
+          "push": "fRawTriple",
+          "notAfterWord": true,
+          "remember": 1
+        },
+        {
+          "match": {
+            "seq": [
+              {
+                "anyOf": [
+                  {
+                    "seq": [
+                      {
+                        "class": "[fF]"
+                      },
+                      {
+                        "class": "[rR]"
+                      }
+                    ]
+                  },
+                  {
+                    "seq": [
+                      {
+                        "class": "[rR]"
+                      },
+                      {
+                        "class": "[fF]"
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "anyOf": [
+                  {
+                    "literal": "\""
+                  },
+                  {
+                    "literal": "'"
+                  }
+                ]
+              }
+            ]
+          },
+          "scope": "string.quoted",
+          "push": "fRawSingle",
+          "notAfterWord": true,
+          "remember": 1
+        },
+        {
+          "match": {
+            "seq": [
+              {
                 "opt": {
                   "class": "[rRbB]"
                 }
@@ -393,6 +481,73 @@
         },
         {
           "match": {
+            "seq": [
+              {
+                "bol": true
+              },
+              {
+                "repeat": "[ \\t]"
+              },
+              {
+                "words": [
+                  "match",
+                  "case"
+                ]
+              },
+              {
+                "repeat": "[ \\t]",
+                "min": 1
+              },
+              {
+                "notFollowedBy": {
+                  "class": "[=.,:)\\]]"
+                }
+              }
+            ]
+          },
+          "captures": [
+            null,
+            null,
+            "keyword",
+            null,
+            null
+          ]
+        },
+        {
+          "match": {
+            "seq": [
+              {
+                "bol": true
+              },
+              {
+                "repeat": "[ \\t]"
+              },
+              {
+                "words": [
+                  "type"
+                ]
+              },
+              {
+                "repeat": "[ \\t]",
+                "min": 1
+              },
+              {
+                "followedBy": {
+                  "class": "[A-Za-z_]"
+                }
+              }
+            ]
+          },
+          "captures": [
+            null,
+            null,
+            "keyword",
+            null,
+            null
+          ]
+        },
+        {
+          "match": {
             "words": [
               "and",
               "as",
@@ -425,9 +580,7 @@
               "try",
               "while",
               "with",
-              "yield",
-              "match",
-              "case"
+              "yield"
             ]
           },
           "scope": "keyword"
@@ -741,6 +894,72 @@
               }
             ]
           }
+        },
+        {
+          "match": {
+            "remembered": true
+          },
+          "pop": true
+        }
+      ]
+    },
+    "fRawSingle": {
+      "scope": "string.quoted",
+      "endsAtEOL": true,
+      "rules": [
+        {
+          "match": {
+            "seq": [
+              {
+                "literal": "\\"
+              },
+              {
+                "eol": true
+              }
+            ]
+          },
+          "continuesLine": true
+        },
+        {
+          "match": {
+            "seq": [
+              {
+                "literal": "\\"
+              },
+              {
+                "class": "[^\\r\\n]"
+              }
+            ]
+          }
+        },
+        {
+          "include": "fieldBraces"
+        },
+        {
+          "match": {
+            "remembered": true
+          },
+          "pop": true
+        }
+      ]
+    },
+    "fRawTriple": {
+      "scope": "string.quoted",
+      "rules": [
+        {
+          "match": {
+            "seq": [
+              {
+                "literal": "\\"
+              },
+              {
+                "class": "[^\\r\\n]"
+              }
+            ]
+          }
+        },
+        {
+          "include": "fieldBraces"
         },
         {
           "match": {
