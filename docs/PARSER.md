@@ -359,7 +359,8 @@ their conversions and format specs.
   before didn't end in a comma, operator or opening bracket. So a half-typed `f(1, 2` costs its
   own statement, not the rest of the file. A missing `:` or `)` is reported and the block after
   it still parses.
-- **Soft keywords.** `match` starts a match statement only when its logical line ends in `:`;
+- **Soft keywords.** `match` starts a match statement only when its logical line ends in `:` (a header too long
+  to scan, past 2048 tokens, goes by the lexer's reading);
   `case` only in a match block; `type` only before a name and `=` or `[`; `_` is a keyword only as
   a wildcard pattern. A `match` or `case` the lexer took for a keyword elsewhere is re-lexed as a
   name (state `softKeywordName`), as are builtins and `self` after a `.` (`identifier`), and `@b`

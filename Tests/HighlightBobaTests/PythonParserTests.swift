@@ -142,6 +142,23 @@ enum Python {
         #expect(Python.scopes(of: "_", in: "match x:\n    case [_, Color._] if _: _ = _\n") == ["keyword", nil, nil, nil, nil])
     }
 
+    /// A header too long to scan to its end (past 2048 tokens) is still decided: `match` as the lexer
+    /// read it at the start of the line, `with (` as parenthesized items. (So a call `match(…)` that
+    /// long reads as a match statement, as the lexer alone reads it.)
+    @Test func headersTooLongToScanAreStillDecided() {
+        let subject = String(repeating: "a + ", count: 2500) + "b"
+        let match = "match " + subject + ":\n    case 1:\n        pass\n"
+        // The subject nests 2500 deep, too deep for the recursive `outline`.
+        let (_, tree) = Python.parse(match)
+        let statement = tree.root.childNodes.first
+        #expect(statement?.kind.name == "match_statement")
+        #expect(statement?.childNodes.last?.kind.name == "case_block")
+        #expect(tree.errors.isEmpty)
+        let items = "with (" + (0..<1200).map { "a\($0) as b\($0)" }.joined(separator: ", ") + "):\n    pass\n"
+        #expect(Python.outline(items).hasPrefix("(with_statement with ( (with_item"))
+        #expect(Python.errors(items).isEmpty)
+    }
+
     // MARK: Lines and indentation
 
     @Test func bracketsAndBackslashesJoinLinesAndBlankLinesDontCount() {

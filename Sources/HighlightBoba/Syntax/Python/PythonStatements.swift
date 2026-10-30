@@ -450,10 +450,13 @@ extension PythonParse {
 
     /// Whether the `(` after `with` closes right before the header's `:`, so it holds the items,
     /// as in `with (open(a) as f, open(b) as g):`, rather than starting the first expression.
+    /// Past `scanLimit` tokens it guesses items.
     func parenthesizesItems() -> Bool {
         var depth = 0
         var offset = 0
-        while offset < 2048, let token = b.peek(offset) {
+        while let token = b.peek(offset) {
+            // Too long to scan: a long header is far likelier to be items, one per line.
+            guard offset < Self.scanLimit else { return true }
             if token.kind == .symbol {
                 switch text(token) {
                 case "(", "[", "{": depth += 1
@@ -515,7 +518,7 @@ extension PythonParse {
         var depth = 0
         var offset = 1
         var last = first
-        while offset < 2048 {
+        while offset < Self.scanLimit {
             guard let token = b.peek(offset) else { break }
             if offset > 1 && b.indentation(of: token) != nil && !(last.kind == .symbol && text(last) == "\\") {
                 if depth == 0 || Self.statementOnly.contains(keyword(token) ?? "") { break }
@@ -530,8 +533,13 @@ extension PythonParse {
             last = token
             offset += 1
         }
-        return offset < 2048 && depth == 0 && last.kind == .symbol && text(last) == ":"
+        // Too long to scan without the builder taking the parser for stuck: go by the lexer's reading.
+        guard offset < Self.scanLimit else { return keyword(b.current!) == "match" }
+        return depth == 0 && last.kind == .symbol && text(last) == ":"
     }
+
+    /// How far a header is scanned ahead, well inside `TreeBuilder.maxStall`.
+    static let scanLimit = 2048
 
     func matchStatement(_ col: Int) {
         node(K.matchStatement) {
