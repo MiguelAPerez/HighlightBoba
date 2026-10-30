@@ -314,18 +314,20 @@ public final class TreeBuilder {
         guard lexing != nil, relexBudget > 0, let state = lexing!.grammar.stateID(named: stateName),
               let index = lookahead() else { return false }
         let location = token(at: index).location
-        if lexing!.override(at: location) == state { return true }
+        let earlier = lexing!.override(at: location)
+        if earlier == state { return true }
         let first = lexing!.lineIndex(containing: location)
-        let previous = lexing!.overrides
         lexing!.setOverride(at: location, state: state)
         let scan = lexing!.rescan(fromLine: first)
+        // A refused request has re-scanned too, so it spends budget like an accepted one.
+        let end = scan.lines.last?.end ?? location
+        relexBudget -= end - lexing!.lines[first].start
         // The re-scanned lines start at the same place, so their tokens up to `location` are the ones already here.
         let fresh = lexing!.syntaxTokens(of: scan.lines).drop { $0.location < location }
-        guard scan.applied.contains(location), fresh.first?.location == location, let end = scan.lines.last?.end else {
-            lexing!.overrides = previous
+        guard scan.applied.contains(location), fresh.first?.location == location else {
+            if let earlier { lexing!.setOverride(at: location, state: earlier) } else { lexing!.removeOverride(at: location) }
             return false
         }
-        relexBudget -= end - lexing!.lines[first].start
         lexing!.lines.replaceSubrange(first..<(first + scan.lines.count), with: scan.lines)
         relexedLines.append(first..<(first + scan.lines.count))
 

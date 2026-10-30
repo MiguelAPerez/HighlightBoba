@@ -92,6 +92,11 @@ struct Lexing: Sendable {
         }
     }
 
+    mutating func removeOverride(at location: Int) {
+        let slot = overrideSlot(atOrAfter: location)
+        if slot < overrides.count && overrides[slot].location == location { overrides.remove(at: slot) }
+    }
+
     /// Drops every override and re-scans the lines that had one.
     /// - Returns: the line indices re-scanned.
     mutating func clearOverrides() -> [Range<Int>] {

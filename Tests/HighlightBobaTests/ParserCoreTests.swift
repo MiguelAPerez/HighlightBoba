@@ -342,6 +342,39 @@ func scoped(_ highlighter: Highlighter) -> [String] {
         #expect(leafText(tree.root) == text)
     }
 
+    /// A refused request puts back the request already at that token, not just the lexer's own reading.
+    @Test func aRefusedRequestKeepsTheEarlierOne() {
+        let text = "f(a) /re/"
+        let builder = TreeBuilder(highlighter: Highlighter(grammar: relexGrammar, text: text))
+        for _ in 0..<4 { builder.bump() }
+        #expect(builder.relex(as: "divide"))
+        let divided = builder.tokens
+        #expect(!builder.relex(as: "greater"), "no rule of `greater` matches a `/`")
+        #expect(builder.tokens == divided)
+        #expect(builder.relex(as: "divide"), "the earlier request still stands")
+        #expect(builder.relex(as: "regexStart"), "and can be replaced")
+        #expect(builder.current.map(builder.text(of:)) == "/re/")
+        _ = builder.finish()
+    }
+
+    /// A request the lexer refuses has still re-scanned the line to find out, so it spends budget too:
+    /// a parser that asks at every token of one long line must not re-scan it once per token.
+    @Test func refusedRelexWorkStaysLinear() {
+        let text = String(repeating: "a ", count: 500)
+        let builder = TreeBuilder(highlighter: Highlighter(grammar: relexGrammar, text: text))
+        let budget = builder.relexBudget
+        var asked = 0
+        while !builder.isAtEnd {
+            #expect(!builder.relex(as: "blockStart"), "no rule of the state matches an `a`")
+            asked += 1
+            builder.bump()
+        }
+        #expect(asked == 500)
+        #expect(builder.relexBudget <= 0, "refused re-scans were charged: \(budget) left \(builder.relexBudget)")
+        #expect(builder.relexBudget > -text.utf16.count, "it stops within one re-scan of the budget")
+        #expect(leafText(builder.finish().root) == text)
+    }
+
     /// After any mix of edits and re-parses, the highlight is what a fresh highlighter and parse give.
     @Test func editingThenReparsingConverges() {
         let highlighter = Highlighter(grammar: relexGrammar, text: "f(a) /re/\nx")
