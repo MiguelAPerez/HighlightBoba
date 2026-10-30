@@ -1,0 +1,64 @@
+Setext heading
+==============
+^^^^^^^^^^^^^^ markup.heading
+Second level
+------------
+^^^^^^^^^^^^ punctuation
+![alt text](img.png) and [ref link][id] and [collapsed][]
+          ^^ punctuation
+            ^^^^^^^ markup.link
+                   ^ punctuation
+                                  ^^ punctuation
+                                    ^^ markup.link
+                                      ^ punctuation
+                                                      ^^^ punctuation
+
+[id]: https://example.com "Title"
+^ punctuation
+   ^^ punctuation
+      ^^^^^^^^^^^^^^^^^^^ markup.link
+                         ^^^^^^^^ string.quoted
+| Col A | Col **B** |
+              ^^^^^ markup.bold
+|-------|:---------:|
+| `x`   | ~~gone~~  |
+  ^^^ markup.raw
+- [ ] todo with *emphasis*
+^ punctuation
+                ^^^^^^^^^^ markup.italic
+- [x] done
+^ punctuation
+  - nested `code`
+  ^ punctuation
+           ^^^^^^ markup.raw
+    indented continuation
+
+    indented code block **not bold**
+                        ^^^^^^^^^^^^ markup.bold
+<div class="note">*raw html*</div>
+still *raw* until a blank line
+
+Line with trailing spaces for a break
+and a backslash break\
+Footnote ref[^1] and snake_case_name and 3*4*5.
+                                          ^^^ markup.italic
+[^1]: The note.
+**bold with *nested italic* inside** and ***both***
+^^^^^^^^^^^^ markup.bold
+            ^^^^^^^^^^^^^^^ markup.italic
+                           ^^^^^^^^^ markup.bold
+                                         ^^ markup.bold
+                                           ^^^^^^ markup.italic
+                                                 ^^ markup.bold
+Not *closed and not **closed
+    ^^^^^^^^^^^^^^^^^^^^^^^^ markup.italic
+`` code with ` tick `` then `unclosed
+^^^^^^^^^^^^^^^^^^^^^^ markup.raw
+                            ^^^^^^^^^ markup.raw
+&amp; &copy; entity
+<!-- comment
+with *no* emphasis -->
+
+after the comment *italic*
+                  ^^^^^^^^ markup.italic
+

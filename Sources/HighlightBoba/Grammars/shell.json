@@ -159,6 +159,19 @@
         },
         {
           "match": {
+            "seq": [
+              {
+                "literal": "\\"
+              },
+              {
+                "class": "[^\\r\\n]"
+              }
+            ]
+          },
+          "scope": "constant.character.escape"
+        },
+        {
+          "match": {
             "literal": "$'"
           },
           "scope": "string.quoted",

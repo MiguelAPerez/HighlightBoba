@@ -21,6 +21,55 @@
                 "bol": true
               },
               {
+                "literal": "%"
+              },
+              {
+                "repeat": "[^\\r\\n]"
+              }
+            ]
+          },
+          "scope": "meta.preprocessor"
+        },
+        {
+          "match": {
+            "seq": [
+              {
+                "bol": true
+              },
+              {
+                "repeat": "[ \\t]"
+              },
+              {
+                "class": "[?:]"
+              },
+              {
+                "followedBy": {
+                  "anyOf": [
+                    {
+                      "class": "[ \\t]"
+                    },
+                    {
+                      "eol": true
+                    }
+                  ]
+                }
+              }
+            ]
+          },
+          "captures": [
+            null,
+            null,
+            "punctuation",
+            null
+          ]
+        },
+        {
+          "match": {
+            "seq": [
+              {
+                "bol": true
+              },
+              {
                 "anyOf": [
                   {
                     "literal": "---"
@@ -64,8 +113,10 @@
           "match": {
             "seq": [
               {
-                "repeat": "[A-Za-z0-9_./-]",
-                "min": 1
+                "class": "[A-Za-z0-9_./<]"
+              },
+              {
+                "repeat": "[A-Za-z0-9_./< \\t-]"
               },
               {
                 "repeat": "[ \\t]"
@@ -88,6 +139,7 @@
             ]
           },
           "captures": [
+            "support.type.property-name",
             "support.type.property-name",
             null,
             "punctuation",
@@ -333,6 +385,64 @@
           "match": {
             "seq": [
               {
+                "repeat": "[0-9]",
+                "min": 1
+              },
+              {
+                "class": "[-:]"
+              },
+              {
+                "class": "[0-9]"
+              },
+              {
+                "repeat": "[^ \\t\\r\\n,\\[\\]{}#]"
+              }
+            ]
+          },
+          "notAfterWord": true
+        },
+        {
+          "match": {
+            "seq": [
+              {
+                "opt": {
+                  "class": "[-+]"
+                }
+              },
+              {
+                "literal": "."
+              },
+              {
+                "words": [
+                  "inf",
+                  "Inf",
+                  "INF",
+                  "nan",
+                  "NaN",
+                  "NAN"
+                ]
+              },
+              {
+                "followedBy": {
+                  "anyOf": [
+                    {
+                      "class": "[ \\t,\\]}]"
+                    },
+                    {
+                      "eol": true
+                    }
+                  ]
+                }
+              }
+            ]
+          },
+          "scope": "constant.numeric",
+          "notAfter": "[^:\\[{,-]"
+        },
+        {
+          "match": {
+            "seq": [
+              {
                 "opt": {
                   "class": "[-+]"
                 }
@@ -428,7 +538,6 @@
     },
     "doubleString": {
       "scope": "string.quoted",
-      "endsAtEOL": true,
       "rules": [
         {
           "match": {
@@ -453,7 +562,6 @@
     },
     "singleString": {
       "scope": "string.quoted",
-      "endsAtEOL": true,
       "rules": [
         {
           "match": {

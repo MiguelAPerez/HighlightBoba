@@ -1,0 +1,31 @@
+Setext heading
+==============
+Second level
+------------
+![alt text](img.png) and [ref link][id] and [collapsed][]
+
+[id]: https://example.com "Title"
+| Col A | Col **B** |
+|-------|:---------:|
+| `x`   | ~~gone~~  |
+- [ ] todo with *emphasis*
+- [x] done
+  - nested `code`
+    indented continuation
+
+    indented code block **not bold**
+<div class="note">*raw html*</div>
+still *raw* until a blank line
+
+Line with trailing spaces for a break
+and a backslash break\
+Footnote ref[^1] and snake_case_name and 3*4*5.
+[^1]: The note.
+**bold with *nested italic* inside** and ***both***
+Not *closed and not **closed
+`` code with ` tick `` then `unclosed
+&amp; &copy; entity
+<!-- comment
+with *no* emphasis -->
+
+after the comment *italic*

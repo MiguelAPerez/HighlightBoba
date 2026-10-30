@@ -1,0 +1,32 @@
+%YAML 1.2
+--- !config
+? complex key
+: complex value
+nested:
+  - name: a
+    value: 1
+  - name: b
+    items:
+      - x
+      - [y, {z: 1}]
+multi: "double quoted
+  continues here"
+plain multi line
+  scalar continues
+keep: |+
+  trailing newlines kept
+
+strip: >2-
+    indented by two extra
+tag: !custom value
+merge:
+  <<: *anchor
+date: 2026-10-30
+time: 12:30:45
+octal: 0o17
+inf: .inf
+nan: .NaN
+yes: yes
+key with spaces: value
+"key": "value with # not a comment"
+- top level item # comment

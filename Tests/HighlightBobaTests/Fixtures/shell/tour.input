@@ -1,0 +1,23 @@
+#!/bin/sh
+arr=(one "two words" 'three')
+echo "${arr[@]}" "${#arr[@]}" "${name:-default}" "${path//\//-}" "${v^^}"
+case "$1" in
+  start|run) echo go ;;
+  *) echo "usage: $0 {start}" >&2; exit 1 ;;
+esac
+if [[ -n "$x" && $y == *.txt ]]; then :; elif (( n > 3 )); then true; else false; fi
+while read -r line; do printf '%s\n' "$line"; done < input.txt
+until false; do break; done
+diff <(sort a) <(sort b) 2>&1 | tee log >/dev/null
+cmd <<< "here string $var"
+export PATH="$HOME/bin:$PATH" LANG=C
+readonly MAX=10; declare -a list; local -r k=v
+echo "nested $(echo "inner $(date +%s)") done" 'it'\''s' "a\"b" \$HOME
+echo one \
+  two
+x=$((1 + 2 * 3)) y=$(( x << 2 ))
+[ "$a" = "b" ] && echo yes || echo no
+trap 'rm -f "$tmp"' EXIT
+echo $? $$ $! $- $_ ${10} $10
+echo ~/dir ~user/x *.sh {a,b}.txt
+select opt in a b; do break; done

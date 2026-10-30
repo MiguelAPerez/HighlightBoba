@@ -167,6 +167,26 @@
           "match": {
             "seq": [
               {
+                "literal": "]["
+              },
+              {
+                "repeat": "[^\\]\\r\\n]"
+              },
+              {
+                "literal": "]"
+              }
+            ]
+          },
+          "captures": [
+            "punctuation",
+            "markup.link",
+            "punctuation"
+          ]
+        },
+        {
+          "match": {
+            "seq": [
+              {
                 "literal": "**"
               },
               {
@@ -554,7 +574,194 @@
           ]
         },
         {
+          "match": {
+            "seq": [
+              {
+                "bol": true
+              },
+              {
+                "repeat": "[ ]",
+                "max": 3
+              },
+              {
+                "followedBy": {
+                  "anyOf": [
+                    {
+                      "literal": "<!--"
+                    },
+                    {
+                      "seq": [
+                        {
+                          "literal": "<"
+                        },
+                        {
+                          "opt": {
+                            "literal": "/"
+                          }
+                        },
+                        {
+                          "words": [
+                            "address",
+                            "article",
+                            "aside",
+                            "blockquote",
+                            "details",
+                            "dialog",
+                            "div",
+                            "dl",
+                            "fieldset",
+                            "figcaption",
+                            "figure",
+                            "footer",
+                            "form",
+                            "h1",
+                            "h2",
+                            "h3",
+                            "h4",
+                            "h5",
+                            "h6",
+                            "header",
+                            "hr",
+                            "li",
+                            "main",
+                            "nav",
+                            "ol",
+                            "p",
+                            "pre",
+                            "script",
+                            "section",
+                            "style",
+                            "summary",
+                            "table",
+                            "tbody",
+                            "td",
+                            "tfoot",
+                            "th",
+                            "thead",
+                            "tr",
+                            "ul"
+                          ]
+                        }
+                      ]
+                    }
+                  ]
+                }
+              },
+              {
+                "literal": "<"
+              }
+            ]
+          },
+          "push": "htmlBlock"
+        },
+        {
+          "match": {
+            "seq": [
+              {
+                "bol": true
+              },
+              {
+                "repeat": "[ ]",
+                "max": 3
+              },
+              {
+                "literal": "["
+              },
+              {
+                "class": "[^\\]^\\r\\n]"
+              },
+              {
+                "repeat": "[^\\]\\r\\n]"
+              },
+              {
+                "literal": "]:"
+              },
+              {
+                "repeat": "[ \\t]"
+              },
+              {
+                "repeat": "[^ \\t\\r\\n]",
+                "min": 1
+              },
+              {
+                "opt": {
+                  "seq": [
+                    {
+                      "repeat": "[ \\t]",
+                      "min": 1
+                    },
+                    {
+                      "literal": "\""
+                    },
+                    {
+                      "repeat": "[^\"\\r\\n]"
+                    },
+                    {
+                      "literal": "\""
+                    }
+                  ]
+                }
+              }
+            ]
+          },
+          "captures": [
+            null,
+            null,
+            "punctuation",
+            null,
+            null,
+            "punctuation",
+            null,
+            "markup.link",
+            "string.quoted"
+          ]
+        },
+        {
+          "match": {
+            "seq": [
+              {
+                "bol": true
+              },
+              {
+                "repeat": "[ ]",
+                "max": 3
+              },
+              {
+                "repeat": "[=]",
+                "min": 1
+              },
+              {
+                "repeat": "[ \\t]"
+              },
+              {
+                "eol": true
+              }
+            ]
+          },
+          "scope": "markup.heading"
+        },
+        {
           "include": "inline"
+        }
+      ]
+    },
+    "htmlBlock": {
+      "rules": [
+        {
+          "match": {
+            "seq": [
+              {
+                "bol": true
+              },
+              {
+                "repeat": "[ \\t]"
+              },
+              {
+                "eol": true
+              }
+            ]
+          },
+          "pop": true
         }
       ]
     }
