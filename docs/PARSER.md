@@ -36,7 +36,7 @@ let tree = builder.finish()
 
 - **Reading:** `current`, `peek(n)`, `at("text")`, `at(scope:)` and `isAtEnd` only ever see
   significant tokens. `at("->")` also matches a run of adjacent tokens that spell it, since
-  multi-character operators arrive as one-character symbols; trivia between them never matches.
+  multi-character operators arrive as one-character symbols; trivia between them never matches. `at` compares whole tokens, so it never matches part of a longer lexeme, and it never matches trivia (`at(" ")`, `at("//")`).
 - **Trivia:** trivia before a consumed token goes into the node that is open at the time. A node starts
   at its first significant token, so the trivia in front of it stays with its parent.
 - **Left-associative operators:** take a `checkpoint()` before the left operand, then
@@ -46,6 +46,8 @@ let tree = builder.finish()
   is open; using it anywhere else stops the program.
 - **Losslessness:** `finish()` puts every token the parser didn't consume into the root, so walking the
   leaves always gives the text back, even after a parser bug or an early stop.
+
+`TreeBuilder(tokens:text:)` requires tokens that tile the text, as `syntaxTokens` does, and stops the program otherwise.
 
 `SyntaxTree` is immutable and `Sendable`. `SyntaxNode` is a cheap handle that gives `kind`, `range`
 (UTF-16), `text`, `parent`, `children`, `childNodes` and `tokens`. Kinds are names

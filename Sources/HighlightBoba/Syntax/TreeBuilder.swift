@@ -29,6 +29,8 @@ public final class TreeBuilder {
     /// Index into `significant` of the first entry at or after `position`.
     private var cursor = 0
     private var nextFrameID = 1
+    /// Tokens examined by lookahead, for the linearity tests.
+    private(set) var lookaheadSteps = 0
 
     private struct Frame {
         var kind: SyntaxKind
@@ -49,9 +51,16 @@ public final class TreeBuilder {
         let start: Int
     }
 
+    /// `tokens` must tile `text`, as `Highlighter.syntaxTokens` does: in order, no gaps, none empty.
     public init(tokens: [SyntaxToken], text: String) {
         self.tokens = tokens
         units = Array(text.utf16)
+        var expected = 0
+        for token in tokens {
+            precondition(token.location == expected && token.length > 0, "tokens must tile the text: gap, overlap or empty token at \(expected)")
+            expected = token.end
+        }
+        precondition(expected == units.count, "tokens must tile the text: they end at \(expected), the text at \(units.count)")
         significant = tokens.indices.filter { !tokens[$0].isTrivia }
         frames = [Frame(kind: .root, start: 0)]
     }
@@ -66,6 +75,7 @@ public final class TreeBuilder {
     /// The index of the `offset`-th significant token from `position`.
     private func significantIndex(_ offset: Int = 0) -> Int? {
         let slot = cursor + offset
+        lookaheadSteps += 1
         return offset >= 0 && slot < significant.count ? significant[slot] : nil
     }
 
@@ -95,6 +105,7 @@ public final class TreeBuilder {
         while matched < wanted.count {
             guard index < tokens.count, !tokens[index].isTrivia || count == 0 else { return nil }
             let token = tokens[index]
+            lookaheadSteps += 1
             guard matched + token.length <= wanted.count,
                   units[token.location..<token.end].elementsEqual(wanted[matched..<(matched + token.length)]) else { return nil }
             matched += token.length

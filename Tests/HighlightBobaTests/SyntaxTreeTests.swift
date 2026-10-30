@@ -357,22 +357,18 @@ func leafText(_ node: SyntaxNode) -> String { node.tokens.map(node.tree.text(of:
     }
 
     /// Looking ahead over long runs of trivia and many tokens stays linear.
+    /// Asserted on the builder's work counter, not wall time, so it never flakes on a busy runner.
     @Test func lookaheadIsLinear() throws {
         let comments = String(repeating: "// c\n", count: 30_000) + "a"
         let builder = try Self.builder(comments, "javascript")
-        let clock = ContinuousClock()
-        let elapsed = clock.measure {
-            for _ in 0..<30_000 { #expect(builder.at("a")) }
-        }
-        #expect(elapsed < .seconds(1), "30k `at` calls behind 60k trivia tokens took \(elapsed)")
+        for _ in 0..<30_000 { #expect(builder.at("a")) }
+        #expect(builder.lookaheadSteps <= 2 * 30_000, "30k `at` calls behind 60k trivia tokens took \(builder.lookaheadSteps) steps")
 
         let words = try Self.builder(String(repeating: "a ", count: 30_000), "javascript")
-        let scan = clock.measure {
-            var offset = 0
-            while words.peek(offset) != nil { offset += 1 }
-            #expect(offset == 30_000)
-        }
-        #expect(scan < .seconds(1), "peek(n) for every n took \(scan)")
+        var offset = 0
+        while words.peek(offset) != nil { offset += 1 }
+        #expect(offset == 30_000)
+        #expect(words.lookaheadSteps <= 30_001, "peek(n) for every n took \(words.lookaheadSteps) steps")
         _ = builder.finish()
         _ = words.finish()
     }
