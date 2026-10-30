@@ -1,0 +1,22 @@
+<div.x>*is block? no*
+
+<div:x>*is block? no*
+
+<div/>*block*
+
+<div x=1>*block*
+
+*after*
+<p_x>*not block*
+
+<![CDATA[
+*raw cdata*
+]]>
+*after cdata*
+<?php
+*raw php*
+?>
+*after php*
+<!DOCTYPE
+html>
+*after doctype*

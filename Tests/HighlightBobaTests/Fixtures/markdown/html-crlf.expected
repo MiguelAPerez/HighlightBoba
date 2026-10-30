@@ -1,0 +1,10 @@
+<div>
+*raw*
+
+*after*
+^^^^^^^ markup.italic
+<!-- c
+*raw* -->
+*after*
+^^^^^^^ markup.italic
+

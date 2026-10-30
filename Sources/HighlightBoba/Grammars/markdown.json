@@ -601,6 +601,60 @@
                 "max": 3
               },
               {
+                "literal": "<?"
+              }
+            ]
+          },
+          "push": "htmlPI"
+        },
+        {
+          "match": {
+            "seq": [
+              {
+                "bol": true
+              },
+              {
+                "repeat": "[ ]",
+                "max": 3
+              },
+              {
+                "literal": "<![CDATA["
+              }
+            ]
+          },
+          "push": "htmlCdata"
+        },
+        {
+          "match": {
+            "seq": [
+              {
+                "bol": true
+              },
+              {
+                "repeat": "[ ]",
+                "max": 3
+              },
+              {
+                "literal": "<!"
+              },
+              {
+                "class": "[A-Za-z]"
+              }
+            ]
+          },
+          "push": "htmlDecl"
+        },
+        {
+          "match": {
+            "seq": [
+              {
+                "bol": true
+              },
+              {
+                "repeat": "[ ]",
+                "max": 3
+              },
+              {
                 "literal": "<"
               },
               {
@@ -620,8 +674,18 @@
                 ]
               },
               {
-                "notFollowedBy": {
-                  "class": "[-A-Za-z0-9]"
+                "followedBy": {
+                  "anyOf": [
+                    {
+                      "class": "[ \\t>]"
+                    },
+                    {
+                      "literal": "/>"
+                    },
+                    {
+                      "eol": true
+                    }
+                  ]
                 }
               }
             ]
@@ -830,8 +894,18 @@
                 ]
               },
               {
-                "notFollowedBy": {
-                  "class": "[-A-Za-z0-9]"
+                "followedBy": {
+                  "anyOf": [
+                    {
+                      "class": "[ \\t>]"
+                    },
+                    {
+                      "literal": "/>"
+                    },
+                    {
+                      "eol": true
+                    }
+                  ]
                 }
               }
             ]
@@ -1031,6 +1105,57 @@
                   "style",
                   "textarea"
                 ]
+              },
+              {
+                "repeat": "[^\\r\\n]"
+              }
+            ]
+          },
+          "pop": true
+        }
+      ]
+    },
+    "htmlPI": {
+      "rules": [
+        {
+          "match": {
+            "seq": [
+              {
+                "literal": "?>"
+              },
+              {
+                "repeat": "[^\\r\\n]"
+              }
+            ]
+          },
+          "pop": true
+        }
+      ]
+    },
+    "htmlCdata": {
+      "rules": [
+        {
+          "match": {
+            "seq": [
+              {
+                "literal": "]]>"
+              },
+              {
+                "repeat": "[^\\r\\n]"
+              }
+            ]
+          },
+          "pop": true
+        }
+      ]
+    },
+    "htmlDecl": {
+      "rules": [
+        {
+          "match": {
+            "seq": [
+              {
+                "literal": ">"
               },
               {
                 "repeat": "[^\\r\\n]"
