@@ -1,0 +1,17 @@
+function* walk(node, depth = 0) { yield node; }
+async function load({ id, name: label = "x" }, [first, ...rest]) {}
+const get = 1, set = 2, of = [], from = 3;
+let pick = flag ? get : set;
+for (const item of of) total += item;
+const o = { default: 1, if: 2, async: 3, get, of };
+const m = { get size() { return 1; }, set size(v) {}, async *each() {}, run() {} };
+class Box extends Base {
+  static count = 0;
+  #secret = 1;
+  get value() { return this.#secret; }
+  static create(...args) { return new Box(...args); }
+  async() {}
+  static { Box.count++; }
+}
+outer: for (;;) { break outer; }
+const add = (a, b) => a + b, id = x => x, later = async () => {};

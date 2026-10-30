@@ -248,3 +248,42 @@ without looking past it.
 Nesting stops at 64 open nodes, or sooner when less than 160 KB of the thread's stack is left (a
 debug build's frames are several times a release build's). The rest of that construct goes into
 an `error` node and keeps the lexer's colours.
+
+### JavaScript and TypeScript
+
+One parser reads both. The TypeScript dialect adds types, interfaces, enums, namespaces, `declare`,
+generics, `as`/`satisfies`, `!`, access modifiers and decorators; declaration files are the same grammar.
+JSX isn't parsed yet: it will join the re-lex requests below.
+
+**Re-lexing.** Three grammar states exist only for the parser's requests. `regexStart` re-reads a `/`
+where an operand starts as a regex (`if (ok) /x/.test(s)`, where the lexer saw `)`); `divisionStart`
+re-reads a regex the lexer started where an operator belongs as division (`total\n  / count`,
+`` `${a}` / 2 ``, `i++ / 2`); `identifierStart` re-reads a contextual keyword used as a name, because the
+lexer matches `of /` as a keyword and a regex in one step (`const half = of / 2`). TypeScript needs
+no re-lexing for generics: `<` and `>` arrive as one-character symbols, so `f<T>(x)` versus `a < b` is the
+parser's decision alone, and `Map<K, Array<V>>` closes one `>` at a time.
+
+**Lookahead.** Whether `(` starts an arrow function's parameters, and whether `<` starts type
+arguments, is decided by a scan of at most 256 tokens that gives up at anything a parameter list or a
+type can't hold. A parameter list too long for the scan still parses: `(…)` followed by `=>` becomes an
+arrow function after the fact.
+
+**Names** are wrapped in a node of their own, so the queries colour them by role:
+
+| Node | What | Scope |
+|------|------|-------|
+| `function_name`, `method_name` | `function f`, `f() {}` in a class or object | `entity.name.function` |
+| `type_name` | a declared class, interface, type alias, enum, namespace or type parameter | `entity.name.type` |
+| `type_identifier` | a type used in TypeScript (`x: Foo`) | `entity.name.type` |
+| `property_name` | an object key, class field, enum member, interface property, tuple label | `support.type.property-name` |
+| `binding`, `identifier` | a declared name (variable, parameter, import), a name used as a value | `variable.other` |
+| `label` | `outer:` and `break outer` | `variable.other` |
+| `decorator` | `@name`, `@a.b(…)` | `entity.other.attribute` |
+
+A contextual keyword in one of these positions (`get`, `of`, `type`, `async`…) takes the position's
+scope, so `a ? get : set` and `{ default: 1 }` aren't keywords; a capitalised name keeps the lexer's
+`entity.name.type`. In TypeScript, `void` as an operator (`void 0`) is a keyword, and a primitive type's
+name used as a value (`const string = 1`) is a variable.
+
+**Depth.** Constructs nest at most 200 nodes deep (`JSParse.maxDepth`): deeper, the parser records an
+error and stops nesting, so a parse fits a background thread's 512 KB stack even in a debug build.

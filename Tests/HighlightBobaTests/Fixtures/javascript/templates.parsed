@@ -1,0 +1,55 @@
+const s = `Hello ${user.name}, you have ${items.filter(i => { return i.done }).length} done`;
+^^^^^ keyword
+      ^ variable.other
+          ^^^^^^^ string.quoted
+                 ^^ punctuation.section.embedded
+                   ^^^^ variable.other
+                            ^ punctuation.section.embedded
+                             ^^^^^^^^^^^ string.quoted
+                                        ^^ punctuation.section.embedded
+                                          ^^^^^ variable.other
+                                                       ^ variable.other
+                                                              ^^^^^^ keyword
+                                                                     ^ variable.other
+                                                                                     ^ punctuation.section.embedded
+                                                                                      ^^^^^^ string.quoted
+const multi = `line one
+^^^^^ keyword
+      ^^^^^ variable.other
+              ^^^^^^^^^ string.quoted
+  line ${two} and \u00e9 \` still`;
+^^^^^^^ string.quoted
+       ^^ punctuation.section.embedded
+         ^^^ variable.other
+            ^ punctuation.section.embedded
+             ^^^^^ string.quoted
+                  ^^^^^^ constant.character.escape
+                        ^ string.quoted
+                         ^^ constant.character.escape
+                           ^^^^^^^ string.quoted
+const nested = `outer ${`inner ${deep}`} end`;
+^^^^^ keyword
+      ^^^^^^ variable.other
+               ^^^^^^^ string.quoted
+                      ^^ punctuation.section.embedded
+                        ^^^^^^^ string.quoted
+                               ^^ punctuation.section.embedded
+                                 ^^^^ variable.other
+                                     ^ punctuation.section.embedded
+                                      ^ string.quoted
+                                       ^ punctuation.section.embedded
+                                        ^^^^^ string.quoted
+const quote = "it's \"fine\"\n" + 'say \'hi\'';
+^^^^^ keyword
+      ^^^^^ variable.other
+              ^^^^^^ string.quoted
+                    ^^ constant.character.escape
+                      ^^^^ string.quoted
+                          ^^^^ constant.character.escape
+                              ^ string.quoted
+                                  ^^^^^ string.quoted
+                                       ^^ constant.character.escape
+                                         ^^ string.quoted
+                                           ^^ constant.character.escape
+                                             ^ string.quoted
+

@@ -1,0 +1,50 @@
+{
+  "format": 1,
+  "language": "javascript",
+  "queries": [
+    {
+      "in": "decorator",
+      "scope": "entity.other.attribute"
+    },
+    {
+      "in": "function_name",
+      "scope": "entity.name.function"
+    },
+    {
+      "in": "method_name",
+      "scope": "entity.name.function"
+    },
+    {
+      "in": "type_name",
+      "scope": "entity.name.type"
+    },
+    {
+      "in": "property_name",
+      "scope": "support.type.property-name"
+    },
+    {
+      "in": "label",
+      "scope": "variable.other"
+    },
+    {
+      "in": "binding",
+      "kind": "word",
+      "scope": "variable.other"
+    },
+    {
+      "in": "binding",
+      "lexerScope": "keyword",
+      "scope": "variable.other"
+    },
+    {
+      "in": "identifier",
+      "kind": "word",
+      "scope": "variable.other"
+    },
+    {
+      "in": "identifier",
+      "lexerScope": "keyword",
+      "scope": "variable.other"
+    }
+  ]
+}

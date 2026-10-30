@@ -1,0 +1,5 @@
+interface A { x: number y: string }
+type B = ;
+function f(a: , b: string) {}
+class C { m(): { } }
+let ok: number = 1;

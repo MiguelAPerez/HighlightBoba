@@ -1,0 +1,56 @@
+declare module "lib" {
+^^^^^^^ keyword
+        ^^^^^^ keyword
+               ^^^^^ string.quoted
+  export interface Options { verbose?: boolean }
+  ^^^^^^ keyword
+         ^^^^^^^^^ keyword
+                   ^^^^^^^ entity.name.type
+                                       ^^^^^^^ entity.name.type
+  export function run(opts?: Options): Promise<void>;
+  ^^^^^^ keyword
+         ^^^^^^^^ keyword
+                  ^^^ entity.name.function
+                             ^^^^^^^ entity.name.type
+                                       ^^^^^^^ entity.name.type
+                                               ^^^^ entity.name.type
+  export default run;
+  ^^^^^^ keyword
+         ^^^^^^^ keyword
+}
+declare global {
+^^^^^^^ keyword
+  interface Window { app: unknown }
+  ^^^^^^^^^ keyword
+            ^^^^^^ entity.name.type
+                          ^^^^^^^ entity.name.type
+}
+export declare class Client {
+^^^^^^ keyword
+       ^^^^^^^ keyword
+               ^^^^^ keyword
+                     ^^^^^^ entity.name.type
+  private constructor();
+  ^^^^^^^ keyword
+  static connect(url: string): Client;
+  ^^^^^^ keyword
+                      ^^^^^^ entity.name.type
+                               ^^^^^^ entity.name.type
+  on(event: "open" | "close", cb: () => void): this;
+            ^^^^^^ string.quoted
+                     ^^^^^^^ string.quoted
+                                        ^^^^ entity.name.type
+                                               ^^^^ variable.language
+}
+export as namespace Lib;
+^^^^^^ keyword
+       ^^ keyword
+          ^^^^^^^^^ keyword
+                    ^^^ entity.name.type
+import fs = require("fs");
+^^^^^^ keyword
+                    ^^^^ string.quoted
+export = Client;
+^^^^^^ keyword
+         ^^^^^^ entity.name.type
+

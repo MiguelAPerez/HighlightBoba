@@ -1,0 +1,10 @@
+const s = `a
+^^^^^ keyword
+      ^ variable.other
+          ^^ string.quoted
+${b}`;
+^^ punctuation.section.embedded
+  ^ variable.other
+   ^ punctuation.section.embedded
+    ^ string.quoted
+

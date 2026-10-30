@@ -1,0 +1,23 @@
+const ratio = total
+^^^^^ keyword
+  / count / 2;
+  ^^^^^^^^^ string.regexp
+            ^ constant.numeric
+if (ok) /^\d+$/.test(input);
+^^ keyword
+let n = i++ / 2, m = `${a}` / 4;
+^^^ keyword
+            ^^^^^^^^^^^^^^^^^ string.regexp
+                              ^ constant.numeric
+const of = 8, half = of / 2;
+^^^^^ keyword
+      ^^ keyword
+           ^ constant.numeric
+                     ^^ keyword
+                        ^^^^ string.regexp
+while (busy) /x/g.exec(s);
+^^^^^ keyword
+const parts = path.split(/\//), sum = (a) / b;
+^^^^^ keyword
+                         ^^^^ string.regexp
+

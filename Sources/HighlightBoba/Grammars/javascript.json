@@ -471,6 +471,15 @@
         }
       ]
     },
+    "divisionStart": {
+      "rules": [
+        {
+          "match": {
+            "literal": "/"
+          }
+        }
+      ]
+    },
     "doubleString": {
       "scope": "string.quoted",
       "endsAtEOL": true,
@@ -565,6 +574,15 @@
         }
       ]
     },
+    "identifierStart": {
+      "rules": [
+        {
+          "match": {
+            "wordStarting": "[A-Za-z_$]"
+          }
+        }
+      ]
+    },
     "regex": {
       "scope": "string.regexp",
       "endsAtEOL": true,
@@ -623,6 +641,17 @@
             "literal": "]"
           },
           "pop": true
+        }
+      ]
+    },
+    "regexStart": {
+      "rules": [
+        {
+          "match": {
+            "literal": "/"
+          },
+          "scope": "string.regexp",
+          "push": "regex"
         }
       ]
     },

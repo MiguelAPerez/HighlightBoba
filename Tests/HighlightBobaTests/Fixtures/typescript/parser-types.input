@@ -1,0 +1,34 @@
+interface Shape<T extends object = {}> extends Base, Other<T> {
+  readonly id: string;
+  area?(): number;
+  [key: string]: unknown;
+  new (x: number): Shape<T>;
+}
+type Pair<K, V> = [key: K, value?: V];
+type Deep = Map<string, Array<Set<number>>>;
+type Maybe<T> = T extends null | undefined ? never : T;
+type Ro<T> = { readonly [P in keyof T]?: T[P] };
+type Fn = <T>(x: T, ...rest: T[]) => x is T;
+type Tpl = `id-${string}`;
+enum Color { Red = 1, Green, "Blue" }
+const enum Flags { None = 0 }
+namespace App.Core { export const x = 1; }
+declare const VERSION: string;
+declare function greet(name: string): void;
+abstract class Repo<T> implements Store<T> {
+  private readonly items: T[] = [];
+  constructor(protected name: string, public size?: number) { super(); }
+  abstract find(id: string): T | undefined;
+  @memo get count(): number { return this.items.length; }
+  static of<T>(xs: T[]): Repo<T> { return null!; }
+}
+const a = f<string>(x), b = c < d, e = g > (h);
+const v = void 0, k = { void: 1, type: 2, string: 3 };
+let s = x as unknown as string, t = y satisfies Shape<{}>;
+let n = value!.length, shift = bits >> 2 >>> 1;
+function isText(x: unknown): x is string { return typeof x === "string"; }
+function assert(x: unknown): asserts x {}
+const id = <T,>(x: T): T => x;
+let type = 1, declare = 2, readonly = type + declare;
+export type { Shape };
+import type { Config } from "./config";

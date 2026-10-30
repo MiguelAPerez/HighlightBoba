@@ -1,0 +1,233 @@
+import Foundation
+import Testing
+@testable import HighlightBoba
+
+/// The JavaScript/TypeScript parser over the JS and TS fixtures: the parsed highlight of each, the
+/// errors it finds, and that a block reparse is always the whole parse.
+@Suite struct JSParserTests {
+    static let fixtures = Fixture.all().filter { $0.language == "javascript" || $0.language == "typescript" }
+
+    static func parser(_ language: String) -> JSParser {
+        JSParser(dialect: language == "typescript" ? .typescript : .javascript)
+    }
+
+    /// Parses `text`, applies the tree's re-lexing and runs the bundled queries.
+    static func highlight(_ text: String, _ language: String) throws -> (tokens: [HighlightToken], tree: SyntaxTree) {
+        let highlighter = Highlighter(grammar: try Grammar.bundled(language), text: text)
+        let tree = parser(language).parse(highlighter.snapshot).tree
+        _ = highlighter.applyRelexing(of: tree)
+        let queries = try #require(LanguageParsers.queries(for: language))
+        let tokens = try #require(highlighter.tokens(refinedBy: queries.run(on: tree)))
+        return (tokens, tree)
+    }
+
+    static func errors(_ tree: SyntaxTree) -> String {
+        tree.errors.map { "\($0.message) at \(String(decoding: tree.units[$0.range.location..<NSMaxRange($0.range)], as: UTF16.self).debugDescription) (\($0.range.location))" }
+            .joined(separator: "; ")
+    }
+
+    /// `<name>.parsed` beside the lexer's `.expected`: the tokens once the parser and queries ran.
+    @Test(arguments: fixtures)
+    func parsedFixtureMatches(_ fixture: Fixture) throws {
+        let input = try fixture.input()
+        let (tokens, tree) = try Self.highlight(input, fixture.language)
+        #expect(leafText(tree.root) == input)
+        let actual = CaretRenderer.render(input, tokens: tokens)
+        let url = fixture.inputURL.deletingPathExtension().appendingPathExtension("parsed")
+        let expected = try? String(contentsOf: url, encoding: .utf8)
+        if FixtureTests.record && actual != expected {
+            try actual.write(to: url, atomically: true, encoding: .utf8)
+            return
+        }
+        #expect(expected != nil, "missing \(url.lastPathComponent); draft it with HIGHLIGHT_RECORD=1")
+        #expect(actual == expected, """
+            \(fixture.testDescription) parsed tokens differ.
+            --- expected
+            \(expected ?? "")
+            --- actual
+            \(actual)
+            """)
+        // Fixtures named `parser-…` exist to show what the parser fixes, so the lexer alone must get them wrong.
+        if fixture.name.hasPrefix("parser-") {
+            #expect(actual != fixture.expected(), "\(fixture.testDescription) highlights the same without the parser")
+        }
+    }
+
+    /// The fixtures are valid code, apart from the ones about broken code.
+    @Test(arguments: fixtures)
+    func validFixturesParseWithoutErrors(_ fixture: Fixture) throws {
+        guard !["recovery", "unterminated"].contains(where: fixture.name.contains) else { return }
+        let (_, tree) = try Self.highlight(try fixture.input(), fixture.language)
+        #expect(tree.errors.isEmpty, "\(fixture.testDescription): \(Self.errors(tree))")
+    }
+
+    // MARK: Incremental reparsing
+
+    static let editPieces = ["{", "}", "(", ")", "[", "]", "/", "`", "${", "\"", "'", "<", ">", "=>", "x", " ", "\n",
+                             ";", ",", ":", "?", "a / ", "/re/", "//", "/*", "*/", "function f() {", "class ", "if (x) ",
+                             "type ", "🧋", "of ", "async ", "<T>", "get ", "=", ".", "!", "\\"]
+
+    /// Random edits over every JS and TS fixture, the highlighter sometimes taking the tree's
+    /// re-lexing: the block reparse is always exactly the whole parse.
+    @Test(arguments: fixtures)
+    func incrementalEqualsFullOnRandomEdits(_ fixture: Fixture) throws {
+        let grammar = try Grammar.bundled(fixture.language)
+        let parser = Self.parser(fixture.language)
+        let text = try fixture.input()
+        for seed in UInt64(1)...4 {
+            var rng = SeededGenerator(state: UInt64(text.utf16.count) &* seed)
+            let highlighter = Highlighter(grammar: grammar, text: text)
+            var tree = parser.parse(highlighter.snapshot).tree
+            for step in 0..<50 {
+                for _ in 0..<Int.random(in: 1...2, using: &rng) {
+                    let units = highlighter.units.count
+                    let location = Int.random(in: 0...units, using: &rng)
+                    let length = Int.random(in: 0...min(4, units - location), using: &rng)
+                    let insert = Bool.random(using: &rng) ? Self.editPieces.randomElement(using: &rng)! : ""
+                    let safe = (highlighter.text as NSString).rangeOfComposedCharacterSequences(for: NSRange(location: location, length: length))
+                    highlighter.replaceCharacters(in: safe, with: insert)
+                }
+                let edit = highlighter.edit(since: tree.revision) ?? TextEdit(range: NSRange(), replacementLength: 0)
+                let result = parser.reparse(tree, after: edit, in: highlighter.snapshot)
+                let full = parser.parse(highlighter.snapshot)
+                guard sameParse(result.tree, full.tree) else {
+                    Issue.record("\(fixture.testDescription) seed \(seed) step \(step): \(firstDifference(result.tree, full.tree)) in \(highlighter.text.debugDescription)")
+                    return
+                }
+                #expect(leafText(result.tree.root) == highlighter.text)
+                tree = result.tree
+                if Bool.random(using: &rng) { _ = highlighter.applyRelexing(of: tree) }
+            }
+        }
+    }
+
+    /// A file of many functions and classes: typing inside one body reparses that body, not the file.
+    @Test(arguments: ["javascript", "typescript"])
+    func editsInsideBodiesStayInTheirBlock(_ language: String) throws {
+        let unit = language == "typescript" ? Self.typeScriptUnit : Self.javaScriptUnit
+        let text = (0..<200).map { unit.replacingOccurrences(of: "NAME", with: "f\($0)") }.joined()
+        let parser = Self.parser(language)
+        let highlighter = Highlighter(grammar: try Grammar.bundled(language), text: text)
+        var tree = parser.parse(highlighter.snapshot).tree
+        #expect(tree.errors.isEmpty, "\(Self.errors(tree))")
+        var rng = SeededGenerator(state: 7)
+        var incremental = 0
+        let edits = 60
+        for _ in 0..<edits {
+            let at = (highlighter.text as NSString).range(of: "total", options: [], range: NSRange(location: Int.random(in: 0..<(highlighter.units.count - 400), using: &rng), length: 400)).location
+            guard at != NSNotFound else { continue }
+            highlighter.replaceCharacters(in: NSRange(location: at, length: 0), with: ["x + ", "/re/.test(s) && ", "(a) / 2 + ", "`${v}` + "].randomElement(using: &rng)!)
+            let result = parser.reparse(tree, after: highlighter.edit(since: tree.revision)!, in: highlighter.snapshot)
+            #expect(sameParse(result.tree, parser.parse(highlighter.snapshot).tree))
+            if result.isIncremental {
+                incremental += 1
+                #expect(result.steps * 50 < parser.parse(highlighter.snapshot).steps, "a block reparse should cost the block")
+            }
+            tree = result.tree
+        }
+        #expect(incremental * 4 >= edits * 3, "only \(incremental) of \(edits) edits reparsed just a block")
+    }
+
+    static let javaScriptUnit = """
+    function NAME(items, { limit = 10 } = {}) {
+      let total = 0;
+      for (const item of items) { if (item.ok) total += item.value / limit; }
+      return { total, label: `sum ${total}` };
+    }
+    class NAMEBox extends Base { get size() { const total = 1; return total; } }
+
+    """
+
+    static let typeScriptUnit = """
+    function NAME<T extends object>(items: T[], opts?: { limit: number }): Map<string, T> {
+      let total: number = 0;
+      for (const item of items as Array<T>) { if (item) total += 1 / (opts?.limit ?? 1); }
+      return new Map<string, T>();
+    }
+    interface NAMEShape { readonly id: string; area(): number }
+    class NAMEBox<T> implements Store<T> { private total = 0; get size(): number { const total = 1; return total; } }
+
+    """
+
+    // MARK: Cost
+
+    /// The parser's lookahead per token stays flat as a file grows, on real code and on input
+    /// built to make lookahead scans or recursion go quadratic.
+    @Test(arguments: Self.linearInputs.indices)
+    func parseStaysLinear(_ index: Int) throws {
+        let (language, name, make) = Self.linearInputs[index]
+        let grammar = try Grammar.bundled(language)
+        func steps(_ size: Int) -> Int {
+            let highlighter = Highlighter(grammar: grammar, text: make(size))
+            let builder = TreeBuilder(highlighter: highlighter)
+            Self.parser(language).parse(builder)
+            #expect(leafText(builder.finish().root) == highlighter.text)
+            return builder.lookaheadSteps
+        }
+        let small = steps(10_000)
+        let large = steps(40_000)
+        let ratio = Double(large) / Double(max(small, 1))
+        #expect(ratio < 5, "\(language) \(name): 4× input cost \(String(format: "%.1f", ratio))× the lookahead")
+        #expect(large < 40_000 * 400, "\(language) \(name): \(large) lookahead steps for 40k units")
+    }
+
+    static let linearInputs: [(String, String, @Sendable (Int) -> String)] = [
+        ("javascript", "real code", { String(repeating: javaScriptUnit, count: max(1, $0 / javaScriptUnit.utf16.count)) }),
+        ("typescript", "real code", { String(repeating: typeScriptUnit, count: max(1, $0 / typeScriptUnit.utf16.count)) }),
+        ("javascript", "open parens", { String(repeating: "(", count: $0) }),
+        ("javascript", "parens and braces", { String(repeating: "({", count: $0 / 2) }),
+        ("javascript", "arrow-like lists that never arrow", { String(repeating: "(a, b, c = (d, e)) + ", count: $0 / 21) }),
+        ("javascript", "long parameter lists", { String(repeating: "f((" + String(repeating: "a, ", count: 120) + "b) => 1);\n", count: $0 / 370) }),
+        ("javascript", "slashes", { String(repeating: "a / b /\n", count: $0 / 8) }),
+        ("javascript", "template openers", { String(repeating: "`${", count: $0 / 3) }),
+        ("javascript", "unclosed objects", { String(repeating: "x = { a: [", count: $0 / 10) }),
+        ("typescript", "less-thans", { String(repeating: "a < b < c, ", count: $0 / 11) }),
+        ("typescript", "open angles", { String(repeating: "f<", count: $0 / 2) }),
+        ("typescript", "generic-looking comparisons", { String(repeating: "a < (b, c) > d;\n", count: $0 / 16) }),
+        ("typescript", "nested generics", { "type T = " + String(repeating: "A<", count: $0 / 4) + String(repeating: ">", count: $0 / 4) }),
+        ("typescript", "arrow return types", { String(repeating: "x ? (a) : (b) : c;\n", count: $0 / 19) })
+    ]
+
+    /// Deep nesting stops at the depth limit, so a parse on a background thread's 512 KB stack never overflows.
+    @Test(arguments: ["(", "[", "{", "x = {a:", "!", "<", "f(", "a ? b : ", "`${", "if (x) ", "() => ", "[...", "T<", "type A = ("])
+    func deepNestingFitsASmallStack(_ opener: String) throws {
+        let text = String(repeating: opener, count: 50_000 / opener.utf16.count)
+        let snapshot = Highlighter(grammar: try Grammar.bundled("typescript"), text: text).snapshot
+        let done = DispatchSemaphore(value: 0)
+        let lossless = Locked(false)
+        let thread = Thread {
+            let builder = TreeBuilder(snapshot: snapshot)
+            JSParser(dialect: .typescript).parse(builder)
+            let tree = builder.finish()
+            lossless.withLock { $0 = leafText(tree.root) == text }
+            done.signal()
+        }
+        thread.stackSize = 512 * 1024
+        thread.start()
+        done.wait()
+        #expect(lossless.withLock { $0 })
+    }
+
+    // MARK: Registration
+
+    @Test func bothLanguagesAreRegisteredWithTheirQueries() throws {
+        for language in ["javascript", "typescript"] {
+            let parser = try #require(LanguageParsers.parser(for: language) as? JSParser)
+            #expect(parser.dialect == (language == "typescript" ? .typescript : .javascript))
+            #expect(LanguageParsers.queries(for: language)?.language == language)
+        }
+        #expect(LanguageParsers.parser(for: "json") == nil)
+        #expect(LanguageParsers.queries(for: "json") == nil)
+        #expect(Set(["javascript", "typescript"]).isSubset(of: Set(LanguageParsers.bundledQueryNames)))
+    }
+
+    /// The re-lexing a parse asks for reaches the highlighter, through a background parse session too.
+    @MainActor @Test func aParseSessionAppliesTheParsersRelexing() async throws {
+        let highlighter = Highlighter(grammar: try Grammar.bundled("javascript"), text: "const ratio = total\n  / count / 2;\n")
+        #expect(highlighter.tokens.contains { $0.scope == "string.regexp" }, "the lexer alone reads `/ count /` as a regex")
+        let session = ParseSession(highlighter: highlighter, parser: JSParser())
+        session.textDidChange()
+        await session.waitUntilIdle()
+        #expect(!highlighter.tokens.contains { $0.scope == "string.regexp" })
+    }
+}

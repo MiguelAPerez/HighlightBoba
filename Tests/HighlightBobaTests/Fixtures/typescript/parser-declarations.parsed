@@ -1,0 +1,68 @@
+declare module "lib" {
+^^^^^^^ keyword
+        ^^^^^^ keyword
+               ^^^^^ string.quoted
+  export interface Options { verbose?: boolean }
+  ^^^^^^ keyword
+         ^^^^^^^^^ keyword
+                   ^^^^^^^ entity.name.type
+                             ^^^^^^^ support.type.property-name
+                                       ^^^^^^^ entity.name.type
+  export function run(opts?: Options): Promise<void>;
+  ^^^^^^ keyword
+         ^^^^^^^^ keyword
+                  ^^^ entity.name.function
+                      ^^^^ variable.other
+                             ^^^^^^^ entity.name.type
+                                       ^^^^^^^ entity.name.type
+                                               ^^^^ entity.name.type
+  export default run;
+  ^^^^^^ keyword
+         ^^^^^^^ keyword
+                 ^^^ variable.other
+}
+declare global {
+^^^^^^^ keyword
+  interface Window { app: unknown }
+  ^^^^^^^^^ keyword
+            ^^^^^^ entity.name.type
+                     ^^^ support.type.property-name
+                          ^^^^^^^ entity.name.type
+}
+export declare class Client {
+^^^^^^ keyword
+       ^^^^^^^ keyword
+               ^^^^^ keyword
+                     ^^^^^^ entity.name.type
+  private constructor();
+  ^^^^^^^ keyword
+          ^^^^^^^^^^^ entity.name.function
+  static connect(url: string): Client;
+  ^^^^^^ keyword
+         ^^^^^^^ entity.name.function
+                 ^^^ variable.other
+                      ^^^^^^ entity.name.type
+                               ^^^^^^ entity.name.type
+  on(event: "open" | "close", cb: () => void): this;
+  ^^ entity.name.function
+     ^^^^^ variable.other
+            ^^^^^^ string.quoted
+                     ^^^^^^^ string.quoted
+                              ^^ variable.other
+                                        ^^^^ entity.name.type
+                                               ^^^^ variable.language
+}
+export as namespace Lib;
+^^^^^^ keyword
+       ^^ keyword
+          ^^^^^^^^^ keyword
+                    ^^^ entity.name.type
+import fs = require("fs");
+^^^^^^ keyword
+       ^^ variable.other
+            ^^^^^^^ variable.other
+                    ^^^^ string.quoted
+export = Client;
+^^^^^^ keyword
+         ^^^^^^ entity.name.type
+

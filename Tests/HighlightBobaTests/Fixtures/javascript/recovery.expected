@@ -1,0 +1,25 @@
+function ok() { return 1; }
+^^^^^^^^ keyword
+         ^^ entity.name.function
+                ^^^^^^ keyword
+                       ^ constant.numeric
+function broken( { let x = ; }
+^^^^^^^^ keyword
+         ^^^^^^ entity.name.function
+                   ^^^ keyword
+const fine = [1, 2 3];
+^^^^^ keyword
+              ^ constant.numeric
+                 ^ constant.numeric
+                   ^ constant.numeric
+if (x { y(); }
+^^ keyword
+class C { method( { } other() {} }
+^^^^^ keyword
+      ^ entity.name.type
+const after = { a: 1, b: };
+^^^^^ keyword
+                   ^ constant.numeric
+call(a b, c);
+last();
+

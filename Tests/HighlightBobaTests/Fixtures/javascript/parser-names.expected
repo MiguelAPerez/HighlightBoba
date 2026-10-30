@@ -1,0 +1,73 @@
+function* walk(node, depth = 0) { yield node; }
+^^^^^^^^ keyword
+                             ^ constant.numeric
+                                  ^^^^^ keyword
+async function load({ id, name: label = "x" }, [first, ...rest]) {}
+^^^^^ keyword
+      ^^^^^^^^ keyword
+               ^^^^ entity.name.function
+                                        ^^^ string.quoted
+const get = 1, set = 2, of = [], from = 3;
+^^^^^ keyword
+      ^^^ keyword
+            ^ constant.numeric
+               ^^^ keyword
+                     ^ constant.numeric
+                        ^^ keyword
+                                 ^^^^ keyword
+                                        ^ constant.numeric
+let pick = flag ? get : set;
+^^^ keyword
+                        ^^^ keyword
+for (const item of of) total += item;
+^^^ keyword
+     ^^^^^ keyword
+                ^^ keyword
+                   ^^ keyword
+const o = { default: 1, if: 2, async: 3, get, of };
+^^^^^ keyword
+            ^^^^^^^ keyword
+                     ^ constant.numeric
+                            ^ constant.numeric
+                                      ^ constant.numeric
+                                         ^^^ keyword
+                                              ^^ keyword
+const m = { get size() { return 1; }, set size(v) {}, async *each() {}, run() {} };
+^^^^^ keyword
+            ^^^ keyword
+                         ^^^^^^ keyword
+                                ^ constant.numeric
+                                      ^^^ keyword
+                                                      ^^^^^ keyword
+class Box extends Base {
+^^^^^ keyword
+      ^^^ entity.name.type
+          ^^^^^^^ keyword
+                  ^^^^ entity.name.type
+  static count = 0;
+  ^^^^^^ keyword
+                 ^ constant.numeric
+  #secret = 1;
+            ^ constant.numeric
+  get value() { return this.#secret; }
+  ^^^ keyword
+                ^^^^^^ keyword
+                       ^^^^ variable.language
+  static create(...args) { return new Box(...args); }
+  ^^^^^^ keyword
+                           ^^^^^^ keyword
+                                  ^^^ keyword
+                                      ^^^ entity.name.type
+  async() {}
+  ^^^^^ keyword
+  static { Box.count++; }
+  ^^^^^^ keyword
+           ^^^ entity.name.type
+}
+outer: for (;;) { break outer; }
+       ^^^ keyword
+                  ^^^^^ keyword
+const add = (a, b) => a + b, id = x => x, later = async () => {};
+^^^^^ keyword
+                                                  ^^^^^ keyword
+

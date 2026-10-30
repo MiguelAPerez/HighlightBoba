@@ -1,0 +1,20 @@
+interface A { x: number y: string }
+^^^^^^^^^ keyword
+          ^ entity.name.type
+                 ^^^^^^ entity.name.type
+                           ^^^^^^ entity.name.type
+type B = ;
+^^^^ keyword
+     ^ entity.name.type
+function f(a: , b: string) {}
+^^^^^^^^ keyword
+         ^ entity.name.function
+                   ^^^^^^ entity.name.type
+class C { m(): { } }
+^^^^^ keyword
+      ^ entity.name.type
+let ok: number = 1;
+^^^ keyword
+        ^^^^^^ entity.name.type
+                 ^ constant.numeric
+

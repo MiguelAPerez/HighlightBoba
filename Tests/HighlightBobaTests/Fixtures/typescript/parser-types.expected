@@ -1,0 +1,209 @@
+interface Shape<T extends object = {}> extends Base, Other<T> {
+^^^^^^^^^ keyword
+          ^^^^^ entity.name.type
+                ^ entity.name.type
+                  ^^^^^^^ keyword
+                          ^^^^^^ entity.name.type
+                                       ^^^^^^^ keyword
+                                               ^^^^ entity.name.type
+                                                     ^^^^^ entity.name.type
+                                                           ^ entity.name.type
+  readonly id: string;
+  ^^^^^^^^ keyword
+               ^^^^^^ entity.name.type
+  area?(): number;
+           ^^^^^^ entity.name.type
+  [key: string]: unknown;
+        ^^^^^^ entity.name.type
+                 ^^^^^^^ entity.name.type
+  new (x: number): Shape<T>;
+  ^^^ keyword
+          ^^^^^^ entity.name.type
+                   ^^^^^ entity.name.type
+                         ^ entity.name.type
+}
+type Pair<K, V> = [key: K, value?: V];
+^^^^ keyword
+     ^^^^ entity.name.type
+          ^ entity.name.type
+             ^ entity.name.type
+                        ^ entity.name.type
+                                   ^ entity.name.type
+type Deep = Map<string, Array<Set<number>>>;
+^^^^ keyword
+     ^^^^ entity.name.type
+            ^^^ entity.name.type
+                ^^^^^^ entity.name.type
+                        ^^^^^ entity.name.type
+                              ^^^ entity.name.type
+                                  ^^^^^^ entity.name.type
+type Maybe<T> = T extends null | undefined ? never : T;
+^^^^ keyword
+     ^^^^^ entity.name.type
+           ^ entity.name.type
+                ^ entity.name.type
+                  ^^^^^^^ keyword
+                          ^^^^ constant.language
+                                 ^^^^^^^^^ constant.language
+                                             ^^^^^ entity.name.type
+                                                     ^ entity.name.type
+type Ro<T> = { readonly [P in keyof T]?: T[P] };
+^^^^ keyword
+     ^^ entity.name.type
+        ^ entity.name.type
+               ^^^^^^^^ keyword
+                         ^ entity.name.type
+                           ^^ keyword
+                              ^^^^^ keyword
+                                    ^ entity.name.type
+                                         ^ entity.name.type
+                                           ^ entity.name.type
+type Fn = <T>(x: T, ...rest: T[]) => x is T;
+^^^^ keyword
+     ^^ entity.name.type
+           ^ entity.name.type
+                 ^ entity.name.type
+                             ^ entity.name.type
+                                       ^^ keyword
+                                          ^ entity.name.type
+type Tpl = `id-${string}`;
+^^^^ keyword
+     ^^^ entity.name.type
+           ^^^^ string.quoted
+               ^^ punctuation.section.embedded
+                 ^^^^^^ entity.name.type
+                       ^ punctuation.section.embedded
+                        ^ string.quoted
+enum Color { Red = 1, Green, "Blue" }
+^^^^ keyword
+     ^^^^^ entity.name.type
+             ^^^ entity.name.type
+                   ^ constant.numeric
+                      ^^^^^ entity.name.type
+                             ^^^^^^ string.quoted
+const enum Flags { None = 0 }
+^^^^^ keyword
+      ^^^^ keyword
+           ^^^^^ entity.name.type
+                   ^^^^ entity.name.type
+                          ^ constant.numeric
+namespace App.Core { export const x = 1; }
+^^^^^^^^^ keyword
+          ^^^ entity.name.type
+              ^^^^ entity.name.type
+                     ^^^^^^ keyword
+                            ^^^^^ keyword
+                                      ^ constant.numeric
+declare const VERSION: string;
+^^^^^^^ keyword
+        ^^^^^ keyword
+              ^^^^^^^ entity.name.type
+                       ^^^^^^ entity.name.type
+declare function greet(name: string): void;
+^^^^^^^ keyword
+        ^^^^^^^^ keyword
+                 ^^^^^ entity.name.function
+                             ^^^^^^ entity.name.type
+                                      ^^^^ entity.name.type
+abstract class Repo<T> implements Store<T> {
+^^^^^^^^ keyword
+         ^^^^^ keyword
+               ^^^^ entity.name.type
+                    ^ entity.name.type
+                       ^^^^^^^^^^ keyword
+                                  ^^^^^ entity.name.type
+                                        ^ entity.name.type
+  private readonly items: T[] = [];
+  ^^^^^^^ keyword
+          ^^^^^^^^ keyword
+                          ^ entity.name.type
+  constructor(protected name: string, public size?: number) { super(); }
+              ^^^^^^^^^ keyword
+                              ^^^^^^ entity.name.type
+                                      ^^^^^^ keyword
+                                                    ^^^^^^ entity.name.type
+                                                              ^^^^^ variable.language
+  abstract find(id: string): T | undefined;
+  ^^^^^^^^ keyword
+                    ^^^^^^ entity.name.type
+                             ^ entity.name.type
+                                 ^^^^^^^^^ constant.language
+  @memo get count(): number { return this.items.length; }
+  ^^^^^ entity.other.attribute
+        ^^^ keyword
+                     ^^^^^^ entity.name.type
+                              ^^^^^^ keyword
+                                     ^^^^ variable.language
+  static of<T>(xs: T[]): Repo<T> { return null!; }
+  ^^^^^^ keyword
+         ^^ keyword
+            ^ entity.name.type
+                   ^ entity.name.type
+                         ^^^^ entity.name.type
+                              ^ entity.name.type
+                                   ^^^^^^ keyword
+                                          ^^^^ constant.language
+}
+const a = f<string>(x), b = c < d, e = g > (h);
+^^^^^ keyword
+            ^^^^^^ entity.name.type
+const v = void 0, k = { void: 1, type: 2, string: 3 };
+^^^^^ keyword
+          ^^^^ entity.name.type
+               ^ constant.numeric
+                        ^^^^ entity.name.type
+                              ^ constant.numeric
+                                       ^ constant.numeric
+                                          ^^^^^^ entity.name.type
+                                                  ^ constant.numeric
+let s = x as unknown as string, t = y satisfies Shape<{}>;
+^^^ keyword
+          ^^ keyword
+             ^^^^^^^ entity.name.type
+                     ^^ keyword
+                        ^^^^^^ entity.name.type
+                                      ^^^^^^^^^ keyword
+                                                ^^^^^ entity.name.type
+let n = value!.length, shift = bits >> 2 >>> 1;
+^^^ keyword
+                                       ^ constant.numeric
+                                             ^ constant.numeric
+function isText(x: unknown): x is string { return typeof x === "string"; }
+^^^^^^^^ keyword
+         ^^^^^^ entity.name.function
+                   ^^^^^^^ entity.name.type
+                               ^^ keyword
+                                  ^^^^^^ entity.name.type
+                                           ^^^^^^ keyword
+                                                  ^^^^^^ keyword
+                                                               ^^^^^^^^ string.quoted
+function assert(x: unknown): asserts x {}
+^^^^^^^^ keyword
+         ^^^^^^ entity.name.function
+                   ^^^^^^^ entity.name.type
+                             ^^^^^^^ keyword
+const id = <T,>(x: T): T => x;
+^^^^^ keyword
+            ^ entity.name.type
+                   ^ entity.name.type
+                       ^ entity.name.type
+let type = 1, declare = 2, readonly = type + declare;
+^^^ keyword
+    ^^^^ keyword
+           ^ constant.numeric
+              ^^^^^^^ keyword
+                        ^ constant.numeric
+                           ^^^^^^^^ keyword
+                                      ^^^^ keyword
+                                             ^^^^^^^ keyword
+export type { Shape };
+^^^^^^ keyword
+       ^^^^ keyword
+              ^^^^^ entity.name.type
+import type { Config } from "./config";
+^^^^^^ keyword
+       ^^^^ keyword
+              ^^^^^^ entity.name.type
+                       ^^^^ keyword
+                            ^^^^^^^^^^ string.quoted
+

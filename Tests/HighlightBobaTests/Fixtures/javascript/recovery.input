@@ -1,0 +1,8 @@
+function ok() { return 1; }
+function broken( { let x = ; }
+const fine = [1, 2 3];
+if (x { y(); }
+class C { method( { } other() {} }
+const after = { a: 1, b: };
+call(a b, c);
+last();
