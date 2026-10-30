@@ -12,6 +12,32 @@
           "match": {
             "seq": [
               {
+                "literal": "..."
+              },
+              {
+                "repeat": "[ \\t]"
+              },
+              {
+                "words": [
+                  "try",
+                  "await",
+                  "if",
+                  "switch",
+                  "consume"
+                ]
+              }
+            ]
+          },
+          "captures": [
+            null,
+            null,
+            "keyword"
+          ]
+        },
+        {
+          "match": {
+            "seq": [
+              {
                 "literal": "//"
               },
               {
@@ -59,6 +85,108 @@
           "scope": "string.quoted",
           "push": "rawString",
           "remember": 0
+        },
+        {
+          "match": {
+            "seq": [
+              {
+                "repeat": "[#]",
+                "min": 1
+              },
+              {
+                "literal": "/"
+              },
+              {
+                "eol": true
+              }
+            ]
+          },
+          "scope": "string.regexp",
+          "push": "extendedRegexLines",
+          "remember": 0
+        },
+        {
+          "match": {
+            "seq": [
+              {
+                "repeat": "[#]",
+                "min": 1
+              },
+              {
+                "literal": "/"
+              }
+            ]
+          },
+          "scope": "string.regexp",
+          "push": "extendedRegex",
+          "remember": 0
+        },
+        {
+          "match": {
+            "seq": [
+              {
+                "words": [
+                  "return",
+                  "case",
+                  "in",
+                  "try",
+                  "await",
+                  "throw"
+                ]
+              },
+              {
+                "repeat": "[ \\t]",
+                "min": 1
+              },
+              {
+                "literal": "/"
+              },
+              {
+                "notFollowedBy": {
+                  "class": "[ \\t/*]"
+                }
+              }
+            ]
+          },
+          "captures": [
+            "keyword",
+            null,
+            "string.regexp",
+            null
+          ],
+          "push": "regex"
+        },
+        {
+          "match": {
+            "seq": [
+              {
+                "literal": "/"
+              },
+              {
+                "notFollowedBy": {
+                  "class": "[ \\t/*]"
+                }
+              }
+            ]
+          },
+          "scope": "string.regexp",
+          "push": "regex",
+          "notAfter": "[A-Za-z0-9_$)\\]\"'`}]"
+        },
+        {
+          "match": {
+            "seq": [
+              {
+                "literal": "`"
+              },
+              {
+                "wordStarting": "[A-Za-z_]"
+              },
+              {
+                "literal": "`"
+              }
+            ]
+          }
         },
         {
           "match": {
@@ -369,10 +497,14 @@
               "borrowing",
               "consuming",
               "package",
-              "macro"
+              "macro",
+              "infix",
+              "prefix",
+              "postfix"
             ]
           },
-          "scope": "keyword"
+          "scope": "keyword",
+          "notAfter": "[.]"
         },
         {
           "match": {
@@ -609,6 +741,127 @@
             "seq": [
               {
                 "literal": "\"\"\""
+              },
+              {
+                "remembered": true
+              }
+            ]
+          },
+          "pop": true
+        }
+      ]
+    },
+    "regex": {
+      "scope": "string.regexp",
+      "endsAtEOL": true,
+      "rules": [
+        {
+          "match": {
+            "seq": [
+              {
+                "literal": "\\"
+              },
+              {
+                "class": "[^\\r\\n]"
+              }
+            ]
+          }
+        },
+        {
+          "match": {
+            "literal": "["
+          },
+          "push": "regexClass"
+        },
+        {
+          "match": {
+            "literal": "/"
+          },
+          "pop": true
+        }
+      ]
+    },
+    "regexClass": {
+      "scope": "string.regexp",
+      "endsAtEOL": true,
+      "rules": [
+        {
+          "match": {
+            "seq": [
+              {
+                "literal": "\\"
+              },
+              {
+                "class": "[^\\r\\n]"
+              }
+            ]
+          }
+        },
+        {
+          "match": {
+            "literal": "["
+          },
+          "push": "regexClass"
+        },
+        {
+          "match": {
+            "literal": "]"
+          },
+          "pop": true
+        }
+      ]
+    },
+    "extendedRegex": {
+      "scope": "string.regexp",
+      "endsAtEOL": true,
+      "rules": [
+        {
+          "match": {
+            "seq": [
+              {
+                "literal": "\\"
+              },
+              {
+                "class": "[^\\r\\n]"
+              }
+            ]
+          }
+        },
+        {
+          "match": {
+            "seq": [
+              {
+                "literal": "/"
+              },
+              {
+                "remembered": true
+              }
+            ]
+          },
+          "pop": true
+        }
+      ]
+    },
+    "extendedRegexLines": {
+      "scope": "string.regexp",
+      "rules": [
+        {
+          "match": {
+            "seq": [
+              {
+                "literal": "\\"
+              },
+              {
+                "class": "[^\\r\\n]"
+              }
+            ]
+          }
+        },
+        {
+          "match": {
+            "seq": [
+              {
+                "literal": "/"
               },
               {
                 "remembered": true

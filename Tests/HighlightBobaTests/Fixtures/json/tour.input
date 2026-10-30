@@ -1,0 +1,14 @@
+{
+  "name": "pkg",
+  "version": "1.0.0",
+  "count": -12.5e+3,
+  "zero": 0, "neg": -0.0, "exp": 1E10, "e": 1e5, "bad": 1e, "worse": 1e10x,
+  "ok": true, "missing": null, "off": false,
+  "nested": {"array": [1, "two", {"three": [3]}], "empty": {}, "list": []},
+  "escapes": "quote \" slash \/ back \\ uni \u00e9 \ud83e\udd8b tab \t",
+  "bad escape": "\x41 \u12",
+  "url": "https://example.com/a?b=c#d",
+  "key with spaces": "value",
+  "": "empty key",
+  "unicode": "🧋 café"
+}

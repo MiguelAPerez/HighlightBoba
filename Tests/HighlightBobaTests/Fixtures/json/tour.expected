@@ -1,0 +1,126 @@
+{
+^ punctuation
+  "name": "pkg",
+  ^^^^^^ support.type.property-name
+        ^ punctuation
+          ^^^^^ string.quoted
+               ^ punctuation
+  "version": "1.0.0",
+  ^^^^^^^^^ support.type.property-name
+           ^ punctuation
+             ^^^^^^^ string.quoted
+                    ^ punctuation
+  "count": -12.5e+3,
+  ^^^^^^^ support.type.property-name
+         ^ punctuation
+           ^^^^^^^^ constant.numeric
+                   ^ punctuation
+  "zero": 0, "neg": -0.0, "exp": 1E10, "e": 1e5, "bad": 1e, "worse": 1e10x,
+  ^^^^^^ support.type.property-name
+        ^ punctuation
+          ^ constant.numeric
+           ^ punctuation
+             ^^^^^ support.type.property-name
+                  ^ punctuation
+                    ^^^^ constant.numeric
+                        ^ punctuation
+                          ^^^^^ support.type.property-name
+                               ^ punctuation
+                                 ^^^^ constant.numeric
+                                     ^ punctuation
+                                       ^^^ support.type.property-name
+                                          ^ punctuation
+                                            ^^^ constant.numeric
+                                               ^ punctuation
+                                                 ^^^^^ support.type.property-name
+                                                      ^ punctuation
+                                                        ^^ invalid
+                                                          ^ punctuation
+                                                            ^^^^^^^ support.type.property-name
+                                                                   ^ punctuation
+                                                                     ^^^^^ invalid
+                                                                          ^ punctuation
+  "ok": true, "missing": null, "off": false,
+  ^^^^ support.type.property-name
+      ^ punctuation
+        ^^^^ constant.language
+            ^ punctuation
+              ^^^^^^^^^ support.type.property-name
+                       ^ punctuation
+                         ^^^^ constant.language
+                             ^ punctuation
+                               ^^^^^ support.type.property-name
+                                    ^ punctuation
+                                      ^^^^^ constant.language
+                                           ^ punctuation
+  "nested": {"array": [1, "two", {"three": [3]}], "empty": {}, "list": []},
+  ^^^^^^^^ support.type.property-name
+          ^ punctuation
+            ^ punctuation
+             ^^^^^^^ support.type.property-name
+                    ^ punctuation
+                      ^ punctuation
+                       ^ constant.numeric
+                        ^ punctuation
+                          ^^^^^ string.quoted
+                               ^ punctuation
+                                 ^ punctuation
+                                  ^^^^^^^ support.type.property-name
+                                         ^ punctuation
+                                           ^ punctuation
+                                            ^ constant.numeric
+                                             ^^^^ punctuation
+                                                  ^^^^^^^ support.type.property-name
+                                                         ^ punctuation
+                                                           ^^^ punctuation
+                                                               ^^^^^^ support.type.property-name
+                                                                     ^ punctuation
+                                                                       ^^^^ punctuation
+  "escapes": "quote \" slash \/ back \\ uni \u00e9 \ud83e\udd8b tab \t",
+  ^^^^^^^^^ support.type.property-name
+           ^ punctuation
+             ^^^^^^^ string.quoted
+                    ^^ constant.character.escape
+                      ^^^^^^^ string.quoted
+                             ^^ constant.character.escape
+                               ^^^^^^ string.quoted
+                                     ^^ constant.character.escape
+                                       ^^^^^ string.quoted
+                                            ^^^^^^ constant.character.escape
+                                                  ^ string.quoted
+                                                   ^^^^^^^^^^^^ constant.character.escape
+                                                               ^^^^^ string.quoted
+                                                                    ^^ constant.character.escape
+                                                                      ^ string.quoted
+                                                                       ^ punctuation
+  "bad escape": "\x41 \u12",
+  ^^^^^^^^^^^^ support.type.property-name
+              ^ punctuation
+                ^ string.quoted
+                 ^ invalid
+                  ^^^^ string.quoted
+                      ^ invalid
+                       ^^^^ string.quoted
+                           ^ punctuation
+  "url": "https://example.com/a?b=c#d",
+  ^^^^^ support.type.property-name
+       ^ punctuation
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ string.quoted
+                                      ^ punctuation
+  "key with spaces": "value",
+  ^^^^^^^^^^^^^^^^^ support.type.property-name
+                   ^ punctuation
+                     ^^^^^^^ string.quoted
+                            ^ punctuation
+  "": "empty key",
+  ^^ support.type.property-name
+    ^ punctuation
+      ^^^^^^^^^^^ string.quoted
+                 ^ punctuation
+  "unicode": "🧋 café"
+  ^^^^^^^^^ support.type.property-name
+           ^ punctuation
+             ^^^^^^^^ string.quoted
+}
+^ punctuation
+

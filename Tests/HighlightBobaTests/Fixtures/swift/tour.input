@@ -1,0 +1,36 @@
+import SwiftUI
+#if DEBUG && os(iOS)
+@MainActor @Observable final class Model<T: Hashable>: Sendable where T: Codable {
+    @Published private(set) var items: [T] = []
+    nonisolated(unsafe) static var shared: Model?
+    #endif
+    func load(_ id: T, `default`: Int = 0) async throws(MyError) -> some View {
+        guard let x = try? await fetch(id) else { return EmptyView() }
+        let doubled = items.map { $0 }.filter { _ in true }
+        let pattern = /(?<year>\d+)-(?<month>\d+)/
+        let ratio = total / 2 / count
+        let multi = """
+            line \(x) "quoted"
+            """
+        let raw = #"no \(escape) here"#
+        if case .some(let v) = x, v is String { print(v as! String) }
+        defer { print(#file, #line, #function) }
+        return x ?? nil
+    }
+}
+@available(iOS 26, *)
+extension Model: CustomStringConvertible { var description: String { "m" } }
+protocol P { associatedtype A; func f() -> any P }
+enum E: Int { case a = 1, b; indirect case c(E) }
+let closure: (Int) -> Void = { [weak self] value in self?.use(value) }
+precedencegroup Power { associativity: right }
+infix operator **: Power
+struct S { subscript(i: Int) -> Int { get { i } set {} } }
+actor A { consuming func take() {} borrowing func look() {} }
+let r2 = #/a/b/#, r3 = f(/x\/y[/]z/), half = a / 2, q = (b) / c
+let ext = #/
+  (?<n>\d+) # a number
+  /#
+func g() -> Regex<Substring> { return /ab+/ }
+let notRegex = x /y
+let m = Optional.some(1), s = super.init, k = .default

@@ -1,0 +1,22 @@
+const a = [...new Set(xs)];
+^^^^^ keyword
+              ^^^ keyword
+                  ^^^ entity.name.type
+const b = {...await foo(), ...typeof x, ... void 0};
+^^^^^ keyword
+              ^^^^^ keyword
+                              ^^^^^^ keyword
+                                            ^^^^ keyword
+                                                 ^ constant.numeric
+const c = [...xs, ...this.items, ...null];
+^^^^^ keyword
+                     ^^^^ variable.language
+                                    ^^^^ constant.language
+const d = x?.new + x.default + x.class;
+^^^^^ keyword
+f(...delete o.k, ...yield, ...import("m"));
+     ^^^^^^ keyword
+                    ^^^^^ keyword
+                              ^^^^^^ keyword
+                                     ^^^ string.quoted
+

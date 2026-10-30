@@ -1,0 +1,29 @@
+type T = A extends string ? void : never;
+^^^^ keyword
+     ^ entity.name.type
+         ^ entity.name.type
+           ^^^^^^^ keyword
+                   ^^^^^^ entity.name.type
+                            ^^^^ entity.name.type
+                                   ^^^^^ entity.name.type
+type U<X> = X extends () => infer R ? R : void;
+^^^^ keyword
+     ^ entity.name.type
+       ^ entity.name.type
+            ^ entity.name.type
+              ^^^^^^^ keyword
+                            ^^^^^ keyword
+                                  ^ entity.name.type
+                                      ^ entity.name.type
+                                          ^^^^ entity.name.type
+const f = ok ? void 0 : 1;
+^^^^^ keyword
+               ^^^^ entity.name.type
+                    ^ constant.numeric
+                        ^ constant.numeric
+const o = { readonly: 1, type: 2, as: 3 };
+^^^^^ keyword
+                      ^ constant.numeric
+                               ^ constant.numeric
+                                      ^ constant.numeric
+

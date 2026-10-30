@@ -1,0 +1,5 @@
+const a = [...new Set(xs)];
+const b = {...await foo(), ...typeof x, ... void 0};
+const c = [...xs, ...this.items, ...null];
+const d = x?.new + x.default + x.class;
+f(...delete o.k, ...yield, ...import("m"));

@@ -1,0 +1,38 @@
+a = rf"\{x}"
+    ^^^^ string.quoted
+        ^ punctuation.section.embedded
+          ^ punctuation.section.embedded
+           ^ string.quoted
+b = rf"\\{x}"
+    ^^^^^ string.quoted
+         ^ punctuation.section.embedded
+           ^ punctuation.section.embedded
+            ^ string.quoted
+c = rf"\{{x}}"
+    ^^^^ string.quoted
+        ^^ constant.character.escape
+          ^ string.quoted
+           ^^ constant.character.escape
+             ^ string.quoted
+d = rf'path\{name}\{ext}'
+    ^^^^^^^^ string.quoted
+            ^ punctuation.section.embedded
+                 ^ punctuation.section.embedded
+                  ^ string.quoted
+                   ^ punctuation.section.embedded
+                       ^ punctuation.section.embedded
+                        ^ string.quoted
+e = fr"""
+    ^^^^^ string.quoted
+\d \{y}
+^^^^ string.quoted
+    ^ punctuation.section.embedded
+      ^ punctuation.section.embedded
+"""
+^^^ string.quoted
+f = f"\{x}"
+    ^^^ string.quoted
+       ^ punctuation.section.embedded
+         ^ punctuation.section.embedded
+          ^ string.quoted
+
