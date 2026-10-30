@@ -26,7 +26,7 @@ public final class Highlighter {
     /// Counts edits, so a tree parsed from an older text is never applied to a newer one.
     public private(set) var revision = 0
     /// Tells this highlighter's snapshots from another's.
-    private let id = UUID()
+    let id = UUID()
 
     var units: [UInt16] { lexing.units }
     var lines: [Lexing.Line] { lexing.lines }
