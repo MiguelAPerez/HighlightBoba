@@ -155,16 +155,16 @@ public final class TreeBuilder {
 
     /// Whether the next significant token is `text`, or a run of adjacent tokens with no trivia
     /// between them spells it: `->` and `===` arrive as one-character symbols.
-    public func at(_ text: String) -> Bool { tokenCount(spelling: text) != nil }
+    public func at(_ text: String) -> Bool { end(ofSpelling: text) != nil }
 
     /// Whether the next significant token is a lexeme with this scope.
     public func at(scope: String) -> Bool { current?.scope == scope }
 
-    private func tokenCount(spelling text: String) -> Int? {
+    /// Where the tokens spelling `text` end (an index past the last), if they come next.
+    private func end(ofSpelling text: String) -> Int? {
         let wanted = Array(text.utf16)
         guard !wanted.isEmpty, var index = lookahead() else { return nil }
         var matched = 0
-        var count = 0
         while matched < wanted.count {
             guard index < tokenCount else { return nil }
             let token = token(at: index)
@@ -173,10 +173,9 @@ public final class TreeBuilder {
             guard matched + token.length <= wanted.count,
                   units[token.location..<token.end].elementsEqual(wanted[matched..<(matched + token.length)]) else { return nil }
             matched += token.length
-            count += 1
             index += 1
         }
-        return count
+        return index
     }
 
     // MARK: Building
@@ -190,8 +189,8 @@ public final class TreeBuilder {
     /// Adds the tokens spelling `text` if they come next. Returns whether they did.
     @discardableResult
     public func bump(_ text: String) -> Bool {
-        guard let count = tokenCount(spelling: text) else { return false }
-        for _ in 0..<count { bump() }
+        guard let end = end(ofSpelling: text) else { return false }
+        attach(upTo: end)
         return true
     }
 
@@ -263,9 +262,9 @@ public final class TreeBuilder {
     /// Records an error and wraps the next significant token in an `error` node, so the parse moves on.
     public func errorAndBump(_ message: String) {
         error(message)
-        guard lookahead() != nil else { return }
+        guard let index = lookahead() else { return }
         startNode(.error)
-        bump()
+        attach(upTo: index + 1)
         finishNode()
     }
 
@@ -279,8 +278,8 @@ public final class TreeBuilder {
         error(message)
         var open: [String] = []
         var started = false
-        while let token = current {
-            let text = text(of: token)
+        while let index = lookahead() {
+            let text = text(of: token(at: index))
             if open.isEmpty && stop.contains(where: { at($0) }) { break }
             if let closer = Self.pairs[text] {
                 open.append(closer)
@@ -292,7 +291,7 @@ public final class TreeBuilder {
                 startNode(.error)
                 started = true
             }
-            bump()
+            attach(upTo: index + 1)
         }
         if started { finishNode() }
     }

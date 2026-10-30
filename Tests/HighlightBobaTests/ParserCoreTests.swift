@@ -162,6 +162,35 @@ func scoped(_ highlighter: Highlighter) -> [String] {
         #expect(tree.root.childNodes.map(\.range) == [NSRange(location: 2, length: 0)], "a node started after the stop takes nothing")
     }
 
+    /// Taking what a lookahead just found is not more lookahead: with one call to spare, the rest of
+    /// a multi-token operator and the token an error wraps are still consumed.
+    @Test func consumingWithTheLastLookaheadToSpareStillConsumes() {
+        let operatorBuilder = Self.builder("a -> b")
+        operatorBuilder.bump()
+        for _ in 0..<(TreeBuilder.maxStall - 1) { _ = operatorBuilder.at("x") }
+        operatorBuilder.startNode(SyntaxKind("arrow"))
+        #expect(operatorBuilder.bump("->"))
+        operatorBuilder.finishNode()
+        let arrow = operatorBuilder.finish()
+        #expect(sExpression(arrow.root) == "root(a arrow(- >) b)")
+        #expect(arrow.errors.isEmpty)
+
+        let errorBuilder = Self.builder("a ; b")
+        errorBuilder.bump()
+        for _ in 0..<(TreeBuilder.maxStall - 1) { _ = errorBuilder.at("x") }
+        errorBuilder.errorAndBump("unexpected `;`")
+        let wrapped = errorBuilder.finish()
+        #expect(sExpression(wrapped.root) == "root(a error(;) b)")
+        #expect(wrapped.errors.map(\.message) == ["unexpected `;`"])
+
+        let skipBuilder = Self.builder("a ; b")
+        for _ in 0..<(TreeBuilder.maxStall - 1) { _ = skipBuilder.at("x") }
+        skipBuilder.recover("bad", until: [])
+        let skipped = skipBuilder.finish()
+        #expect(sExpression(skipped.root) == "root(error(a ; b))")
+        #expect(skipped.errors.map(\.message) == ["bad"])
+    }
+
     /// Lookahead that keeps consuming never counts as stuck, however much of it there is.
     @Test func progressResetsTheStallCount() {
         let builder = Self.builder(String(repeating: "a ", count: 20_000))
