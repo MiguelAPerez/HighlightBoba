@@ -1,0 +1,13 @@
+a = [1_000, 0xFF, 0o17, 0b1, 1., .5, 1e-9, 2.5E+3j, 3j]
+     ^^^^^ constant.numeric
+            ^^^^ constant.numeric
+                  ^^^^ constant.numeric
+                        ^^^ constant.numeric
+                             ^^ constant.numeric
+                                 ^^ constant.numeric
+                                     ^^^^ constant.numeric
+                                           ^^^^^^^ constant.numeric
+                                                    ^^ constant.numeric
+b = x2 + t.real + 1 .real
+                  ^ constant.numeric
+

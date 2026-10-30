@@ -1,0 +1,14 @@
+let a = [1_000, 0xFF, 0x1.8p-3, 0b1010, 0o17, 2.5e+10, 1e-9]
+^^^ keyword
+         ^^^^^ constant.numeric
+                ^^^^ constant.numeric
+                      ^^^^^^^^ constant.numeric
+                                ^^^^^^ constant.numeric
+                                        ^^^^ constant.numeric
+                                              ^^^^^^^ constant.numeric
+                                                       ^^^^ constant.numeric
+let b = t.0.1 + x2 + 1.description.count
+^^^ keyword
+          ^^^ constant.numeric
+                     ^ constant.numeric
+
