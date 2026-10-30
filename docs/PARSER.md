@@ -51,7 +51,13 @@ let tree = builder.finish()
 
 `SyntaxTree` is immutable and `Sendable`. `SyntaxNode` is a cheap handle that gives `kind`, `range`
 (UTF-16), `text`, `parent`, `children`, `childNodes` and `tokens`. Kinds are names
-(`SyntaxKind("call")`) that each parser declares, and highlight queries will match on those names.
+(`SyntaxKind("call")`) that each parser declares, and highlight queries match on those names.
+
+## Highlight queries
+
+Highlight queries are data that map tree patterns (a node kind, a child's position, its ancestors,
+a token's text or lexer scope) to scopes. They only give existing tokens a new scope, so they never
+re-tokenise. Format v1 is specified in [QUERIES.md](QUERIES.md).
 
 ## Errors and recovery
 
