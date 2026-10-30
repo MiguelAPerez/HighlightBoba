@@ -361,10 +361,12 @@ func leafText(_ node: SyntaxNode) -> String { node.tokens.map(node.tree.text(of:
     @Test func lookaheadIsLinear() throws {
         let comments = String(repeating: "// c\n", count: 30_000) + "a"
         let builder = try Self.builder(comments, "javascript")
+        builder.stallLimit = .max
         for _ in 0..<30_000 { #expect(builder.at("a")) }
         #expect(builder.lookaheadSteps <= 2 * 30_000, "30k `at` calls behind 60k trivia tokens took \(builder.lookaheadSteps) steps")
 
         let words = try Self.builder(String(repeating: "a ", count: 30_000), "javascript")
+        words.stallLimit = .max
         var offset = 0
         while words.peek(offset) != nil { offset += 1 }
         #expect(offset == 30_000)

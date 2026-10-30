@@ -51,7 +51,12 @@ public struct SyntaxToken: Hashable, Sendable {
 extension Highlighter {
     /// The current text as parser tokens. Kept in step with `replaceCharacters`, since it is
     /// built from the same per-line lexer state.
-    public var syntaxTokens: [SyntaxToken] {
+    public var syntaxTokens: [SyntaxToken] { lexing.syntaxTokens(of: lexing.lines) }
+}
+
+extension Lexing {
+    /// `lines` (some of this text's) as parser tokens.
+    func syntaxTokens(of lines: some Collection<Line>) -> [SyntaxToken] {
         let names = Scopes.Table.shared.allNames
         let word = grammar.classes[grammar.wordClass]
         var result: [SyntaxToken] = []
