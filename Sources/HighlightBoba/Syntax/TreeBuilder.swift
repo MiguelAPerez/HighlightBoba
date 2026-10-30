@@ -272,18 +272,21 @@ public final class TreeBuilder {
     /// Records an error, then skips to the next token in `stop` and wraps what it skipped in an
     /// `error` node. It skips brackets whole, so a `stop` token inside `( )`, `[ ]` or `{ }` doesn't
     /// end it, and it never consumes a closing bracket it didn't open: that one belongs to an
-    /// enclosing construct. At a `stop` token, a closing bracket or the end, it skips nothing.
+    /// enclosing construct, so it ends the skipping, whatever is still open inside. A closer for
+    /// an outer bracket it opened closes the ones inside it. At a `stop` token, a closing bracket
+    /// or the end, it skips nothing.
     public func recover(_ message: String, until stop: Set<String>) {
         error(message)
-        var depth = 0
+        var open: [String] = []
         var started = false
         while let token = current {
             let text = text(of: token)
-            if depth == 0 && (Self.closers.contains(text) || stop.contains { at($0) }) { break }
-            if Self.openers.contains(text) {
-                depth += 1
+            if open.isEmpty && stop.contains(where: { at($0) }) { break }
+            if let closer = Self.pairs[text] {
+                open.append(closer)
             } else if Self.closers.contains(text) {
-                depth -= 1
+                guard let index = open.lastIndex(of: text) else { break }
+                open.removeSubrange(index...)
             }
             if !started {
                 startNode(.error)
@@ -294,7 +297,7 @@ public final class TreeBuilder {
         if started { finishNode() }
     }
 
-    private static let openers: Set<String> = ["(", "[", "{"]
+    private static let pairs = ["(": ")", "[": "]", "{": "}"]
     private static let closers: Set<String> = [")", "]", "}"]
 
     // MARK: Re-lexing

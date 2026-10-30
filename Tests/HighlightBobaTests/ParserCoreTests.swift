@@ -101,6 +101,29 @@ func scoped(_ highlighter: Highlighter) -> [String] {
         #expect(sExpression(builder.finish().root) == "root(( list(error(x y)) ) z)")
     }
 
+    /// A closer that doesn't match what `recover` opened belongs to an enclosing construct: taking it
+    /// as the end of the unclosed `(` would swallow the block's `}` and everything up to the next `;`.
+    @Test func recoverLeavesABracketThatDoesNotMatchWhatItOpened() {
+        let builder = Self.builder("{ a ( b } c ; d")
+        builder.bump()
+        builder.recover("bad statement", until: [";"])
+        #expect(builder.at("}"), "the block's `}`, not the end of the unclosed `(`")
+        #expect(sExpression(builder.finish().root) == "root({ error(a ( b) } c ; d)")
+
+        let mixed = Self.builder("x ( y ] z ;")
+        mixed.recover("bad", until: [";"])
+        #expect(mixed.at("]"))
+        #expect(sExpression(mixed.finish().root) == "root(error(x ( y) ] z ;)")
+    }
+
+    /// A closer for something further out in what `recover` opened closes the brackets inside it.
+    @Test func recoverClosesBracketsLeftOpenInsideAnOuterOne() {
+        let builder = Self.builder("a ( [ b ) c ; d")
+        builder.recover("bad", until: [";"])
+        #expect(builder.at(";"), "the `)` closes the `(`, the unclosed `[` with it")
+        #expect(sExpression(builder.finish().root) == "root(error(a ( [ b ) c) ; d)")
+    }
+
     @Test func recoverAtAStopTokenSkipsNothing() {
         for text in ["; a", ") a", ""] {
             let builder = Self.builder(text)

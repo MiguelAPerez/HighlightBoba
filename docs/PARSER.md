@@ -69,7 +69,8 @@ parser was looking at, or an empty range at the end of the text.
 
 `recover` skips `( )`, `[ ]` and `{ }` whole, so a `;` inside brackets doesn't stop it. It also never
 consumes a closing bracket it didn't open, because that bracket belongs to an enclosing construct: a
-block's statement loop gets its `}` back. At a stop token, a closing bracket or the end, it records
+block's statement loop gets its `}` back, even from `{ a ( b }` where the `(` is never closed. (A
+closer for an outer bracket it did open closes the unclosed ones inside it.) At a stop token, a closing bracket or the end, it records
 the error and skips nothing. So a loop that calls it must also handle a stray closing bracket itself,
 usually with `errorAndBump`, or it makes no progress.
 
