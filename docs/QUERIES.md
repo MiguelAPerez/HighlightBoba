@@ -32,8 +32,9 @@ tokens they match and nothing else.
 
 ## Queries
 
-A query matches one token. Every condition it has must hold, and it needs at least one, so no
-query can match every token. Unknown keys are rejected, so a typo fails to load instead of quietly
+A query matches one token. Every condition it has must hold, and it needs at least one that
+narrows it: `notInside`, or an `in` made only of `"*"`, only rule tokens out, so neither is enough
+alone. Unknown keys are rejected, so a typo fails to load instead of quietly
 matching more than it should.
 
 | Key | The token… |
@@ -90,10 +91,12 @@ identifier, becomes a span of its own. Every other position keeps exactly the le
 
 **One node.** `run(on: node)` checks only the tokens under `node`, but still sees the nodes above it,
 so its overrides are exactly the whole-tree run's overrides inside `node.range`. A block reparse can
-re-run the queries for the block it rebuilt and nothing else.
+re-run the queries for the block it rebuilt and nothing else. The result covers only that block:
+to keep the rest of the file's overrides, replace the old ones inside `range` with it.
 
 **Cost.** A run is linear in the size of the tree. It walks the tree once, iteratively, so a deep
 tree can't overflow the stack. A token is checked against the queries that can match its kind, in
-order, and each check is a fixed amount of work: `in` looks at as many ancestors as the query names,
-and `inside` and `notInside` read a count of the open nodes of each kind, however deep the token is.
-There is no regex anywhere.
+order, and no check depends on the size or depth of the tree: `in` looks at as many ancestors as the
+query names, `text` compares against the texts it lists, and `inside` and `notInside` read a count
+of the open nodes of each kind, however deep the token is. `run(on: node)` first walks up from the
+node once, to learn its context. There is no regex anywhere.

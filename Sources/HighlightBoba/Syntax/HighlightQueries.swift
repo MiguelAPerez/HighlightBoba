@@ -105,7 +105,7 @@ public final class HighlightQueries: Sendable {
 
     private init(root: [String: Any]) throws {
         try Self.checkKeys(root, allowed: ["format", "language", "queries"], at: "queries")
-        guard let format = root["format"] as? Int, format == 1 else {
+        guard let format = root["format"] as? NSNumber, CFGetTypeID(format) != CFBooleanGetTypeID(), format == 1 else {
             throw QueryError("queries need \"format\": 1 (got \(root["format"].map { "\($0)" } ?? "none"))")
         }
         guard let language = root["language"] as? String, !language.isEmpty else { throw QueryError("queries need a \"language\"") }
@@ -145,7 +145,6 @@ public final class HighlightQueries: Sendable {
             guard let raw = any as? [String: Any] else { throw QueryError("\(at) must be an object") }
             try Self.checkKeys(raw, allowed: ["scope", "text", "kind", "lexerScope", "in", "index", "after", "before", "inside", "notInside"], at: at)
             guard let scope = raw["scope"] as? String, !scope.isEmpty else { throw QueryError("\(at) needs a \"scope\"") }
-            guard raw.count > 1 else { throw QueryError("\(at) needs at least one condition, or it would match every token") }
 
             var texts: [[UInt16]]?
             if let any = raw["text"] {
@@ -180,6 +179,11 @@ public final class HighlightQueries: Sendable {
             let path = try kinds(raw["in"], key: "in", at: at)
             let inside = try kinds(raw["inside"], key: "inside", at: at)
             let notInside = try kinds(raw["notInside"], key: "notInside", at: at)
+            // `notInside` and an all-`*` path only rule tokens out, so alone they match nearly every token.
+            guard texts != nil || tokenKind != nil || lexerScope != nil || index != nil || raw["after"] != nil
+                    || raw["before"] != nil || !inside.isEmpty || path.contains(where: { $0 != Self.anyKind }) else {
+                throw QueryError("\(at) needs a condition that narrows it (\"notInside\" or a path of \"*\" alone match nearly every token)")
+            }
             queries.append(Query(scope: scope, texts: texts, tokenKind: tokenKind, lexerScope: lexerScope, path: path,
                                  index: index, after: try text(raw["after"], key: "after", at: at),
                                  before: try text(raw["before"], key: "before", at: at), inside: inside, notInside: notInside,
@@ -281,8 +285,10 @@ public final class HighlightQueries: Sendable {
                 steps += 1
                 let query = queries[index]
                 if inError && !query.matchesErrors { continue }
-                if let wanted = query.lexerScope {
-                    guard let scope = token.scope, scope == wanted || (scope.hasPrefix(wanted) && scope.utf16.dropFirst(wanted.utf16.count).first == 46)
+                if let wanted = query.lexerScope?.utf16 {
+                    // Compared in UTF-16 units throughout: `string` matches `string` and `string.quoted`, not `stringy`.
+                    guard let scope = token.scope?.utf16, scope.starts(with: wanted),
+                          scope.count == wanted.count || scope.dropFirst(wanted.count).first == 46
                     else { continue }
                 }
                 if let texts = query.texts {

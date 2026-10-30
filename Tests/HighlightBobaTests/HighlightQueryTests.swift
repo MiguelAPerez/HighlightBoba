@@ -345,6 +345,45 @@ func overridden(_ refinement: ScopeRefinement, in text: String) -> [String] {
         ])
     }
 
+    @Test func applyingHandlesGapsAndStraddles() {
+        // An override over unscoped text before a span, one straddling two spans (a tree whose
+        // re-lexing wasn't applied), and one past the last span.
+        let refinement = ScopeRefinement(range: NSRange(location: 0, length: 12),
+                                         overrides: [ScopeOverride(range: NSRange(location: 0, length: 2), scope: "a"),
+                                                     ScopeOverride(range: NSRange(location: 4, length: 4), scope: "b"),
+                                                     ScopeOverride(range: NSRange(location: 10, length: 2), scope: "c")],
+                                         highlighter: nil, revision: 0, steps: 0)
+        let lexed = [HighlightToken(range: NSRange(location: 3, length: 3), scope: "x"),
+                     HighlightToken(range: NSRange(location: 6, length: 3), scope: "y")]
+        #expect(refinement.apply(to: lexed) == [
+            HighlightToken(range: NSRange(location: 0, length: 2), scope: "a"),
+            HighlightToken(range: NSRange(location: 3, length: 1), scope: "x"),
+            HighlightToken(range: NSRange(location: 4, length: 4), scope: "b"),
+            HighlightToken(range: NSRange(location: 8, length: 1), scope: "y"),
+            HighlightToken(range: NSRange(location: 10, length: 2), scope: "c")
+        ])
+        #expect(refinement.apply(to: []).count == 3)
+    }
+
+    @Test func aSubtreeRunSeesAnErrorAboveIt() throws {
+        // A node inside an error node: run on it alone, its tokens are still in error.
+        let text = "a b"
+        let builder = TreeBuilder(tokens: [SyntaxToken(kind: .word, location: 0, length: 1),
+                                           SyntaxToken(kind: .space, location: 1, length: 1),
+                                           SyntaxToken(kind: .word, location: 2, length: 1)], text: text)
+        builder.startNode(.error)
+        builder.bump()
+        builder.startNode(ToyLanguage.call)
+        builder.bump()
+        builder.finishNode()
+        builder.finishNode()
+        let tree = builder.finish()
+        let call = try #require(tree.root.childNodes.first?.childNodes.first)
+        let set = try queries(#"[{"in":"call","scope":"support.function"},{"inside":["error","call"],"scope":"invalid"}]"#)
+        #expect(overridden(set.run(on: call), in: text) == ["b:invalid"])
+        #expect(set.run(on: call).overrides == set.run(on: tree).overrides)
+    }
+
     @Test func aStaleRefinementIsNotApplied() throws {
         let (highlighter, tree) = ToyLanguage.parse("fn f() {}")
         let refinement = try queries(Self.toyQueries).run(on: tree)
@@ -372,7 +411,10 @@ func overridden(_ refinement: ScopeRefinement, in text: String) -> [String] {
     @Test(arguments: [
         (#"{"format":2,"language":"toy","queries":[]}"#, "format"),
         (#"{"format":1,"queries":[]}"#, "language"),
-        (#"{"format":1,"language":"toy","queries":[{"scope":"keyword"}]}"#, "every token"),
+        (#"{"format":1,"language":"toy","queries":[{"scope":"keyword"}]}"#, "narrows"),
+        (#"{"format":1,"language":"toy","queries":[{"in":["*","*"],"scope":"keyword"}]}"#, "narrows"),
+        (#"{"format":1,"language":"toy","queries":[{"notInside":"error","scope":"keyword"}]}"#, "narrows"),
+        (#"{"format":true,"language":"toy","queries":[]}"#, "format"),
         (#"{"format":1,"language":"toy","queries":[{"text":"a"}]}"#, "scope"),
         (#"{"format":1,"language":"toy","queries":[{"text":"a","scope":"keyword","colour":1}]}"#, "unknown key \"colour\""),
         (#"{"format":1,"language":"toy","queries":[{"kind":"space","scope":"keyword"}]}"#, "\"kind\""),
