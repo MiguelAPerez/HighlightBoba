@@ -1,0 +1,14 @@
+struct Broken {
+    func half(_ x: Int -> Int {
+        let y = x +
+        return y
+    }
+    var name: String = "unterminated
+    func ok() -> Bool { true }
+}
+class Fine: { }
+let list = [1, 2,, 3
+let dict = [1: , 2: 3]
+func next(a: Int, b c d: Int) { if a { } else }
+enum E { case a( }
+let after = Broken().ok()

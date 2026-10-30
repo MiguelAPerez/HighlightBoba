@@ -1,0 +1,21 @@
+{
+  "format": 1,
+  "language": "swift",
+  "queries": [
+    { "in": "typeName", "scope": "entity.name.type" },
+    { "in": "functionName", "scope": "entity.name.function" },
+    { "in": "enumCaseName", "scope": "variable.other.enummember" },
+    { "in": "parameterName", "scope": "variable.parameter" },
+    { "in": "parameterLabel", "scope": "variable.parameter" },
+    { "in": "argumentLabel", "scope": "variable.parameter" },
+    { "in": "identifierPattern", "scope": "variable.other" },
+    { "text": "init", "in": "memberName", "scope": "keyword" },
+    { "text": "init", "in": "implicitMember", "scope": "keyword" },
+    { "kind": "word", "in": "implicitMember", "scope": "variable.other.enummember" },
+    { "kind": "word", "in": ["memberName", "memberExpr", "callExpr"], "index": 0, "scope": "support.function" },
+    { "kind": "word", "in": ["identifier", "callExpr"], "index": 0, "scope": "support.function" },
+    { "lexerScope": "keyword", "in": ["identifier", "callExpr"], "index": 0, "scope": "support.function" },
+    { "lexerScope": "keyword", "in": "identifier", "scope": "variable.other" },
+    { "kind": "word", "in": "typeIdentifier", "scope": "entity.name.type" }
+  ]
+}

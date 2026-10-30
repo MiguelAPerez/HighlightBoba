@@ -1,0 +1,54 @@
+let pair = ((1, 2), (3, 4))
+^^^ keyword
+    ^^^^ variable.other
+             ^ constant.numeric
+                ^ constant.numeric
+                     ^ constant.numeric
+                        ^ constant.numeric
+let a = pair.0.1, b = pair.1.0 + t.0.0
+^^^ keyword
+    ^ variable.other
+             ^ constant.numeric
+               ^ constant.numeric
+                  ^ variable.other
+                           ^ constant.numeric
+                             ^ constant.numeric
+                                   ^ constant.numeric
+                                     ^ constant.numeric
+let c = x!/2, d = y?/2, e = (z!)/2
+^^^ keyword
+    ^ variable.other
+           ^ constant.numeric
+              ^ variable.other
+                     ^ constant.numeric
+                        ^ variable.other
+                                 ^ constant.numeric
+infix operator /+/: AdditionPrecedence
+^^^^^ keyword
+      ^^^^^^^^ keyword
+               ^ entity.name.function
+                ^ entity.name.function
+                 ^ entity.name.function
+                    ^^^^^^^^^^^^^^^^^^ entity.name.type
+prefix operator /-
+^^^^^^ keyword
+       ^^^^^^^^ keyword
+                ^ entity.name.function
+                 ^ entity.name.function
+func /+/ (lhs: Int, rhs: Int) -> Int { lhs + rhs }
+^^^^ keyword
+     ^ entity.name.function
+      ^ entity.name.function
+       ^ entity.name.function
+          ^^^ variable.parameter
+               ^^^ entity.name.type
+                    ^^^ variable.parameter
+                         ^^^ entity.name.type
+                                 ^^^ entity.name.type
+let regex = /ab+c/, after = 1
+^^^ keyword
+    ^^^^^ variable.other
+            ^^^^^^ string.regexp
+                    ^^^^^ variable.other
+                            ^ constant.numeric
+

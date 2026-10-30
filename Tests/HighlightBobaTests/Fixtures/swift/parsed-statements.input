@@ -1,0 +1,59 @@
+func run(values: [Int?], store: Store) async throws {
+    outer: for case let value? in values where value > 0 {
+        guard value != 13 else { continue outer }
+        if value.isMultiple(of: 2), let half = Optional(value / 2) {
+            print(half)
+        } else if case .some(let x) = Optional(value) {
+            print(x)
+        } else {
+            break outer
+        }
+    }
+    for (index, element) in values.enumerated() { _ = (index, element) }
+    var i = 0
+    while i < 3 { i += 1 }
+    repeat { i -= 1 } while i > 0
+    switch store.state {
+    case .idle, .paused(_):
+        fallthrough
+    case let .loading(progress) where progress < 0.5:
+        print("early \(progress, format: .percent)")
+    case .loaded(let items as [Int]), .cached(let items as [Int]):
+        print(items.count)
+    case is Error:
+        break
+    @unknown default:
+        return
+    }
+    do {
+        try await store.save()
+    } catch let error as URLError where error.code == .timedOut {
+        print(error)
+    } catch {
+        throw error
+    }
+    defer { store.close() }
+    let total = values.compactMap { $0 }.reduce(0) { partial, next in partial + next }
+    let sorted = values.sorted { (a: Int?, b: Int?) -> Bool in (a ?? 0) < (b ?? 0) }
+    let task = Task { [weak store, count = values.count] in await store?.load(count) }
+    store.animate(duration: 0.3) {
+        store.opacity = 1
+    } completion: { finished in
+        print(finished)
+    }
+    let path = \Store.items[0].name, root = \.count
+    let lookup: [String: [Int]] = ["a": [1, 2], "b": []], empty: [String: Int] = [:]
+    let mixed = cond ? [1] : [2], tuple = (x: 1, y: (2, 3))
+    let cast = store as? Saving, forced = store as! Saving, check = store is Saving
+    let chained = store.items.first?.name.uppercased() ?? "none"
+    let shifted = 1 << 2 + 3 * 4 - -5, bits = ~0 & 0xFF | 1 ^ 2
+    let range = 0..<10, closed = 0...10, open = ...5, from = 5...
+    let generic = Array<Int>(repeating: 0, count: 3), compare = i < 3 && i > 1
+    let deep = Dictionary<String, Array<Int>>()
+    let value = if i > 0 { "positive" } else { "other" }
+    #warning("check this")
+    #Preview("Card") { CardView(title: "x") }
+    let result = try? JSONDecoder().decode([Item].self, from: data)
+    store.items[keyPath: path].append(contentsOf: values.map(\.description))
+    _ = consume total
+}

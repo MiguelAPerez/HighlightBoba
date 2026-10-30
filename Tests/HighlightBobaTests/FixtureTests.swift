@@ -13,7 +13,7 @@ import Testing
     static func entry(for fixture: Fixture) throws -> FixtureReport.Entry {
         let grammar = try Grammar.bundled(fixture.language)
         let input = try fixture.input()
-        let tokens = Highlighter.highlight(input, grammar: grammar)
+        let tokens = LanguageSupport.highlight(input, grammar: grammar)
         return FixtureReport.Entry(fixture: fixture, input: input, tokens: tokens,
                                    actual: CaretRenderer.render(input, tokens: tokens), expected: fixture.expected())
     }

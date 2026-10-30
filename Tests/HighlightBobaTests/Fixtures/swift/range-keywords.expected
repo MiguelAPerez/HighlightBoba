@@ -1,24 +1,34 @@
 let a = 0...try f()
 ^^^ keyword
+    ^ variable.other
         ^ constant.numeric
             ^^^ keyword
+                ^ support.function
 let b = 0 ... await g()
 ^^^ keyword
+    ^ variable.other
         ^ constant.numeric
               ^^^^^ keyword
+                    ^ support.function
 let c = ...try f()
 ^^^ keyword
+    ^ variable.other
            ^^^ keyword
+               ^ support.function
 let d = 1..<await n
 ^^^ keyword
+    ^ variable.other
         ^ constant.numeric
             ^^^^^ keyword
 let e = 0...self.n
 ^^^ keyword
+    ^ variable.other
         ^ constant.numeric
             ^^^^ variable.language
 let f = a.try
 ^^^ keyword
+    ^ variable.other
 let g = x.await
 ^^^ keyword
+    ^ variable.other
 

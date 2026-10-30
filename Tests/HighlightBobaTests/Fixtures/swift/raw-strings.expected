@@ -1,15 +1,18 @@
 let a = #"C:\path "quoted" \(not) \#(name)"#
 ^^^ keyword
+    ^ variable.other
         ^^^^^^^^^^^^^^^^^^^^^^^^^^ string.quoted
                                   ^^^ punctuation.section.embedded
                                          ^ punctuation.section.embedded
                                           ^^ string.quoted
 let b = ##"one "# two"## + #"x"#
 ^^^ keyword
+    ^ variable.other
         ^^^^^^^^^^^^^^^^ string.quoted
                            ^^^^^ string.quoted
 let c = #"""
 ^^^ keyword
+    ^ variable.other
         ^^^^ string.quoted
     raw "multi" \#n line
 ^^^^^^^^^^^^^^^^ string.quoted
