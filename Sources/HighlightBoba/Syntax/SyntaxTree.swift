@@ -42,18 +42,42 @@ public final class SyntaxTree: Sendable {
     /// The highlighter and revision the parse's snapshot came from.
     let highlighter: UUID?
     let revision: Int
+    /// Every re-lex request that re-scanned, accepted or not, in the order made: an incremental
+    /// reparse checks that none outside the block depended on the edited text.
+    let relexLog: [RelexRequest]
+    /// The most lookahead with nothing consumed at any point of the parse. Exact for a full parse,
+    /// an upper bound after an incremental one.
+    let maxStall: Int
 
-    struct RawNode: Sendable {
+    struct RawNode: Equatable, Sendable {
         var kind: SyntaxKind
         var start: Int
         var end: Int
         var childStart: Int
         var childCount: Int
         var parent: Int
+        /// What a block reparse needs to rerun this node's parse alone: `depth` when it was started,
+        /// how far lookahead had read by then, and the slices of `errors` and `relexLog` made while
+        /// it was open (`firstError` is -1 for a node started at a checkpoint, which wraps earlier work).
+        var depth: Int
+        var lookedTo: Int
+        var firstError: Int
+        var errorEnd: Int
+        var firstRelex: Int
+        var relexEnd: Int
+    }
+
+    /// One `TreeBuilder.relex(as:)` that re-scanned: at `location`, from the start of its line to
+    /// `scanEnd`, spending `scanEnd - lineStart` of the budget.
+    struct RelexRequest: Equatable, Sendable {
+        var location: Int
+        var lineStart: Int
+        var scanEnd: Int
+        var cost: Int { scanEnd - lineStart }
     }
 
     init(tokens: [SyntaxToken], units: [UInt16], nodes: [RawNode], children: [Int32], errors: [SyntaxError],
-         lexing: Lexing?, highlighter: UUID?, revision: Int) {
+         lexing: Lexing?, highlighter: UUID?, revision: Int, relexLog: [RelexRequest], maxStall: Int) {
         self.tokens = tokens
         self.units = units
         self.nodes = nodes
@@ -62,7 +86,26 @@ public final class SyntaxTree: Sendable {
         self.lexing = lexing
         self.highlighter = highlighter
         self.revision = revision
+        self.relexLog = relexLog
+        self.maxStall = maxStall
     }
+
+    /// Budget the parse's re-lex requests spent.
+    var relexSpent: Int { relexLog.reduce(0) { $0 + $1.cost } }
+
+    /// The first (or last) token under node `index`, if it has any.
+    func leaf(of index: Int, last: Bool) -> Int? {
+        var node = nodes[index]
+        while node.childCount > 0 {
+            let child = children[last ? node.childStart + node.childCount - 1 : node.childStart]
+            if child >= 0 { return Int(child) }
+            node = nodes[Int(~child)]
+        }
+        return nil
+    }
+
+    /// The text version this tree was parsed from: compare with `Highlighter.revision`.
+    public var textRevision: Int { revision }
 
     /// Built bottom-up, so the root is the last node.
     public var root: SyntaxNode { SyntaxNode(tree: self, index: nodes.count - 1) }

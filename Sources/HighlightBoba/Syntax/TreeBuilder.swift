@@ -36,6 +36,22 @@ public final class TreeBuilder {
     /// Lookahead since a significant token was last consumed.
     private var stall = 0
     private var stalled = false
+    /// The most `stall` reached, for an incremental reparse to bound the stall at a block's start.
+    private(set) var maxStall = 0
+    /// `maxStall` when the first significant token was consumed.
+    private var stallBeforeFirstConsume: Int?
+    /// Where lookahead has read to so far (a UTF-16 offset), recorded on each node started.
+    private var lookedTo = 0
+    /// The task this parse runs in was cancelled: the builder reads as at the end.
+    private(set) var isCancelled = false
+    private var cancellationChecks = 0
+    /// Set when reparsing one block: its tokens are all the builder has.
+    private let window: Window?
+    /// The window parse read past its end, or re-lexed beyond its last line: its tree can't be used.
+    private(set) var leftWindow = false
+    /// `depth` of the block being reparsed, so a parser's nesting limit sees what a full parse would.
+    private let depthBase: Int
+    private var relexLog: [SyntaxTree.RelexRequest] = []
     /// `maxStall`, raised by tests that look ahead a long way on purpose.
     var stallLimit = TreeBuilder.maxStall
     private var lexing: Lexing?
@@ -53,6 +69,17 @@ public final class TreeBuilder {
         var start: Int
         var children: [Int32] = []
         var id = 0
+        var depth = 0
+        var lookedTo = 0
+        var firstError = 0
+        var firstRelex = 0
+    }
+
+    /// The block a reparse covers, `start..<end` in the new text, and where its last line ends.
+    struct Window {
+        let start: Int
+        let end: Int
+        let lastLineEnd: Int
     }
 
     /// Where a node may later be started, to wrap what is parsed from here on (`a - b` becoming
@@ -69,7 +96,7 @@ public final class TreeBuilder {
     /// `tokens` must tile `text`, as `Highlighter.syntaxTokens` does: in order, no gaps, none empty.
     /// A builder made this way can't re-lex.
     public convenience init(tokens: [SyntaxToken], text: String) {
-        self.init(tokens: tokens, units: Array(text.utf16), lexing: nil, highlighter: nil, revision: 0)
+        self.init(tokens: tokens, units: Array(text.utf16), lexing: nil, highlighter: nil, revision: 0, window: nil)
     }
 
     /// Parses a snapshot of a highlighter's text, on any thread. Re-lex requests the last parse
@@ -78,7 +105,17 @@ public final class TreeBuilder {
         var lexing = snapshot.lexing
         lexing.clearOverrides()
         self.init(tokens: lexing.syntaxTokens(of: lexing.lines), units: lexing.units, lexing: lexing,
-                  highlighter: snapshot.highlighter, revision: snapshot.revision)
+                  highlighter: snapshot.highlighter, revision: snapshot.revision, window: nil)
+    }
+
+    /// Reparses one block: `tokens` tile `window.start..<window.end` of `lexing`'s text. Lookahead
+    /// past the window's end reads as the end and sets `leftWindow`.
+    convenience init(window: Window, tokens: [SyntaxToken], lexing: Lexing, highlighter: UUID, revision: Int,
+                     depth: Int, lookedTo: Int, relexBudget: Int) {
+        self.init(tokens: tokens, units: lexing.units, lexing: lexing, highlighter: highlighter, revision: revision,
+                  window: window, depthBase: depth)
+        self.lookedTo = lookedTo
+        self.relexBudget = relexBudget
     }
 
     /// Parses `highlighter`'s current text.
@@ -86,14 +123,18 @@ public final class TreeBuilder {
         self.init(snapshot: highlighter.snapshot)
     }
 
-    private init(tokens: [SyntaxToken], units: [UInt16], lexing: Lexing?, highlighter: UUID?, revision: Int) {
+    private init(tokens: [SyntaxToken], units: [UInt16], lexing: Lexing?, highlighter: UUID?, revision: Int,
+                 window: Window?, depthBase: Int = 0) {
         self.units = units
-        var expected = 0
+        var expected = window?.start ?? 0
         for token in tokens {
             precondition(token.location == expected && token.length > 0, "tokens must tile the text: gap, overlap or empty token at \(expected)")
             expected = token.end
         }
-        precondition(expected == units.count, "tokens must tile the text: they end at \(expected), the text at \(units.count)")
+        let end = window?.end ?? units.count
+        precondition(expected == end, "tokens must tile the text: they end at \(expected), the text at \(end)")
+        self.window = window
+        self.depthBase = depthBase
         let reversed = Array(tokens.reversed())
         tail = reversed
         tailSignificant = reversed.indices.filter { !reversed[$0].isTrivia }
@@ -101,15 +142,18 @@ public final class TreeBuilder {
         self.lexing = lexing
         self.highlighter = highlighter
         self.revision = revision
-        relexBudget = 4 * units.count + 4096
+        relexBudget = Self.relexBudget(forLength: units.count)
     }
+
+    /// The re-lex budget of a whole parse of a text this long.
+    static func relexBudget(forLength length: Int) -> Int { 4 * length + 4096 }
 
     /// Every token in order, as re-lexing has left them. Builds the array: O(tokens).
     public var tokens: [SyntaxToken] { head + tail.reversed() }
 
     /// How many nodes are open below the root. A recursive parser checks it to stop nesting
     /// before its own stack runs out.
-    public var depth: Int { frames.count - 1 }
+    public var depth: Int { frames.count - 1 + depthBase }
 
     // MARK: Reading
 
@@ -123,14 +167,23 @@ public final class TreeBuilder {
     private func nextSignificant(_ offset: Int = 0) -> Int? {
         lookaheadSteps += 1
         let slot = tailSignificant.count - 1 - offset
-        guard offset >= 0, slot >= 0 else { return nil }
-        return head.count + (tail.count - 1 - tailSignificant[slot])
+        guard offset >= 0 else { return nil }
+        guard slot >= 0 else {
+            if window != nil { leftWindow = true }
+            return nil
+        }
+        let index = head.count + (tail.count - 1 - tailSignificant[slot])
+        lookedTo = max(lookedTo, token(at: index).end)
+        return index
     }
 
     /// `nextSignificant` on the parser's behalf, which reads as the end once the parser is stuck.
     private func lookahead(_ offset: Int = 0) -> Int? {
-        guard !stalled else { return nil }
+        cancellationChecks += 1
+        if cancellationChecks & 1023 == 0 && Task.isCancelled { isCancelled = true }
+        guard !stalled, !isCancelled else { return nil }
         stall += 1
+        maxStall = max(maxStall, stall)
         guard stall <= stallLimit else {
             error("the parser stopped making progress here")
             stalled = true
@@ -163,10 +216,14 @@ public final class TreeBuilder {
         guard !wanted.isEmpty, var index = lookahead() else { return nil }
         var matched = 0
         while matched < wanted.count {
-            guard index < tokenCount else { return nil }
+            guard index < tokenCount else {
+                if window != nil { leftWindow = true }
+                return nil
+            }
             let token = token(at: index)
             guard !token.isTrivia else { return nil }
             lookaheadSteps += 1
+            lookedTo = max(lookedTo, token.end)
             guard matched + token.length <= wanted.count,
                   units[token.location..<token.end].elementsEqual(wanted[matched..<(matched + token.length)]) else { return nil }
             matched += token.length
@@ -230,7 +287,11 @@ public final class TreeBuilder {
         }
         let wrapped = Array(frames[top].children[first...])
         frames[top].children.removeSubrange(first...)
-        frames.append(makeFrame(kind, start: checkpoint.start, children: wrapped))
+        var frame = makeFrame(kind, start: checkpoint.start, children: wrapped)
+        // Its children were parsed before it was started, so it can't be reparsed as a block.
+        frame.firstError = -1
+        frame.firstRelex = -1
+        frames.append(frame)
     }
 
     /// Ends parsing: every token left goes into the root.
@@ -240,7 +301,33 @@ public final class TreeBuilder {
         let root = frames.removeLast()
         _ = makeNode(Frame(kind: root.kind, start: 0, children: root.children), end: units.count)
         return SyntaxTree(tokens: head, units: units, nodes: nodes, children: pool, errors: errors,
-                          lexing: lexing, highlighter: highlighter, revision: revision)
+                          lexing: lexing, highlighter: highlighter, revision: revision, relexLog: relexLog,
+                          maxStall: maxStall)
+    }
+
+    /// What a window parse made, in the window builder's own numbering: node indices from 0, token
+    /// indices from the window's first token, error indices from 0.
+    struct WindowParse {
+        let tokens: [SyntaxToken]
+        let nodes: [SyntaxTree.RawNode]
+        let children: [Int32]
+        let errors: [SyntaxError]
+        let lexing: Lexing
+        let relexLog: [SyntaxTree.RelexRequest]
+        let relexBudget: Int
+        let maxStall: Int
+        let stallBeforeFirstConsume: Int
+    }
+
+    /// Ends a window parse: `nil` unless the parser made exactly one `kind` node holding every token of
+    /// the window, never read past it, and wasn't stopped or cancelled.
+    func finishWindow(kind: SyntaxKind) -> WindowParse? {
+        precondition(window != nil && frames.count == 1, "finishWindow() needs a window builder with no node open")
+        guard !leftWindow, !stalled, !isCancelled, tail.isEmpty, frames[0].children.count == 1,
+              let only = frames[0].children.first, only < 0, nodes[Int(~only)].kind == kind else { return nil }
+        return WindowParse(tokens: head, nodes: nodes, children: pool, errors: errors, lexing: lexing!,
+                           relexLog: relexLog, relexBudget: relexBudget, maxStall: maxStall,
+                           stallBeforeFirstConsume: stallBeforeFirstConsume ?? maxStall)
     }
 
     // MARK: Recovering
@@ -323,10 +410,18 @@ public final class TreeBuilder {
         let scan = lexing!.rescan(fromLine: first)
         // A refused request has re-scanned too, so it spends budget like an accepted one.
         let end = scan.lines.last?.end ?? location
-        relexBudget -= end - lexing!.lines[first].start
+        let lineStart = lexing!.lines[first].start
+        relexBudget -= end - lineStart
+        relexLog.append(SyntaxTree.RelexRequest(location: location, lineStart: lineStart, scanEnd: end))
         // The re-scanned lines start at the same place, so their tokens up to `location` are the ones already here.
-        let fresh = lexing!.syntaxTokens(of: scan.lines).drop { $0.location < location }
-        guard scan.applied.contains(location), fresh.first?.location == location else {
+        var fresh = lexing!.syntaxTokens(of: scan.lines).drop { $0.location < location }
+        if let window {
+            // A re-lex whose effect runs past the block's last line changes what follows the block,
+            // which a block reparse doesn't redo. Tokens on that line past the window are checked later.
+            fresh = fresh.prefix { $0.location < window.end }
+            if end > window.lastLineEnd || (end > window.end && fresh.last?.end != window.end) { leftWindow = true }
+        }
+        guard !leftWindow, scan.applied.contains(location), fresh.first?.location == location else {
             if let earlier { lexing!.setOverride(at: location, state: earlier) } else { lexing!.removeOverride(at: location) }
             return false
         }
@@ -348,7 +443,8 @@ public final class TreeBuilder {
 
     private func makeFrame(_ kind: SyntaxKind, start: Int, children: [Int32] = []) -> Frame {
         defer { nextFrameID += 1 }
-        return Frame(kind: kind, start: start, children: children, id: nextFrameID)
+        return Frame(kind: kind, start: start, children: children, id: nextFrameID, depth: depth,
+                     lookedTo: lookedTo, firstError: errors.count, firstRelex: relexLog.count)
     }
 
     /// Where the next significant token starts: trivia in front of it is not part of a node.
@@ -368,7 +464,10 @@ public final class TreeBuilder {
             tailSignificant.removeLast()
             consumed = true
         }
-        if consumed { stall = 0 }
+        if consumed {
+            if stallBeforeFirstConsume == nil { stallBeforeFirstConsume = maxStall }
+            stall = 0
+        }
     }
 
     private func makeNode(_ frame: Frame, end explicitEnd: Int? = nil) -> Int {
@@ -378,7 +477,9 @@ public final class TreeBuilder {
         if let first = frame.children.first { start = startOf(first) }
         if let last = frame.children.last { end = endOf(last) }
         nodes.append(SyntaxTree.RawNode(kind: frame.kind, start: start, end: explicitEnd ?? end,
-                                        childStart: pool.count, childCount: frame.children.count, parent: -1))
+                                        childStart: pool.count, childCount: frame.children.count, parent: -1,
+                                        depth: frame.depth, lookedTo: frame.lookedTo, firstError: frame.firstError,
+                                        errorEnd: errors.count, firstRelex: frame.firstRelex, relexEnd: relexLog.count))
         pool.append(contentsOf: frame.children)
         for child in frame.children where child < 0 { nodes[Int(~child)].parent = index }
         return index

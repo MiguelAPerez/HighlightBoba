@@ -137,3 +137,72 @@ let snapshot = highlighter.snapshot
 let tree = await Task.detached { parse(TreeBuilder(snapshot: snapshot)) }.value
 if let changed = highlighter.applyRelexing(of: tree) { recolour(changed) }
 ```
+
+## Incremental reparsing
+
+After an edit, a parser reparses only the smallest block around it, and the result is exactly the
+tree a whole parse would build. A language opts in with `IncrementalParser`:
+
+```swift
+struct SwiftParser: IncrementalParser {
+    var reparseBoundaries: Set<SyntaxKind> { [codeBlock, arrayLiteral] }
+    func parse(_ builder: TreeBuilder) { /* the whole file */ }
+    func parseBlock(_ kind: SyntaxKind, _ builder: TreeBuilder) { /* one `kind` node, from its first token */ }
+}
+
+let result = parser.reparse(oldTree, after: highlighter.edit(since: oldTree.textRevision)!, in: highlighter.snapshot)
+result.tree        // the new tree
+result.changed     // the node that was rebuilt: re-run highlight queries on just this
+```
+
+A **reparse boundary** is a node kind whose parse depends only on its own tokens: a `{ }` body, an
+array literal. `parseBlock` must parse one such node exactly as `parse` would have, whatever is
+around it, and must start it with `startNode(kind)`, not at a checkpoint.
+
+`Highlighter.edit(since:)` folds the edits since a revision into one `TextEdit`: the range it replaced in
+the old text and how long the new text is. It remembers the last 1024 edits.
+
+### When a block is enough
+
+The reparse walks from the innermost node around the edit outwards and takes the first boundary
+where every one of these holds. If none does, it parses the whole text.
+
+- The edit is strictly inside the block: its first and last tokens (`{` and `}`) are untouched and
+  lex the same. Typing just before `{` or just after `}` belongs to the enclosing block.
+- Lookahead before the block started read no further than its first token, so the parse leading up
+  to it decided nothing from the edited text.
+- The block's parse ends exactly at its old last token and never looks past it. Inserting a stray
+  `}` ends the block early, and an extra `[` in a list takes its `]` and reads on, so both fall back. An
+  unclosed `(` that recovery closes at the list's `]` stays inside it.
+- The lexer agrees about what follows: the rest of the block's last line lexes as before, and that
+  line hands the next one the same state. Opening a string that runs past the block falls back.
+- Re-lexing stays inside: the block's own requests re-scan no line past its last, no request made
+  outside it re-scanned the edited text, and the whole parse stays inside its re-lex budget.
+
+Then everything after the block parses as before, so its nodes are moved by the edit's length, not
+rebuilt. The tree stores what the checks need on each node (its depth, how far lookahead had read,
+the errors and re-lex requests made inside it), so they cost the block, not the file.
+
+**Cost.** Parser work is proportional to the block: a one-line edit in a 2,000-block file does
+about 1/1000 of a whole parse's lookahead. Splicing the subtree in copies the tree's flat tables
+and moving the offsets after it is linear in the file, but that is memory work, far cheaper than parsing.
+
+### Off the main thread
+
+`ParseSession` keeps a tree for a highlighter, parsing on a background task:
+
+```swift
+let session = ParseSession(highlighter: highlighter, parser: SwiftParser())
+session.onUpdate = { update in
+    recolour(update.relexed)                   // re-lexing the tree asked for, already applied
+    rerunQueries(on: update.changed)           // the rebuilt block, or the root
+}
+highlighter.replaceCharacters(in: range, with: text)
+session.textDidChange()
+```
+
+`textDidChange()` takes a `Sendable` snapshot, cancels the parse that is running, and starts one
+that covers every edit since the last published tree. The builder notices cancellation within a
+few thousand lookahead steps and stops early. A result is published, on the main actor, only if
+it is the newest parse and the text is still the revision it was parsed from. Anything older is
+dropped, never applied over newer text.

@@ -22,7 +22,7 @@ struct Lexing: Sendable {
     }
 
     /// At `location`, the lexer tries `state`'s rules before the current state's.
-    struct Override: Equatable, Sendable {
+    struct Override: Hashable, Sendable {
         var location: Int
         var state: Int
     }
@@ -68,7 +68,7 @@ struct Lexing: Sendable {
     // MARK: Overrides
 
     /// The first override at or after `location`.
-    private func overrideSlot(atOrAfter location: Int) -> Int {
+    func overrideSlot(atOrAfter location: Int) -> Int {
         var low = 0
         var high = overrides.count
         while low < high {
@@ -98,12 +98,16 @@ struct Lexing: Sendable {
     }
 
     /// Drops every override and re-scans the lines that had one.
-    mutating func clearOverrides() {
-        let old = overrides
-        overrides = []
+    mutating func clearOverrides() { replaceOverrides(with: []) }
+
+    /// Makes `new` (ascending by location) the overrides, re-scanning from each line where they differ.
+    mutating func replaceOverrides(with new: [Override]) {
+        guard new != overrides else { return }
+        let differing = Set(overrides).symmetricDifference(new).map(\.location).sorted()
+        overrides = new
         var scannedTo = 0
-        for override in old {
-            let first = lineIndex(containing: override.location)
+        for location in differing {
+            let first = lineIndex(containing: location)
             if first < scannedTo { continue }
             let scanned = rescan(fromLine: first).lines
             lines.replaceSubrange(first..<(first + scanned.count), with: scanned)
