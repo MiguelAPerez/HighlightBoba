@@ -354,7 +354,8 @@ extension JSParse {
             start(JSKind.importSpecifier)
             if ts && atWord("type") && (isWordLike(tok(1)) || isStringStart(tok(1))) && !atWord("as", 1) { bump() }
             if atWord("as", 1) || isStringStart(cur) {
-                if isStringStart(cur) { string() } else { bump() }
+                // The name the other module exports, then the local binding.
+                if isStringStart(cur) { string() } else { exportedName() }
                 expectWord("as")
                 if isIdentifier() { wrap(JSKind.binding) } else { error("expected a name") }
             } else if isIdentifier() {
@@ -422,6 +423,12 @@ extension JSParse {
         finish()
     }
 
+    /// A name in an import or export specifier: an identifier, or `default` and other reserved
+    /// words, which stay keywords.
+    func exportedName() {
+        if isIdentifier() { wrap(JSKind.identifier) } else { bump() }
+    }
+
     func exportClause() {
         start(JSKind.exportClause)
         bump()
@@ -431,13 +438,13 @@ extension JSParse {
             if isStringStart(cur) {
                 string()
             } else if isWordLike(cur) {
-                if atWord("as", 1) { bump() } else { wrap(JSKind.identifier) }
+                exportedName()
             } else if !atSym(",") {
                 errorAndBump("expected a name")
             }
             if atWord("as") {
                 bump()
-                if isStringStart(cur) { string() } else if isWordLike(cur) { bump() } else { error("expected a name") }
+                if isStringStart(cur) { string() } else if isWordLike(cur) { exportedName() } else { error("expected a name") }
             }
             finish()
             if atSym(",") { bump() } else { break }

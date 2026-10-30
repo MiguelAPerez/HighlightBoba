@@ -230,4 +230,40 @@ import Testing
         await session.waitUntilIdle()
         #expect(!highlighter.tokens.contains { $0.scope == "string.regexp" })
     }
+
+    // MARK: Specific shapes
+
+    /// The kind of the innermost node whose text is exactly `text`, for each place it occurs.
+    static func kinds(of text: String, in tree: SyntaxTree) -> [String] {
+        var found: [NSRange: String] = [:]
+        var stack = [tree.root]
+        while let node = stack.popLast() {
+            if node.text == text { found[node.range] = node.kind.name }
+            stack.append(contentsOf: node.childNodes)
+        }
+        return found.keys.sorted { $0.location < $1.location }.map { found[$0]! }
+    }
+
+    /// Both names of an export specifier are names the queries can colour, as an import's are.
+    @Test func exportSpecifiersWrapBothNames() throws {
+        let text = "export { path as paths, read, x as default };\nimport { readFile as rf, default as d } from \"fs\";\n"
+        let (tokens, tree) = try Self.highlight(text, "javascript")
+        #expect(tree.errors.isEmpty, "\(Self.errors(tree))")
+        #expect(Self.kinds(of: "path", in: tree) == ["identifier"])
+        #expect(Self.kinds(of: "paths", in: tree) == ["identifier"])
+        #expect(Self.kinds(of: "read", in: tree) == ["identifier"])
+        #expect(Self.kinds(of: "readFile", in: tree) == ["identifier"])
+        #expect(Self.kinds(of: "rf", in: tree) == ["binding"])
+        let defaults = tokens.filter { (text as NSString).substring(with: $0.range) == "default" }
+        #expect(defaults.count == 2 && defaults.allSatisfy { $0.scope == "keyword" }, "`default` in a specifier stays a keyword")
+    }
+
+    /// `in` is an operator in a conditional's consequent even in a `for` head: the grammar gives
+    /// that arm `[+In]`; only the test and the alternate inherit the head's `[~In]`.
+    @Test func inIsAnOperatorInAConditionalsConsequentInsideAForHead() throws {
+        let (_, tree) = try Self.highlight("for (ready ? start in end : skip;;) {}\nfor (x = a ? b : c in d) {}\n", "javascript")
+        #expect(tree.errors.isEmpty, "\(Self.errors(tree))")
+        #expect(Self.kinds(of: "start in end", in: tree) == ["binary_expression"])
+        #expect(Self.kinds(of: "for (x = a ? b : c in d) {}", in: tree) == ["for_in_statement"])
+    }
 }

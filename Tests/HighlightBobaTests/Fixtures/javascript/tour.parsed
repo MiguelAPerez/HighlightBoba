@@ -5,6 +5,7 @@
 import fs, { readFile as rf } from "node:fs";
 ^^^^^^ keyword
        ^^ variable.other
+             ^^^^^^^^ variable.other
                          ^^ variable.other
                               ^^^^ keyword
                                    ^^^^^^^^^ string.quoted

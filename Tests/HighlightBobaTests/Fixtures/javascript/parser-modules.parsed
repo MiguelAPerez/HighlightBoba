@@ -1,6 +1,7 @@
 import fs, { readFile as read, default as main } from "node:fs";
 ^^^^^^ keyword
        ^^ variable.other
+             ^^^^^^^^ variable.other
                          ^^^^ variable.other
                                ^^^^^^^ keyword
                                           ^^^^ variable.other
@@ -25,6 +26,8 @@ import "./side-effect.js";
 export { read, path as paths };
 ^^^^^^ keyword
          ^^^^ variable.other
+               ^^^^ variable.other
+                       ^^^^^ variable.other
 export * from "./all.js";
 ^^^^^^ keyword
          ^^^^ keyword
