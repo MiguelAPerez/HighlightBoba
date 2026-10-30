@@ -190,22 +190,20 @@ import Testing
 
     /// Deep nesting stops at the depth limit, so a parse on a background thread's 512 KB stack never overflows.
     @Test(arguments: ["(", "[", "{", "x = {a:", "!", "<", "f(", "a ? b : ", "`${", "if (x) ", "() => ", "[...", "T<", "type A = ("])
-    func deepNestingFitsASmallStack(_ opener: String) throws {
+    func deepNestingFitsASmallStack(_ opener: String) async throws {
         let text = String(repeating: opener, count: 50_000 / opener.utf16.count)
         let snapshot = Highlighter(grammar: try Grammar.bundled("typescript"), text: text).snapshot
-        let done = DispatchSemaphore(value: 0)
-        let lossless = Locked(false)
-        let thread = Thread {
-            let builder = TreeBuilder(snapshot: snapshot)
-            JSParser(dialect: .typescript).parse(builder)
-            let tree = builder.finish()
-            lossless.withLock { $0 = leafText(tree.root) == text }
-            done.signal()
+        // Awaited, not waited on: blocking a concurrency thread here can starve the other tests.
+        let lossless = await withCheckedContinuation { continuation in
+            let thread = Thread {
+                let builder = TreeBuilder(snapshot: snapshot)
+                JSParser(dialect: .typescript).parse(builder)
+                continuation.resume(returning: leafText(builder.finish().root) == text)
+            }
+            thread.stackSize = 512 * 1024
+            thread.start()
         }
-        thread.stackSize = 512 * 1024
-        thread.start()
-        done.wait()
-        #expect(lossless.withLock { $0 })
+        #expect(lossless)
     }
 
     // MARK: Registration
