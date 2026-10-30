@@ -12,6 +12,32 @@
           "match": {
             "seq": [
               {
+                "literal": "..."
+              },
+              {
+                "repeat": "[ \\t]"
+              },
+              {
+                "words": [
+                  "try",
+                  "await",
+                  "if",
+                  "switch",
+                  "consume"
+                ]
+              }
+            ]
+          },
+          "captures": [
+            null,
+            null,
+            "keyword"
+          ]
+        },
+        {
+          "match": {
+            "seq": [
+              {
                 "literal": "//"
               },
               {

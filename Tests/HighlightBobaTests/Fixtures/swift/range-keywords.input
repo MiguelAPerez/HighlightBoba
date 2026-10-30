@@ -1,0 +1,7 @@
+let a = 0...try f()
+let b = 0 ... await g()
+let c = ...try f()
+let d = 1..<await n
+let e = 0...self.n
+let f = a.try
+let g = x.await
