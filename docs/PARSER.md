@@ -102,11 +102,12 @@ the real stack. The lexer re-scans from the start of the line until its state ma
 before, which is usually the same line. The tokens the parser hasn't consumed yet are replaced.
 `relex` returns `false` and changes nothing when:
 
-- the builder has no highlighter,
+- the builder has no highlighter, or the parser is at the end (or stuck),
 - the grammar has no such state,
 - none of the state's rules match at the token,
 - the lexer doesn't start a step there, like the `>` of a `=>` it matched in one step,
-- or the parse has used its budget, about four re-scans of the whole text.
+- or the parse has used its budget, about four re-scans of the whole text. A request that is refused
+  after the lexer looked still counts against it.
 
 The budget keeps a hostile file linear. A real file needs a handful of re-lexes.
 
