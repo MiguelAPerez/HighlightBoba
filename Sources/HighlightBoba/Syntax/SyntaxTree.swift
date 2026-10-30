@@ -9,6 +9,20 @@ public struct SyntaxKind: Hashable, Sendable, CustomStringConvertible {
 
     /// The node every tree has at the top, covering the whole text.
     public static let root = SyntaxKind("root")
+    /// Tokens a parser couldn't fit anywhere, wrapped by `errorAndBump` and `recover`.
+    public static let error = SyntaxKind("error")
+}
+
+/// Something a parser found wrong with the text.
+public struct SyntaxError: Hashable, Sendable {
+    public let message: String
+    /// The significant token the parser was looking at, or an empty range at the end of the text.
+    public let range: NSRange
+
+    public init(message: String, range: NSRange) {
+        self.message = message
+        self.range = range
+    }
 }
 
 /// A lossless syntax tree: every token of the text is a leaf of exactly one node, in order, so
@@ -21,6 +35,15 @@ public final class SyntaxTree: Sendable {
     let nodes: [RawNode]
     /// Each node's children, in order: `>= 0` a token index, `< 0` a node index as `~index`.
     let children: [Int32]
+    /// What the parser found wrong, in the order it found it.
+    public let errors: [SyntaxError]
+    /// The lexing the parse ended with, re-lex requests included, when it came from a highlighter.
+    let lexing: Lexing?
+    /// The highlighter and revision the parse's snapshot came from.
+    let highlighter: UUID?
+    let revision: Int
+    /// Lines whose tokens the parse may have changed from the highlighter's.
+    let relexedLines: [Range<Int>]
 
     struct RawNode: Sendable {
         var kind: SyntaxKind
@@ -31,11 +54,17 @@ public final class SyntaxTree: Sendable {
         var parent: Int
     }
 
-    init(tokens: [SyntaxToken], units: [UInt16], nodes: [RawNode], children: [Int32]) {
+    init(tokens: [SyntaxToken], units: [UInt16], nodes: [RawNode], children: [Int32], errors: [SyntaxError],
+         lexing: Lexing?, highlighter: UUID?, revision: Int, relexedLines: [Range<Int>]) {
         self.tokens = tokens
         self.units = units
         self.nodes = nodes
         self.children = children
+        self.errors = errors
+        self.lexing = lexing
+        self.highlighter = highlighter
+        self.revision = revision
+        self.relexedLines = relexedLines
     }
 
     /// Built bottom-up, so the root is the last node.

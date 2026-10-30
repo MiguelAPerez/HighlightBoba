@@ -20,33 +20,29 @@ public final class Highlighter {
     public let grammar: Grammar
     /// Where embedded grammars (a Markdown fence's language) are looked up.
     public let registry: GrammarRegistry
-    private(set) var units: [UInt16]
-    private(set) var lines: [Line]
+    private(set) var lexing: Lexing
     /// Scanner work done by the last full highlight or edit, for the linearity tests.
     private(set) var lastSteps = 0
+    /// Counts edits, so a tree parsed from an older text is never applied to a newer one.
+    public private(set) var revision = 0
+    /// Tells this highlighter's snapshots from another's.
+    private let id = UUID()
 
-    struct Line: Equatable {
-        var start: Int
-        var contentLength: Int
-        var terminatorLength: Int
-        var tokens: [LineToken]
-        var endStack: [Frame]
-    }
+    var units: [UInt16] { lexing.units }
+    var lines: [Lexing.Line] { lexing.lines }
 
     public init(grammar: Grammar, text: String, registry: GrammarRegistry = .shared) {
         self.grammar = grammar
         self.registry = registry
-        units = Array(text.utf16)
-        lines = []
-        lines = scan(from: 0, stack: initialStack) { _, _ in false }.lines
+        var steps = 0
+        lexing = Lexing(grammar: grammar, registry: registry, units: Array(text.utf16), steps: &steps)
+        lastSteps = steps
     }
 
     /// One-shot highlight of `text`.
     public static func highlight(_ text: String, grammar: Grammar, registry: GrammarRegistry = .shared) -> [HighlightToken] {
         Highlighter(grammar: grammar, text: text, registry: registry).tokens
     }
-
-    private var initialStack: [Frame] { [Frame(state: grammar.initial)] }
 
     public var text: String { String(decoding: units, as: UTF16.self) }
 
@@ -59,6 +55,17 @@ public final class Highlighter {
         }
     }
 
+    /// The current text and its lexing, for a parser to read on any thread.
+    public var snapshot: Snapshot { Snapshot(lexing: lexing, highlighter: id, revision: revision) }
+
+    /// What a parser reads: a copy of the text and its tokens as they were at `revision`.
+    public struct Snapshot: Sendable {
+        let lexing: Lexing
+        let highlighter: UUID
+        public let revision: Int
+        public var text: String { String(decoding: lexing.units, as: UTF16.self) }
+    }
+
     /// Applies an edit and re-highlights only what it affects.
     /// - Returns: the UTF-16 range of the new text whose tokens may have changed.
     @discardableResult
@@ -68,24 +75,29 @@ public final class Highlighter {
         let inserted = Array(string.utf16)
         let delta = inserted.count - range.length
         let oldEditEnd = NSMaxRange(range)
-        units.replaceSubrange(range.location..<oldEditEnd, with: inserted)
+        revision += 1
+        lexing.units.replaceSubrange(range.location..<oldEditEnd, with: inserted)
+        // A re-lex request moves with its text, and goes with it when the edit replaces that text.
+        lexing.overrides = lexing.overrides.compactMap { override in
+            if override.location >= oldEditEnd { return Lexing.Override(location: override.location + delta, state: override.state) }
+            return override.location >= range.location ? nil : override
+        }
 
         // Start one line early: joining "\r" and "\n" or deleting a line break changes the line before.
-        let first = max(0, lineIndex(containing: range.location) - 1)
+        let first = max(0, lexing.lineIndex(containing: range.location) - 1)
         let start = lines[first].start
-        let startStack = first == 0 ? initialStack : lines[first - 1].endStack
 
         var resume: Int?
-        let (scanned, stoppedAt) = scan(from: start, stack: startStack) { newStart, stack in
+        let scan = lexing.scan(from: start, stack: lexing.startStack(ofLine: first)) { newStart, stack in
             let oldStart = newStart - delta
-            guard oldStart >= oldEditEnd, let index = self.lineIndex(startingAt: oldStart), index >= first else { return false }
-            let oldStack = index == 0 ? self.initialStack : self.lines[index - 1].endStack
-            guard oldStack == stack else { return false }
+            guard oldStart >= oldEditEnd, let index = self.lexing.lineIndex(startingAt: oldStart), index >= first else { return false }
+            guard self.lexing.startStack(ofLine: index) == stack else { return false }
             resume = index
             return true
         }
+        lastSteps = scan.steps
 
-        var rebuilt = Array(lines[..<first]) + scanned
+        var rebuilt = Array(lines[..<first]) + scan.lines
         if let resume {
             rebuilt += lines[resume...].map { line in
                 var line = line
@@ -93,48 +105,30 @@ public final class Highlighter {
                 return line
             }
         }
-        lines = rebuilt
-        return NSRange(location: start, length: (stoppedAt ?? units.count) - start)
+        lexing.lines = rebuilt
+        return NSRange(location: start, length: (scan.stoppedAt ?? units.count) - start)
     }
 
-    private func lineIndex(containing location: Int) -> Int {
-        var low = 0
-        var high = lines.count - 1
-        while low < high {
-            let mid = (low + high + 1) / 2
-            if lines[mid].start <= location { low = mid } else { high = mid - 1 }
-        }
-        return low
-    }
-
-    private func lineIndex(startingAt location: Int) -> Int? {
-        let index = lineIndex(containing: location)
-        return lines[index].start == location ? index : nil
-    }
-
-    /// Scans lines from `start` until the text ends or `shouldStop` accepts a line start.
-    private func scan(from start: Int, stack initial: [Frame],
-                      until shouldStop: (Int, [Frame]) -> Bool) -> (lines: [Line], stoppedAt: Int?) {
-        var result: [Line] = []
-        var stack = initial
-        var position = start
-        var steps = 0
-        defer { lastSteps = steps }
-        while true {
-            var end = position
-            while end < units.count && units[end] != 10 && units[end] != 13 { end += 1 }
-            var terminator = 0
-            if end < units.count {
-                terminator = units[end] == 13 && end + 1 < units.count && units[end + 1] == 10 ? 2 : 1
+    /// Takes the re-lexing a parse asked for (`TreeBuilder.relex(as:)`), so the highlighting
+    /// matches the tree. Re-lexing replaces earlier requests: a token the last parse re-lexed and
+    /// this one didn't goes back to the lexer's own reading.
+    /// - Returns: the UTF-16 ranges whose tokens changed, to re-colour; `nil`, with nothing applied,
+    ///   if the text was edited since the parse's snapshot or the tree came from another highlighter's.
+    public func applyRelexing(of tree: SyntaxTree) -> [NSRange]? {
+        guard let parsed = tree.lexing, tree.highlighter == id, tree.revision == revision,
+              parsed.lines.count == lines.count else { return nil }
+        var changed: [NSRange] = []
+        for range in tree.relexedLines {
+            for index in range where parsed.lines[index] != lines[index] {
+                let line = parsed.lines[index]
+                if let last = changed.last, NSMaxRange(last) == line.start {
+                    changed[changed.count - 1].length += line.end - line.start
+                } else {
+                    changed.append(NSRange(location: line.start, length: line.end - line.start))
+                }
             }
-            var scanner = LineScanner(units: units, lineStart: position, limit: end, registry: registry)
-            let tokens = scanner.scan(grammar, stack: &stack)
-            steps += scanner.steps + (end - position) + 1
-            result.append(Line(start: position, contentLength: end - position, terminatorLength: terminator,
-                               tokens: tokens, endStack: stack))
-            if terminator == 0 { return (result, nil) }
-            position = end + terminator
-            if shouldStop(position, stack) { return (result, position) }
         }
+        lexing = parsed
+        return changed
     }
 }

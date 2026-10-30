@@ -167,6 +167,9 @@ public final class Grammar: Sendable {
     let classes: [CharClass]
     let wordClass: Int
 
+    /// The id of the state named `name`, for re-lex requests.
+    func stateID(named name: String) -> Int? { stateNames.firstIndex(of: name) }
+
     /// The deepest the state stack may grow; deeper pushes are ignored so hostile nesting stays bounded.
     static let maxDepth = 128
 

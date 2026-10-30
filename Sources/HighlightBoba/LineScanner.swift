@@ -53,6 +53,13 @@ struct LineScanner {
     private var continuedAt: [Int] = []
     /// Work done, for the linearity tests.
     private(set) var steps = 0
+    /// Re-lex requests on this line, ascending; each is tried at the first step at its location.
+    private let overrides: ArraySlice<Lexing.Override>
+    private var nextOverride: Int
+    /// The locations whose override matched.
+    private(set) var applied: [Int] = []
+    /// A token never merges into the one before it here: a re-lexed token starts its own.
+    private var barrier = -1
 
     /// Deeper embedding (a fence inside a fence inside…) is highlighted by the host only.
     static let maxEmbedDepth = 4
@@ -68,11 +75,14 @@ struct LineScanner {
         }
     }
 
-    init(units: [UInt16], lineStart: Int, limit: Int, registry: GrammarRegistry) {
+    init(units: [UInt16], lineStart: Int, limit: Int, registry: GrammarRegistry,
+         overrides: ArraySlice<Lexing.Override> = []) {
         self.units = units
         self.lineStart = lineStart
         self.limit = limit
         self.registry = registry
+        self.overrides = overrides
+        nextOverride = overrides.startIndex
     }
 
     mutating func scan(_ grammar: Grammar, stack: inout [Frame]) -> [LineToken] {
@@ -153,9 +163,42 @@ struct LineScanner {
     /// Takes one step at `position` and returns where the next starts: past the first rule that
     /// matched, past one character if none did, or at `position` after an empty pop.
     private mutating func step(_ grammar: Grammar, _ stack: inout [Frame], at position: Int, depth: Int) -> Int {
+        if depth == 0 && nextOverride < overrides.endIndex, let forced = override(at: position) {
+            barrier = position
+            if let end = tryRules(of: forced, grammar, &stack, at: position, depth: depth) {
+                applied.append(position)
+                nextOverride += 1
+                return end
+            }
+            barrier = -1
+        }
         let top = stack.count - 1
-        let state = grammar.states[stack[top].state]
-        let remembered = stack[top].remembered
+        if let end = tryRules(of: stack[top].state, grammar, &stack, at: position, depth: depth) { return end }
+        if var guest = stack[top].guest {
+            stack[top].guest = nil
+            let end = step(guest.grammar, &guest.stack, at: position, depth: depth + 1)
+            stack[top].guest = guest
+            return end
+        }
+        var end = position + 1
+        if UTF16.isLeadSurrogate(units[position]), end < limit, UTF16.isTrailSurrogate(units[end]) { end += 1 }
+        emit(position, end, grammar.states[stack[top].state].scope, grammar)
+        return end
+    }
+
+    /// The state a re-lex request names for `position`, skipping requests the scan has passed.
+    private mutating func override(at position: Int) -> Int? {
+        while nextOverride < overrides.endIndex && overrides[nextOverride].location < position { nextOverride += 1 }
+        guard nextOverride < overrides.endIndex, overrides[nextOverride].location == position else { return nil }
+        return overrides[nextOverride].state
+    }
+
+    /// Tries `stateIndex`'s rules at `position` against the current stack; returns where the match ends.
+    @inline(__always)
+    private mutating func tryRules(of stateIndex: Int, _ grammar: Grammar, _ stack: inout [Frame],
+                                   at position: Int, depth: Int) -> Int? {
+        let state = grammar.states[stateIndex]
+        let remembered = stack[stack.count - 1].remembered
         let cache = slot(for: grammar, depth: depth)
         for index in Int(state.ruleStart)..<Int(state.ruleStart + state.ruleCount) {
             let rule = grammar.rules[index]
@@ -189,16 +232,7 @@ struct LineScanner {
             }
             return end
         }
-        if var guest = stack[top].guest {
-            stack[top].guest = nil
-            let end = step(guest.grammar, &guest.stack, at: position, depth: depth + 1)
-            stack[top].guest = guest
-            return end
-        }
-        var end = position + 1
-        if UTF16.isLeadSurrogate(units[position]), end < limit, UTF16.isTrailSurrogate(units[end]) { end += 1 }
-        emit(position, end, state.scope, grammar)
-        return end
+        return nil
     }
 
     private mutating func apply(_ rule: FlatRule, _ grammar: Grammar, _ stack: inout [Frame],
@@ -231,7 +265,7 @@ struct LineScanner {
         guard scope >= 0, end > start else { return }
         let id = grammar.scopeIDs[Int(scope)]
         let offset = start - lineStart
-        if let last = tokens.last, last.scope == id, last.offset + last.length == offset {
+        if let last = tokens.last, last.scope == id, last.offset + last.length == offset, start != barrier {
             tokens[tokens.count - 1].length += end - start
         } else {
             tokens.append(LineToken(offset: offset, length: end - start, scope: id))
