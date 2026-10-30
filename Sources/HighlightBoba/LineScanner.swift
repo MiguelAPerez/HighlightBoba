@@ -49,6 +49,8 @@ struct LineScanner {
     private(set) var tokens: [LineToken] = []
     /// `pushAtNextLine` frames per embedding depth, pushed at the line end in opener order.
     private var pending: [[Frame]] = []
+    /// Per embedding depth, where the last `continuesLine` match ended.
+    private var continuedAt: [Int] = []
     /// Work done, for the linearity tests.
     private(set) var steps = 0
 
@@ -129,8 +131,15 @@ struct LineScanner {
             }
             break
         }
-        while stack.count > 1, grammar.states[stack[stack.count - 1].state].endsAtEOL {
-            stack.removeLast()
+        if !(depth < continuedAt.count && continuedAt[depth] == limit) {
+            // A single-line state ends here with everything nested in it, unless a state above it spans lines.
+            var cut: Int?
+            for index in stride(from: stack.count - 1, through: 1, by: -1) {
+                let state = grammar.states[stack[index].state]
+                if state.spansLines { break }
+                if state.endsAtEOL { cut = index }
+            }
+            if let cut { stack.removeLast(stack.count - cut) }
         }
         if depth < pending.count {
             // The first opener's body comes first, so it goes on top.
@@ -174,6 +183,10 @@ struct LineScanner {
                 emit(position, end, base, grammar)
             }
             apply(rule, grammar, &stack, from: position, to: end, bounds: bounds, depth: depth)
+            if rule.continuesLine {
+                while continuedAt.count <= depth { continuedAt.append(-1) }
+                continuedAt[depth] = end
+            }
             return end
         }
         if var guest = stack[top].guest {

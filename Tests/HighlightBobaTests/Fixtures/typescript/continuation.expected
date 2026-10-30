@@ -1,0 +1,14 @@
+const a = 'one \
+^^^^^ keyword
+          ^^^^^ string.quoted
+               ^ constant.character.escape
+two';
+^^^^ string.quoted
+const b = "esc \\
+^^^^^ keyword
+          ^^^^^ string.quoted
+               ^^ constant.character.escape
+const c = 2;
+^^^^^ keyword
+          ^ constant.numeric
+

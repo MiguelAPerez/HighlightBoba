@@ -1,0 +1,23 @@
+let s = "a\(x
+^^^ keyword
+        ^^ string.quoted
+          ^^ punctuation.section.embedded
+x) + 2
+     ^ constant.numeric
+let t = "b\(f(y
+^^^ keyword
+        ^^ string.quoted
+          ^^ punctuation.section.embedded
+y)) + 3
+      ^ constant.numeric
+let u = """
+^^^ keyword
+        ^^^ string.quoted
+c \(z) d
+^^ string.quoted
+  ^^ punctuation.section.embedded
+     ^ punctuation.section.embedded
+      ^^ string.quoted
+"""
+^^^ string.quoted
+

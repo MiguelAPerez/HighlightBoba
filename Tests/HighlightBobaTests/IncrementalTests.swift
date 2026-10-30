@@ -21,8 +21,8 @@ struct SeededGenerator: RandomNumberGenerator {
                   "#", "##", "\\#(", "func f"],
         "python": ["\"", "'''", "\"\"\"", "f\"", "{", "}", "#", "def ", "x", " ", "\n", "\r\n", "r'", "\\", "🧋", "1e3", "None"],
         "json": ["\"", "{", "}", "[", "]", ":", ",", "\\", "\\u00e9", "true", "-1.5", " ", "\n", "🧋", "\"k\":"],
-        "javascript": ["`", "${", "}", "/", "/re/g", "x", "return ", "//", "/*", "*/", "\"", "'", "\n", "(", ")", "[", "]", "🧋"],
-        "typescript": ["interface ", "T", "<", ">", "`", "${", "}", "/", "x", "\n", "\"", "as ", "{"],
+        "javascript": ["`", "${", "}", "/", "/re/g", "x", "return ", "//", "/*", "*/", "\"", "'", "\n", "(", ")", "[", "]", "🧋", "\\"],
+        "typescript": ["interface ", "T", "<", ">", "`", "${", "}", "/", "x", "\n", "\"", "'", "as ", "{", "\\"],
         "go": ["`", "\"", "'", "\\", "func ", "(p *T) ", "f", "/*", "*/", "//", "\n", "x"],
         "yaml": ["key: ", "- ", "|", ">-", "\n", "  ", "    ", "\"", "'", "#", "true", "1.5", "&a", "[", "]"],
         "markdown": ["```", "````", "~~~", "swift", "json", "yaml", "\n", " ", "**", "*", "_", "`", "# ", "> ", "- ", "/*", "\"", "x"],
@@ -109,5 +109,26 @@ struct SeededGenerator: RandomNumberGenerator {
         #expect(highlighter.tokens == Highlighter(grammar: grammar, text: highlighter.text).tokens)
         highlighter.replaceCharacters(in: NSRange(location: 0, length: highlighter.units.count), with: "")
         #expect(highlighter.tokens.isEmpty)
+    }
+
+    /// A continuation backslash keeps a single-line string open, so deleting or adding one re-colours the next line.
+    @Test(arguments: ["python", "javascript"])
+    func continuationEditsRecolourTheNextLine(_ language: String) throws {
+        let grammar = try Grammar.bundled(language)
+        let text = "a = 'one \\\ntwo' + 1\n"
+        func scope(_ highlighter: Highlighter) -> String? {
+            let two = (highlighter.text as NSString).range(of: "two")
+            return highlighter.tokens.first { NSIntersectionRange($0.range, two).length > 0 }?.scope
+        }
+        let highlighter = Highlighter(grammar: grammar, text: text)
+        #expect(scope(highlighter) == "string.quoted")
+
+        highlighter.replaceCharacters(in: (text as NSString).range(of: "\\"), with: "")
+        #expect(scope(highlighter) != "string.quoted")
+        #expect(highlighter.tokens == Highlighter(grammar: grammar, text: highlighter.text).tokens)
+
+        highlighter.replaceCharacters(in: NSRange(location: (highlighter.text as NSString).range(of: "\n").location, length: 0), with: "\\")
+        #expect(scope(highlighter) == "string.quoted")
+        #expect(highlighter.tokens == Highlighter(grammar: grammar, text: highlighter.text).tokens)
     }
 }

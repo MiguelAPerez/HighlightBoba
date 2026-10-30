@@ -1,0 +1,7 @@
+let s = "a\(x
+x) + 2
+let t = "b\(f(y
+y)) + 3
+let u = """
+c \(z) d
+"""

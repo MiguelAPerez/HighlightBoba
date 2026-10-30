@@ -1,0 +1,13 @@
+a = 'one \
+two' + 1
+b = "esc \\
+c = 2
+r = r'raw \
+still' + 3
+f = f'{x} \
+{y}'
+s = 'plain
+d = 4
+g = f"{x
++ 1} end"
+h = 5
