@@ -15,7 +15,7 @@ for token in highlighter.tokens {
 let changed = highlighter.replaceCharacters(in: editedRange, with: replacement) // re-scans only what the edit affects
 ```
 
-Grammars are data: a small pushdown state machine per language, matched without regex or backtracking. See [docs/GRAMMAR.md](docs/GRAMMAR.md).
+Grammars are data: a small pushdown state machine per language, matched without regex or backtracking. See [docs/GRAMMAR.md](docs/GRAMMAR.md). A parser layer is being built on top of them for the languages that need context; see [docs/PARSER.md](docs/PARSER.md).
 
 ## Contributing
 

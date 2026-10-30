@@ -21,7 +21,7 @@ public final class Highlighter {
     /// Where embedded grammars (a Markdown fence's language) are looked up.
     public let registry: GrammarRegistry
     private(set) var units: [UInt16]
-    private var lines: [Line]
+    private(set) var lines: [Line]
     /// Scanner work done by the last full highlight or edit, for the linearity tests.
     private(set) var lastSteps = 0
 
