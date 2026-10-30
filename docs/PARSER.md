@@ -3,7 +3,7 @@
 Lexer grammars ([GRAMMAR.md](GRAMMAR.md)) give every language instant, linear highlighting. Languages where
 context changes what a token means get a parser on top. It's hand-written recursive descent that builds a
 lossless syntax tree, which highlight queries then use to refine scopes. This file covers the core the
-parsers share. Highlight queries and incremental reparsing are next.
+parsers share, from tokens to incremental reparsing.
 
 ## Tokens
 
@@ -187,7 +187,7 @@ the errors and re-lex requests made inside it), so they cost the block, not the 
 about 1/1000 of a whole parse's lookahead. Splicing the subtree in copies the tree's flat tables
 and moving the offsets after it is linear in the file, but that is memory work, far cheaper than parsing.
 
-### Off the main thread
+### Parsing in the background
 
 `ParseSession` keeps a tree for a highlighter, parsing on a background task:
 
