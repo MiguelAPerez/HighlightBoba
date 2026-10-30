@@ -19,7 +19,7 @@ Grammars are data: a small pushdown state machine per language, matched without 
 
 ## Contributing
 
-**Issues welcome, PRs not yet.** Bug reports, language requests and design feedback are very welcome as issues. Pull requests from outside contributors will open once the grammar format is stable; until then they will be closed without review.
+**Issues welcome, PRs not yet.** Bug reports, language requests and design feedback are very welcome as issues. Pull requests from outside contributors will open once the grammar format is stable; until then they will be closed without review. See [CONTRIBUTING.md](CONTRIBUTING.md) for how the data and engine lanes will work, and [SECURITY.md](SECURITY.md) to report a vulnerability privately.
 
 ## License
 

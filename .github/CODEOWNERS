@@ -1,3 +1,15 @@
+# Later lines win. One owner today; the data lane can take more reviewers later.
+
+# Engine lane
 /Sources/ @MiguelAPerez
-/.github/workflows/ @MiguelAPerez
-/.github/CODEOWNERS @MiguelAPerez
+/Package.swift @MiguelAPerez
+/Tests/ @MiguelAPerez
+
+# Data lane: grammars and fixtures
+/Sources/HighlightBoba/Grammars/ @MiguelAPerez
+/Tests/HighlightBobaTests/Fixtures/ @MiguelAPerez
+
+# Repo policy and CI
+/.github/ @MiguelAPerez
+/scripts/ @MiguelAPerez
+/cz.yaml @MiguelAPerez

@@ -28,6 +28,17 @@ jobs:
             scripts/check-commit-emails.sh HEAD
           fi
 
+  dco:
+    if: github.event_name == 'pull_request'
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Signed-off-by on every commit
+        run: scripts/check-dco.sh "origin/${{ github.base_ref }}..HEAD^2"
+
   test:
     runs-on: macos-15
     timeout-minutes: 20
