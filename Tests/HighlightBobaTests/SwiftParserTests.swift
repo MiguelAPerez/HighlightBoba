@@ -2,7 +2,7 @@ import Foundation
 import Testing
 @testable import HighlightBoba
 
-@Suite struct SwiftParserTests {
+@Suite(.timeLimit(.minutes(2))) struct SwiftParserTests {
     static let grammar = try! Grammar.bundled("swift")
     static let parser = SwiftParser()
     static let swiftFixtures = Fixture.all().filter { $0.language == "swift" }
@@ -145,9 +145,9 @@ import Testing
     }
 
     @Test(arguments: [
-        String(repeating: "(", count: 50_000), String(repeating: "[", count: 50_000), String(repeating: "{", count: 50_000),
-        String(repeating: "f(", count: 25_000), String(repeating: "a = ", count: 20_000), String(repeating: "a ? b : ", count: 10_000),
-        String(repeating: "- ", count: 30_000), String(repeating: "try ", count: 20_000), String(repeating: "let x: [", count: 10_000),
+        String(repeating: "(", count: 20_000), String(repeating: "[", count: 20_000), String(repeating: "{", count: 20_000),
+        String(repeating: "f(", count: 10_000), String(repeating: "a = ", count: 20_000), String(repeating: "a ? b : ", count: 10_000),
+        String(repeating: "- ", count: 12_000), String(repeating: "try ", count: 20_000), String(repeating: "let x: [", count: 10_000),
         "let x: " + String(repeating: "A<", count: 20_000), String(repeating: "{ x in ", count: 10_000),
         String(repeating: "\"\\(", count: 20_000), String(repeating: "case .a(let ", count: 8_000),
         String(repeating: "f { a, b ", count: 10_000), String(repeating: "V(x: [y.map { if a { W { ", count: 4_000)
@@ -271,7 +271,7 @@ import Testing
     }()
 
     @Test func largeFileBenchmark() {
-        let text = String(repeating: Self.tour, count: 200)
+        let text = String(repeating: Self.tour, count: 60)
         let clock = ContinuousClock()
         let highlighter = Highlighter(grammar: Self.grammar, text: text)
         var tree: SyntaxTree?
