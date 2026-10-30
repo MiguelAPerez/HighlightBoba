@@ -74,14 +74,25 @@ public struct SyntaxNode: Hashable, Sendable {
         children.compactMap { if case .node(let node) = $0 { node } else { nil } }
     }
 
-    /// Every token under this node, in order.
+    /// Every token under this node, in order. Iterative: a tree can be as deep as the input nests.
     public var tokens: [SyntaxToken] {
-        children.flatMap { child -> [SyntaxToken] in
-            switch child {
-            case .token(let token): [token]
-            case .node(let node): node.tokens
+        var result: [SyntaxToken] = []
+        var stack = [(next: raw.childStart, end: raw.childStart + raw.childCount)]
+        while let (next, end) = stack.last {
+            guard next < end else {
+                stack.removeLast()
+                continue
+            }
+            stack[stack.count - 1].next += 1
+            let child = tree.children[next]
+            if child >= 0 {
+                result.append(tree.tokens[Int(child)])
+            } else {
+                let inner = tree.nodes[Int(~child)]
+                stack.append((inner.childStart, inner.childStart + inner.childCount))
             }
         }
+        return result
     }
 
     public static func == (lhs: SyntaxNode, rhs: SyntaxNode) -> Bool { lhs.tree === rhs.tree && lhs.index == rhs.index }

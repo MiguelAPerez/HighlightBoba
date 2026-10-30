@@ -251,3 +251,177 @@ func leafText(_ node: SyntaxNode) -> String { node.tokens.map(node.tree.text(of:
         #expect(other.root != tree.root, "same shape in another tree is a different node")
     }
 }
+
+@Suite struct TreeBuilderContractTests {
+    static func builder(_ text: String, _ language: String = "json") throws -> TreeBuilder {
+        TreeBuilder(highlighter: Highlighter(grammar: try Grammar.bundled(language), text: text))
+    }
+
+    /// Taking a checkpoint and never using it must not change the tree: trailing trivia stays outside the node.
+    @Test func anUnusedCheckpointLeavesTrailingTriviaOutside() throws {
+        let builder = try Self.builder("1 /* c */ \n2", "javascript")
+        builder.startNode(SyntaxKind("a"))
+        builder.bump()
+        _ = builder.checkpoint()
+        builder.finishNode()
+        builder.startNode(SyntaxKind("b"))
+        builder.bump()
+        builder.finishNode()
+        let tree = builder.finish()
+        let nodes = tree.root.childNodes
+        #expect(nodes.map(\.text) == ["1", "2"])
+        #expect(nodes[0].range == NSRange(location: 0, length: 1))
+        #expect(leafText(tree.root) == "1 /* c */ \n2")
+    }
+
+    /// The same, with the checkpoint used on nothing: the wrapper is empty and the trivia stays pending.
+    @Test func aCheckpointWrappingNothingIsEmptyAndKeepsTriviaOutside() throws {
+        let builder = try Self.builder("  1")
+        let start = builder.checkpoint()
+        builder.startNode(SyntaxKind("w"), at: start)
+        builder.finishNode()
+        builder.bump()
+        let tree = builder.finish()
+        let wrapper = try #require(tree.root.childNodes.first)
+        #expect(wrapper.range == NSRange(location: 2, length: 0))
+        #expect(wrapper.children.isEmpty)
+        #expect(leafText(tree.root) == "  1")
+    }
+
+    /// Trivia inside a wrapped run stays inside; trivia in front of the checkpoint stays outside.
+    @Test func aWrapperStartsAtTheFirstSignificantTokenAfterTheCheckpoint() throws {
+        let builder = try Self.builder("[ /* c */ 1 , 2 ]", "javascript")
+        builder.startNode(SyntaxKind("array"))
+        builder.bump("[")
+        let start = builder.checkpoint()
+        builder.bump()
+        builder.bump(",")
+        builder.bump()
+        builder.startNode(SyntaxKind("wrap"), at: start)
+        builder.finishNode()
+        builder.bump("]")
+        builder.finishNode()
+        let tree = builder.finish()
+        let wrap = try #require(tree.root.childNodes.first?.childNodes.first)
+        #expect(wrap.text == "1 , 2")
+        #expect(wrap.range == NSRange(location: 10, length: 5))
+        #expect(wrap.children.first.map { if case .token(let token) = $0 { !token.isTrivia } else { false } } == true)
+        #expect(leafText(tree.root) == "[ /* c */ 1 , 2 ]")
+    }
+
+    /// Nested checkpoints, used inner first and then outer, keep parents, ranges and order right.
+    @Test func nestedCheckpointsWrapInOrder() throws {
+        let builder = try Self.builder("1 2 3")
+        let outer = builder.checkpoint()
+        let inner = builder.checkpoint()
+        builder.bump()
+        builder.bump()
+        builder.startNode(SyntaxKind("inner"), at: inner)
+        builder.finishNode()
+        builder.bump()
+        builder.startNode(SyntaxKind("outer"), at: outer)
+        builder.finishNode()
+        let tree = builder.finish()
+        let outerNode = try #require(tree.root.childNodes.first)
+        let innerNode = try #require(outerNode.childNodes.first)
+        #expect(outerNode.kind == SyntaxKind("outer") && outerNode.text == "1 2 3")
+        #expect(innerNode.kind == SyntaxKind("inner") && innerNode.text == "1 2")
+        #expect(innerNode.parent == outerNode && outerNode.parent == tree.root)
+        #expect(leafText(tree.root) == "1 2 3")
+    }
+
+    /// `finish()` when the parser consumed nothing keeps the whole text in the root.
+    @Test func finishWithNothingConsumedKeepsEverything() throws {
+        let text = "  // c\n 1 2 "
+        let tree = try Self.builder(text).finish()
+        #expect(leafText(tree.root) == text)
+        #expect(tree.root.range == NSRange(location: 0, length: text.utf16.count))
+        #expect(tree.root.children.count == tree.tokens.count)
+    }
+
+    /// Every node's range is the span of its own tokens, whatever the builder calls were.
+    @Test func everyNodeRangeMatchesItsTokens() throws {
+        let tree = try ToyExpression.parse("a - /* x */ b -\n c * d ** e ** f ")
+        func check(_ node: SyntaxNode) {
+            let tokens = node.tokens
+            if let first = tokens.first, let last = tokens.last, node.kind != .root {
+                #expect(node.range == NSRange(location: first.location, length: last.end - first.location))
+                #expect(!first.isTrivia, "a node starts at a significant token")
+            }
+            for child in node.childNodes {
+                #expect(child.parent == node)
+                check(child)
+            }
+        }
+        check(tree.root)
+    }
+
+    /// Looking ahead over long runs of trivia and many tokens stays linear.
+    @Test func lookaheadIsLinear() throws {
+        let comments = String(repeating: "// c\n", count: 30_000) + "a"
+        let builder = try Self.builder(comments, "javascript")
+        let clock = ContinuousClock()
+        let elapsed = clock.measure {
+            for _ in 0..<30_000 { #expect(builder.at("a")) }
+        }
+        #expect(elapsed < .seconds(1), "30k `at` calls behind 60k trivia tokens took \(elapsed)")
+
+        let words = try Self.builder(String(repeating: "a ", count: 30_000), "javascript")
+        let scan = clock.measure {
+            var offset = 0
+            while words.peek(offset) != nil { offset += 1 }
+            #expect(offset == 30_000)
+        }
+        #expect(scan < .seconds(1), "peek(n) for every n took \(scan)")
+        _ = builder.finish()
+        _ = words.finish()
+    }
+
+    @Test func deepTreesWalkWithoutRecursion() throws {
+        let depth = 200_000
+        let builder = try Self.builder(String(repeating: "[", count: depth))
+        for _ in 0..<depth {
+            builder.startNode(SyntaxKind("n"))
+            builder.bump()
+        }
+        for _ in 0..<depth { builder.finishNode() }
+        let tree = builder.finish()
+        #expect(tree.root.tokens.count == depth)
+    }
+}
+
+@Suite struct SyntaxTokenEdgeTests {
+    private func assertTiles(_ highlighter: Highlighter, _ note: String) {
+        var position = 0
+        for token in highlighter.syntaxTokens {
+            #expect(token.location == position && token.length > 0, "\(note): gap, overlap or empty token at \(position)")
+            position = token.end
+        }
+        #expect(position == highlighter.text.utf16.count, "\(note): short")
+    }
+
+    /// Embedded grammars, lone `\r`, and `\r\n` joined or split by an edit all keep the tiling and match a fresh stream.
+    @Test func embeddedGrammarsAndLineBreaksTileThroughEdits() throws {
+        let grammar = try Grammar.bundled("markdown")
+        let highlighter = Highlighter(grammar: grammar, text: "# t\r```swift\rlet x = \"🧋\" // c\r\n```\nend")
+        assertTiles(highlighter, "fresh")
+        for (range, insert) in [(NSRange(location: 4, length: 0), "\n"), (NSRange(location: 4, length: 1), ""),
+                                (NSRange(location: 0, length: 0), "\r"), (NSRange(location: 1, length: 0), "\n"),
+                                (NSRange(location: 20, length: 3), "🧋🧋"), (NSRange(location: 0, length: 40), "")] {
+            let end = highlighter.text.utf16.count
+            highlighter.replaceCharacters(in: NSRange(location: min(range.location, end), length: min(range.length, end - min(range.location, end))), with: insert)
+            assertTiles(highlighter, "after inserting \(insert.debugDescription)")
+            #expect(highlighter.syntaxTokens == Highlighter(grammar: grammar, text: highlighter.text).syntaxTokens)
+        }
+    }
+
+    /// A punctuation lexeme holding a surrogate pair is split per character, never mid-pair.
+    @Test func punctuationSplitKeepsSurrogatePairsWhole() throws {
+        let highlighter = Highlighter(grammar: try Grammar.bundled("json"), text: "[🧋,]")
+        assertTiles(highlighter, "json")
+        let units = Array(highlighter.text.utf16)
+        for token in highlighter.syntaxTokens where token.length == 1 {
+            #expect(!UTF16.isLeadSurrogate(units[token.location]) && !UTF16.isTrailSurrogate(units[token.location]))
+        }
+    }
+}

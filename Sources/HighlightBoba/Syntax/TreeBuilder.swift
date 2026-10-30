@@ -24,25 +24,35 @@ public final class TreeBuilder {
     private var frames: [Frame]
     private var nodes: [SyntaxTree.RawNode] = []
     private var pool: [Int32] = []
-    private var parents: [Int] = []
+    /// Indices of the significant tokens, ascending, so lookahead never walks trivia.
+    private let significant: [Int]
+    /// Index into `significant` of the first entry at or after `position`.
+    private var cursor = 0
+    private var nextFrameID = 1
 
     private struct Frame {
         var kind: SyntaxKind
         var start: Int
         var children: [Int32] = []
+        var id = 0
     }
 
     /// Where a node may later be started, to wrap what is parsed from here on (`a - b` becoming
     /// the left side of `a - b - c`).
     public struct Checkpoint: Sendable {
-        let depth: Int
+        /// The node it was taken in; a checkpoint is only good there.
+        let frameID: Int
         let childIndex: Int
+        /// Where the cursor was, and how much trivia was waiting in front of the next significant token.
+        let position: Int
+        let pendingTrivia: Int
         let start: Int
     }
 
     public init(tokens: [SyntaxToken], text: String) {
         self.tokens = tokens
         units = Array(text.utf16)
+        significant = tokens.indices.filter { !tokens[$0].isTrivia }
         frames = [Frame(kind: .root, start: 0)]
     }
 
@@ -55,16 +65,8 @@ public final class TreeBuilder {
 
     /// The index of the `offset`-th significant token from `position`.
     private func significantIndex(_ offset: Int = 0) -> Int? {
-        var index = position
-        var remaining = offset
-        while index < tokens.count {
-            if !tokens[index].isTrivia {
-                if remaining == 0 { return index }
-                remaining -= 1
-            }
-            index += 1
-        }
-        return nil
+        let slot = cursor + offset
+        return offset >= 0 && slot < significant.count ? significant[slot] : nil
     }
 
     /// The next significant token, or `nil` at the end.
@@ -120,7 +122,7 @@ public final class TreeBuilder {
 
     public func startNode(_ kind: SyntaxKind) {
         attachTrivia()
-        frames.append(Frame(kind: kind, start: nextLocation))
+        frames.append(makeFrame(kind, start: nextLocation))
     }
 
     public func finishNode() {
@@ -130,18 +132,24 @@ public final class TreeBuilder {
         frames[frames.count - 1].children.append(~Int32(index))
     }
 
-    /// Marks the spot a later `startNode(_:at:)` may wrap from. Trivia before it stays outside.
+    /// Marks the spot a later `startNode(_:at:)` may wrap from. Trivia before it stays outside the
+    /// wrapper, and taking a checkpoint adds nothing to the tree, so one that is never used changes nothing.
     public func checkpoint() -> Checkpoint {
-        attachTrivia()
-        return Checkpoint(depth: frames.count, childIndex: frames[frames.count - 1].children.count, start: nextLocation)
+        let top = frames[frames.count - 1]
+        return Checkpoint(frameID: top.id, childIndex: top.children.count, position: position,
+                          pendingTrivia: (significantIndex() ?? tokens.count) - position, start: nextLocation)
     }
 
     /// Starts a node holding everything added to the open node since `checkpoint`.
     public func startNode(_ kind: SyntaxKind, at checkpoint: Checkpoint) {
-        precondition(checkpoint.depth == frames.count, "a checkpoint must be used in the node it was taken in")
-        let wrapped = Array(frames[frames.count - 1].children[checkpoint.childIndex...])
-        frames[frames.count - 1].children.removeSubrange(checkpoint.childIndex...)
-        frames.append(Frame(kind: kind, start: checkpoint.start, children: wrapped))
+        let top = frames.count - 1
+        precondition(checkpoint.frameID == frames[top].id, "a checkpoint must be used in the node it was taken in, while that node is open")
+        // Trivia that was waiting when the checkpoint was taken goes in front of the wrapper, not into it.
+        let first = checkpoint.childIndex + (position == checkpoint.position ? 0 : checkpoint.pendingTrivia)
+        precondition(first <= frames[top].children.count, "a checkpoint was used twice, or after its children were wrapped")
+        let wrapped = Array(frames[top].children[first...])
+        frames[top].children.removeSubrange(first...)
+        frames.append(makeFrame(kind, start: checkpoint.start, children: wrapped))
     }
 
     /// Ends parsing: every token left goes into the root.
@@ -155,7 +163,13 @@ public final class TreeBuilder {
 
     // MARK: Internals
 
-    private var nextLocation: Int { position < tokens.count ? tokens[position].location : units.count }
+    private func makeFrame(_ kind: SyntaxKind, start: Int, children: [Int32] = []) -> Frame {
+        defer { nextFrameID += 1 }
+        return Frame(kind: kind, start: start, children: children, id: nextFrameID)
+    }
+
+    /// Where the next significant token starts: trivia in front of it is not part of a node.
+    private var nextLocation: Int { significantIndex().map { tokens[$0].location } ?? units.count }
 
     private func attachTrivia() {
         attach(upTo: significantIndex() ?? tokens.count)
@@ -166,6 +180,7 @@ public final class TreeBuilder {
             frames[frames.count - 1].children.append(Int32(position))
             position += 1
         }
+        while cursor < significant.count && significant[cursor] < position { cursor += 1 }
     }
 
     private func makeNode(_ frame: Frame, end explicitEnd: Int? = nil) -> Int {

@@ -40,7 +40,10 @@ let tree = builder.finish()
 - **Trivia:** trivia before a consumed token goes into the node that is open at the time. A node starts
   at its first significant token, so the trivia in front of it stays with its parent.
 - **Left-associative operators:** take a `checkpoint()` before the left operand, then
-  `startNode(kind, at: checkpoint)` wraps everything parsed since then, as rowan does.
+  `startNode(kind, at: checkpoint)` wraps everything parsed since then, as rowan does. Trivia in front
+  of the checkpoint stays outside the wrapper. Taking a checkpoint changes nothing in the tree, so one
+  you never use costs nothing. A checkpoint is valid only in the node it was taken in, while that node
+  is open; using it anywhere else stops the program.
 - **Losslessness:** `finish()` puts every token the parser didn't consume into the root, so walking the
   leaves always gives the text back, even after a parser bug or an early stop.
 
