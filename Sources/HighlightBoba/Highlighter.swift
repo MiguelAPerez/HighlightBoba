@@ -28,6 +28,12 @@ public final class Highlighter {
     /// Tells this highlighter's snapshots from another's.
     let id = UUID()
 
+    /// The edits since revision `journalBase`, oldest first, for incremental reparsing.
+    private var journal: [TextEdit] = []
+    private var journalBase = 0
+    /// Edits remembered; a tree older than this is reparsed whole.
+    static let journalLimit = 1024
+
     var units: [UInt16] { lexing.units }
     var lines: [Lexing.Line] { lexing.lines }
 
@@ -76,6 +82,11 @@ public final class Highlighter {
         let delta = inserted.count - range.length
         let oldEditEnd = NSMaxRange(range)
         revision += 1
+        journal.append(TextEdit(range: range, replacementLength: inserted.count))
+        if journal.count > Self.journalLimit {
+            journal.removeFirst(journal.count - Self.journalLimit / 2)
+            journalBase = revision - journal.count
+        }
         lexing.units.replaceSubrange(range.location..<oldEditEnd, with: inserted)
         // A re-lex request moves with its text, and goes with it when the edit replaces that text.
         lexing.overrides = lexing.overrides.compactMap { override in
@@ -107,6 +118,13 @@ public final class Highlighter {
         }
         lexing.lines = rebuilt
         return NSRange(location: start, length: (scan.stoppedAt ?? units.count) - start)
+    }
+
+    /// Every edit since `revision` as one: the range it replaced in that revision's text, and how long
+    /// the replacement is now. `nil` when nothing changed since, or the edits are too old to remember.
+    public func edit(since revision: Int) -> TextEdit? {
+        guard revision >= journalBase, revision < self.revision else { return nil }
+        return journal[(revision - journalBase)...].dropFirst().reduce(journal[revision - journalBase]) { $0.followed(by: $1) }
     }
 
     /// Takes the re-lexing a parse asked for (`TreeBuilder.relex(as:)`), so the highlighting
