@@ -1,0 +1,36 @@
+<!-- badges -->
+*after a one-line comment*
+^^^^^^^^^^^^^^^^^^^^^^^^^^ markup.italic
+<!-- c1
+
+*still in the comment* -->
+*after the comment*
+^^^^^^^^^^^^^^^^^^^ markup.italic
+<pre>
+
+*raw in pre*
+</pre>
+*after pre*
+^^^^^^^^^^^ markup.italic
+<DIV>*raw upper*</DIV>
+
+<center>*raw center*</center>
+
+<table-x>*not a block*
+         ^^^^^^^^^^^^^ markup.italic
+<divx>*not a block*
+      ^^^^^^^^^^^^^ markup.italic
+[TODO]: fix this *later*
+                 ^^^^^^^ markup.italic
+[ ]: http://x
+[a]: http://x 'single'
+^ punctuation
+  ^^ punctuation
+     ^^^^^^^^ markup.link
+             ^^^^^^^^^ string.quoted
+[b]: http://x (paren)
+^ punctuation
+  ^^ punctuation
+     ^^^^^^^^ markup.link
+             ^^^^^^^^ string.quoted
+

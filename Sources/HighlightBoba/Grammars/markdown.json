@@ -584,71 +584,255 @@
                 "max": 3
               },
               {
-                "followedBy": {
-                  "anyOf": [
-                    {
-                      "literal": "<!--"
-                    },
-                    {
-                      "seq": [
-                        {
-                          "literal": "<"
-                        },
-                        {
-                          "opt": {
-                            "literal": "/"
-                          }
-                        },
-                        {
-                          "words": [
-                            "address",
-                            "article",
-                            "aside",
-                            "blockquote",
-                            "details",
-                            "dialog",
-                            "div",
-                            "dl",
-                            "fieldset",
-                            "figcaption",
-                            "figure",
-                            "footer",
-                            "form",
-                            "h1",
-                            "h2",
-                            "h3",
-                            "h4",
-                            "h5",
-                            "h6",
-                            "header",
-                            "hr",
-                            "li",
-                            "main",
-                            "nav",
-                            "ol",
-                            "p",
-                            "pre",
-                            "script",
-                            "section",
-                            "style",
-                            "summary",
-                            "table",
-                            "tbody",
-                            "td",
-                            "tfoot",
-                            "th",
-                            "thead",
-                            "tr",
-                            "ul"
-                          ]
-                        }
-                      ]
-                    }
-                  ]
-                }
+                "literal": "<!--"
+              }
+            ]
+          },
+          "push": "htmlComment"
+        },
+        {
+          "match": {
+            "seq": [
+              {
+                "bol": true
+              },
+              {
+                "repeat": "[ ]",
+                "max": 3
               },
               {
                 "literal": "<"
+              },
+              {
+                "words": [
+                  "PRE",
+                  "Pre",
+                  "SCRIPT",
+                  "STYLE",
+                  "Script",
+                  "Style",
+                  "TEXTAREA",
+                  "Textarea",
+                  "pre",
+                  "script",
+                  "style",
+                  "textarea"
+                ]
+              },
+              {
+                "notFollowedBy": {
+                  "class": "[-A-Za-z0-9]"
+                }
+              }
+            ]
+          },
+          "push": "htmlRaw"
+        },
+        {
+          "match": {
+            "seq": [
+              {
+                "bol": true
+              },
+              {
+                "repeat": "[ ]",
+                "max": 3
+              },
+              {
+                "literal": "<"
+              },
+              {
+                "opt": {
+                  "literal": "/"
+                }
+              },
+              {
+                "words": [
+                  "ADDRESS",
+                  "ARTICLE",
+                  "ASIDE",
+                  "Address",
+                  "Article",
+                  "Aside",
+                  "BASE",
+                  "BASEFONT",
+                  "BLOCKQUOTE",
+                  "BODY",
+                  "Base",
+                  "Basefont",
+                  "Blockquote",
+                  "Body",
+                  "CAPTION",
+                  "CENTER",
+                  "COL",
+                  "COLGROUP",
+                  "Caption",
+                  "Center",
+                  "Col",
+                  "Colgroup",
+                  "DD",
+                  "DETAILS",
+                  "DIALOG",
+                  "DIR",
+                  "DIV",
+                  "DL",
+                  "DT",
+                  "Dd",
+                  "Details",
+                  "Dialog",
+                  "Dir",
+                  "Div",
+                  "Dl",
+                  "Dt",
+                  "FIELDSET",
+                  "FIGCAPTION",
+                  "FIGURE",
+                  "FOOTER",
+                  "FORM",
+                  "FRAME",
+                  "FRAMESET",
+                  "Fieldset",
+                  "Figcaption",
+                  "Figure",
+                  "Footer",
+                  "Form",
+                  "Frame",
+                  "Frameset",
+                  "H1",
+                  "H2",
+                  "H3",
+                  "H4",
+                  "H5",
+                  "H6",
+                  "HEAD",
+                  "HEADER",
+                  "HR",
+                  "HTML",
+                  "Head",
+                  "Header",
+                  "Hr",
+                  "Html",
+                  "IFRAME",
+                  "Iframe",
+                  "LEGEND",
+                  "LI",
+                  "LINK",
+                  "Legend",
+                  "Li",
+                  "Link",
+                  "MAIN",
+                  "MENU",
+                  "MENUITEM",
+                  "Main",
+                  "Menu",
+                  "Menuitem",
+                  "NAV",
+                  "NOFRAMES",
+                  "Nav",
+                  "Noframes",
+                  "OL",
+                  "OPTGROUP",
+                  "OPTION",
+                  "Ol",
+                  "Optgroup",
+                  "Option",
+                  "P",
+                  "PARAM",
+                  "Param",
+                  "SEARCH",
+                  "SECTION",
+                  "SUMMARY",
+                  "Search",
+                  "Section",
+                  "Summary",
+                  "TABLE",
+                  "TBODY",
+                  "TD",
+                  "TFOOT",
+                  "TH",
+                  "THEAD",
+                  "TITLE",
+                  "TR",
+                  "TRACK",
+                  "Table",
+                  "Tbody",
+                  "Td",
+                  "Tfoot",
+                  "Th",
+                  "Thead",
+                  "Title",
+                  "Tr",
+                  "Track",
+                  "UL",
+                  "Ul",
+                  "address",
+                  "article",
+                  "aside",
+                  "base",
+                  "basefont",
+                  "blockquote",
+                  "body",
+                  "caption",
+                  "center",
+                  "col",
+                  "colgroup",
+                  "dd",
+                  "details",
+                  "dialog",
+                  "dir",
+                  "div",
+                  "dl",
+                  "dt",
+                  "fieldset",
+                  "figcaption",
+                  "figure",
+                  "footer",
+                  "form",
+                  "frame",
+                  "frameset",
+                  "h1",
+                  "h2",
+                  "h3",
+                  "h4",
+                  "h5",
+                  "h6",
+                  "head",
+                  "header",
+                  "hr",
+                  "html",
+                  "iframe",
+                  "legend",
+                  "li",
+                  "link",
+                  "main",
+                  "menu",
+                  "menuitem",
+                  "nav",
+                  "noframes",
+                  "ol",
+                  "optgroup",
+                  "option",
+                  "p",
+                  "param",
+                  "search",
+                  "section",
+                  "summary",
+                  "table",
+                  "tbody",
+                  "td",
+                  "tfoot",
+                  "th",
+                  "thead",
+                  "title",
+                  "tr",
+                  "track",
+                  "ul"
+                ]
+              },
+              {
+                "notFollowedBy": {
+                  "class": "[-A-Za-z0-9]"
+                }
               }
             ]
           },
@@ -668,7 +852,7 @@
                 "literal": "["
               },
               {
-                "class": "[^\\]^\\r\\n]"
+                "class": "[^\\]^ \\t\\r\\n]"
               },
               {
                 "repeat": "[^\\]\\r\\n]"
@@ -691,16 +875,56 @@
                       "min": 1
                     },
                     {
-                      "literal": "\""
-                    },
-                    {
-                      "repeat": "[^\"\\r\\n]"
-                    },
-                    {
-                      "literal": "\""
+                      "anyOf": [
+                        {
+                          "seq": [
+                            {
+                              "literal": "\""
+                            },
+                            {
+                              "repeat": "[^\"\\r\\n]"
+                            },
+                            {
+                              "literal": "\""
+                            }
+                          ]
+                        },
+                        {
+                          "seq": [
+                            {
+                              "literal": "'"
+                            },
+                            {
+                              "repeat": "[^'\\r\\n]"
+                            },
+                            {
+                              "literal": "'"
+                            }
+                          ]
+                        },
+                        {
+                          "seq": [
+                            {
+                              "literal": "("
+                            },
+                            {
+                              "repeat": "[^)\\r\\n]"
+                            },
+                            {
+                              "literal": ")"
+                            }
+                          ]
+                        }
+                      ]
                     }
                   ]
                 }
+              },
+              {
+                "repeat": "[ \\t]"
+              },
+              {
+                "eol": true
               }
             ]
           },
@@ -713,7 +937,9 @@
             "punctuation",
             null,
             "markup.link",
-            "string.quoted"
+            "string.quoted",
+            null,
+            null
           ]
         },
         {
@@ -758,6 +984,56 @@
               },
               {
                 "eol": true
+              }
+            ]
+          },
+          "pop": true
+        }
+      ]
+    },
+    "htmlComment": {
+      "rules": [
+        {
+          "match": {
+            "seq": [
+              {
+                "literal": "-->"
+              },
+              {
+                "repeat": "[^\\r\\n]"
+              }
+            ]
+          },
+          "pop": true
+        }
+      ]
+    },
+    "htmlRaw": {
+      "rules": [
+        {
+          "match": {
+            "seq": [
+              {
+                "literal": "</"
+              },
+              {
+                "words": [
+                  "PRE",
+                  "Pre",
+                  "SCRIPT",
+                  "STYLE",
+                  "Script",
+                  "Style",
+                  "TEXTAREA",
+                  "Textarea",
+                  "pre",
+                  "script",
+                  "style",
+                  "textarea"
+                ]
+              },
+              {
+                "repeat": "[^\\r\\n]"
               }
             ]
           },

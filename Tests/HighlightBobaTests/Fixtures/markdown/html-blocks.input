@@ -1,0 +1,21 @@
+<!-- badges -->
+*after a one-line comment*
+<!-- c1
+
+*still in the comment* -->
+*after the comment*
+<pre>
+
+*raw in pre*
+</pre>
+*after pre*
+<DIV>*raw upper*</DIV>
+
+<center>*raw center*</center>
+
+<table-x>*not a block*
+<divx>*not a block*
+[TODO]: fix this *later*
+[ ]: http://x
+[a]: http://x 'single'
+[b]: http://x (paren)

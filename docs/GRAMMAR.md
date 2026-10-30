@@ -124,6 +124,7 @@ Columns count characters, so carets line up under emoji. Ranges in the API are U
 - Look-behind is limited to the current line: `notAfter` can't see a token on the previous line (so a JS regex that starts a continuation line is read as division only if the `/` follows an identifier on the same line).
 - Lexers don't know command position: shell keywords like `done` are highlighted as arguments too (`echo done`). The parser layer fixes this for languages that get one.
 - A Swift tuple index chain `t.0.1` reads as the number `0.1`; telling them apart needs the parser. (A not-after-`.` rule would break `1...5`.)
-- Markdown has no look-ahead to a closing delimiter, so an unclosed `*`, `_` or `` ` `` colours to the end of the line; setext heading text (the line above `===`) isn't scoped, only the underline; and indented code isn't told apart from list continuation.
+- Markdown has no look-ahead to a closing delimiter, so an unclosed `*`, `_` or `` ` `` colours to the end of the line; setext heading text (the line above `===`) isn't scoped, only the underline; and indented code isn't told apart from list continuation. Without the previous line, a lone `===` after a blank line still reads as a setext underline, `a[i][j]` in prose reads as a reference link, and an HTML block inside a blockquote (`> <div>`) isn't recognised.
+- An unterminated YAML quote runs on until the next matching quote, because YAML quoted strings may span lines.
 - Markdown strikethrough, tables and entities, and YAML timestamps, have no scope in the vocabulary, so they stay plain.
 - Embedding nests at most four grammars deep, and a remembered delimiter is capped at 256 UTF-16 units.
