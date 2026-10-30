@@ -500,7 +500,33 @@
               },
               {
                 "notFollowedBy": {
-                  "class": "[=.,:)\\]]"
+                  "anyOf": [
+                    {
+                      "class": "[=.,:)\\]<>%/&|^@!;}]"
+                    },
+                    {
+                      "seq": [
+                        {
+                          "class": "[+*-]"
+                        },
+                        {
+                          "literal": "="
+                        }
+                      ]
+                    },
+                    {
+                      "words": [
+                        "is",
+                        "in",
+                        "and",
+                        "or",
+                        "if",
+                        "else",
+                        "for",
+                        "as"
+                      ]
+                    }
+                  ]
                 }
               }
             ]
@@ -535,6 +561,21 @@
                 "followedBy": {
                   "class": "[A-Za-z_]"
                 }
+              },
+              {
+                "notFollowedBy": {
+                  "words": [
+                    "is",
+                    "in",
+                    "and",
+                    "or",
+                    "if",
+                    "else",
+                    "for",
+                    "as",
+                    "not"
+                  ]
+                }
               }
             ]
           },
@@ -542,6 +583,7 @@
             null,
             null,
             "keyword",
+            null,
             null,
             null
           ]

@@ -1,0 +1,37 @@
+match += 1
+         ^ constant.numeric
+match -= 1
+         ^ constant.numeric
+match *= 2
+         ^ constant.numeric
+case //= 3
+         ^ constant.numeric
+match != 3
+         ^ constant.numeric
+match < 3
+        ^ constant.numeric
+match % 3
+        ^ constant.numeric
+match is None
+      ^^ keyword
+         ^^^^ constant.language
+match in xs
+      ^^ keyword
+match and foo
+      ^^^ keyword
+type is int
+^^^^ support.function
+     ^^ keyword
+        ^^^ support.function
+type in xs
+^^^^ support.function
+     ^^ keyword
+type X = int
+^^^^ keyword
+     ^ entity.name.type
+         ^^^ support.function
+match -x:
+^^^^^ keyword
+match *a, b:
+^^^^^ keyword
+

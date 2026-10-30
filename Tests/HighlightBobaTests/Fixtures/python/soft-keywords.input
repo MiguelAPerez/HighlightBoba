@@ -1,0 +1,15 @@
+match += 1
+match -= 1
+match *= 2
+case //= 3
+match != 3
+match < 3
+match % 3
+match is None
+match in xs
+match and foo
+type is int
+type in xs
+type X = int
+match -x:
+match *a, b:
