@@ -137,24 +137,101 @@
         },
         {
           "match": {
+            "anyOf": [
+              {
+                "seq": [
+                  {
+                    "literal": "0"
+                  },
+                  {
+                    "class": "[xXbBoO]"
+                  },
+                  {
+                    "repeat": "[0-9A-Fa-f_]"
+                  },
+                  {
+                    "opt": {
+                      "class": "[n]"
+                    }
+                  }
+                ]
+              },
+              {
+                "seq": [
+                  {
+                    "class": "[0-9]"
+                  },
+                  {
+                    "repeat": "[0-9_]"
+                  },
+                  {
+                    "opt": {
+                      "seq": [
+                        {
+                          "literal": "."
+                        },
+                        {
+                          "repeat": "[0-9_]"
+                        }
+                      ]
+                    }
+                  },
+                  {
+                    "opt": {
+                      "seq": [
+                        {
+                          "class": "[eE]"
+                        },
+                        {
+                          "opt": {
+                            "class": "[+-]"
+                          }
+                        },
+                        {
+                          "repeat": "[0-9_]",
+                          "min": 1
+                        }
+                      ]
+                    }
+                  },
+                  {
+                    "opt": {
+                      "class": "[n]"
+                    }
+                  }
+                ]
+              }
+            ]
+          },
+          "scope": "constant.numeric",
+          "notAfterWord": true
+        },
+        {
+          "match": {
             "seq": [
+              {
+                "literal": "."
+              },
               {
                 "class": "[0-9]"
               },
               {
-                "repeat": "[0-9A-Za-z_]"
+                "repeat": "[0-9_]"
               },
               {
                 "opt": {
                   "seq": [
                     {
-                      "literal": "."
+                      "class": "[eE]"
                     },
                     {
-                      "class": "[0-9]"
+                      "opt": {
+                        "class": "[+-]"
+                      }
                     },
                     {
-                      "repeat": "[0-9A-Za-z_]"
+                      "repeat": "[0-9_]",
+                      "min": 1
                     }
                   ]
                 }

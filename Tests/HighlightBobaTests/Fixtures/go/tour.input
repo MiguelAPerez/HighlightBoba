@@ -1,0 +1,61 @@
+/* block
+   comment */
+package geo // line comment
+
+import "math"
+
+type Number interface {
+	~int | ~float64
+}
+
+func Sum[T Number](xs ...T) (total T) {
+	for _, x := range xs {
+		total += x
+	}
+	return
+}
+
+type Tagged struct {
+	Name string `json:"name,omitempty"`
+	ch   chan<- int
+	m    map[string][]byte
+}
+
+const (
+	A = iota
+	B
+	big  = 1_000_000
+	bin  = 0b1010
+	oct  = 0o17
+	old  = 017
+	hexf = 0x1p-2
+	f    = .5
+	g    = 6.02e23
+	neg  = 1e-9
+	plus = 2.5E+3
+	hexs = 0xAB_CD
+	im   = 1.5i
+)
+
+func run(ch chan int, done <-chan struct{}) error {
+	var p *Tagged = nil
+	select {
+	case v, ok := <-ch:
+		if !ok || v == 0 {
+			goto end
+		}
+	case <-done:
+		break
+	default:
+		fallthrough
+	}
+end:
+	switch x := math.Pi; {
+	case x > 3:
+	}
+	go func() { defer recover() }()
+	r1, r2, r3 := 'a', '\'', '\u00e9'
+	_ = "unterminated
+	_ = true && false
+	return nil
+}

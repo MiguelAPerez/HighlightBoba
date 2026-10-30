@@ -1,0 +1,23 @@
+const a = [1_000, 0xFF, 0b1, 0o7, 10n, 0xFFn, .5, 1e-9, 2.5E+3];
+^^^^^ keyword
+           ^^^^^ constant.numeric
+                  ^^^^ constant.numeric
+                        ^^^ constant.numeric
+                             ^^^ constant.numeric
+                                  ^^^ constant.numeric
+                                       ^^^^^ constant.numeric
+                                              ^^ constant.numeric
+                                                  ^^^^ constant.numeric
+                                                        ^^^^^^ constant.numeric
+const b = x2 + a.b5 + cond ?.5 : 1;
+^^^^^ keyword
+                            ^^ constant.numeric
+                                 ^ constant.numeric
+const c = [5., 1.e3, 1..toString(), 0xFF.toString(16)];
+^^^^^ keyword
+           ^^ constant.numeric
+               ^^^^ constant.numeric
+                     ^^ constant.numeric
+                                    ^^^^ constant.numeric
+                                                  ^^ constant.numeric
+

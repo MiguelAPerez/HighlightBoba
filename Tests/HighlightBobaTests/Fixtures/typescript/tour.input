@@ -1,0 +1,23 @@
+/** Doc comment
+ * @param x the value
+ */
+import type { Config } from "./config";
+import * as path from 'node:path';
+export default class Box<T> {
+  #secret = 0n;
+  static readonly MAX = 0xFF_FF;
+  constructor(private readonly value: T, public tag?: string) {}
+  @memo get size(): number { return this.value?.length ?? 0; }
+}
+type Keys = keyof typeof defaults;
+type Fn = (a: number, ...rest: string[]) => void;
+type Deep = Map<string, Array<number>>;
+const nums = [1, 2.5, .5, 1e-3, 0b101, 0o17, 1_000] as const;
+let s = `sum ${a + `inner ${b}`} done`;
+const re = /ab+c/gi, half = total / 2 / count;
+for await (const item of stream) { if (item instanceof Error) throw item; }
+label: while (true) { break label; }
+// line comment with "quotes"
+const obj = { "key": 1, 'k2': null, undefined: void 0 };
+namespace NS { export const x = 1; }
+abstract class A { protected abstract m(): never; }

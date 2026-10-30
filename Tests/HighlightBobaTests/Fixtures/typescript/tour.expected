@@ -1,0 +1,125 @@
+/** Doc comment
+^^^^^^^^^^^^^^^ comment.block
+ * @param x the value
+^^^^^^^^^^^^^^^^^^^^^ comment.block
+ */
+^^^ comment.block
+import type { Config } from "./config";
+^^^^^^ keyword
+       ^^^^ keyword
+              ^^^^^^ entity.name.type
+                       ^^^^ keyword
+                            ^^^^^^^^^^ string.quoted
+import * as path from 'node:path';
+^^^^^^ keyword
+         ^^ keyword
+                 ^^^^ keyword
+                      ^^^^^^^^^^^ string.quoted
+export default class Box<T> {
+^^^^^^ keyword
+       ^^^^^^^ keyword
+               ^^^^^ keyword
+                     ^^^ entity.name.type
+                         ^ entity.name.type
+  #secret = 0n;
+            ^^ constant.numeric
+  static readonly MAX = 0xFF_FF;
+  ^^^^^^ keyword
+         ^^^^^^^^ keyword
+                  ^^^ entity.name.type
+                        ^^^^^^^ constant.numeric
+  constructor(private readonly value: T, public tag?: string) {}
+              ^^^^^^^ keyword
+                      ^^^^^^^^ keyword
+                                      ^ entity.name.type
+                                         ^^^^^^ keyword
+                                                      ^^^^^^ entity.name.type
+  @memo get size(): number { return this.value?.length ?? 0; }
+  ^^^^^ entity.other.attribute
+        ^^^ keyword
+                    ^^^^^^ entity.name.type
+                             ^^^^^^ keyword
+                                    ^^^^ variable.language
+                                                          ^ constant.numeric
+}
+type Keys = keyof typeof defaults;
+^^^^ keyword
+     ^^^^ entity.name.type
+            ^^^^^ keyword
+                  ^^^^^^ keyword
+type Fn = (a: number, ...rest: string[]) => void;
+^^^^ keyword
+     ^^ entity.name.type
+              ^^^^^^ entity.name.type
+                               ^^^^^^ entity.name.type
+                                            ^^^^ entity.name.type
+type Deep = Map<string, Array<number>>;
+^^^^ keyword
+     ^^^^ entity.name.type
+            ^^^ entity.name.type
+                ^^^^^^ entity.name.type
+                        ^^^^^ entity.name.type
+                              ^^^^^^ entity.name.type
+const nums = [1, 2.5, .5, 1e-3, 0b101, 0o17, 1_000] as const;
+^^^^^ keyword
+              ^ constant.numeric
+                 ^^^ constant.numeric
+                      ^^ constant.numeric
+                          ^^^^ constant.numeric
+                                ^^^^^ constant.numeric
+                                       ^^^^ constant.numeric
+                                             ^^^^^ constant.numeric
+                                                    ^^ keyword
+                                                       ^^^^^ keyword
+let s = `sum ${a + `inner ${b}`} done`;
+^^^ keyword
+        ^^^^^ string.quoted
+             ^^ punctuation.section.embedded
+                   ^^^^^^^ string.quoted
+                          ^^ punctuation.section.embedded
+                             ^ punctuation.section.embedded
+                              ^ string.quoted
+                               ^ punctuation.section.embedded
+                                ^^^^^^ string.quoted
+const re = /ab+c/gi, half = total / 2 / count;
+^^^^^ keyword
+           ^^^^^^^^ string.regexp
+                                    ^ constant.numeric
+for await (const item of stream) { if (item instanceof Error) throw item; }
+^^^ keyword
+    ^^^^^ keyword
+           ^^^^^ keyword
+                      ^^ keyword
+                                   ^^ keyword
+                                            ^^^^^^^^^^ keyword
+                                                       ^^^^^ entity.name.type
+                                                              ^^^^^ keyword
+label: while (true) { break label; }
+       ^^^^^ keyword
+              ^^^^ constant.language
+                      ^^^^^ keyword
+// line comment with "quotes"
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ comment.line
+const obj = { "key": 1, 'k2': null, undefined: void 0 };
+^^^^^ keyword
+              ^^^^^ string.quoted
+                     ^ constant.numeric
+                        ^^^^ string.quoted
+                              ^^^^ constant.language
+                                    ^^^^^^^^^ constant.language
+                                               ^^^^ entity.name.type
+                                                    ^ constant.numeric
+namespace NS { export const x = 1; }
+^^^^^^^^^ keyword
+          ^^ entity.name.type
+               ^^^^^^ keyword
+                      ^^^^^ keyword
+                                ^ constant.numeric
+abstract class A { protected abstract m(): never; }
+^^^^^^^^ keyword
+         ^^^^^ keyword
+               ^ entity.name.type
+                   ^^^^^^^^^ keyword
+                             ^^^^^^^^ keyword
+                                           ^^^^^ entity.name.type
+

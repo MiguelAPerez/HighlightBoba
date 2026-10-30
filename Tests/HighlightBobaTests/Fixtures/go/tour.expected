@@ -1,0 +1,138 @@
+/* block
+^^^^^^^^ comment.block
+   comment */
+^^^^^^^^^^^^^ comment.block
+package geo // line comment
+^^^^^^^ keyword
+            ^^^^^^^^^^^^^^^ comment.line
+
+import "math"
+^^^^^^ keyword
+       ^^^^^^ string.quoted
+
+type Number interface {
+^^^^ keyword
+     ^^^^^^ entity.name.type
+            ^^^^^^^^^ keyword
+	~int | ~float64
+  ^^^ entity.name.type
+         ^^^^^^^ entity.name.type
+}
+
+func Sum[T Number](xs ...T) (total T) {
+^^^^ keyword
+     ^^^ entity.name.function
+	for _, x := range xs {
+ ^^^ keyword
+             ^^^^^ keyword
+		total += x
+	}
+	return
+ ^^^^^^ keyword
+}
+
+type Tagged struct {
+^^^^ keyword
+     ^^^^^^ entity.name.type
+            ^^^^^^ keyword
+	Name string `json:"name,omitempty"`
+      ^^^^^^ entity.name.type
+             ^^^^^^^^^^^^^^^^^^^^^^^ string.quoted
+	ch   chan<- int
+      ^^^^ keyword
+             ^^^ entity.name.type
+	m    map[string][]byte
+      ^^^ keyword
+          ^^^^^^ entity.name.type
+                   ^^^^ entity.name.type
+}
+
+const (
+^^^^^ keyword
+	A = iota
+     ^^^^ constant.language
+	B
+	big  = 1_000_000
+        ^^^^^^^^^ constant.numeric
+	bin  = 0b1010
+        ^^^^^^ constant.numeric
+	oct  = 0o17
+        ^^^^ constant.numeric
+	old  = 017
+        ^^^ constant.numeric
+	hexf = 0x1p-2
+        ^^^^^^ constant.numeric
+	f    = .5
+        ^^ constant.numeric
+	g    = 6.02e23
+        ^^^^^^^ constant.numeric
+	neg  = 1e-9
+        ^^^^ constant.numeric
+	plus = 2.5E+3
+        ^^^^^^ constant.numeric
+	hexs = 0xAB_CD
+        ^^^^^^^ constant.numeric
+	im   = 1.5i
+        ^^^^ constant.numeric
+)
+
+func run(ch chan int, done <-chan struct{}) error {
+^^^^ keyword
+     ^^^ entity.name.function
+            ^^^^ keyword
+                 ^^^ entity.name.type
+                             ^^^^ keyword
+                                  ^^^^^^ keyword
+                                            ^^^^^ entity.name.type
+	var p *Tagged = nil
+ ^^^ keyword
+                 ^^^ constant.language
+	select {
+ ^^^^^^ keyword
+	case v, ok := <-ch:
+ ^^^^ keyword
+		if !ok || v == 0 {
+  ^^ keyword
+                 ^ constant.numeric
+			goto end
+   ^^^^ keyword
+		}
+	case <-done:
+ ^^^^ keyword
+		break
+  ^^^^^ keyword
+	default:
+ ^^^^^^^ keyword
+		fallthrough
+  ^^^^^^^^^^^ keyword
+	}
+end:
+	switch x := math.Pi; {
+ ^^^^^^ keyword
+	case x > 3:
+ ^^^^ keyword
+          ^ constant.numeric
+	}
+	go func() { defer recover() }()
+ ^^ keyword
+    ^^^^ keyword
+             ^^^^^ keyword
+                   ^^^^^^^ support.function
+	r1, r2, r3 := 'a', '\'', '\u00e9'
+               ^^^ string.quoted
+                    ^ string.quoted
+                     ^^ constant.character.escape
+                       ^ string.quoted
+                          ^ string.quoted
+                           ^^^^^^ constant.character.escape
+                                 ^ string.quoted
+	_ = "unterminated
+     ^^^^^^^^^^^^^ string.quoted
+	_ = true && false
+     ^^^^ constant.language
+             ^^^^^ constant.language
+	return nil
+ ^^^^^^ keyword
+        ^^^ constant.language
+}
+
