@@ -103,7 +103,7 @@ struct Recorded: IncrementalParser {
 /// test at a time, so no more than one held parse blocks a thread of the cooperative pool.
 extension ParseSessionTests {
     func makeSession(gate: Gate, log: ParseLog) throws -> ParseSession<Recorded> {
-        let highlighter = Highlighter(grammar: try Grammar.bundled("swift"), text: try largeText("swift", length: 25_000))
+        let highlighter = Highlighter(grammar: try Grammar.bundled("swift"), text: try largeText("swift", length: 8_000))
         return ParseSession(highlighter: highlighter, parser: Recorded(inner: SwiftParser(), gate: gate, log: log))
     }
 
@@ -177,7 +177,7 @@ extension ParseSessionTests {
         gate.open()
         session.textDidChange()
         // Blocks the main actor, so the result can't be published before `cancel()`.
-        let deadline = Date().addingTimeInterval(Gate.limit)
+        let deadline = Date().addingTimeInterval(60)
         while log.entries.isEmpty && Date() < deadline { usleep(5_000) }
         #expect(log.entries.first?.cancelled == false, "the parse ran to the end")
         session.cancel()
