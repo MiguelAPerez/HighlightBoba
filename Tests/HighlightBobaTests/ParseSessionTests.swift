@@ -3,11 +3,17 @@ import Testing
 @testable import HighlightBoba
 
 /// Holds parses until the test opens it, so a test can edit while a parse is in flight.
+///
+/// A held parse blocks a thread of the cooperative pool, which a CI runner may have only three of.
+/// So a parse whose task is cancelled goes through at once, as a real one stops early, and a test
+/// holds no more than the one parse it waits for. A parse is never held past `limit`, so a test
+/// that never opens the gate fails instead of hanging the run.
 final class Gate: @unchecked Sendable {
     private let condition = NSCondition()
     private var closed = true
     private var waitingCount = 0
     private var cancelledCount = 0
+    static let limit: TimeInterval = 20
 
     /// Parses waiting at the gate now.
     var waiting: Int { condition.withLock { waitingCount } }
@@ -17,7 +23,11 @@ final class Gate: @unchecked Sendable {
     func pass() {
         condition.withLock {
             waitingCount += 1
-            while closed { _ = condition.wait(until: Date().addingTimeInterval(10)) }
+            let deadline = Date().addingTimeInterval(Self.limit)
+            // Cancelling a task doesn't signal the condition, so it's polled.
+            while closed && !Task.isCancelled && Date() < deadline {
+                _ = condition.wait(until: min(deadline, Date().addingTimeInterval(0.005)))
+            }
             waitingCount -= 1
             if Task.isCancelled { cancelledCount += 1 }
         }
@@ -48,7 +58,7 @@ struct GatedBlocks: IncrementalParser {
 }
 
 @MainActor
-@Suite struct ParseSessionTests {
+@Suite(.serialized) struct ParseSessionTests {
     static func waitFor(_ condition: () -> Bool) async {
         for _ in 0..<2_000 where !condition() { try? await Task.sleep(for: .milliseconds(5)) }
         #expect(condition(), "timed out")
@@ -94,7 +104,8 @@ struct GatedBlocks: IncrementalParser {
         await Self.waitFor { gate.waiting == 1 }
         type("2", after: "[ c1")
         type("3", after: "[ c12")
-        await Self.waitFor { gate.waiting == 3 }
+        // The two cancelled parses go through; the newest waits.
+        await Self.waitFor { gate.cancelled == 2 && gate.waiting == 1 }
         gate.open()
         await session.waitUntilIdle()
         #expect(updates.count == 1, "only the newest parse publishes")
@@ -158,5 +169,17 @@ struct GatedBlocks: IncrementalParser {
         let full = TreeBuilder(snapshot: snapshot)
         ToyBlocks().parse(full)
         #expect(cancelled && steps * 10 < full.lookaheadSteps, "\(steps) steps after cancelling, \(full.lookaheadSteps) for the file")
+    }
+
+    /// A cancelled parse isn't held, so held parses can't fill the cooperative pool.
+    @Test func aClosedGateLetsACancelledParseThrough() async {
+        let gate = Gate()
+        let task = Task.detached { gate.pass() }
+        await Self.waitFor { gate.waiting == 1 }
+        let start = Date()
+        task.cancel()
+        await task.value
+        #expect(Date().timeIntervalSince(start) < Gate.limit / 2, "the gate held a cancelled parse")
+        #expect(gate.cancelled == 1 && gate.waiting == 0)
     }
 }
