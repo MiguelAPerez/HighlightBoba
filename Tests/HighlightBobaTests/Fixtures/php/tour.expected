@@ -1,0 +1,267 @@
+<?php
+^^^^^ punctuation.section.embedded
+declare(strict_types=1);
+^^^^^^^ keyword
+                     ^ constant.numeric
+
+namespace App\Models;
+^^^^^^^^^ keyword
+          ^^^ entity.name.type
+              ^^^^^^ entity.name.type
+
+use App\Contracts\HasName;
+^^^ keyword
+    ^^^ entity.name.type
+        ^^^^^^^^^ entity.name.type
+                  ^^^^^^^ entity.name.type
+use function strlen as len;
+^^^ keyword
+    ^^^^^^^^ keyword
+             ^^^^^^ entity.name.function
+                    ^^ keyword
+
+/**
+^^^ comment.block
+ * A tour of PHP: every construct once.
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ comment.block
+ */
+^^^ comment.block
+#[Attribute(Attribute::TARGET_CLASS), Deprecated]
+^^ punctuation
+  ^^^^^^^^^ entity.name.type
+            ^^^^^^^^^ entity.name.type
+                     ^^ punctuation
+                                      ^^^^^^^^^^ entity.name.type
+                                                ^ punctuation
+final readonly class User implements HasName
+^^^^^ keyword
+      ^^^^^^^^ keyword
+               ^^^^^ keyword
+                     ^^^^ entity.name.type
+                          ^^^^^^^^^^ keyword
+                                     ^^^^^^^ entity.name.type
+{
+    public const MAX = 0x7F_FF + 0b1010 + 0o17 + 017 + 1_000_000 + 1.5e-3 + .5;
+    ^^^^^^ keyword
+           ^^^^^ keyword
+                       ^^^^^^^ constant.numeric
+                                 ^^^^^^ constant.numeric
+                                          ^^^^ constant.numeric
+                                                 ^^^ constant.numeric
+                                                       ^^^^^^^^^ constant.numeric
+                                                                   ^^^^^^ constant.numeric
+                                                                            ^^ constant.numeric
+
+    public function __construct(
+    ^^^^^^ keyword
+           ^^^^^^^^ keyword
+                    ^^^^^^^^^^^ entity.name.function
+        private string $name,
+        ^^^^^^^ keyword
+                ^^^^^^ entity.name.type
+                       ^^^^^ variable.other
+        protected ?int $age = null,
+        ^^^^^^^^^ keyword
+                   ^^^ entity.name.type
+                       ^^^^ variable.other
+                              ^^^^ constant.language
+    ) {}
+
+    public static function make(string ...$names): static
+    ^^^^^^ keyword
+           ^^^^^^ keyword
+                  ^^^^^^^^ keyword
+                           ^^^^ entity.name.function
+                                ^^^^^^ entity.name.type
+                                          ^^^^^^ variable.other
+                                                   ^^^^^^ keyword
+    {
+        return new static(name: $names[0], age: 30);
+        ^^^^^^ keyword
+               ^^^ keyword
+                   ^^^^^^ keyword
+                          ^^^^ variable.parameter
+                                ^^^^^^ variable.other
+                                       ^ constant.numeric
+                                           ^^^ variable.parameter
+                                                ^^ constant.numeric
+    }
+
+    public function greet(): string
+    ^^^^^^ keyword
+           ^^^^^^^^ keyword
+                    ^^^^^ entity.name.function
+                             ^^^^^^ entity.name.type
+    {
+        $fn = fn(int $x): int => $x * 2;
+        ^^^ variable.other
+              ^^ keyword
+                 ^^^ entity.name.type
+                     ^^ variable.other
+                          ^^^ entity.name.type
+                                 ^^ variable.other
+                                      ^ constant.numeric
+        $n = (int) $this->age ?? 0;
+        ^^ variable.other
+             ^ punctuation
+              ^^^ entity.name.type
+                 ^ punctuation
+                   ^^^^^ variable.language
+                        ^^ punctuation
+                                 ^ constant.numeric
+        $s = (string)$n . PHP_EOL . __CLASS__;
+        ^^ variable.other
+             ^ punctuation
+              ^^^^^^ entity.name.type
+                    ^ punctuation
+                     ^^ variable.other
+                                    ^^^^^^^^^ constant.language
+        return "Hi $this->name, {$this->age} and ${n} and $list[0] \t\u{1F9CB}\$";
+        ^^^^^^ keyword
+               ^^^^ string.quoted
+                   ^^^^^^^^^^^ variable.other
+                              ^^ string.quoted
+                                ^ punctuation.section.embedded
+                                 ^^^^^ variable.language
+                                      ^^ punctuation
+                                           ^ punctuation.section.embedded
+                                            ^^^^^ string.quoted
+                                                 ^^ punctuation.section.embedded
+                                                   ^ variable.other
+                                                    ^ punctuation.section.embedded
+                                                     ^^^^^ string.quoted
+                                                          ^^^^^^^^ variable.other
+                                                                  ^ string.quoted
+                                                                   ^^^^^^^^^^^^^ constant.character.escape
+                                                                                ^ string.quoted
+    }
+}
+
+enum Suit: string
+^^^^ keyword
+     ^^^^ entity.name.type
+           ^^^^^^ entity.name.type
+{
+    case Hearts = 'H';
+    ^^^^ keyword
+         ^^^^^^ variable.other.enummember
+                  ^^^ string.quoted
+    case Spades = 'S\'s';
+    ^^^^ keyword
+         ^^^^^^ variable.other.enummember
+                  ^^ string.quoted
+                    ^^ constant.character.escape
+                      ^^ string.quoted
+}
+
+$label = match (true) {
+^^^^^^ variable.other
+         ^^^^^ keyword
+                ^^^^ constant.language
+    $user?->age > 18 => 'adult',
+    ^^^^^ variable.other
+         ^^^ punctuation
+                  ^^ constant.numeric
+                        ^^^^^^^ string.quoted
+    default => 'minor',
+    ^^^^^^^ keyword
+               ^^^^^^^ string.quoted
+};
+
+$html = <<<HTML
+^^^^^ variable.other
+        ^^^^^^^ keyword
+    <p>{$user->name} costs \$5</p>
+^^^^^^^ string.quoted
+       ^ punctuation.section.embedded
+        ^^^^^ variable.other
+             ^^ punctuation
+                   ^ punctuation.section.embedded
+                    ^^^^^^^ string.quoted
+                           ^^ constant.character.escape
+                             ^^^^^ string.quoted
+    HTML;
+^^^^^^^^ keyword
+$raw = <<<'RAW'
+^^^^ variable.other
+       ^^^^^^^^ keyword
+  no $interpolation {$here}
+^^^^^^^^^^^^^^^^^^^^^^^^^^^ string.quoted
+  RAW;
+^^^^^ keyword
+
+// a comment ?> back in HTML
+^^^^^^^^^^^^^ comment.line
+             ^^ punctuation.section.embedded
+<title><?= htmlspecialchars($title) ?></title>
+^ punctuation
+ ^^^^^ entity.name.tag
+      ^ punctuation
+       ^^^ punctuation.section.embedded
+                            ^^^^^^ variable.other
+                                    ^^ punctuation.section.embedded
+                                      ^^ punctuation
+                                        ^^^^^ entity.name.tag
+                                             ^ punctuation
+<a href="/user/<?= $id ?>" class="<?php echo $cls; ?>">link</a>
+^ punctuation
+ ^ entity.name.tag
+   ^^^^ entity.other.attribute
+       ^ punctuation
+        ^^^^^^^ string.quoted
+               ^^^ punctuation.section.embedded
+                   ^^^ variable.other
+                       ^^ punctuation.section.embedded
+                         ^ string.quoted
+                           ^^^^^ entity.other.attribute
+                                ^ punctuation
+                                 ^ string.quoted
+                                  ^^^^^ punctuation.section.embedded
+                                        ^^^^ keyword
+                                             ^^^^ variable.other
+                                                   ^^ punctuation.section.embedded
+                                                     ^ string.quoted
+                                                      ^ punctuation
+                                                           ^^ punctuation
+                                                             ^ entity.name.tag
+                                                              ^ punctuation
+<script>let x = "<?= json_encode($data) ?>";</script>
+^ punctuation
+ ^^^^^^ entity.name.tag
+       ^ punctuation
+        ^^^ keyword
+                ^ string.quoted
+                 ^^^ punctuation.section.embedded
+                                 ^^^^^ variable.other
+                                        ^^ punctuation.section.embedded
+                                          ^ string.quoted
+                                            ^^ punctuation
+                                              ^^^^^^ entity.name.tag
+                                                    ^ punctuation
+<?php if ($ok): ?>
+^^^^^ punctuation.section.embedded
+      ^^ keyword
+          ^^^ variable.other
+                ^^ punctuation.section.embedded
+  <b>yes</b>
+  ^ punctuation
+   ^ entity.name.tag
+    ^ punctuation
+        ^^ punctuation
+          ^ entity.name.tag
+           ^ punctuation
+<?php endif; # hash comment
+^^^^^ punctuation.section.embedded
+      ^^^^^ keyword
+             ^^^^^^^^^^^^^^ comment.line
+echo Suit::Hearts->value, Suit::class, TRUE, Null;
+^^^^ keyword
+     ^^^^ entity.name.type
+         ^^ punctuation
+                 ^^ punctuation
+                          ^^^^ entity.name.type
+                              ^^ punctuation
+                                ^^^^^ keyword
+                                       ^^^^ constant.language
+                                             ^^^^ constant.language
+

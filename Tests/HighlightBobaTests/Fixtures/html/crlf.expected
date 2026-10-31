@@ -1,6 +1,6 @@
 <p class="crlf">
 ^ punctuation
- ^ entity.name.type
+ ^ entity.name.tag
    ^^^^^ entity.other.attribute
         ^ punctuation
          ^^^^^^ string.quoted
@@ -9,6 +9,6 @@
        ^^^^^ constant.character.escape
 </p>
 ^^ punctuation
-  ^ entity.name.type
+  ^ entity.name.tag
    ^ punctuation
 

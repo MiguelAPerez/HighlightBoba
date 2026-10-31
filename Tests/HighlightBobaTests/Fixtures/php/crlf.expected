@@ -1,0 +1,16 @@
+<?php
+^^^^^ punctuation.section.embedded
+$a = 1; // c
+^^ variable.other
+     ^ constant.numeric
+        ^^^^ comment.line
+?>
+^^ punctuation.section.embedded
+<p>x</p>
+^ punctuation
+ ^ entity.name.tag
+  ^ punctuation
+    ^^ punctuation
+      ^ entity.name.tag
+       ^ punctuation
+

@@ -10,34 +10,34 @@
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ comment.block
 <html lang="en">
 ^ punctuation
- ^^^^ entity.name.type
+ ^^^^ entity.name.tag
       ^^^^ entity.other.attribute
           ^ punctuation
            ^^^^ string.quoted
                ^ punctuation
 <head>
 ^ punctuation
- ^^^^ entity.name.type
+ ^^^^ entity.name.tag
      ^ punctuation
   <meta charset=utf-8>
   ^ punctuation
-   ^^^^ entity.name.type
+   ^^^^ entity.name.tag
         ^^^^^^^ entity.other.attribute
                ^ punctuation
                 ^^^^^ string.quoted
                      ^ punctuation
   <title>Fish &amp; Chips &lt;3 <b>not bold</b></title>
   ^ punctuation
-   ^^^^^ entity.name.type
+   ^^^^^ entity.name.tag
         ^ punctuation
               ^^^^^ constant.character.escape
                           ^^^^ constant.character.escape
                                                ^^ punctuation
-                                                 ^^^^^ entity.name.type
+                                                 ^^^^^ entity.name.tag
                                                       ^ punctuation
   <link rel='stylesheet' href="style.css?v=1&amp;x=2">
   ^ punctuation
-   ^^^^ entity.name.type
+   ^^^^ entity.name.tag
         ^^^ entity.other.attribute
            ^ punctuation
             ^^^^^^^^^^^^ string.quoted
@@ -49,13 +49,13 @@
                                                      ^ punctuation
   <style media="screen">
   ^ punctuation
-   ^^^^^ entity.name.type
+   ^^^^^ entity.name.tag
          ^^^^^ entity.other.attribute
               ^ punctuation
                ^^^^^^^^ string.quoted
                        ^ punctuation
     body > .main { color: #333; }
-    ^^^^ entity.name.type
+    ^^^^ entity.name.tag
          ^ punctuation
            ^^^^^ entity.other.attribute
                  ^ punctuation
@@ -66,11 +66,11 @@
                                 ^ punctuation
   </style>
   ^^ punctuation
-    ^^^^^ entity.name.type
+    ^^^^^ entity.name.tag
          ^ punctuation
   <script type="module">
   ^ punctuation
-   ^^^^^^ entity.name.type
+   ^^^^^^ entity.name.tag
           ^^^^ entity.other.attribute
               ^ punctuation
                ^^^^^^^^ string.quoted
@@ -85,11 +85,11 @@
                           ^^^^ string.quoted
   </script>
   ^^ punctuation
-    ^^^^^^ entity.name.type
+    ^^^^^^ entity.name.tag
           ^ punctuation
   <script type="application/json">{"key": [1, true, null]}</script>
   ^ punctuation
-   ^^^^^^ entity.name.type
+   ^^^^^^ entity.name.tag
           ^^^^ entity.other.attribute
               ^ punctuation
                ^^^^^^^^^^^^^^^^^^ string.quoted
@@ -103,35 +103,35 @@
                                                   ^ punctuation
                                                     ^^^^ constant.language
                                                         ^^^^ punctuation
-                                                            ^^^^^^ entity.name.type
+                                                            ^^^^^^ entity.name.tag
                                                                   ^ punctuation
   <script type="text/template"><div>{{ raw }}</div></script>
   ^ punctuation
-   ^^^^^^ entity.name.type
+   ^^^^^^ entity.name.tag
           ^^^^ entity.other.attribute
               ^ punctuation
                ^^^^^^^^^^^^^^^ string.quoted
                               ^ punctuation
                                                    ^^ punctuation
-                                                     ^^^^^^ entity.name.type
+                                                     ^^^^^^ entity.name.tag
                                                            ^ punctuation
   <script src="app.js" defer></script>
   ^ punctuation
-   ^^^^^^ entity.name.type
+   ^^^^^^ entity.name.tag
           ^^^ entity.other.attribute
              ^ punctuation
               ^^^^^^^^ string.quoted
                        ^^^^^ entity.other.attribute
                             ^^^ punctuation
-                               ^^^^^^ entity.name.type
+                               ^^^^^^ entity.name.tag
                                      ^ punctuation
 </head>
 ^^ punctuation
-  ^^^^ entity.name.type
+  ^^^^ entity.name.tag
       ^ punctuation
 <BODY class="page dark" data-x = "1" hidden>
 ^ punctuation
- ^^^^ entity.name.type
+ ^^^^ entity.name.tag
       ^^^^^ entity.other.attribute
            ^ punctuation
             ^^^^^^^^^^^ string.quoted
@@ -142,7 +142,7 @@
                                            ^ punctuation
   <p style="color: red; margin: 0 auto !important">Hello&nbsp;world &#169; &#x1F9CB; &bogus</p>
   ^ punctuation
-   ^ entity.name.type
+   ^ entity.name.tag
      ^^^^^ entity.other.attribute
           ^ punctuation
            ^ string.quoted
@@ -159,11 +159,11 @@
                                                                     ^^^^^^ constant.character.escape
                                                                            ^^^^^^^^^ constant.character.escape
                                                                                            ^^ punctuation
-                                                                                             ^ entity.name.type
+                                                                                             ^ entity.name.tag
                                                                                               ^ punctuation
   <button onclick="go('home'); return false;" disabled>Go</button>
   ^ punctuation
-   ^^^^^^ entity.name.type
+   ^^^^^^ entity.name.tag
           ^^^^^^^ entity.other.attribute
                  ^ punctuation
                   ^ string.quoted
@@ -174,11 +174,11 @@
                                               ^^^^^^^^ entity.other.attribute
                                                       ^ punctuation
                                                          ^^ punctuation
-                                                           ^^^^^^ entity.name.type
+                                                           ^^^^^^ entity.name.tag
                                                                  ^ punctuation
   <img src=logo.png alt="" width=100/>
   ^ punctuation
-   ^^^ entity.name.type
+   ^^^ entity.name.tag
        ^^^ entity.other.attribute
           ^ punctuation
            ^^^^^^^^ string.quoted
@@ -191,11 +191,11 @@
                                      ^ punctuation
   <br><hr/><input type=checkbox checked>
   ^ punctuation
-   ^^ entity.name.type
+   ^^ entity.name.tag
      ^^ punctuation
-       ^^ entity.name.type
+       ^^ entity.name.tag
          ^^^ punctuation
-            ^^^^^ entity.name.type
+            ^^^^^ entity.name.tag
                   ^^^^ entity.other.attribute
                       ^ punctuation
                        ^^^^^^^^ string.quoted
@@ -203,18 +203,18 @@
                                        ^ punctuation
   <textarea name="t">Raw <b>text</b> &amp; entities</textarea>
   ^ punctuation
-   ^^^^^^^^ entity.name.type
+   ^^^^^^^^ entity.name.tag
             ^^^^ entity.other.attribute
                 ^ punctuation
                  ^^^ string.quoted
                     ^ punctuation
                                      ^^^^^ constant.character.escape
                                                    ^^ punctuation
-                                                     ^^^^^^^^ entity.name.type
+                                                     ^^^^^^^^ entity.name.tag
                                                              ^ punctuation
   <svg viewBox="0 0 10 10"><![CDATA[ x < y ]]></svg>
   ^ punctuation
-   ^^^ entity.name.type
+   ^^^ entity.name.tag
        ^^^^^^^ entity.other.attribute
               ^ punctuation
                ^^^^^^^^^^^ string.quoted
@@ -222,11 +222,11 @@
                            ^^^^^^^^^ meta.preprocessor
                                            ^^^ meta.preprocessor
                                               ^^ punctuation
-                                                ^^^ entity.name.type
+                                                ^^^ entity.name.tag
                                                    ^ punctuation
   <a
   ^ punctuation
-   ^ entity.name.type
+   ^ entity.name.tag
     href="/multi"
     ^^^^ entity.other.attribute
         ^ punctuation
@@ -238,7 +238,7 @@
   >link</a>
   ^ punctuation
        ^^ punctuation
-         ^ entity.name.type
+         ^ entity.name.tag
           ^ punctuation
   <?xml-stylesheet href="a.xsl"?>
   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ meta.preprocessor
@@ -249,10 +249,10 @@
   if a < b && c > d
 </BODY>
 ^^ punctuation
-  ^^^^ entity.name.type
+  ^^^^ entity.name.tag
       ^ punctuation
 </html>
 ^^ punctuation
-  ^^^^ entity.name.type
+  ^^^^ entity.name.tag
       ^ punctuation
 

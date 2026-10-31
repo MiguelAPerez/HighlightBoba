@@ -1,0 +1,34 @@
+<?PHP echo 1 ?><?php
+$a = "no ?> close in a string";
+/* nor ?> in a block comment */
+$b = 'single $no {$interp}' . "multi
+line string with {$a['k']["c"]} and $obj?->prop";
+$c = <<<"EOT"
+  EOTX is not the end
+  value: {$a}
+  EOT . 'tail';
+$d = foo(<<<EOT
+    body
+    EOT, 2);
+$e = 0X1F + 1e10 + 1_000.5_0 + 07_7;
+$f = ( float ) $x + (object)[] + (bool)$y;
+$g = $obj?->a?->b()::c;
+$h = $$name . $this . self::X . parent::y();
+#not an attribute
+#[\Foo\Bar(1, [2, 3]), Baz]
+function &ref(array &$arr = []): ?array { return $arr; }
+switch ($x) { case FOO: break; default: goto end; }
+end: echo 1;
+$t = $x ? CONST_A : CONST_B;
+f(
+    first: 1,
+    second: 2,
+);
+IF ($x) { ECHO "upper"; }
+$emoji = "🧋 $tea";
+?>
+<p>🧋 html</p>
+<? echo "short tag" ?>
+<?php
+// no closing tag: the rest stays PHP
+<p>not html</p>
