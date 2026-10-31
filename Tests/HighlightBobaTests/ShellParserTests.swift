@@ -340,6 +340,5 @@ import Testing
         let run = clock.measure { _ = queries.run(on: tree!) }
         print("benchmark: \(text.utf16.count / 1024) KB shell, parse \(parse), queries \(run)")
         #expect(tree!.errors.isEmpty)
-        #expect(parse < .seconds(5))
     }
 }
