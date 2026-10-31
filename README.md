@@ -15,11 +15,11 @@ for token in highlighter.tokens {
 let changed = highlighter.replaceCharacters(in: editedRange, with: replacement) // re-scans only what the edit affects
 ```
 
-Grammars are data: a small pushdown state machine per language, matched without regex or backtracking. See [docs/GRAMMAR.md](docs/GRAMMAR.md). A parser layer is being built on top of them for the languages that need context; see [docs/PARSER.md](docs/PARSER.md).
+Grammars are data: a small pushdown state machine per language, matched without regex or backtracking. See [docs/GRAMMAR.md](docs/GRAMMAR.md). For the languages that need context (Swift, JavaScript/TypeScript, JSX/TSX, Python and shell), a parser layer on top refines those colours; see [docs/PARSER.md](docs/PARSER.md).
 
 ## Contributing
 
-**Issues welcome, PRs not yet.** Bug reports, language requests and design feedback are very welcome as issues. Pull requests from outside contributors will open once the grammar format is stable; until then they will be closed without review. See [CONTRIBUTING.md](CONTRIBUTING.md) for how the data and engine lanes will work, and [SECURITY.md](SECURITY.md) to report a vulnerability privately.
+**Pull requests are welcome.** So are bug reports, language requests and design feedback as issues. Read [CONTRIBUTING.md](CONTRIBUTING.md) first: every PR belongs to the data lane (grammars, fixtures, queries) or the engine lane (Swift code), and both need a fixture or test that fails without the change. To report a vulnerability privately, see [SECURITY.md](SECURITY.md).
 
 ## License
 
