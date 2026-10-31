@@ -7,6 +7,9 @@ import Foundation
 /// An edit that arrives while a parse runs cancels it; the next parse covers every edit since the
 /// last published tree. A result is published only if the text is still the one it was parsed
 /// from, so a tree never lands over newer text.
+///
+/// Cancelling is cooperative: the parse checks between tokens and stops within a bounded amount
+/// of work. `cancel()` stops it without publishing, and so does releasing the session.
 @MainActor
 public final class ParseSession<Parser: IncrementalParser> {
     public let highlighter: Highlighter
@@ -36,6 +39,17 @@ public final class ParseSession<Parser: IncrementalParser> {
     public init(highlighter: Highlighter, parser: Parser) {
         self.highlighter = highlighter
         self.parser = parser
+    }
+
+    // The task is `Sendable` and cancelling it is thread-safe, so the nonisolated deinit may.
+    deinit { parsing?.cancel() }
+
+    /// Stops the parse that is running, if any, and publishes nothing from it. The tree stays the
+    /// last one published; the next `textDidChange()` parses every edit since it.
+    public func cancel() {
+        parsing?.cancel()
+        // Whatever it returns is no longer the newest parse, so it can't publish.
+        generation += 1
     }
 
     /// Starts a parse of the current text, cancelling one that is running.

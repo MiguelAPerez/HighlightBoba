@@ -219,10 +219,28 @@ session.textDidChange()
 ```
 
 `textDidChange()` takes a `Sendable` snapshot, cancels the parse that is running, and starts one
-that covers every edit since the last published tree. The builder notices cancellation within a
-few thousand lookahead steps and stops early. A result is published, on the main actor, only if
+that covers every edit since the last published tree. A result is published, on the main actor, only if
 it is the newest parse and the text is still the revision it was parsed from. Anything older is
 dropped, never applied over newer text.
+
+#### Cancelling
+
+A parse is cancelled when a newer `textDidChange()` supersedes it, when the host calls `cancel()`
+(the editor is closing), and when the session is released. A cancelled parse never publishes, and
+the tree stays the last one published, so the next `textDidChange()` covers every edit since it.
+
+Cancelling is cooperative, and lives in `TreeBuilder`, so every parser gets it without code of its
+own. Every token a parser looks at or consumes goes through the builder's lookahead, which checks
+`Task.isCancelled` on its first call and then once every 1,024 calls. Once it is set, the builder
+reads as at the end of the text: the parser's loops end and its recursion unwinds as it would at
+the end of a file, a few steps for each node still open. A re-lex request reads as
+refused, so nothing is re-scanned. The check never blocks, takes no lock and allocates nothing.
+
+So a cancelled parse stops within a bounded amount of parser work, whatever the file's size. What
+is left is linear memory work: `finish()` puts the tokens not yet read into the root, so even a
+cancelled tree is lossless. A block reparse checks between its attempts and, cancelled, doesn't
+fall back to a whole parse: the parser isn't started again. The tests cancel each bundled
+parser partway through a large file and count the lookahead it took after noticing.
 
 ## Bundled parsers
 

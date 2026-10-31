@@ -44,7 +44,12 @@ public final class TreeBuilder {
     private var lookedTo = 0
     /// The task this parse runs in was cancelled: the builder reads as at the end.
     private(set) var isCancelled = false
-    private var cancellationChecks = 0
+    /// `lookaheadSteps` when the builder noticed it was cancelled, for the tests.
+    private(set) var stepsWhenCancelled: Int?
+    /// Lookahead calls until cancellation is next checked; the first call checks.
+    private var untilCancellationCheck = 0
+    /// Whether the parse should stop. The tests replace it to cancel at a chosen point.
+    var cancellation: () -> Bool = { Task.isCancelled }
     /// Set when reparsing one block: its tokens are all the builder has.
     private let window: Window?
     /// The window parse read past its end, or re-lexed beyond its last line: its tree can't be used.
@@ -63,6 +68,11 @@ public final class TreeBuilder {
     /// Lookahead without consuming anything after which the parser is taken to be stuck: from
     /// then on the builder reads as at the end, so a loop that never advances still terminates.
     public static let maxStall = 4096
+
+    /// Lookahead calls between checks for cancellation. Every token a parser consumes or looks at
+    /// goes through lookahead, so a cancelled parse stops within this many of them: after that the
+    /// builder reads as at the end, and the parser unwinds as it would at the end of the text.
+    static let cancellationInterval = 1024
 
     private struct Frame {
         var kind: SyntaxKind
@@ -181,8 +191,14 @@ public final class TreeBuilder {
 
     /// `nextSignificant` on the parser's behalf, which reads as the end once the parser is stuck.
     private func lookahead(_ offset: Int = 0) -> Int? {
-        cancellationChecks += 1
-        if cancellationChecks & 1023 == 0 && Task.isCancelled { isCancelled = true }
+        if untilCancellationCheck == 0 {
+            untilCancellationCheck = Self.cancellationInterval
+            if !isCancelled && cancellation() {
+                isCancelled = true
+                stepsWhenCancelled = lookaheadSteps
+            }
+        }
+        untilCancellationCheck -= 1
         guard !stalled, !isCancelled else { return nil }
         stall += 1
         maxStall = max(maxStall, stall)
