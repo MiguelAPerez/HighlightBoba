@@ -59,9 +59,20 @@ struct GatedBlocks: IncrementalParser {
 
 @MainActor
 @Suite(.serialized) struct ParseSessionTests {
-    static func waitFor(_ condition: () -> Bool) async {
-        for _ in 0..<2_000 where !condition() { try? await Task.sleep(for: .milliseconds(5)) }
-        #expect(condition(), "timed out")
+    /// Blocks the main thread until `condition` holds, for up to two minutes. Whether it did.
+    ///
+    /// A parse held at a closed gate blocks a thread of the cooperative pool, and a CI runner may
+    /// have only three, with long tests on the others. An `await` here can wait on a thread the pool
+    /// doesn't have, and give up before the parse is even at the gate; the main thread needs none.
+    static func blockUntil(_ condition: () -> Bool) -> Bool {
+        let deadline = Date().addingTimeInterval(120)
+        while !condition() && Date() < deadline { usleep(1_000) }
+        return condition()
+    }
+
+    static func waitFor(_ condition: () -> Bool) {
+        let held = blockUntil(condition)
+        #expect(held, "timed out")
     }
 
     static func makeSession(_ text: String, gate: Gate) async -> (ParseSession<GatedBlocks>, [ParseSession<GatedBlocks>.Update]) {
@@ -101,12 +112,12 @@ struct GatedBlocks: IncrementalParser {
             session.textDidChange()
         }
         type("1", after: "[ c")
-        await Self.waitFor { gate.waiting == 1 }
+        Self.waitFor { gate.waiting == 1 }
         type("2", after: "[ c1")
         type("3", after: "[ c12")
         // The cancelled parses go through; the newest waits. The second can be cancelled before it
         // starts, and then it never reaches the gate: a cancelled parse doesn't start the parser.
-        await Self.waitFor { gate.cancelled >= 1 && gate.waiting == 1 }
+        Self.waitFor { gate.cancelled >= 1 && gate.waiting == 1 }
         gate.open()
         await session.waitUntilIdle()
         #expect(updates.count == 1, "only the newest parse publishes")
@@ -125,7 +136,7 @@ struct GatedBlocks: IncrementalParser {
         gate.close()
         session.highlighter.replaceCharacters(in: NSRange(location: 2, length: 0), with: "b ")
         session.textDidChange()
-        await Self.waitFor { gate.waiting == 1 }
+        Self.waitFor { gate.waiting == 1 }
         // Edited again before the parse ends, and the host hasn't asked for a parse yet.
         session.highlighter.replaceCharacters(in: NSRange(location: 2, length: 0), with: "c ")
         gate.open()
@@ -163,7 +174,7 @@ struct GatedBlocks: IncrementalParser {
             #expect(leafText(tree.root) == text, "a cancelled parse still finishes a lossless tree")
             return (builder.isCancelled, builder.lookaheadSteps)
         }
-        await Self.waitFor { gate.waiting == 1 }
+        Self.waitFor { gate.waiting == 1 }
         task.cancel()
         gate.open()
         let (cancelled, steps) = await task.value
@@ -176,7 +187,7 @@ struct GatedBlocks: IncrementalParser {
     @Test func aClosedGateLetsACancelledParseThrough() async {
         let gate = Gate()
         let task = Task.detached { gate.pass() }
-        await Self.waitFor { gate.waiting == 1 }
+        Self.waitFor { gate.waiting == 1 }
         let start = Date()
         task.cancel()
         await task.value

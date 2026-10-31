@@ -101,19 +101,9 @@ struct Recorded: IncrementalParser {
 
 /// `ParseSession` cancelling a real parse of a large file.
 ///
-/// A parse held at a closed gate blocks a thread of the cooperative pool, and a CI runner may
-/// have only three, with long tests on the others. An `await` there can wait on a thread the pool
-/// doesn't have, so these tests block the main thread instead, which needs none, until the parse
-/// is at the gate, and cancel it at once: it is held a few milliseconds, not for as long as the
-/// pool is busy.
+/// These block the main thread until the parse is at the gate (see `blockUntil`) and cancel it at
+/// once: it is held a few milliseconds, not for as long as the pool is busy.
 extension ParseSessionTests {
-    /// Blocks the main thread until `condition` holds, for up to two minutes. Whether it did.
-    static func blockUntil(_ condition: () -> Bool) -> Bool {
-        let deadline = Date().addingTimeInterval(120)
-        while !condition() && Date() < deadline { usleep(1_000) }
-        return condition()
-    }
-
     static func stoppedEarly(_ entry: ParseLog.Entry) -> Bool {
         entry.cancelled && entry.steps < TreeBuilder.cancellationInterval
     }
