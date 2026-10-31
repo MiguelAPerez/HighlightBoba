@@ -297,9 +297,8 @@ an `error` node and keeps the lexer's colours.
 
 ### JavaScript and TypeScript
 
-One parser reads both. The TypeScript dialect adds types, interfaces, enums, namespaces, `declare`,
+One parser reads both, and JSX and TSX ([below](#jsx-and-tsx)). The TypeScript dialect adds types, interfaces, enums, namespaces, `declare`,
 generics, `as`/`satisfies`, `!`, access modifiers and decorators; declaration files are the same grammar.
-JSX isn't parsed yet: it will join the re-lex requests below.
 
 Its reparse boundaries are statement blocks, class bodies, object literals, switch bodies, object
 types and enum bodies. None of them depends on anything around its `{`: flags like `in` being an
@@ -337,6 +336,59 @@ name used as a value (`const string = 1`) is a variable.
 
 **Depth.** Constructs nest at most 200 nodes deep (`JSParse.maxDepth`): deeper, the parser records an
 error and stops nesting, so a parse fits a background thread's 512 KB stack even in a debug build.
+
+### JSX and TSX
+
+The `jsx` and `tsx` languages (`.jsx`, `.tsx`) are the JavaScript and TypeScript parser in its JSX
+dialects (`JSParser(dialect: .jsx)`, `.tsx`). Their grammars are `javascript.json` and
+`typescript.json` plus JSX states ([GRAMMAR.md](GRAMMAR.md#jsx-and-tsx)).
+
+**Deciding `<`.** Where an expression starts, `<` opens an element; after an operand it is a
+comparison, or in TSX type arguments (`f<T>(x)`). The lexer guesses from the character before it,
+as it does for a regex: an element after `(`, `=`, `=>`, `,`, `?`, `:`, `{`, `&&`, a line start or
+`return`, and not after a name, a number, `)`, `]` or a quote. The parser corrects a wrong guess
+with a re-lex request: `jsxStart` reads a `<` as an element's, `jsxLessThan` as the operator (in
+`total\n  <limit`, or a type such as `type F = <T>(x: T) => T`). In TSX there are no `<T>x`
+assertions, so `<T>…` where an expression starts is always an element, while `<T,>(x) =>` and
+`<T extends U>(x) =>` are generic arrows; the lexer leaves those two alone. `.js` and `.ts` are
+unchanged.
+
+**Elements.** Elements and fragments (`<>…</>`), self-closing tags, intrinsic names (`div`,
+`my-element`, `svg:rect`), components (`Button`, `Foo.Bar`, `this.Item`), TSX type arguments
+(`<List<T> …>`), attributes (string, `{expression}`, `{...spread}`, boolean, `aria-label`,
+`xlink:href`), text with entities, and `{expressions}` holding any JS or TS, JSX nested in them
+included. Comments go in `{/* */}` or between attributes.
+
+| Node | What | Scope |
+|------|------|-------|
+| `jsx_tag_name` | an intrinsic element's name: lowercase, dashed or namespaced | `entity.name.tag` |
+| `jsx_component_name` | a component's name; `this` in `<this.Item>` is `variable.language` | `entity.name.type` |
+| `jsx_attribute_name` | `className`, `aria-label`, `xlink:href` | `entity.other.attribute` |
+| `jsx_expression` | its `{` and `}` | `punctuation.section.embedded` |
+| `jsx_text` | text between tags, lexed in a JSX state so keywords and quotes in it stay plain | none |
+
+Tags (`jsx_opening_tag`, `jsx_closing_tag`, `jsx_self_closing_tag`) sit in a `jsx_element`. The
+lexer scopes their `<`, `/` and `>` as `punctuation` and entities (`&amp;`, `&#169;`, `&#xA9;`) as
+`constant.character.escape`.
+
+**Recovery.** The lexer's stack holds a state per open element, so a broken element would make it
+read the rest of the file as JSX. The parser ends the element, records an error, and re-lexes the
+next token after popping the element's states (`jsxPop1`…`jsxPop16`), so what follows is code again:
+
+- A tag that meets anything an attribute can't start with (`<div className=` and a `}`) ends there.
+- A quoted value that runs past its line and holds `<`, `>`, `{`, `}` or `=`, or doesn't close,
+  is a quote left open: it ends at the line end (`jsxLineString`). A long `className` spanning
+  lines still parses.
+- A `}` in text can't be JSX, so the root's open elements end before it, and it closes the block.
+- A closing tag naming an outer element (`<div><p>x</div>`) closes the ones inside it; one that
+  names nothing open closes the innermost.
+- Where an expression starts, a `<` the lexer left as an operator opens an element only when a
+  name or `>` follows it directly: `< b` is a comparison being typed, not `<b`.
+
+**Cost.** A re-lex re-scans from its line until the lexer's state meets the old reading, so a
+correct guess costs nothing and a wrong one usually its element's lines. One the old reading never
+meets again (an element left open) re-scans to the end of the file. The re-lex budget keeps that
+linear: past it, later elements keep the lexer's guess.
 
 ### Shell
 

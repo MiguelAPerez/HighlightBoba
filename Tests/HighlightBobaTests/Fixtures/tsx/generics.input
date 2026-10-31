@@ -1,0 +1,8 @@
+const a = <T,>(x: T) => x;
+const b = <T extends object>(x: T): T => x;
+const c = async <const T, U = string>(x: T) => x;
+const d = <T>text</T>;
+const e = <T extends="attribute" />;
+const f = f<string>(1) < g;
+const g = new Map<string, Array<number>>();
+const h = value as unknown as Props;

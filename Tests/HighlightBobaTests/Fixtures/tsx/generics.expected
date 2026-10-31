@@ -1,0 +1,69 @@
+const a = <T,>(x: T) => x;
+^^^^^ keyword
+      ^ variable.other
+           ^ entity.name.type
+               ^ variable.other
+                  ^ entity.name.type
+                        ^ variable.other
+const b = <T extends object>(x: T): T => x;
+^^^^^ keyword
+      ^ variable.other
+           ^ entity.name.type
+             ^^^^^^^ keyword
+                     ^^^^^^ entity.name.type
+                             ^ variable.other
+                                ^ entity.name.type
+                                    ^ entity.name.type
+                                         ^ variable.other
+const c = async <const T, U = string>(x: T) => x;
+^^^^^ keyword
+      ^ variable.other
+          ^^^^^ keyword
+                 ^^^^^ keyword
+                       ^ entity.name.type
+                          ^ entity.name.type
+                              ^^^^^^ entity.name.type
+                                      ^ variable.other
+                                         ^ entity.name.type
+                                               ^ variable.other
+const d = <T>text</T>;
+^^^^^ keyword
+      ^ variable.other
+          ^ punctuation
+           ^ entity.name.type
+            ^ punctuation
+                 ^^ punctuation
+                   ^ entity.name.type
+                    ^ punctuation
+const e = <T extends="attribute" />;
+^^^^^ keyword
+      ^ variable.other
+          ^ punctuation
+           ^ entity.name.type
+             ^^^^^^^ entity.other.attribute
+                     ^^^^^^^^^^^ string.quoted
+                                 ^^ punctuation
+const f = f<string>(1) < g;
+^^^^^ keyword
+      ^ variable.other
+          ^ variable.other
+            ^^^^^^ entity.name.type
+                    ^ constant.numeric
+                         ^ variable.other
+const g = new Map<string, Array<number>>();
+^^^^^ keyword
+      ^ variable.other
+          ^^^ keyword
+              ^^^ entity.name.type
+                  ^^^^^^ entity.name.type
+                          ^^^^^ entity.name.type
+                                ^^^^^^ entity.name.type
+const h = value as unknown as Props;
+^^^^^ keyword
+      ^ variable.other
+          ^^^^^ variable.other
+                ^^ keyword
+                   ^^^^^^^ entity.name.type
+                           ^^ keyword
+                              ^^^^^ entity.name.type
+

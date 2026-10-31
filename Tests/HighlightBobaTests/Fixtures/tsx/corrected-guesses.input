@@ -1,0 +1,9 @@
+const small = total
+  <limit && ok;
+type Pick = <T>(items: T[]) => T;
+let make: <T,>(value: T) => Box<T>;
+interface Factory {
+  <T>(value: T): Box<T>;
+  new <T>(value: T): Box<T>;
+}
+const view = cond ? <Box>{small}</Box> : <T,>(x: T) => x;

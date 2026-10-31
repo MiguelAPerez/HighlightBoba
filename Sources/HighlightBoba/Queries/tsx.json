@@ -1,0 +1,121 @@
+{
+  "format": 1,
+  "language": "tsx",
+  "queries": [
+    {
+      "in": "jsx_expression",
+      "text": "{",
+      "index": 0,
+      "scope": "punctuation.section.embedded"
+    },
+    {
+      "in": "jsx_expression",
+      "text": "}",
+      "index": -1,
+      "scope": "punctuation.section.embedded"
+    },
+    {
+      "in": "jsx_component_name",
+      "text": "this",
+      "index": 0,
+      "scope": "variable.language"
+    },
+    {
+      "in": "jsx_component_name",
+      "kind": "word",
+      "scope": "entity.name.type"
+    },
+    {
+      "in": "jsx_tag_name",
+      "scope": "entity.name.tag"
+    },
+    {
+      "in": "jsx_attribute_name",
+      "scope": "entity.other.attribute"
+    },
+    {
+      "in": "decorator",
+      "scope": "entity.other.attribute"
+    },
+    {
+      "in": "function_name",
+      "scope": "entity.name.function"
+    },
+    {
+      "in": "method_name",
+      "scope": "entity.name.function"
+    },
+    {
+      "in": "type_name",
+      "scope": "entity.name.type"
+    },
+    {
+      "in": "property_name",
+      "scope": "support.type.property-name"
+    },
+    {
+      "in": "label",
+      "scope": "variable.other"
+    },
+    {
+      "in": "type_identifier",
+      "scope": "entity.name.type"
+    },
+    {
+      "text": "void",
+      "in": "unary_expression",
+      "index": 0,
+      "scope": "keyword"
+    },
+    {
+      "in": "binding",
+      "text": [
+        "any",
+        "unknown",
+        "never",
+        "string",
+        "number",
+        "boolean",
+        "bigint",
+        "symbol",
+        "object"
+      ],
+      "scope": "variable.other"
+    },
+    {
+      "in": "identifier",
+      "text": [
+        "any",
+        "unknown",
+        "never",
+        "string",
+        "number",
+        "boolean",
+        "bigint",
+        "symbol",
+        "object"
+      ],
+      "scope": "variable.other"
+    },
+    {
+      "in": "binding",
+      "kind": "word",
+      "scope": "variable.other"
+    },
+    {
+      "in": "binding",
+      "lexerScope": "keyword",
+      "scope": "variable.other"
+    },
+    {
+      "in": "identifier",
+      "kind": "word",
+      "scope": "variable.other"
+    },
+    {
+      "in": "identifier",
+      "lexerScope": "keyword",
+      "scope": "variable.other"
+    }
+  ]
+}

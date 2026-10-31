@@ -213,6 +213,7 @@ extension JSParse {
     /// A type. `noConditional` reads `A extends B` without the `? :` (the check of a conditional type).
     func type(noConditional: Bool = false) {
         if tooDeep() { return }
+        angleIfNeeded()
         if atSym("<") || (atSym("(") && arrowFollows(parenAt: 0)) { return functionType(JSKind.functionType) }
         if atWord("new") || (atWord("abstract") && atWord("new", 1)) { return functionType(JSKind.constructorType) }
         let mark = checkpoint()
@@ -443,6 +444,7 @@ extension JSParse {
     }
 
     func typeMember() {
+        angleIfNeeded()
         let mark = checkpoint()
         if atSym("(") || atSym("<") {
             start(JSKind.callSignature, at: mark)
@@ -485,6 +487,7 @@ extension JSParse {
 
     /// `<T extends C = D, …>` where things are declared.
     func typeParameters() {
+        angleIfNeeded()
         start(JSKind.typeParameters)
         bump()
         while !isAtEnd && !atSym(">") && !atCloser {
@@ -510,6 +513,7 @@ extension JSParse {
 
     /// `<A, B>` where types are applied.
     func typeArguments() {
+        angleIfNeeded()
         start(JSKind.typeArguments)
         bump()
         while !isAtEnd && !atSym(">") && !atCloser {

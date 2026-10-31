@@ -1,0 +1,65 @@
+const note = (
+^^^^^ keyword
+      ^^^^ variable.other
+  <p>
+  ^ punctuation
+   ^ entity.name.tag
+    ^ punctuation
+    function return class if else "not a string" 'nor this' `nor this`
+    // not a comment
+    1 + 2 = {1 + 2}, a &lt; b is {String(a < b)}
+            ^ punctuation.section.embedded
+             ^ constant.numeric
+                 ^ constant.numeric
+                  ^ punctuation.section.embedded
+                       ^^^^ constant.character.escape
+                                 ^ punctuation.section.embedded
+                                  ^^^^^^ entity.name.type
+                                         ^ variable.other
+                                             ^ variable.other
+                                               ^ punctuation.section.embedded
+    &nbsp;&lt;tag&gt;&#169;&#xA9;&notAnEntity
+    ^^^^^^^^^^ constant.character.escape
+                 ^^^^^^^^^^^^^^^^ constant.character.escape
+  </p>
+  ^^ punctuation
+    ^ entity.name.tag
+     ^ punctuation
+);
+const less = a < b && c > d;
+^^^^^ keyword
+      ^^^^ variable.other
+             ^ variable.other
+                 ^ variable.other
+                      ^ variable.other
+                          ^ variable.other
+const nested = <A>{cond && <B>{list.map(x => <C key={x} />)}</B>}</A>;
+^^^^^ keyword
+      ^^^^^^ variable.other
+               ^ punctuation
+                ^ entity.name.type
+                 ^ punctuation
+                  ^ punctuation.section.embedded
+                   ^^^^ variable.other
+                           ^ punctuation
+                            ^ entity.name.type
+                             ^ punctuation
+                              ^ punctuation.section.embedded
+                               ^^^^ variable.other
+                                        ^ variable.other
+                                             ^ punctuation
+                                              ^ entity.name.type
+                                                ^^^ entity.other.attribute
+                                                    ^ punctuation.section.embedded
+                                                     ^ variable.other
+                                                      ^ punctuation.section.embedded
+                                                        ^^ punctuation
+                                                           ^ punctuation.section.embedded
+                                                            ^^ punctuation
+                                                              ^ entity.name.type
+                                                               ^ punctuation
+                                                                ^ punctuation.section.embedded
+                                                                 ^^ punctuation
+                                                                   ^ entity.name.type
+                                                                    ^ punctuation
+

@@ -49,7 +49,7 @@ struct Recorded: IncrementalParser {
 /// One test at a time: they're heavy, and a CI runner's cooperative pool may have only three
 /// threads, which the session tests' parses need too.
 @Suite(.serialized) struct CancellationTests {
-    static let languages = ["swift", "javascript", "typescript", "python", "shell"]
+    static let languages = ["swift", "javascript", "typescript", "jsx", "tsx", "python", "shell"]
 
     static func builder(_ language: String) throws -> (TreeBuilder, String, any IncrementalParser) {
         let text = try largeText(language)

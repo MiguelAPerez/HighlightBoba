@@ -1,0 +1,57 @@
+const small = total
+^^^^^ keyword
+      ^^^^^ variable.other
+              ^^^^^ variable.other
+  <limit && ok;
+   ^^^^^ variable.other
+            ^^ variable.other
+type Pick = <T>(items: T[]) => T;
+^^^^ keyword
+     ^^^^ entity.name.type
+             ^ entity.name.type
+                ^^^^^ variable.other
+                       ^ entity.name.type
+                               ^ entity.name.type
+let make: <T,>(value: T) => Box<T>;
+^^^ keyword
+    ^^^^ variable.other
+           ^ entity.name.type
+               ^^^^^ variable.other
+                      ^ entity.name.type
+                            ^^^ entity.name.type
+                                ^ entity.name.type
+interface Factory {
+^^^^^^^^^ keyword
+          ^^^^^^^ entity.name.type
+  <T>(value: T): Box<T>;
+   ^ entity.name.type
+      ^^^^^ variable.other
+             ^ entity.name.type
+                 ^^^ entity.name.type
+                     ^ entity.name.type
+  new <T>(value: T): Box<T>;
+  ^^^ keyword
+       ^ entity.name.type
+          ^^^^^ variable.other
+                 ^ entity.name.type
+                     ^^^ entity.name.type
+                         ^ entity.name.type
+}
+const view = cond ? <Box>{small}</Box> : <T,>(x: T) => x;
+^^^^^ keyword
+      ^^^^ variable.other
+             ^^^^ variable.other
+                    ^ punctuation
+                     ^^^ entity.name.type
+                        ^ punctuation
+                         ^ punctuation.section.embedded
+                          ^^^^^ variable.other
+                               ^ punctuation.section.embedded
+                                ^^ punctuation
+                                  ^^^ entity.name.type
+                                     ^ punctuation
+                                          ^ entity.name.type
+                                              ^ variable.other
+                                                 ^ entity.name.type
+                                                       ^ variable.other
+

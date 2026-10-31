@@ -1,0 +1,21 @@
+function halfTypedAttribute() {
+  return <div className="app
+}
+function unclosedChild() {
+  return <div>
+    <span>
+  </div>;
+}
+function halfTypedChildTag() {
+  return (
+    <ul>
+      <li
+    </ul>
+  );
+}
+function unclosedRoot() {
+  return <p>no closing tag (yet);
+}
+const mismatched = <a>x</b>;
+const halfTyped = <
+function stillCode() { return 1 }

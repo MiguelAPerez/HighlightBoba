@@ -8,6 +8,8 @@ import Foundation
 final class JSParse {
     let b: TreeBuilder
     let ts: Bool
+    /// JSX elements are expressions (`.jsx` and `.tsx`); a TSX file has no `<T>value` assertions.
+    let jsx: Bool
     /// Where the last consumed token ends, for ASI (`newlineBefore`) and for telling string pieces
     /// that belong together.
     private(set) var lastEnd = 0
@@ -25,13 +27,14 @@ final class JSParse {
 
     init(_ builder: TreeBuilder, dialect: JSParser.Dialect) {
         b = builder
-        ts = dialect == .typescript
+        ts = dialect == .typescript || dialect == .tsx
+        jsx = dialect == .jsx || dialect == .tsx
     }
 
     // MARK: Re-lexing
 
     /// What the parser asks the lexer to re-read the next token as. Each names a grammar state that
-    /// exists only for these requests (JSX tags would join them here).
+    /// exists only for these requests.
     enum Relex: String {
         /// A `/` the lexer read as division where an expression starts: a regex.
         case regex = "regexStart"
@@ -40,10 +43,36 @@ final class JSParse {
         /// A contextual keyword used as a name, read by the lexer together with a following `/` as
         /// a regex (`of / 2`): a plain word, so the `/` after it is division.
         case identifier = "identifierStart"
+        /// A `<` where an expression starts, in JSX: the start of an element, lexed in JSX states.
+        case jsx = "jsxStart"
+        /// A `<` the lexer guessed opens an element where an operator or a type belongs: `a\n<b`,
+        /// `type F = <T>(x: T) => T`.
+        case lessThan = "jsxLessThan"
+        /// A JSX attribute's quoted value that runs on past its line into what is clearly not
+        /// one, as a half-typed `className="a` would: a string that ends at the line end.
+        case jsxLineString = "jsxLineString"
     }
 
     @discardableResult
     func relex(_ request: Relex) -> Bool { b.relex(as: request.rawValue) }
+
+    /// Where a `<` can't open an element (after an operand, in a type), one the lexer took for
+    /// an element's is re-lexed as the operator.
+    @inline(never)
+    func angleIfNeeded() {
+        if jsx && jsxPunctuation("<") { relex(.lessThan) }
+    }
+
+    /// The JSX states the lexer can be asked to leave at once (`jsxPop1`…).
+    static let jsxPopLimit = 16
+
+    /// Re-lexes the next token after popping `count` of the lexer's JSX states, to leave elements
+    /// the parser has ended: a half-typed tag, or ones a stray `}` or an outer closing tag ends.
+    @discardableResult
+    func relexPopping(_ count: Int) -> Bool {
+        guard count > 0, count <= Self.jsxPopLimit else { return false }
+        return b.relex(as: "jsxPop\(count)")
+    }
 
     // MARK: Reading
 

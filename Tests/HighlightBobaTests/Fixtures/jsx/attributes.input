@@ -1,0 +1,12 @@
+const a = <input type="text" value={value} disabled />;
+const b = <div style={{ color: "red", margin: 0 }} {...props} />;
+const c = <img
+  src="a.png"
+  alt="a picture
+       across lines"
+/>;
+const d = <a href='https://x.test/?a=1&amp;b=2' title="&quot;hi&quot; &#x1F9CB;">link</a>;
+const e = <Foo.Bar.Baz this-is="ok" ns:attr="v" />;
+const f = <this.Item />;
+const g = <div /* a comment */ id="x" // and another
+  />;

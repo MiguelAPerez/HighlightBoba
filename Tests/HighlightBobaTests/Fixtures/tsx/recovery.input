@@ -1,0 +1,8 @@
+function half(props: Props) {
+  return <Button onClick={() => go(props.id)}
+}
+function unclosed(): JSX.Element {
+  return <Panel<Item> items={list}>
+    {list.map((item: Item) => <Row key={item.id}>{item.name})}
+}
+const next: number = 1;

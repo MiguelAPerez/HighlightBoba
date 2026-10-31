@@ -1,0 +1,72 @@
+function halfTypedAttribute() {
+^^^^^^^^ keyword
+         ^^^^^^^^^^^^^^^^^^ entity.name.function
+  return <div className="app
+  ^^^^^^ keyword
+         ^ punctuation
+          ^^^ entity.name.tag
+              ^^^^^^^^^ entity.other.attribute
+                        ^^^^ string.quoted
+}
+function unclosedChild() {
+^^^^^^^^ keyword
+         ^^^^^^^^^^^^^ entity.name.function
+  return <div>
+  ^^^^^^ keyword
+         ^ punctuation
+          ^^^ entity.name.tag
+             ^ punctuation
+    <span>
+    ^ punctuation
+     ^^^^ entity.name.tag
+         ^ punctuation
+  </div>;
+  ^^ punctuation
+    ^^^ entity.name.tag
+       ^ punctuation
+}
+function halfTypedChildTag() {
+^^^^^^^^ keyword
+         ^^^^^^^^^^^^^^^^^ entity.name.function
+  return (
+  ^^^^^^ keyword
+    <ul>
+    ^ punctuation
+     ^^ entity.name.tag
+       ^ punctuation
+      <li
+      ^ punctuation
+       ^^ entity.name.tag
+    </ul>
+    ^^ punctuation
+      ^^ entity.name.tag
+        ^ punctuation
+  );
+}
+function unclosedRoot() {
+^^^^^^^^ keyword
+         ^^^^^^^^^^^^ entity.name.function
+  return <p>no closing tag (yet);
+  ^^^^^^ keyword
+         ^ punctuation
+          ^ entity.name.tag
+           ^ punctuation
+}
+const mismatched = <a>x</b>;
+^^^^^ keyword
+      ^^^^^^^^^^ variable.other
+                   ^ punctuation
+                    ^ entity.name.tag
+                     ^ punctuation
+                       ^^ punctuation
+                         ^ entity.name.tag
+                          ^ punctuation
+const halfTyped = <
+^^^^^ keyword
+      ^^^^^^^^^ variable.other
+function stillCode() { return 1 }
+^^^^^^^^ keyword
+         ^^^^^^^^^ entity.name.function
+                       ^^^^^^ keyword
+                              ^ constant.numeric
+

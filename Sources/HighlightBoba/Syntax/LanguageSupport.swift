@@ -17,6 +17,8 @@ public struct LanguageSupport: Sendable {
         "swift": SwiftParser(),
         "javascript": JSParser(dialect: .javascript),
         "typescript": JSParser(dialect: .typescript),
+        "jsx": JSParser(dialect: .jsx),
+        "tsx": JSParser(dialect: .tsx),
         "shell": ShellParser()
     ]
 

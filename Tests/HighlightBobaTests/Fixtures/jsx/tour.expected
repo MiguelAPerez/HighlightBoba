@@ -1,0 +1,174 @@
+import React, { useState } from "react";
+^^^^^^ keyword
+       ^^^^^ entity.name.type
+                ^^^^^^^^ variable.other
+                           ^^^^ keyword
+                                ^^^^^^^ string.quoted
+
+// A component: lowercase tags are elements, capitalised ones components.
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ comment.line
+export default function TodoList({ items, onToggle, ...rest }) {
+^^^^^^ keyword
+       ^^^^^^^ keyword
+               ^^^^^^^^ keyword
+                        ^^^^^^^^ entity.name.function
+                                   ^^^^^ variable.other
+                                          ^^^^^^^^ variable.other
+                                                       ^^^^ variable.other
+  const [filter, setFilter] = useState("all");
+  ^^^^^ keyword
+         ^^^^^^ variable.other
+                 ^^^^^^^^^ variable.other
+                              ^^^^^^^^ variable.other
+                                       ^^^^^ string.quoted
+  const shown = items.filter(item => filter === "all" || item.done < 1);
+  ^^^^^ keyword
+        ^^^^^ variable.other
+                ^^^^^ variable.other
+                             ^^^^ variable.other
+                                     ^^^^^^ variable.other
+                                                ^^^^^ string.quoted
+                                                         ^^^^ variable.other
+                                                                     ^ constant.numeric
+  return (
+  ^^^^^^ keyword
+    <section className="todos" data-filter={filter} {...rest}>
+    ^ punctuation
+     ^^^^^^^ entity.name.tag
+             ^^^^^^^^^ entity.other.attribute
+                       ^^^^^^^ string.quoted
+                               ^^^^ entity.other.attribute
+                                   ^ entity.other.attribute
+                                    ^^^^^^ entity.other.attribute
+                                           ^ punctuation.section.embedded
+                                            ^^^^^^ variable.other
+                                                  ^ punctuation.section.embedded
+                                                    ^ punctuation.section.embedded
+                                                        ^^^^ variable.other
+                                                            ^ punctuation.section.embedded
+                                                             ^ punctuation
+      <Header.Title level={2}>Things to do &amp; done&#33;</Header.Title>
+      ^ punctuation
+       ^^^^^^ entity.name.type
+              ^^^^^ entity.name.type
+                    ^^^^^ entity.other.attribute
+                          ^ punctuation.section.embedded
+                           ^ constant.numeric
+                            ^ punctuation.section.embedded
+                             ^ punctuation
+                                           ^^^^^ constant.character.escape
+                                                     ^^^^^ constant.character.escape
+                                                          ^^ punctuation
+                                                            ^^^^^^ entity.name.type
+                                                                   ^^^^^ entity.name.type
+                                                                        ^ punctuation
+      <ul aria-label='todo list'>
+      ^ punctuation
+       ^^ entity.name.tag
+          ^^^^ entity.other.attribute
+              ^ entity.other.attribute
+               ^^^^^ entity.other.attribute
+                     ^^^^^^^^^^^ string.quoted
+                                ^ punctuation
+        {shown.map(item => (
+        ^ punctuation.section.embedded
+         ^^^^^ variable.other
+                   ^^^^ variable.other
+          <li key={item.id} onClick={() => onToggle(item.id)}>
+          ^ punctuation
+           ^^ entity.name.tag
+              ^^^ entity.other.attribute
+                  ^ punctuation.section.embedded
+                   ^^^^ variable.other
+                          ^ punctuation.section.embedded
+                            ^^^^^^^ entity.other.attribute
+                                    ^ punctuation.section.embedded
+                                           ^^^^^^^^ variable.other
+                                                    ^^^^ variable.other
+                                                            ^ punctuation.section.embedded
+                                                             ^ punctuation
+            {item.done ? <s>{item.text}</s> : item.text}
+            ^ punctuation.section.embedded
+             ^^^^ variable.other
+                         ^ punctuation
+                          ^ entity.name.tag
+                           ^ punctuation
+                            ^ punctuation.section.embedded
+                             ^^^^ variable.other
+                                      ^ punctuation.section.embedded
+                                       ^^ punctuation
+                                         ^ entity.name.tag
+                                          ^ punctuation
+                                              ^^^^ variable.other
+                                                       ^ punctuation.section.embedded
+          </li>
+          ^^ punctuation
+            ^^ entity.name.tag
+              ^ punctuation
+        ))}
+          ^ punctuation.section.embedded
+      </ul>
+      ^^ punctuation
+        ^^ entity.name.tag
+          ^ punctuation
+      {/* if this is empty, say so */}
+      ^ punctuation.section.embedded
+       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ comment.block
+                                     ^ punctuation.section.embedded
+      {shown.length === 0 && <p>Nothing here, it's if/else-free: return true</p>}
+      ^ punctuation.section.embedded
+       ^^^^^ variable.other
+                        ^ constant.numeric
+                             ^ punctuation
+                              ^ entity.name.tag
+                               ^ punctuation
+                                                                            ^^ punctuation
+                                                                              ^ entity.name.tag
+                                                                               ^ punctuation
+                                                                                ^ punctuation.section.embedded
+      <svg:rect xlink:href="#shape" width="10" />
+      ^ punctuation
+       ^^^ entity.name.tag
+          ^ entity.name.tag
+           ^^^^ entity.name.tag
+                ^^^^^ entity.other.attribute
+                     ^ entity.other.attribute
+                      ^^^^ entity.other.attribute
+                           ^^^^^^^^ string.quoted
+                                    ^^^^^ entity.other.attribute
+                                          ^^^^ string.quoted
+                                               ^^ punctuation
+      <my-widget disabled />
+      ^ punctuation
+       ^^ entity.name.tag
+         ^ entity.name.tag
+          ^^^^^^ entity.name.tag
+                 ^^^^^^^^ entity.other.attribute
+                          ^^ punctuation
+      <>
+      ^^ punctuation
+        Fragment text with a 'quote' and a "double" one
+      </>
+      ^^^ punctuation
+    </section>
+    ^^ punctuation
+      ^^^^^^^ entity.name.tag
+             ^ punctuation
+  );
+}
+
+const ratio = total / count < 2 ? <b>low</b> : /x/.test(s);
+^^^^^ keyword
+      ^^^^^ variable.other
+              ^^^^^ variable.other
+                      ^^^^^ variable.other
+                              ^ constant.numeric
+                                  ^ punctuation
+                                   ^ entity.name.tag
+                                    ^ punctuation
+                                        ^^ punctuation
+                                          ^ entity.name.tag
+                                           ^ punctuation
+                                               ^^^ string.regexp
+                                                        ^ variable.other
+
