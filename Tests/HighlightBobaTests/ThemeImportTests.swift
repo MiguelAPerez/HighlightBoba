@@ -89,6 +89,21 @@ import Testing
         #expect(theme.styles["entity.name.type"] == HighlightStyle(color: Self.hex("#E0D070"), italic: true))
     }
 
+    @Test func diffColoursReachTheDiffScopes() throws {
+        // Many themes style only the diff-specific names, which a prefix match can't reach.
+        let theme = try Self.vsCode("""
+        {
+          "type": "dark",
+          "tokenColors": [
+            { "scope": "markup.inserted.diff", "settings": { "foreground": "#40C040" } },
+            { "scope": "markup.deleted", "settings": { "foreground": "#E04040" } }
+          ]
+        }
+        """)
+        #expect(theme.styles["markup.inserted"]?.color == Self.hex("#40C040"))
+        #expect(theme.styles["markup.deleted"]?.color == Self.hex("#E04040"))
+    }
+
     @Test func theLaterOfTwoEqualRulesWins() throws {
         #expect(try Self.vsCode(Self.sample).styles["constant.numeric"]?.color == Self.hex("#F0C080"))
     }

@@ -374,6 +374,8 @@ enum ScopeAliases {
         "variable.parameter": ["variable.parameter.function", "variable"],
         "markup.heading": ["entity.name.section", "markup.heading.markdown"],
         "markup.raw": ["markup.inline.raw", "markup.fenced_code", "string"],
-        "markup.link": ["markup.underline.link", "string.other.link"]
+        "markup.link": ["markup.underline.link", "string.other.link"],
+        "markup.inserted": ["markup.inserted.diff"],
+        "markup.deleted": ["markup.deleted.diff"]
     ]
 }
