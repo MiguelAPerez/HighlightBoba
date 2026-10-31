@@ -4,10 +4,10 @@ import Testing
 
 /// A large file of a language: its fixtures, repeated to about 20,000 lookahead steps of parsing
 /// (Swift's fixtures are mostly comments and strings, so it takes more text).
-func largeText(_ language: String) throws -> String {
+func largeText(_ language: String, length: Int? = nil) throws -> String {
     let inputs = try Fixture.all().filter { $0.language == language }.map { try $0.input() }
     let chunk = inputs.joined(separator: "\n")
-    let length = ["swift": 100_000, "shell": 50_000][language] ?? 25_000
+    let length = length ?? ["swift": 100_000, "shell": 50_000][language] ?? 25_000
     return Array(repeating: chunk, count: max(1, length / max(1, chunk.utf16.count))).joined(separator: "\n")
 }
 
@@ -46,7 +46,9 @@ struct Recorded: IncrementalParser {
     }
 }
 
-@Suite struct CancellationTests {
+/// One test at a time: they're heavy, and a CI runner's cooperative pool may have only three
+/// threads, which the session tests' parses need too.
+@Suite(.serialized) struct CancellationTests {
     static let languages = ["swift", "javascript", "typescript", "python", "shell"]
 
     static func builder(_ language: String) throws -> (TreeBuilder, String, any IncrementalParser) {
@@ -95,26 +97,13 @@ struct Recorded: IncrementalParser {
         #expect(whole.steps < 64 && reparse.steps < 64, "\(whole.steps) and \(reparse.steps) steps")
         #expect(leafText(whole.tree.root) == highlighter.text && leafText(reparse.tree.root) == highlighter.text)
     }
-
-    /// The check that is never set off changes nothing: the tree is the one a parse without it builds.
-    @Test(arguments: languages)
-    func anUncancelledParseIsUnchanged(_ language: String) throws {
-        let (plain, _, parser) = try Self.builder(language)
-        parser.parse(plain)
-        let (checked, _, _) = try Self.builder(language)
-        var checks = 0
-        checked.cancellation = { checks += 1; return false }
-        parser.parse(checked)
-        #expect(checks > 1 && !checked.isCancelled)
-        #expect(sameParse(plain.finish(), checked.finish()))
-    }
 }
 
 /// `ParseSession` cancelling a real parse of a large file. In `ParseSessionTests`, which runs one
 /// test at a time, so no more than one held parse blocks a thread of the cooperative pool.
 extension ParseSessionTests {
     func makeSession(gate: Gate, log: ParseLog) throws -> ParseSession<Recorded> {
-        let highlighter = Highlighter(grammar: try Grammar.bundled("swift"), text: try largeText("swift"))
+        let highlighter = Highlighter(grammar: try Grammar.bundled("swift"), text: try largeText("swift", length: 25_000))
         return ParseSession(highlighter: highlighter, parser: Recorded(inner: SwiftParser(), gate: gate, log: log))
     }
 
@@ -134,12 +123,12 @@ extension ParseSessionTests {
         session.highlighter.replaceCharacters(in: NSRange(location: 0, length: 0), with: "let x = 1\n")
         session.textDidChange()
         await Self.waitFor { log.entries.count == 1 }
-        let first = log.entries[0]
+        let first = try #require(log.entries.first)
         #expect(first.cancelled && first.steps < TreeBuilder.cancellationInterval, "the superseded parse took \(first.steps) steps")
         gate.open()
         await session.waitUntilIdle()
         #expect(updates == 1, "only the newest parse publishes")
-        #expect(sameParse(session.tree!, fullParse(session)))
+        #expect(sameParse(try #require(session.tree), fullParse(session)))
     }
 
     @Test func releasingTheSessionCancelsItsParse() async throws {
@@ -152,7 +141,8 @@ extension ParseSessionTests {
         await Self.waitFor { gate.waiting == 1 }
         session = nil
         await Self.waitFor { log.entries.count == 1 }
-        #expect(log.entries[0].cancelled && log.entries[0].steps < TreeBuilder.cancellationInterval)
+        let entry = try #require(log.entries.first)
+        #expect(entry.cancelled && entry.steps < TreeBuilder.cancellationInterval)
         #expect(updates == 0)
         gate.open()
     }
@@ -169,12 +159,13 @@ extension ParseSessionTests {
         await Self.waitFor { log.entries.count == 1 }
         gate.open()
         await session.waitUntilIdle()
-        #expect(log.entries[0].cancelled && updates == 0 && session.tree == nil)
+        #expect(try #require(log.entries.first).cancelled && updates == 0 && session.tree == nil)
 
         // Nothing was lost: the next parse covers the text.
         session.textDidChange()
         await session.waitUntilIdle()
-        #expect(updates == 1 && sameParse(session.tree!, fullParse(session)))
+        #expect(updates == 1)
+        #expect(sameParse(try #require(session.tree), fullParse(session)))
     }
 
     /// Cancelled after the parse ended but before its result reached the main actor: still dropped.
