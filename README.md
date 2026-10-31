@@ -17,6 +17,17 @@ let changed = highlighter.replaceCharacters(in: editedRange, with: replacement) 
 
 Grammars are data: a small pushdown state machine per language, matched without regex or backtracking. See [docs/GRAMMAR.md](docs/GRAMMAR.md). For the languages that need context (Swift, JavaScript/TypeScript, JSX/TSX, Python and shell), a parser layer on top refines those colours; see [docs/PARSER.md](docs/PARSER.md).
 
+## Themes
+
+A `HighlightTheme` says how tokens draw: a background, a text colour and a style (colour, bold, italic) per scope selector. A selector styles its scope and every dotted scope under it, so `"string"` covers `string.quoted` and `string.regexp`, and the longest matching selector wins. Themes are `Codable`, with `#RRGGBB` colours.
+
+```swift
+let theme = try JSONDecoder().decode(HighlightTheme.self, from: data).readable(ratio: 4.5)
+let styles = theme.stylesByScope // look up once, then style each token by token.scope
+```
+
+`readable(ratio:)` raises any colour below a WCAG contrast ratio on the theme's background just far enough to reach it, keeping its hue.
+
 ## Contributing
 
 **Pull requests are welcome.** So are bug reports, language requests and design feedback as issues. Read [CONTRIBUTING.md](CONTRIBUTING.md) first: every PR belongs to the data lane (grammars, fixtures, queries) or the engine lane (Swift code), and both need a fixture or test that fails without the change. To report a vulnerability privately, see [SECURITY.md](SECURITY.md).
