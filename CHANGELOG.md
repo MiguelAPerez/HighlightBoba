@@ -1,5 +1,15 @@
 # Changelog
 
+## 0.4.0 (2026-10-31)
+
+### Feat
+
+- themes, styled by scope selector, with a contrast fix (#28)
+
+### Fix
+
+- keep the session tests' waits off a starved cooperative pool (#26)
+
 ## 0.3.0 (2026-10-31)
 
 ### Feat
