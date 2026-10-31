@@ -10,14 +10,18 @@ interface Shape<T extends object = {}> extends Base, Other<T> {
                                                            ^ entity.name.type
   readonly id: string;
   ^^^^^^^^ keyword
+           ^^ support.type.property-name
                ^^^^^^ entity.name.type
   area?(): number;
+  ^^^^ entity.name.function
            ^^^^^^ entity.name.type
   [key: string]: unknown;
+   ^^^ variable.other
         ^^^^^^ entity.name.type
                  ^^^^^^^ entity.name.type
   new (x: number): Shape<T>;
   ^^^ keyword
+       ^ variable.other
           ^^^^^^ entity.name.type
                    ^^^^^ entity.name.type
                          ^ entity.name.type
@@ -27,7 +31,9 @@ type Pair<K, V> = [key: K, value?: V];
      ^^^^ entity.name.type
           ^ entity.name.type
              ^ entity.name.type
+                   ^^^ support.type.property-name
                         ^ entity.name.type
+                           ^^^^^ support.type.property-name
                                    ^ entity.name.type
 type Deep = Map<string, Array<Set<number>>>;
 ^^^^ keyword
@@ -62,8 +68,11 @@ type Fn = <T>(x: T, ...rest: T[]) => x is T;
 ^^^^ keyword
      ^^ entity.name.type
            ^ entity.name.type
+              ^ variable.other
                  ^ entity.name.type
+                       ^^^^ variable.other
                              ^ entity.name.type
+                                     ^ variable.other
                                        ^^ keyword
                                           ^ entity.name.type
 type Tpl = `id-${string}`;
@@ -77,15 +86,15 @@ type Tpl = `id-${string}`;
 enum Color { Red = 1, Green, "Blue" }
 ^^^^ keyword
      ^^^^^ entity.name.type
-             ^^^ entity.name.type
+             ^^^ support.type.property-name
                    ^ constant.numeric
-                      ^^^^^ entity.name.type
+                      ^^^^^ support.type.property-name
                              ^^^^^^ string.quoted
 const enum Flags { None = 0 }
 ^^^^^ keyword
       ^^^^ keyword
            ^^^^^ entity.name.type
-                   ^^^^ entity.name.type
+                   ^^^^ support.type.property-name
                           ^ constant.numeric
 namespace App.Core { export const x = 1; }
 ^^^^^^^^^ keyword
@@ -93,6 +102,7 @@ namespace App.Core { export const x = 1; }
               ^^^^ entity.name.type
                      ^^^^^^ keyword
                             ^^^^^ keyword
+                                  ^ variable.other
                                       ^ constant.numeric
 declare const VERSION: string;
 ^^^^^^^ keyword
@@ -103,6 +113,7 @@ declare function greet(name: string): void;
 ^^^^^^^ keyword
         ^^^^^^^^ keyword
                  ^^^^^ entity.name.function
+                       ^^^^ variable.other
                              ^^^^^^ entity.name.type
                                       ^^^^ entity.name.type
 abstract class Repo<T> implements Store<T> {
@@ -116,28 +127,36 @@ abstract class Repo<T> implements Store<T> {
   private readonly items: T[] = [];
   ^^^^^^^ keyword
           ^^^^^^^^ keyword
+                   ^^^^^ support.type.property-name
                           ^ entity.name.type
   constructor(protected name: string, public size?: number) { super(); }
+  ^^^^^^^^^^^ entity.name.function
               ^^^^^^^^^ keyword
+                        ^^^^ variable.other
                               ^^^^^^ entity.name.type
                                       ^^^^^^ keyword
+                                             ^^^^ variable.other
                                                     ^^^^^^ entity.name.type
                                                               ^^^^^ variable.language
   abstract find(id: string): T | undefined;
   ^^^^^^^^ keyword
+           ^^^^ entity.name.function
+                ^^ variable.other
                     ^^^^^^ entity.name.type
                              ^ entity.name.type
                                  ^^^^^^^^^ constant.language
   @memo get count(): number { return this.items.length; }
   ^^^^^ entity.other.attribute
         ^^^ keyword
+            ^^^^^ entity.name.function
                      ^^^^^^ entity.name.type
                               ^^^^^^ keyword
                                      ^^^^ variable.language
   static of<T>(xs: T[]): Repo<T> { return null!; }
   ^^^^^^ keyword
-         ^^ keyword
+         ^^ entity.name.function
             ^ entity.name.type
+               ^^ variable.other
                    ^ entity.name.type
                          ^^^^ entity.name.type
                               ^ entity.name.type
@@ -146,56 +165,84 @@ abstract class Repo<T> implements Store<T> {
 }
 const a = f<string>(x), b = c < d, e = g > (h);
 ^^^^^ keyword
+      ^ variable.other
+          ^ variable.other
             ^^^^^^ entity.name.type
+                    ^ variable.other
+                        ^ variable.other
+                            ^ variable.other
+                                ^ variable.other
+                                   ^ variable.other
+                                       ^ variable.other
+                                            ^ variable.other
 const v = void 0, k = { void: 1, type: 2, string: 3 };
 ^^^^^ keyword
-          ^^^^ entity.name.type
+      ^ variable.other
+          ^^^^ keyword
                ^ constant.numeric
-                        ^^^^ entity.name.type
+                  ^ variable.other
+                        ^^^^ support.type.property-name
                               ^ constant.numeric
+                                 ^^^^ support.type.property-name
                                        ^ constant.numeric
-                                          ^^^^^^ entity.name.type
+                                          ^^^^^^ support.type.property-name
                                                   ^ constant.numeric
 let s = x as unknown as string, t = y satisfies Shape<{}>;
 ^^^ keyword
+    ^ variable.other
+        ^ variable.other
           ^^ keyword
              ^^^^^^^ entity.name.type
                      ^^ keyword
                         ^^^^^^ entity.name.type
+                                ^ variable.other
+                                    ^ variable.other
                                       ^^^^^^^^^ keyword
                                                 ^^^^^ entity.name.type
 let n = value!.length, shift = bits >> 2 >>> 1;
 ^^^ keyword
+    ^ variable.other
+        ^^^^^ variable.other
+                       ^^^^^ variable.other
+                               ^^^^ variable.other
                                        ^ constant.numeric
                                              ^ constant.numeric
 function isText(x: unknown): x is string { return typeof x === "string"; }
 ^^^^^^^^ keyword
          ^^^^^^ entity.name.function
+                ^ variable.other
                    ^^^^^^^ entity.name.type
+                             ^ variable.other
                                ^^ keyword
                                   ^^^^^^ entity.name.type
                                            ^^^^^^ keyword
                                                   ^^^^^^ keyword
+                                                         ^ variable.other
                                                                ^^^^^^^^ string.quoted
 function assert(x: unknown): asserts x {}
 ^^^^^^^^ keyword
          ^^^^^^ entity.name.function
+                ^ variable.other
                    ^^^^^^^ entity.name.type
                              ^^^^^^^ keyword
+                                     ^ variable.other
 const id = <T,>(x: T): T => x;
 ^^^^^ keyword
+      ^^ variable.other
             ^ entity.name.type
+                ^ variable.other
                    ^ entity.name.type
                        ^ entity.name.type
+                            ^ variable.other
 let type = 1, declare = 2, readonly = type + declare;
 ^^^ keyword
-    ^^^^ keyword
+    ^^^^ variable.other
            ^ constant.numeric
-              ^^^^^^^ keyword
+              ^^^^^^^ variable.other
                         ^ constant.numeric
-                           ^^^^^^^^ keyword
-                                      ^^^^ keyword
-                                             ^^^^^^^ keyword
+                           ^^^^^^^^ variable.other
+                                      ^^^^ variable.other
+                                             ^^^^^^^ variable.other
 export type { Shape };
 ^^^^^^ keyword
        ^^^^ keyword

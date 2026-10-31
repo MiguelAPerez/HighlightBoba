@@ -1,6 +1,7 @@
 interface A { x: number y: string }
 ^^^^^^^^^ keyword
           ^ entity.name.type
+              ^ support.type.property-name
                  ^^^^^^ entity.name.type
                            ^^^^^^ entity.name.type
 type B = ;
@@ -9,12 +10,16 @@ type B = ;
 function f(a: , b: string) {}
 ^^^^^^^^ keyword
          ^ entity.name.function
+           ^ variable.other
+                ^ variable.other
                    ^^^^^^ entity.name.type
 class C { m(): { } }
 ^^^^^ keyword
       ^ entity.name.type
+          ^ entity.name.function
 let ok: number = 1;
 ^^^ keyword
+    ^^ variable.other
         ^^^^^^ entity.name.type
                  ^ constant.numeric
 

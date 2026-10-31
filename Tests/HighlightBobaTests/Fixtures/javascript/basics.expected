@@ -2,6 +2,7 @@
 ^^^^^^^^^^ comment.line
 import { readFile } from "fs/promises";
 ^^^^^^ keyword
+         ^^^^^^^^ variable.other
                     ^^^^ keyword
                          ^^^^^^^^^^^^^ string.quoted
 export async function load(path, retries = 3) {
@@ -9,14 +10,20 @@ export async function load(path, retries = 3) {
        ^^^^^ keyword
              ^^^^^^^^ keyword
                       ^^^^ entity.name.function
+                           ^^^^ variable.other
+                                 ^^^^^^^ variable.other
                                            ^ constant.numeric
   const data = await readFile(path, 'utf8') /* inline */;
   ^^^^^ keyword
+        ^^^^ variable.other
                ^^^^^ keyword
+                     ^^^^^^^^ variable.other
+                              ^^^^ variable.other
                                     ^^^^^^ string.quoted
                                             ^^^^^^^^^^^^ comment.block
   return data.length > 0x1F ? null : undefined;
   ^^^^^^ keyword
+         ^^^^ variable.other
                        ^^^^ constant.numeric
                               ^^^^ constant.language
                                      ^^^^^^^^^ constant.language
@@ -27,14 +34,18 @@ class Store extends Base { static #count = 1_000; get size() { return this.items
             ^^^^^^^ keyword
                     ^^^^ entity.name.type
                            ^^^^^^ keyword
+                                  ^ support.type.property-name
+                                   ^^^^^ support.type.property-name
                                            ^^^^^ constant.numeric
                                                   ^^^ keyword
+                                                      ^^^^ entity.name.function
                                                                ^^^^^^ keyword
                                                                       ^^^^ variable.language
 @decorator
 ^^^^^^^^^^ entity.other.attribute
 const big = 10n + 1.5e3;
 ^^^^^ keyword
+      ^^^ variable.other
             ^^^ constant.numeric
                   ^^^^^ constant.numeric
 

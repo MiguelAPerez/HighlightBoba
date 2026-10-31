@@ -1,23 +1,45 @@
 const ratio = total
 ^^^^^ keyword
+      ^^^^^ variable.other
+              ^^^^^ variable.other
   / count / 2;
-  ^^^^^^^^^ string.regexp
+    ^^^^^ variable.other
             ^ constant.numeric
 if (ok) /^\d+$/.test(input);
 ^^ keyword
+    ^^ variable.other
+        ^^^^^^^ string.regexp
+                     ^^^^^ variable.other
 let n = i++ / 2, m = `${a}` / 4;
 ^^^ keyword
-            ^^^^^^^^^^^^^^^^^ string.regexp
+    ^ variable.other
+        ^ variable.other
+              ^ constant.numeric
+                 ^ variable.other
+                     ^ string.quoted
+                      ^^ punctuation.section.embedded
+                        ^ variable.other
+                         ^ punctuation.section.embedded
+                          ^ string.quoted
                               ^ constant.numeric
 const of = 8, half = of / 2;
 ^^^^^ keyword
-      ^^ keyword
+      ^^ variable.other
            ^ constant.numeric
-                     ^^ keyword
-                        ^^^^ string.regexp
+              ^^^^ variable.other
+                     ^^ variable.other
+                          ^ constant.numeric
 while (busy) /x/g.exec(s);
 ^^^^^ keyword
+       ^^^^ variable.other
+             ^^^^ string.regexp
+                       ^ variable.other
 const parts = path.split(/\//), sum = (a) / b;
 ^^^^^ keyword
+      ^^^^^ variable.other
+              ^^^^ variable.other
                          ^^^^ string.regexp
+                                ^^^ variable.other
+                                       ^ variable.other
+                                            ^ variable.other
 

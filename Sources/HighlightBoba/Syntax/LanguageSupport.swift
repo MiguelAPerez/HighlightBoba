@@ -13,7 +13,9 @@ public struct LanguageSupport: Sendable {
 
     /// The parsers shipped in the package, by grammar name. Their queries are `Queries/<name>.json`.
     static let bundledParsers: [String: any IncrementalParser] = [
-        "swift": SwiftParser()
+        "swift": SwiftParser(),
+        "javascript": JSParser(dialect: .javascript),
+        "typescript": JSParser(dialect: .typescript)
     ]
 
     private static let cache = Cache()

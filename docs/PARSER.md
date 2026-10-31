@@ -255,6 +255,10 @@ One parser reads both. The TypeScript dialect adds types, interfaces, enums, nam
 generics, `as`/`satisfies`, `!`, access modifiers and decorators; declaration files are the same grammar.
 JSX isn't parsed yet: it will join the re-lex requests below.
 
+Its reparse boundaries are statement blocks, class bodies, object literals, switch bodies, object
+types and enum bodies. None of them depends on anything around its `{`: flags like `in` being an
+operator are arguments, reset inside brackets.
+
 **Re-lexing.** Three grammar states exist only for the parser's requests. `regexStart` re-reads a `/`
 where an operand starts as a regex (`if (ok) /x/.test(s)`, where the lexer saw `)`); `divisionStart`
 re-reads a regex the lexer started where an operator belongs as division (`total\n  / count`,

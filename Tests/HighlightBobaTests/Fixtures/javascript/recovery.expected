@@ -6,20 +6,31 @@ function ok() { return 1; }
 function broken( { let x = ; }
 ^^^^^^^^ keyword
          ^^^^^^ entity.name.function
-                   ^^^ keyword
+                   ^^^ variable.other
 const fine = [1, 2 3];
 ^^^^^ keyword
+      ^^^^ variable.other
               ^ constant.numeric
                  ^ constant.numeric
                    ^ constant.numeric
 if (x { y(); }
 ^^ keyword
+    ^ variable.other
+        ^ variable.other
 class C { method( { } other() {} }
 ^^^^^ keyword
       ^ entity.name.type
+          ^^^^^^ entity.name.function
 const after = { a: 1, b: };
 ^^^^^ keyword
+      ^^^^^ variable.other
+                ^ support.type.property-name
                    ^ constant.numeric
+                      ^ support.type.property-name
 call(a b, c);
+^^^^ variable.other
+     ^ variable.other
+          ^ variable.other
 last();
+^^^^ variable.other
 

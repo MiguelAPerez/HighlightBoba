@@ -13,6 +13,7 @@ import type { Config } from "./config";
 import * as path from 'node:path';
 ^^^^^^ keyword
          ^^ keyword
+            ^^^^ variable.other
                  ^^^^ keyword
                       ^^^^^^^^^^^ string.quoted
 export default class Box<T> {
@@ -22,21 +23,27 @@ export default class Box<T> {
                      ^^^ entity.name.type
                          ^ entity.name.type
   #secret = 0n;
+  ^ support.type.property-name
+   ^^^^^^ support.type.property-name
             ^^ constant.numeric
   static readonly MAX = 0xFF_FF;
   ^^^^^^ keyword
          ^^^^^^^^ keyword
-                  ^^^ entity.name.type
+                  ^^^ support.type.property-name
                         ^^^^^^^ constant.numeric
   constructor(private readonly value: T, public tag?: string) {}
+  ^^^^^^^^^^^ entity.name.function
               ^^^^^^^ keyword
                       ^^^^^^^^ keyword
+                               ^^^^^ variable.other
                                       ^ entity.name.type
                                          ^^^^^^ keyword
+                                                ^^^ variable.other
                                                       ^^^^^^ entity.name.type
   @memo get size(): number { return this.value?.length ?? 0; }
   ^^^^^ entity.other.attribute
         ^^^ keyword
+            ^^^^ entity.name.function
                     ^^^^^^ entity.name.type
                              ^^^^^^ keyword
                                     ^^^^ variable.language
@@ -47,10 +54,13 @@ type Keys = keyof typeof defaults;
      ^^^^ entity.name.type
             ^^^^^ keyword
                   ^^^^^^ keyword
+                         ^^^^^^^^ variable.other
 type Fn = (a: number, ...rest: string[]) => void;
 ^^^^ keyword
      ^^ entity.name.type
+           ^ variable.other
               ^^^^^^ entity.name.type
+                         ^^^^ variable.other
                                ^^^^^^ entity.name.type
                                             ^^^^ entity.name.type
 type Deep = Map<string, Array<number>>;
@@ -62,6 +72,7 @@ type Deep = Map<string, Array<number>>;
                               ^^^^^^ entity.name.type
 const nums = [1, 2.5, .5, 1e-3, 0b101, 0o17, 1_000] as const;
 ^^^^^ keyword
+      ^^^^ variable.other
               ^ constant.numeric
                  ^^^ constant.numeric
                       ^^ constant.numeric
@@ -73,47 +84,62 @@ const nums = [1, 2.5, .5, 1e-3, 0b101, 0o17, 1_000] as const;
                                                        ^^^^^ keyword
 let s = `sum ${a + `inner ${b}`} done`;
 ^^^ keyword
+    ^ variable.other
         ^^^^^ string.quoted
              ^^ punctuation.section.embedded
+               ^ variable.other
                    ^^^^^^^ string.quoted
                           ^^ punctuation.section.embedded
+                            ^ variable.other
                              ^ punctuation.section.embedded
                               ^ string.quoted
                                ^ punctuation.section.embedded
                                 ^^^^^^ string.quoted
 const re = /ab+c/gi, half = total / 2 / count;
 ^^^^^ keyword
+      ^^ variable.other
            ^^^^^^^^ string.regexp
+                     ^^^^ variable.other
+                            ^^^^^ variable.other
                                     ^ constant.numeric
+                                        ^^^^^ variable.other
 for await (const item of stream) { if (item instanceof Error) throw item; }
 ^^^ keyword
     ^^^^^ keyword
            ^^^^^ keyword
+                 ^^^^ variable.other
                       ^^ keyword
+                         ^^^^^^ variable.other
                                    ^^ keyword
+                                       ^^^^ variable.other
                                             ^^^^^^^^^^ keyword
                                                        ^^^^^ entity.name.type
                                                               ^^^^^ keyword
+                                                                    ^^^^ variable.other
 label: while (true) { break label; }
+^^^^^ variable.other
        ^^^^^ keyword
               ^^^^ constant.language
                       ^^^^^ keyword
+                            ^^^^^ variable.other
 // line comment with "quotes"
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ comment.line
 const obj = { "key": 1, 'k2': null, undefined: void 0 };
 ^^^^^ keyword
+      ^^^ variable.other
               ^^^^^ string.quoted
                      ^ constant.numeric
                         ^^^^ string.quoted
                               ^^^^ constant.language
-                                    ^^^^^^^^^ constant.language
-                                               ^^^^ entity.name.type
+                                    ^^^^^^^^^ support.type.property-name
+                                               ^^^^ keyword
                                                     ^ constant.numeric
 namespace NS { export const x = 1; }
 ^^^^^^^^^ keyword
           ^^ entity.name.type
                ^^^^^^ keyword
                       ^^^^^ keyword
+                            ^ variable.other
                                 ^ constant.numeric
 abstract class A { protected abstract m(): never; }
 ^^^^^^^^ keyword
@@ -121,5 +147,6 @@ abstract class A { protected abstract m(): never; }
                ^ entity.name.type
                    ^^^^^^^^^ keyword
                              ^^^^^^^^ keyword
+                                      ^ entity.name.function
                                            ^^^^^ entity.name.type
 

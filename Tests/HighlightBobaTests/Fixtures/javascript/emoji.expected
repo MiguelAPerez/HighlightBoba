@@ -1,11 +1,14 @@
 const 🧋 = "boba 🧋"; // 🍵
 ^^^^^ keyword
+      ^ variable.other
           ^^^^^^^^ string.quoted
                     ^^^^ comment.line
 const t = `${👩‍💻}`;
 ^^^^^ keyword
+      ^ variable.other
           ^ string.quoted
            ^^ punctuation.section.embedded
+             ^ variable.other
               ^ punctuation.section.embedded
                ^ string.quoted
 

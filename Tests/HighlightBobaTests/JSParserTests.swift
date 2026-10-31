@@ -2,7 +2,7 @@ import Foundation
 import Testing
 @testable import HighlightBoba
 
-/// The JavaScript/TypeScript parser over the JS and TS fixtures: the parsed highlight of each, the
+/// The JavaScript/TypeScript parser over the JS and TS fixtures: what the parser fixes, the
 /// errors it finds, and that a block reparse is always the whole parse.
 ///
 /// Serialized: its many CPU-heavy cases would otherwise hold every concurrency thread on a small CI
@@ -19,7 +19,7 @@ import Testing
         let highlighter = Highlighter(grammar: try Grammar.bundled(language), text: text)
         let tree = parser(language).parse(highlighter.snapshot).tree
         _ = highlighter.applyRelexing(of: tree)
-        let queries = try #require(LanguageParsers.queries(for: language))
+        let queries = try #require(LanguageSupport.bundled(for: language)?.queries)
         let tokens = try #require(highlighter.tokens(refinedBy: queries.run(on: tree)))
         return (tokens, tree)
     }
@@ -29,31 +29,16 @@ import Testing
             .joined(separator: "; ")
     }
 
-    /// `<name>.parsed` beside the lexer's `.expected`: the tokens once the parser and queries ran.
-    @Test(arguments: fixtures)
-    func parsedFixtureMatches(_ fixture: Fixture) throws {
+    /// The fixture tests draw every fixture through its parser (`LanguageSupport.highlight`). Fixtures
+    /// named `parser-…` exist to show what the parser fixes, so the lexer alone must draw them differently.
+    @Test(arguments: fixtures.filter { $0.name.hasPrefix("parser-") })
+    func parserFixturesNeedTheParser(_ fixture: Fixture) throws {
         let input = try fixture.input()
         let (tokens, tree) = try Self.highlight(input, fixture.language)
         #expect(leafText(tree.root) == input)
-        let actual = CaretRenderer.render(input, tokens: tokens)
-        let url = fixture.inputURL.deletingPathExtension().appendingPathExtension("parsed")
-        let expected = try? String(contentsOf: url, encoding: .utf8)
-        if FixtureTests.record && actual != expected {
-            try actual.write(to: url, atomically: true, encoding: .utf8)
-            return
-        }
-        #expect(expected != nil, "missing \(url.lastPathComponent); draft it with HIGHLIGHT_RECORD=1")
-        #expect(actual == expected, """
-            \(fixture.testDescription) parsed tokens differ.
-            --- expected
-            \(expected ?? "")
-            --- actual
-            \(actual)
-            """)
-        // Fixtures named `parser-…` exist to show what the parser fixes, so the lexer alone must get them wrong.
-        if fixture.name.hasPrefix("parser-") {
-            #expect(actual != fixture.expected(), "\(fixture.testDescription) highlights the same without the parser")
-        }
+        let lexerOnly = Highlighter.highlight(input, grammar: try Grammar.bundled(fixture.language))
+        #expect(CaretRenderer.render(input, tokens: tokens) != CaretRenderer.render(input, tokens: lexerOnly),
+                "\(fixture.testDescription) highlights the same without the parser")
     }
 
     /// The fixtures are valid code, apart from the ones about broken code.
@@ -214,13 +199,11 @@ import Testing
 
     @Test func bothLanguagesAreRegisteredWithTheirQueries() throws {
         for language in ["javascript", "typescript"] {
-            let parser = try #require(LanguageParsers.parser(for: language) as? JSParser)
+            let support = try #require(LanguageSupport.bundled(for: language))
+            let parser = try #require(support.parser as? JSParser)
             #expect(parser.dialect == (language == "typescript" ? .typescript : .javascript))
-            #expect(LanguageParsers.queries(for: language)?.language == language)
+            #expect(support.queries.language == language)
         }
-        #expect(LanguageParsers.parser(for: "json") == nil)
-        #expect(LanguageParsers.queries(for: "json") == nil)
-        #expect(Set(["javascript", "typescript"]).isSubset(of: Set(LanguageParsers.bundledQueryNames)))
     }
 
     /// The re-lexing a parse asks for reaches the highlighter, through a background parse session too.
