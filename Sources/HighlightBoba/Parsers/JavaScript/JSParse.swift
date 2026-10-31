@@ -21,6 +21,8 @@ final class JSParse {
     /// debug build and 700 bytes in release, which is why the functions that recurse leave their
     /// token tests to small `@inline(never)` helpers: inlined, those made a level cost 5 KB.
     static let maxDepth = 200
+    /// The last guard, when a frame is bigger than the depth limit allows for: a debug build's.
+    private let stack = StackGuard()
     /// How far a lookahead scan (is this `(` an arrow's parameters? is this `<` type arguments?)
     /// reads before giving up. Scans are only for precision: past it, the parse still recovers.
     static let scanLimit = 256
@@ -335,7 +337,7 @@ final class JSParse {
     /// Records an error and consumes one token when the tree is already too deep to nest further.
     @inline(never)
     func tooDeep() -> Bool {
-        guard b.depth >= Self.maxDepth else { return false }
+        guard b.depth >= Self.maxDepth || stack.isLow else { return false }
         errorAndBump("too deeply nested")
         return true
     }

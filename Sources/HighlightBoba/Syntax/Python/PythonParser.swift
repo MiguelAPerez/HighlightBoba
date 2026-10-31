@@ -115,6 +115,8 @@ final class PythonParse {
 
     static let maxNesting = 100
     static let maxDepth = 200
+    /// The last guard, when a frame is bigger than the limits allow for: a debug build's.
+    let stack = StackGuard()
 
     init(_ builder: TreeBuilder) { b = builder }
 

@@ -38,7 +38,7 @@ extension PythonParse {
             b.error("expected an indented block")
             return
         }
-        guard b.depth < Self.maxDepth else {
+        guard b.depth < Self.maxDepth, !stack.isLow else {
             b.error("blocks nested too deeply")
             return
         }
@@ -551,7 +551,7 @@ extension PythonParse {
                 b.error("expected an indented block of `case` clauses")
                 return
             }
-            guard b.depth < Self.maxDepth else {
+            guard b.depth < Self.maxDepth, !stack.isLow else {
                 b.error("blocks nested too deeply")
                 return
             }

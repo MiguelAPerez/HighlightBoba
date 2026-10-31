@@ -102,27 +102,12 @@ final class ShellParse {
     /// hostile input can't run a background thread's stack out. The limit is on the tree's depth,
     /// so a block's reparse stops exactly where a whole parse does.
     static let maxDepth = 64
-    /// Stack the parser keeps free, as a last guard: a debug build's frames are several times a
-    /// release build's, and a background thread may have only 512 KB.
-    static let stackReserve: UInt = 160 * 1024
-    private let stackFloor: UInt
+    /// The last guard, when a frame is bigger than the depth limit allows for.
+    private let stack = StackGuard()
 
     init(_ builder: TreeBuilder) {
         b = builder
         textEnd = builder.tokens.last?.end ?? 0
-        #if canImport(Darwin)
-        let thread = pthread_self()
-        let top = UInt(bitPattern: pthread_get_stackaddr_np(thread))
-        let size = UInt(pthread_get_stacksize_np(thread))
-        stackFloor = top > size + Self.stackReserve ? top - size + Self.stackReserve : 0
-        #else
-        stackFloor = 0
-        #endif
-    }
-
-    private var stackIsLow: Bool {
-        var marker = 0
-        return withUnsafeMutablePointer(to: &marker) { UInt(bitPattern: $0) } < stackFloor
     }
 
     // MARK: Entry points
@@ -265,7 +250,7 @@ final class ShellParse {
     }
 
     private func tooDeep() -> Bool {
-        guard b.depth >= Self.maxDepth || stackIsLow else { return false }
+        guard b.depth >= Self.maxDepth || stack.isLow else { return false }
         b.recover("nesting too deep", until: [])
         lastEnd = -1
         return true

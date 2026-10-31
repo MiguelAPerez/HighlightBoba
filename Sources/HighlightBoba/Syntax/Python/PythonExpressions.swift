@@ -4,7 +4,7 @@ extension PythonParse {
     /// Counts one more level of expression nesting; past the limit, wraps the next token in an
     /// error instead, so deep input costs no stack.
     func enter() -> Bool {
-        guard nesting < Self.maxNesting else {
+        guard nesting < Self.maxNesting, !stack.isLow else {
             if cur != nil { b.errorAndBump("nested too deeply") } else { b.error("nested too deeply") }
             return false
         }
