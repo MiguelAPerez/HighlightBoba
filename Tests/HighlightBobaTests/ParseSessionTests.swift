@@ -13,7 +13,9 @@ final class Gate: @unchecked Sendable {
     private var closed = true
     private var waitingCount = 0
     private var cancelledCount = 0
-    static let limit: TimeInterval = 20
+    /// Well past `ParseSessionTests.waitFor`'s, so a slow runner times a test out before a held parse
+    /// is let through uncancelled: on a loaded CI runner a parse can wait a minute for a thread.
+    static let limit: TimeInterval = 180
 
     /// Parses waiting at the gate now.
     var waiting: Int { condition.withLock { waitingCount } }
@@ -59,8 +61,10 @@ struct GatedBlocks: IncrementalParser {
 
 @MainActor
 @Suite(.serialized) struct ParseSessionTests {
+    /// Waits up to a minute: a loaded CI runner's pool can keep a parse from starting for that long.
     static func waitFor(_ condition: () -> Bool) async {
-        for _ in 0..<2_000 where !condition() { try? await Task.sleep(for: .milliseconds(5)) }
+        let deadline = Date().addingTimeInterval(60)
+        while !condition() && Date() < deadline { try? await Task.sleep(for: .milliseconds(5)) }
         #expect(condition(), "timed out")
     }
 
@@ -104,13 +108,14 @@ struct GatedBlocks: IncrementalParser {
         await Self.waitFor { gate.waiting == 1 }
         type("2", after: "[ c1")
         type("3", after: "[ c12")
-        // The two cancelled parses go through; the newest waits.
-        await Self.waitFor { gate.cancelled == 2 && gate.waiting == 1 }
+        // The cancelled parses go through; the newest waits. The second can be cancelled before it
+        // starts, and then it never reaches the gate: a cancelled parse doesn't start the parser.
+        await Self.waitFor { gate.cancelled >= 1 && gate.waiting == 1 }
         gate.open()
         await session.waitUntilIdle()
         #expect(updates.count == 1, "only the newest parse publishes")
         #expect(updates.first?.changed.text == "[ c123 ]", "it covers all three edits, and only the list")
-        #expect(gate.cancelled == 2, "the two older parses were cancelled")
+        #expect((1...2).contains(gate.cancelled), "the older parses were cancelled, each once")
         #expect(session.tree?.revision == highlighter.revision)
         #expect(sameParse(session.tree!, ToyBlocks().parse(highlighter.snapshot).tree))
     }

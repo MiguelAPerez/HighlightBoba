@@ -66,7 +66,9 @@ extension IncrementalParser {
 
     private func parseWhole(_ snapshot: Highlighter.Snapshot, steps: Int) -> Reparse {
         let builder = TreeBuilder(snapshot: snapshot)
-        parse(builder)
+        // Cancelled, as when a block attempt stopped for it, the parser isn't started: its tree, all
+        // tokens in the root, is never published.
+        if !Task.isCancelled { parse(builder) }
         let tree = builder.finish()
         return Reparse(tree: tree, changedIndex: tree.nodes.count - 1, steps: steps + builder.lookaheadSteps)
     }
