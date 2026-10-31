@@ -1,0 +1,36 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" 'http://www.w3.org/TR/html4/strict.dtd'>
+<!-- A tour of HTML:
+     every construct once. -->
+<html lang="en">
+<head>
+  <meta charset=utf-8>
+  <title>Fish &amp; Chips &lt;3 <b>not bold</b></title>
+  <link rel='stylesheet' href="style.css?v=1&amp;x=2">
+  <style media="screen">
+    body > .main { color: #333; }
+  </style>
+  <script type="module">
+    import { a } from "./a.js";
+    const s = "</scrip" + `t>`;
+  </script>
+  <script type="application/json">{"key": [1, true, null]}</script>
+  <script type="text/template"><div>{{ raw }}</div></script>
+  <script src="app.js" defer></script>
+</head>
+<BODY class="page dark" data-x = "1" hidden>
+  <p style="color: red; margin: 0 auto !important">Hello&nbsp;world &#169; &#x1F9CB; &bogus</p>
+  <button onclick="go('home'); return false;" disabled>Go</button>
+  <img src=logo.png alt="" width=100/>
+  <br><hr/><input type=checkbox checked>
+  <textarea name="t">Raw <b>text</b> &amp; entities</textarea>
+  <svg viewBox="0 0 10 10"><![CDATA[ x < y ]]></svg>
+  <a
+    href="/multi"
+    title='line'
+  >link</a>
+  <?xml-stylesheet href="a.xsl"?>
+  <!bogus comment>
+  <!---->
+  if a < b && c > d
+</BODY>
+</html>

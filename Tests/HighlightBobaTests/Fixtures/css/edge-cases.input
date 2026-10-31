@@ -1,0 +1,17 @@
+a{color:red}a:hover{color:blue}.x{b:c;d:hover{e:f}}
+.list {
+  a:hover,
+  b { color: red }
+}
+.s { content: "unterminated
+  color: blue; }
+.t { content: "one \
+two"; background: url(unclosed
+  ; }
+@namespace svg url(http://www.w3.org/2000/svg);
+@property --angle { syntax: '<angle>'; inherits: false; initial-value: 0deg; }
+.n { margin: 1e3px +.5em -0.5em 10E-2 1em; z-index: -1; }
+.c { --empty:; --json: [1, 2]; color: /* inline */ red ! important; }
+DIV.Upper { COLOR: RED; }
+:is(h1, h2):where(.a) > p:has(> img) { all: revert-layer }
+.emoji::before { content: "🧋 tea"; } .🧋 { x: y }

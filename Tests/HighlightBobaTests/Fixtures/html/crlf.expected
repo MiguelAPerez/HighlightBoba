@@ -1,0 +1,14 @@
+<p class="crlf">
+^ punctuation
+ ^ entity.name.type
+   ^^^^^ entity.other.attribute
+        ^ punctuation
+         ^^^^^^ string.quoted
+               ^ punctuation
+  text &amp; more
+       ^^^^^ constant.character.escape
+</p>
+^^ punctuation
+  ^ entity.name.type
+   ^ punctuation
+

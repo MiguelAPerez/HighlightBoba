@@ -1,0 +1,2387 @@
+{
+  "name": "html",
+  "fileExtensions": [
+    "html",
+    "htm"
+  ],
+  "initial": "content",
+  "wordCharacters": "[A-Za-z0-9_-]",
+  "states": {
+    "attributeValue": {
+      "rules": [
+        {
+          "match": {
+            "literal": "\""
+          },
+          "scope": "string.quoted",
+          "pop": true,
+          "push": "doubleValue"
+        },
+        {
+          "match": {
+            "literal": "'"
+          },
+          "scope": "string.quoted",
+          "pop": true,
+          "push": "singleValue"
+        },
+        {
+          "match": {
+            "repeat": "[ \\t]",
+            "min": 1
+          }
+        },
+        {
+          "match": {
+            "anyOf": [
+              {
+                "seq": [
+                  {
+                    "literal": "&#"
+                  },
+                  {
+                    "class": "[xX]"
+                  },
+                  {
+                    "repeat": "[0-9A-Fa-f]",
+                    "min": 1
+                  },
+                  {
+                    "literal": ";"
+                  }
+                ]
+              },
+              {
+                "seq": [
+                  {
+                    "literal": "&#"
+                  },
+                  {
+                    "repeat": "[0-9]",
+                    "min": 1
+                  },
+                  {
+                    "literal": ";"
+                  }
+                ]
+              },
+              {
+                "seq": [
+                  {
+                    "literal": "&"
+                  },
+                  {
+                    "class": "[A-Za-z]"
+                  },
+                  {
+                    "repeat": "[A-Za-z0-9]"
+                  },
+                  {
+                    "literal": ";"
+                  }
+                ]
+              }
+            ]
+          },
+          "scope": "constant.character.escape",
+          "pop": true,
+          "push": "unquotedValue"
+        },
+        {
+          "match": {
+            "class": "[^\\s\"'<>`]"
+          },
+          "scope": "string.quoted",
+          "pop": true,
+          "push": "unquotedValue"
+        },
+        {
+          "match": {
+            "followedBy": {
+              "literal": ">"
+            }
+          },
+          "pop": true
+        }
+      ]
+    },
+    "attributes": {
+      "rules": [
+        {
+          "match": {
+            "literal": "="
+          },
+          "scope": "punctuation",
+          "push": "attributeValue"
+        },
+        {
+          "match": {
+            "seq": [
+              {
+                "repeat": "[^\\s\"'>/=]",
+                "min": 1
+              }
+            ]
+          },
+          "scope": "entity.other.attribute"
+        }
+      ]
+    },
+    "bogusComment": {
+      "scope": "comment.block",
+      "rules": [
+        {
+          "match": {
+            "literal": ">"
+          },
+          "pop": true
+        }
+      ]
+    },
+    "cdata": {
+      "rules": [
+        {
+          "match": {
+            "literal": "]]>"
+          },
+          "scope": "meta.preprocessor",
+          "pop": true
+        }
+      ]
+    },
+    "comment": {
+      "scope": "comment.block",
+      "rules": [
+        {
+          "match": {
+            "anyOf": [
+              {
+                "literal": "-->"
+              },
+              {
+                "literal": "--!>"
+              }
+            ]
+          },
+          "pop": true
+        }
+      ]
+    },
+    "content": {
+      "rules": [
+        {
+          "match": {
+            "anyOf": [
+              {
+                "literal": "<!-->"
+              },
+              {
+                "literal": "<!--->"
+              }
+            ]
+          },
+          "scope": "comment.block"
+        },
+        {
+          "match": {
+            "literal": "<!--"
+          },
+          "scope": "comment.block",
+          "push": "comment"
+        },
+        {
+          "match": {
+            "seq": [
+              {
+                "literal": "<![CDATA["
+              }
+            ]
+          },
+          "scope": "meta.preprocessor",
+          "push": "cdata"
+        },
+        {
+          "match": {
+            "seq": [
+              {
+                "literal": "<!"
+              },
+              {
+                "seq": [
+                  {
+                    "class": "[dD]"
+                  },
+                  {
+                    "class": "[oO]"
+                  },
+                  {
+                    "class": "[cC]"
+                  },
+                  {
+                    "class": "[tT]"
+                  },
+                  {
+                    "class": "[yY]"
+                  },
+                  {
+                    "class": "[pP]"
+                  },
+                  {
+                    "class": "[eE]"
+                  }
+                ]
+              },
+              {
+                "notFollowedBy": {
+                  "class": "[A-Za-z]"
+                }
+              }
+            ]
+          },
+          "scope": "meta.preprocessor",
+          "push": "doctype"
+        },
+        {
+          "match": {
+            "literal": "<!"
+          },
+          "scope": "comment.block",
+          "push": "bogusComment"
+        },
+        {
+          "match": {
+            "literal": "<?"
+          },
+          "scope": "meta.preprocessor",
+          "push": "processingInstruction"
+        },
+        {
+          "match": {
+            "seq": [
+              {
+                "literal": "</"
+              },
+              {
+                "seq": [
+                  {
+                    "class": "[A-Za-z]"
+                  },
+                  {
+                    "repeat": "[^\\s/>]"
+                  }
+                ]
+              }
+            ]
+          },
+          "captures": [
+            "punctuation",
+            "entity.name.type"
+          ],
+          "push": "endTag"
+        },
+        {
+          "match": {
+            "seq": [
+              {
+                "literal": "<"
+              },
+              {
+                "seq": [
+                  {
+                    "class": "[pP]"
+                  },
+                  {
+                    "class": "[lL]"
+                  },
+                  {
+                    "class": "[aA]"
+                  },
+                  {
+                    "class": "[iI]"
+                  },
+                  {
+                    "class": "[nN]"
+                  },
+                  {
+                    "class": "[tT]"
+                  },
+                  {
+                    "class": "[eE]"
+                  },
+                  {
+                    "class": "[xX]"
+                  },
+                  {
+                    "class": "[tT]"
+                  }
+                ]
+              },
+              {
+                "followedBy": {
+                  "anyOf": [
+                    {
+                      "class": "[\\s/>]"
+                    },
+                    {
+                      "eol": true
+                    }
+                  ]
+                }
+              }
+            ]
+          },
+          "captures": [
+            "punctuation",
+            "entity.name.type",
+            null
+          ],
+          "push": "plaintextTag"
+        },
+        {
+          "match": {
+            "seq": [
+              {
+                "literal": "<"
+              },
+              {
+                "seq": [
+                  {
+                    "class": "[tT]"
+                  },
+                  {
+                    "class": "[eE]"
+                  },
+                  {
+                    "class": "[xX]"
+                  },
+                  {
+                    "class": "[tT]"
+                  },
+                  {
+                    "class": "[aA]"
+                  },
+                  {
+                    "class": "[rR]"
+                  },
+                  {
+                    "class": "[eE]"
+                  },
+                  {
+                    "class": "[aA]"
+                  }
+                ]
+              },
+              {
+                "followedBy": {
+                  "anyOf": [
+                    {
+                      "class": "[\\s/>]"
+                    },
+                    {
+                      "eol": true
+                    }
+                  ]
+                }
+              }
+            ]
+          },
+          "captures": [
+            "punctuation",
+            "entity.name.type",
+            null
+          ],
+          "push": "textareaTag"
+        },
+        {
+          "match": {
+            "seq": [
+              {
+                "literal": "<"
+              },
+              {
+                "seq": [
+                  {
+                    "class": "[nN]"
+                  },
+                  {
+                    "class": "[oO]"
+                  },
+                  {
+                    "class": "[fF]"
+                  },
+                  {
+                    "class": "[rR]"
+                  },
+                  {
+                    "class": "[aA]"
+                  },
+                  {
+                    "class": "[mM]"
+                  },
+                  {
+                    "class": "[eE]"
+                  },
+                  {
+                    "class": "[sS]"
+                  }
+                ]
+              },
+              {
+                "followedBy": {
+                  "anyOf": [
+                    {
+                      "class": "[\\s/>]"
+                    },
+                    {
+                      "eol": true
+                    }
+                  ]
+                }
+              }
+            ]
+          },
+          "captures": [
+            "punctuation",
+            "entity.name.type",
+            null
+          ],
+          "push": "noframesTag"
+        },
+        {
+          "match": {
+            "seq": [
+              {
+                "literal": "<"
+              },
+              {
+                "seq": [
+                  {
+                    "class": "[nN]"
+                  },
+                  {
+                    "class": "[oO]"
+                  },
+                  {
+                    "class": "[eE]"
+                  },
+                  {
+                    "class": "[mM]"
+                  },
+                  {
+                    "class": "[bB]"
+                  },
+                  {
+                    "class": "[eE]"
+                  },
+                  {
+                    "class": "[dD]"
+                  }
+                ]
+              },
+              {
+                "followedBy": {
+                  "anyOf": [
+                    {
+                      "class": "[\\s/>]"
+                    },
+                    {
+                      "eol": true
+                    }
+                  ]
+                }
+              }
+            ]
+          },
+          "captures": [
+            "punctuation",
+            "entity.name.type",
+            null
+          ],
+          "push": "noembedTag"
+        },
+        {
+          "match": {
+            "seq": [
+              {
+                "literal": "<"
+              },
+              {
+                "seq": [
+                  {
+                    "class": "[iI]"
+                  },
+                  {
+                    "class": "[fF]"
+                  },
+                  {
+                    "class": "[rR]"
+                  },
+                  {
+                    "class": "[aA]"
+                  },
+                  {
+                    "class": "[mM]"
+                  },
+                  {
+                    "class": "[eE]"
+                  }
+                ]
+              },
+              {
+                "followedBy": {
+                  "anyOf": [
+                    {
+                      "class": "[\\s/>]"
+                    },
+                    {
+                      "eol": true
+                    }
+                  ]
+                }
+              }
+            ]
+          },
+          "captures": [
+            "punctuation",
+            "entity.name.type",
+            null
+          ],
+          "push": "iframeTag"
+        },
+        {
+          "match": {
+            "seq": [
+              {
+                "literal": "<"
+              },
+              {
+                "seq": [
+                  {
+                    "class": "[sS]"
+                  },
+                  {
+                    "class": "[cC]"
+                  },
+                  {
+                    "class": "[rR]"
+                  },
+                  {
+                    "class": "[iI]"
+                  },
+                  {
+                    "class": "[pP]"
+                  },
+                  {
+                    "class": "[tT]"
+                  }
+                ]
+              },
+              {
+                "followedBy": {
+                  "anyOf": [
+                    {
+                      "class": "[\\s/>]"
+                    },
+                    {
+                      "eol": true
+                    }
+                  ]
+                }
+              }
+            ]
+          },
+          "captures": [
+            "punctuation",
+            "entity.name.type",
+            null
+          ],
+          "push": "scriptJSTag"
+        },
+        {
+          "match": {
+            "seq": [
+              {
+                "literal": "<"
+              },
+              {
+                "seq": [
+                  {
+                    "class": "[sS]"
+                  },
+                  {
+                    "class": "[tT]"
+                  },
+                  {
+                    "class": "[yY]"
+                  },
+                  {
+                    "class": "[lL]"
+                  },
+                  {
+                    "class": "[eE]"
+                  }
+                ]
+              },
+              {
+                "followedBy": {
+                  "anyOf": [
+                    {
+                      "class": "[\\s/>]"
+                    },
+                    {
+                      "eol": true
+                    }
+                  ]
+                }
+              }
+            ]
+          },
+          "captures": [
+            "punctuation",
+            "entity.name.type",
+            null
+          ],
+          "push": "styleTag"
+        },
+        {
+          "match": {
+            "seq": [
+              {
+                "literal": "<"
+              },
+              {
+                "seq": [
+                  {
+                    "class": "[tT]"
+                  },
+                  {
+                    "class": "[iI]"
+                  },
+                  {
+                    "class": "[tT]"
+                  },
+                  {
+                    "class": "[lL]"
+                  },
+                  {
+                    "class": "[eE]"
+                  }
+                ]
+              },
+              {
+                "followedBy": {
+                  "anyOf": [
+                    {
+                      "class": "[\\s/>]"
+                    },
+                    {
+                      "eol": true
+                    }
+                  ]
+                }
+              }
+            ]
+          },
+          "captures": [
+            "punctuation",
+            "entity.name.type",
+            null
+          ],
+          "push": "titleTag"
+        },
+        {
+          "match": {
+            "seq": [
+              {
+                "literal": "<"
+              },
+              {
+                "seq": [
+                  {
+                    "class": "[xX]"
+                  },
+                  {
+                    "class": "[mM]"
+                  },
+                  {
+                    "class": "[pP]"
+                  }
+                ]
+              },
+              {
+                "followedBy": {
+                  "anyOf": [
+                    {
+                      "class": "[\\s/>]"
+                    },
+                    {
+                      "eol": true
+                    }
+                  ]
+                }
+              }
+            ]
+          },
+          "captures": [
+            "punctuation",
+            "entity.name.type",
+            null
+          ],
+          "push": "xmpTag"
+        },
+        {
+          "match": {
+            "seq": [
+              {
+                "literal": "<"
+              },
+              {
+                "seq": [
+                  {
+                    "class": "[A-Za-z]"
+                  },
+                  {
+                    "repeat": "[^\\s/>]"
+                  }
+                ]
+              }
+            ]
+          },
+          "captures": [
+            "punctuation",
+            "entity.name.type"
+          ],
+          "push": "tag"
+        },
+        {
+          "include": "entities"
+        }
+      ]
+    },
+    "doctype": {
+      "scope": "meta.preprocessor",
+      "rules": [
+        {
+          "match": {
+            "literal": ">"
+          },
+          "pop": true
+        },
+        {
+          "match": {
+            "literal": "\""
+          },
+          "scope": "string.quoted",
+          "push": "doctypeDouble"
+        },
+        {
+          "match": {
+            "literal": "'"
+          },
+          "scope": "string.quoted",
+          "push": "doctypeSingle"
+        }
+      ]
+    },
+    "doctypeDouble": {
+      "scope": "string.quoted",
+      "rules": [
+        {
+          "match": {
+            "literal": "\""
+          },
+          "pop": true
+        },
+        {
+          "match": {
+            "followedBy": {
+              "literal": ">"
+            }
+          },
+          "pop": true
+        }
+      ]
+    },
+    "doctypeSingle": {
+      "scope": "string.quoted",
+      "rules": [
+        {
+          "match": {
+            "literal": "'"
+          },
+          "pop": true
+        },
+        {
+          "match": {
+            "followedBy": {
+              "literal": ">"
+            }
+          },
+          "pop": true
+        }
+      ]
+    },
+    "doubleValue": {
+      "scope": "string.quoted",
+      "rules": [
+        {
+          "match": {
+            "literal": "\""
+          },
+          "pop": true
+        },
+        {
+          "include": "entities"
+        }
+      ]
+    },
+    "endTag": {
+      "rules": [
+        {
+          "match": {
+            "literal": ">"
+          },
+          "scope": "punctuation",
+          "pop": true
+        }
+      ]
+    },
+    "entities": {
+      "rules": [
+        {
+          "match": {
+            "anyOf": [
+              {
+                "seq": [
+                  {
+                    "literal": "&#"
+                  },
+                  {
+                    "class": "[xX]"
+                  },
+                  {
+                    "repeat": "[0-9A-Fa-f]",
+                    "min": 1
+                  },
+                  {
+                    "literal": ";"
+                  }
+                ]
+              },
+              {
+                "seq": [
+                  {
+                    "literal": "&#"
+                  },
+                  {
+                    "repeat": "[0-9]",
+                    "min": 1
+                  },
+                  {
+                    "literal": ";"
+                  }
+                ]
+              },
+              {
+                "seq": [
+                  {
+                    "literal": "&"
+                  },
+                  {
+                    "class": "[A-Za-z]"
+                  },
+                  {
+                    "repeat": "[A-Za-z0-9]"
+                  },
+                  {
+                    "literal": ";"
+                  }
+                ]
+              }
+            ]
+          },
+          "scope": "constant.character.escape"
+        }
+      ]
+    },
+    "iframeBody": {
+      "rules": [
+        {
+          "match": {
+            "seq": [
+              {
+                "literal": "</"
+              },
+              {
+                "seq": [
+                  {
+                    "class": "[iI]"
+                  },
+                  {
+                    "class": "[fF]"
+                  },
+                  {
+                    "class": "[rR]"
+                  },
+                  {
+                    "class": "[aA]"
+                  },
+                  {
+                    "class": "[mM]"
+                  },
+                  {
+                    "class": "[eE]"
+                  }
+                ]
+              },
+              {
+                "followedBy": {
+                  "anyOf": [
+                    {
+                      "class": "[\\s/>]"
+                    },
+                    {
+                      "eol": true
+                    }
+                  ]
+                }
+              }
+            ]
+          },
+          "captures": [
+            "punctuation",
+            "entity.name.type",
+            null
+          ],
+          "pop": true,
+          "push": "endTag"
+        }
+      ]
+    },
+    "iframeTag": {
+      "rules": [
+        {
+          "match": {
+            "anyOf": [
+              {
+                "literal": "/>"
+              },
+              {
+                "literal": ">"
+              }
+            ]
+          },
+          "scope": "punctuation",
+          "pop": true,
+          "push": "iframeBody"
+        },
+        {
+          "include": "tagAttributes"
+        }
+      ]
+    },
+    "noembedBody": {
+      "rules": [
+        {
+          "match": {
+            "seq": [
+              {
+                "literal": "</"
+              },
+              {
+                "seq": [
+                  {
+                    "class": "[nN]"
+                  },
+                  {
+                    "class": "[oO]"
+                  },
+                  {
+                    "class": "[eE]"
+                  },
+                  {
+                    "class": "[mM]"
+                  },
+                  {
+                    "class": "[bB]"
+                  },
+                  {
+                    "class": "[eE]"
+                  },
+                  {
+                    "class": "[dD]"
+                  }
+                ]
+              },
+              {
+                "followedBy": {
+                  "anyOf": [
+                    {
+                      "class": "[\\s/>]"
+                    },
+                    {
+                      "eol": true
+                    }
+                  ]
+                }
+              }
+            ]
+          },
+          "captures": [
+            "punctuation",
+            "entity.name.type",
+            null
+          ],
+          "pop": true,
+          "push": "endTag"
+        }
+      ]
+    },
+    "noembedTag": {
+      "rules": [
+        {
+          "match": {
+            "anyOf": [
+              {
+                "literal": "/>"
+              },
+              {
+                "literal": ">"
+              }
+            ]
+          },
+          "scope": "punctuation",
+          "pop": true,
+          "push": "noembedBody"
+        },
+        {
+          "include": "tagAttributes"
+        }
+      ]
+    },
+    "noframesBody": {
+      "rules": [
+        {
+          "match": {
+            "seq": [
+              {
+                "literal": "</"
+              },
+              {
+                "seq": [
+                  {
+                    "class": "[nN]"
+                  },
+                  {
+                    "class": "[oO]"
+                  },
+                  {
+                    "class": "[fF]"
+                  },
+                  {
+                    "class": "[rR]"
+                  },
+                  {
+                    "class": "[aA]"
+                  },
+                  {
+                    "class": "[mM]"
+                  },
+                  {
+                    "class": "[eE]"
+                  },
+                  {
+                    "class": "[sS]"
+                  }
+                ]
+              },
+              {
+                "followedBy": {
+                  "anyOf": [
+                    {
+                      "class": "[\\s/>]"
+                    },
+                    {
+                      "eol": true
+                    }
+                  ]
+                }
+              }
+            ]
+          },
+          "captures": [
+            "punctuation",
+            "entity.name.type",
+            null
+          ],
+          "pop": true,
+          "push": "endTag"
+        }
+      ]
+    },
+    "noframesTag": {
+      "rules": [
+        {
+          "match": {
+            "anyOf": [
+              {
+                "literal": "/>"
+              },
+              {
+                "literal": ">"
+              }
+            ]
+          },
+          "scope": "punctuation",
+          "pop": true,
+          "push": "noframesBody"
+        },
+        {
+          "include": "tagAttributes"
+        }
+      ]
+    },
+    "plaintextBody": {
+      "rules": []
+    },
+    "plaintextTag": {
+      "rules": [
+        {
+          "match": {
+            "anyOf": [
+              {
+                "literal": "/>"
+              },
+              {
+                "literal": ">"
+              }
+            ]
+          },
+          "scope": "punctuation",
+          "pop": true,
+          "push": "plaintextBody"
+        },
+        {
+          "include": "tagAttributes"
+        }
+      ]
+    },
+    "processingInstruction": {
+      "scope": "meta.preprocessor",
+      "rules": [
+        {
+          "match": {
+            "literal": ">"
+          },
+          "pop": true
+        }
+      ]
+    },
+    "scriptDouble": {
+      "rules": [
+        {
+          "match": {
+            "literal": "\""
+          },
+          "scope": "string.quoted",
+          "pop": true
+        }
+      ]
+    },
+    "scriptJSBody": {
+      "rules": [
+        {
+          "match": {
+            "seq": [
+              {
+                "literal": "</"
+              },
+              {
+                "seq": [
+                  {
+                    "class": "[sS]"
+                  },
+                  {
+                    "class": "[cC]"
+                  },
+                  {
+                    "class": "[rR]"
+                  },
+                  {
+                    "class": "[iI]"
+                  },
+                  {
+                    "class": "[pP]"
+                  },
+                  {
+                    "class": "[tT]"
+                  }
+                ]
+              },
+              {
+                "followedBy": {
+                  "anyOf": [
+                    {
+                      "class": "[\\s/>]"
+                    },
+                    {
+                      "eol": true
+                    }
+                  ]
+                }
+              }
+            ]
+          },
+          "captures": [
+            "punctuation",
+            "entity.name.type",
+            null
+          ],
+          "pop": true,
+          "push": "endTag"
+        }
+      ]
+    },
+    "scriptJSONBody": {
+      "rules": [
+        {
+          "match": {
+            "seq": [
+              {
+                "literal": "</"
+              },
+              {
+                "seq": [
+                  {
+                    "class": "[sS]"
+                  },
+                  {
+                    "class": "[cC]"
+                  },
+                  {
+                    "class": "[rR]"
+                  },
+                  {
+                    "class": "[iI]"
+                  },
+                  {
+                    "class": "[pP]"
+                  },
+                  {
+                    "class": "[tT]"
+                  }
+                ]
+              },
+              {
+                "followedBy": {
+                  "anyOf": [
+                    {
+                      "class": "[\\s/>]"
+                    },
+                    {
+                      "eol": true
+                    }
+                  ]
+                }
+              }
+            ]
+          },
+          "captures": [
+            "punctuation",
+            "entity.name.type",
+            null
+          ],
+          "pop": true,
+          "push": "endTag"
+        }
+      ]
+    },
+    "scriptJSONTag": {
+      "rules": [
+        {
+          "match": {
+            "anyOf": [
+              {
+                "literal": "/>"
+              },
+              {
+                "literal": ">"
+              }
+            ]
+          },
+          "scope": "punctuation",
+          "pop": true,
+          "push": "scriptJSONBody",
+          "embed": "json"
+        },
+        {
+          "include": "tagAttributes"
+        }
+      ]
+    },
+    "scriptJSTag": {
+      "rules": [
+        {
+          "match": {
+            "anyOf": [
+              {
+                "literal": "/>"
+              },
+              {
+                "literal": ">"
+              }
+            ]
+          },
+          "scope": "punctuation",
+          "pop": true,
+          "push": "scriptJSBody",
+          "embed": "javascript"
+        },
+        {
+          "match": {
+            "seq": [
+              {
+                "seq": [
+                  {
+                    "class": "[tT]"
+                  },
+                  {
+                    "class": "[yY]"
+                  },
+                  {
+                    "class": "[pP]"
+                  },
+                  {
+                    "class": "[eE]"
+                  }
+                ]
+              },
+              {
+                "notFollowedBy": {
+                  "class": "[^\\s\"'>/=]"
+                }
+              },
+              {
+                "repeat": "[ \\t]"
+              },
+              {
+                "literal": "="
+              },
+              {
+                "repeat": "[ \\t]"
+              }
+            ]
+          },
+          "captures": [
+            "entity.other.attribute",
+            null,
+            null,
+            "punctuation",
+            null
+          ],
+          "pop": true,
+          "push": "scriptType",
+          "notAfterWord": true
+        },
+        {
+          "include": "tagAttributes"
+        }
+      ]
+    },
+    "scriptRawBody": {
+      "rules": [
+        {
+          "match": {
+            "seq": [
+              {
+                "literal": "</"
+              },
+              {
+                "seq": [
+                  {
+                    "class": "[sS]"
+                  },
+                  {
+                    "class": "[cC]"
+                  },
+                  {
+                    "class": "[rR]"
+                  },
+                  {
+                    "class": "[iI]"
+                  },
+                  {
+                    "class": "[pP]"
+                  },
+                  {
+                    "class": "[tT]"
+                  }
+                ]
+              },
+              {
+                "followedBy": {
+                  "anyOf": [
+                    {
+                      "class": "[\\s/>]"
+                    },
+                    {
+                      "eol": true
+                    }
+                  ]
+                }
+              }
+            ]
+          },
+          "captures": [
+            "punctuation",
+            "entity.name.type",
+            null
+          ],
+          "pop": true,
+          "push": "endTag"
+        }
+      ]
+    },
+    "scriptRawDouble": {
+      "scope": "string.quoted",
+      "rules": [
+        {
+          "match": {
+            "literal": "\""
+          },
+          "pop": true,
+          "push": "scriptRawTag"
+        }
+      ]
+    },
+    "scriptRawSingle": {
+      "scope": "string.quoted",
+      "rules": [
+        {
+          "match": {
+            "literal": "'"
+          },
+          "pop": true,
+          "push": "scriptRawTag"
+        }
+      ]
+    },
+    "scriptRawTag": {
+      "rules": [
+        {
+          "match": {
+            "anyOf": [
+              {
+                "literal": "/>"
+              },
+              {
+                "literal": ">"
+              }
+            ]
+          },
+          "scope": "punctuation",
+          "pop": true,
+          "push": "scriptRawBody"
+        },
+        {
+          "include": "tagAttributes"
+        }
+      ]
+    },
+    "scriptSingle": {
+      "rules": [
+        {
+          "match": {
+            "literal": "'"
+          },
+          "scope": "string.quoted",
+          "pop": true
+        }
+      ]
+    },
+    "scriptType": {
+      "rules": [
+        {
+          "match": {
+            "seq": [
+              {
+                "literal": "\""
+              },
+              {
+                "anyOf": [
+                  {
+                    "literal": "application/x-javascript"
+                  },
+                  {
+                    "literal": "application/javascript"
+                  },
+                  {
+                    "literal": "application/ecmascript"
+                  },
+                  {
+                    "literal": "text/javascript"
+                  },
+                  {
+                    "literal": "text/ecmascript"
+                  },
+                  {
+                    "literal": "text/jscript"
+                  },
+                  {
+                    "literal": "module"
+                  }
+                ]
+              },
+              {
+                "literal": "\""
+              }
+            ]
+          },
+          "scope": "string.quoted",
+          "pop": true,
+          "push": "scriptJSTag"
+        },
+        {
+          "match": {
+            "seq": [
+              {
+                "literal": "'"
+              },
+              {
+                "anyOf": [
+                  {
+                    "literal": "application/x-javascript"
+                  },
+                  {
+                    "literal": "application/javascript"
+                  },
+                  {
+                    "literal": "application/ecmascript"
+                  },
+                  {
+                    "literal": "text/javascript"
+                  },
+                  {
+                    "literal": "text/ecmascript"
+                  },
+                  {
+                    "literal": "text/jscript"
+                  },
+                  {
+                    "literal": "module"
+                  }
+                ]
+              },
+              {
+                "literal": "'"
+              }
+            ]
+          },
+          "scope": "string.quoted",
+          "pop": true,
+          "push": "scriptJSTag"
+        },
+        {
+          "match": {
+            "seq": [
+              {
+                "anyOf": [
+                  {
+                    "literal": "application/x-javascript"
+                  },
+                  {
+                    "literal": "application/javascript"
+                  },
+                  {
+                    "literal": "application/ecmascript"
+                  },
+                  {
+                    "literal": "text/javascript"
+                  },
+                  {
+                    "literal": "text/ecmascript"
+                  },
+                  {
+                    "literal": "text/jscript"
+                  },
+                  {
+                    "literal": "module"
+                  }
+                ]
+              },
+              {
+                "followedBy": {
+                  "anyOf": [
+                    {
+                      "class": "[\\s>]"
+                    },
+                    {
+                      "eol": true
+                    }
+                  ]
+                }
+              }
+            ]
+          },
+          "scope": "string.quoted",
+          "pop": true,
+          "push": "scriptJSTag"
+        },
+        {
+          "match": {
+            "seq": [
+              {
+                "literal": "\""
+              },
+              {
+                "anyOf": [
+                  {
+                    "literal": "application/ld+json"
+                  },
+                  {
+                    "literal": "application/json"
+                  },
+                  {
+                    "literal": "speculationrules"
+                  },
+                  {
+                    "literal": "importmap"
+                  }
+                ]
+              },
+              {
+                "literal": "\""
+              }
+            ]
+          },
+          "scope": "string.quoted",
+          "pop": true,
+          "push": "scriptJSONTag"
+        },
+        {
+          "match": {
+            "seq": [
+              {
+                "literal": "'"
+              },
+              {
+                "anyOf": [
+                  {
+                    "literal": "application/ld+json"
+                  },
+                  {
+                    "literal": "application/json"
+                  },
+                  {
+                    "literal": "speculationrules"
+                  },
+                  {
+                    "literal": "importmap"
+                  }
+                ]
+              },
+              {
+                "literal": "'"
+              }
+            ]
+          },
+          "scope": "string.quoted",
+          "pop": true,
+          "push": "scriptJSONTag"
+        },
+        {
+          "match": {
+            "seq": [
+              {
+                "anyOf": [
+                  {
+                    "literal": "application/ld+json"
+                  },
+                  {
+                    "literal": "application/json"
+                  },
+                  {
+                    "literal": "speculationrules"
+                  },
+                  {
+                    "literal": "importmap"
+                  }
+                ]
+              },
+              {
+                "followedBy": {
+                  "anyOf": [
+                    {
+                      "class": "[\\s>]"
+                    },
+                    {
+                      "eol": true
+                    }
+                  ]
+                }
+              }
+            ]
+          },
+          "scope": "string.quoted",
+          "pop": true,
+          "push": "scriptJSONTag"
+        },
+        {
+          "match": {
+            "anyOf": [
+              {
+                "literal": "\"\""
+              },
+              {
+                "literal": "''"
+              }
+            ]
+          },
+          "scope": "string.quoted",
+          "pop": true,
+          "push": "scriptJSTag"
+        },
+        {
+          "match": {
+            "literal": "\""
+          },
+          "scope": "string.quoted",
+          "pop": true,
+          "push": "scriptRawDouble"
+        },
+        {
+          "match": {
+            "literal": "'"
+          },
+          "scope": "string.quoted",
+          "pop": true,
+          "push": "scriptRawSingle"
+        },
+        {
+          "match": {
+            "repeat": "[^\\s\"'=<>`]",
+            "min": 1
+          },
+          "scope": "string.quoted",
+          "pop": true,
+          "push": "scriptRawTag"
+        },
+        {
+          "match": {
+            "anyOf": [
+              {
+                "literal": "/>"
+              },
+              {
+                "literal": ">"
+              }
+            ]
+          },
+          "scope": "punctuation",
+          "pop": true,
+          "push": "scriptJSBody",
+          "embed": "javascript"
+        }
+      ]
+    },
+    "singleValue": {
+      "scope": "string.quoted",
+      "rules": [
+        {
+          "match": {
+            "literal": "'"
+          },
+          "pop": true
+        },
+        {
+          "include": "entities"
+        }
+      ]
+    },
+    "styleBody": {
+      "rules": [
+        {
+          "match": {
+            "seq": [
+              {
+                "literal": "</"
+              },
+              {
+                "seq": [
+                  {
+                    "class": "[sS]"
+                  },
+                  {
+                    "class": "[tT]"
+                  },
+                  {
+                    "class": "[yY]"
+                  },
+                  {
+                    "class": "[lL]"
+                  },
+                  {
+                    "class": "[eE]"
+                  }
+                ]
+              },
+              {
+                "followedBy": {
+                  "anyOf": [
+                    {
+                      "class": "[\\s/>]"
+                    },
+                    {
+                      "eol": true
+                    }
+                  ]
+                }
+              }
+            ]
+          },
+          "captures": [
+            "punctuation",
+            "entity.name.type",
+            null
+          ],
+          "pop": true,
+          "push": "endTag"
+        }
+      ]
+    },
+    "styleDouble": {
+      "rules": [
+        {
+          "match": {
+            "literal": "\""
+          },
+          "scope": "string.quoted",
+          "pop": true
+        }
+      ]
+    },
+    "styleSingle": {
+      "rules": [
+        {
+          "match": {
+            "literal": "'"
+          },
+          "scope": "string.quoted",
+          "pop": true
+        }
+      ]
+    },
+    "styleTag": {
+      "rules": [
+        {
+          "match": {
+            "anyOf": [
+              {
+                "literal": "/>"
+              },
+              {
+                "literal": ">"
+              }
+            ]
+          },
+          "scope": "punctuation",
+          "pop": true,
+          "push": "styleBody",
+          "embed": "css"
+        },
+        {
+          "include": "tagAttributes"
+        }
+      ]
+    },
+    "tag": {
+      "rules": [
+        {
+          "match": {
+            "literal": "/>"
+          },
+          "scope": "punctuation",
+          "pop": true
+        },
+        {
+          "match": {
+            "literal": ">"
+          },
+          "scope": "punctuation",
+          "pop": true
+        },
+        {
+          "include": "tagAttributes"
+        }
+      ]
+    },
+    "tagAttributes": {
+      "rules": [
+        {
+          "match": {
+            "seq": [
+              {
+                "seq": [
+                  {
+                    "seq": [
+                      {
+                        "class": "[sS]"
+                      },
+                      {
+                        "class": "[tT]"
+                      },
+                      {
+                        "class": "[yY]"
+                      },
+                      {
+                        "class": "[lL]"
+                      },
+                      {
+                        "class": "[eE]"
+                      }
+                    ]
+                  },
+                  {
+                    "notFollowedBy": {
+                      "class": "[^\\s\"'>/=]"
+                    }
+                  }
+                ]
+              },
+              {
+                "repeat": "[ \\t]"
+              },
+              {
+                "literal": "="
+              },
+              {
+                "repeat": "[ \\t]"
+              },
+              {
+                "literal": "\""
+              }
+            ]
+          },
+          "captures": [
+            "entity.other.attribute",
+            null,
+            "punctuation",
+            null,
+            "string.quoted"
+          ],
+          "push": "styleDouble",
+          "embed": "css",
+          "embedState": "declarations",
+          "notAfterWord": true,
+          "notAfter": "[:@.#]"
+        },
+        {
+          "match": {
+            "seq": [
+              {
+                "seq": [
+                  {
+                    "seq": [
+                      {
+                        "class": "[sS]"
+                      },
+                      {
+                        "class": "[tT]"
+                      },
+                      {
+                        "class": "[yY]"
+                      },
+                      {
+                        "class": "[lL]"
+                      },
+                      {
+                        "class": "[eE]"
+                      }
+                    ]
+                  },
+                  {
+                    "notFollowedBy": {
+                      "class": "[^\\s\"'>/=]"
+                    }
+                  }
+                ]
+              },
+              {
+                "repeat": "[ \\t]"
+              },
+              {
+                "literal": "="
+              },
+              {
+                "repeat": "[ \\t]"
+              },
+              {
+                "literal": "'"
+              }
+            ]
+          },
+          "captures": [
+            "entity.other.attribute",
+            null,
+            "punctuation",
+            null,
+            "string.quoted"
+          ],
+          "push": "styleSingle",
+          "embed": "css",
+          "embedState": "declarations",
+          "notAfterWord": true,
+          "notAfter": "[:@.#]"
+        },
+        {
+          "match": {
+            "seq": [
+              {
+                "seq": [
+                  {
+                    "class": "[oO]"
+                  },
+                  {
+                    "class": "[nN]"
+                  },
+                  {
+                    "class": "[A-Za-z]"
+                  },
+                  {
+                    "repeat": "[A-Za-z]"
+                  },
+                  {
+                    "notFollowedBy": {
+                      "class": "[^\\s\"'>/=]"
+                    }
+                  }
+                ]
+              },
+              {
+                "repeat": "[ \\t]"
+              },
+              {
+                "literal": "="
+              },
+              {
+                "repeat": "[ \\t]"
+              },
+              {
+                "literal": "\""
+              }
+            ]
+          },
+          "captures": [
+            "entity.other.attribute",
+            null,
+            "punctuation",
+            null,
+            "string.quoted"
+          ],
+          "push": "scriptDouble",
+          "embed": "javascript",
+          "notAfterWord": true,
+          "notAfter": "[:@.#]"
+        },
+        {
+          "match": {
+            "seq": [
+              {
+                "seq": [
+                  {
+                    "class": "[oO]"
+                  },
+                  {
+                    "class": "[nN]"
+                  },
+                  {
+                    "class": "[A-Za-z]"
+                  },
+                  {
+                    "repeat": "[A-Za-z]"
+                  },
+                  {
+                    "notFollowedBy": {
+                      "class": "[^\\s\"'>/=]"
+                    }
+                  }
+                ]
+              },
+              {
+                "repeat": "[ \\t]"
+              },
+              {
+                "literal": "="
+              },
+              {
+                "repeat": "[ \\t]"
+              },
+              {
+                "literal": "'"
+              }
+            ]
+          },
+          "captures": [
+            "entity.other.attribute",
+            null,
+            "punctuation",
+            null,
+            "string.quoted"
+          ],
+          "push": "scriptSingle",
+          "embed": "javascript",
+          "notAfterWord": true,
+          "notAfter": "[:@.#]"
+        },
+        {
+          "include": "attributes"
+        }
+      ]
+    },
+    "textareaBody": {
+      "rules": [
+        {
+          "match": {
+            "seq": [
+              {
+                "literal": "</"
+              },
+              {
+                "seq": [
+                  {
+                    "class": "[tT]"
+                  },
+                  {
+                    "class": "[eE]"
+                  },
+                  {
+                    "class": "[xX]"
+                  },
+                  {
+                    "class": "[tT]"
+                  },
+                  {
+                    "class": "[aA]"
+                  },
+                  {
+                    "class": "[rR]"
+                  },
+                  {
+                    "class": "[eE]"
+                  },
+                  {
+                    "class": "[aA]"
+                  }
+                ]
+              },
+              {
+                "followedBy": {
+                  "anyOf": [
+                    {
+                      "class": "[\\s/>]"
+                    },
+                    {
+                      "eol": true
+                    }
+                  ]
+                }
+              }
+            ]
+          },
+          "captures": [
+            "punctuation",
+            "entity.name.type",
+            null
+          ],
+          "pop": true,
+          "push": "endTag"
+        },
+        {
+          "include": "entities"
+        }
+      ]
+    },
+    "textareaTag": {
+      "rules": [
+        {
+          "match": {
+            "anyOf": [
+              {
+                "literal": "/>"
+              },
+              {
+                "literal": ">"
+              }
+            ]
+          },
+          "scope": "punctuation",
+          "pop": true,
+          "push": "textareaBody"
+        },
+        {
+          "include": "tagAttributes"
+        }
+      ]
+    },
+    "titleBody": {
+      "rules": [
+        {
+          "match": {
+            "seq": [
+              {
+                "literal": "</"
+              },
+              {
+                "seq": [
+                  {
+                    "class": "[tT]"
+                  },
+                  {
+                    "class": "[iI]"
+                  },
+                  {
+                    "class": "[tT]"
+                  },
+                  {
+                    "class": "[lL]"
+                  },
+                  {
+                    "class": "[eE]"
+                  }
+                ]
+              },
+              {
+                "followedBy": {
+                  "anyOf": [
+                    {
+                      "class": "[\\s/>]"
+                    },
+                    {
+                      "eol": true
+                    }
+                  ]
+                }
+              }
+            ]
+          },
+          "captures": [
+            "punctuation",
+            "entity.name.type",
+            null
+          ],
+          "pop": true,
+          "push": "endTag"
+        },
+        {
+          "include": "entities"
+        }
+      ]
+    },
+    "titleTag": {
+      "rules": [
+        {
+          "match": {
+            "anyOf": [
+              {
+                "literal": "/>"
+              },
+              {
+                "literal": ">"
+              }
+            ]
+          },
+          "scope": "punctuation",
+          "pop": true,
+          "push": "titleBody"
+        },
+        {
+          "include": "tagAttributes"
+        }
+      ]
+    },
+    "unquotedValue": {
+      "scope": "string.quoted",
+      "endsAtEOL": true,
+      "rules": [
+        {
+          "match": {
+            "followedBy": {
+              "class": "[\\s>]"
+            }
+          },
+          "pop": true
+        },
+        {
+          "include": "entities"
+        }
+      ]
+    },
+    "xmpBody": {
+      "rules": [
+        {
+          "match": {
+            "seq": [
+              {
+                "literal": "</"
+              },
+              {
+                "seq": [
+                  {
+                    "class": "[xX]"
+                  },
+                  {
+                    "class": "[mM]"
+                  },
+                  {
+                    "class": "[pP]"
+                  }
+                ]
+              },
+              {
+                "followedBy": {
+                  "anyOf": [
+                    {
+                      "class": "[\\s/>]"
+                    },
+                    {
+                      "eol": true
+                    }
+                  ]
+                }
+              }
+            ]
+          },
+          "captures": [
+            "punctuation",
+            "entity.name.type",
+            null
+          ],
+          "pop": true,
+          "push": "endTag"
+        }
+      ]
+    },
+    "xmpTag": {
+      "rules": [
+        {
+          "match": {
+            "anyOf": [
+              {
+                "literal": "/>"
+              },
+              {
+                "literal": ">"
+              }
+            ]
+          },
+          "scope": "punctuation",
+          "pop": true,
+          "push": "xmpBody"
+        },
+        {
+          "include": "tagAttributes"
+        }
+      ]
+    }
+  }
+}

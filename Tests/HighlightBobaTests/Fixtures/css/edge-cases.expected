@@ -1,0 +1,162 @@
+a{color:red}a:hover{color:blue}.x{b:c;d:hover{e:f}}
+^ entity.name.type
+ ^ punctuation
+  ^^^^^ support.type.property-name
+       ^ punctuation
+           ^ punctuation
+            ^ entity.name.type
+             ^^^^^^ entity.other.attribute
+                   ^ punctuation
+                    ^^^^^ support.type.property-name
+                         ^ punctuation
+                              ^ punctuation
+                               ^^ entity.other.attribute
+                                 ^ punctuation
+                                  ^ support.type.property-name
+                                   ^ punctuation
+                                     ^ punctuation
+                                      ^ entity.name.type
+                                       ^^^^^^ entity.other.attribute
+                                             ^ punctuation
+                                              ^ support.type.property-name
+                                               ^ punctuation
+                                                 ^^ punctuation
+.list {
+^^^^^ entity.other.attribute
+      ^ punctuation
+  a:hover,
+  ^ support.type.property-name
+   ^ punctuation
+         ^ punctuation
+  b { color: red }
+    ^ punctuation
+      ^^^^^ support.type.property-name
+           ^ punctuation
+                 ^ punctuation
+}
+^ punctuation
+.s { content: "unterminated
+^^ entity.other.attribute
+   ^ punctuation
+     ^^^^^^^ support.type.property-name
+            ^ punctuation
+              ^^^^^^^^^^^^^ string.quoted
+  color: blue; }
+             ^ punctuation
+               ^ punctuation
+.t { content: "one \
+^^ entity.other.attribute
+   ^ punctuation
+     ^^^^^^^ support.type.property-name
+            ^ punctuation
+              ^^^^^ string.quoted
+                   ^ constant.character.escape
+two"; background: url(unclosed
+^^^^ string.quoted
+    ^ punctuation
+      ^^^^^^^^^^ support.type.property-name
+                ^ punctuation
+                  ^^^ support.function
+                     ^ punctuation
+                      ^^^^^^^^ string.quoted
+  ; }
+  ^ punctuation
+    ^ punctuation
+@namespace svg url(http://www.w3.org/2000/svg);
+^^^^^^^^^^ keyword
+               ^^^ support.function
+                  ^ punctuation
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^ string.quoted
+                                             ^^ punctuation
+@property --angle { syntax: '<angle>'; inherits: false; initial-value: 0deg; }
+^^^^^^^^^ keyword
+          ^^^^^^^ variable.other
+                  ^ punctuation
+                    ^^^^^^ support.type.property-name
+                          ^ punctuation
+                            ^^^^^^^^^ string.quoted
+                                     ^ punctuation
+                                       ^^^^^^^^ support.type.property-name
+                                               ^ punctuation
+                                                      ^ punctuation
+                                                        ^^^^^^^^^^^^^ support.type.property-name
+                                                                     ^ punctuation
+                                                                       ^^^^ constant.numeric
+                                                                           ^ punctuation
+                                                                             ^ punctuation
+.n { margin: 1e3px +.5em -0.5em 10E-2 1em; z-index: -1; }
+^^ entity.other.attribute
+   ^ punctuation
+     ^^^^^^ support.type.property-name
+           ^ punctuation
+             ^^^^^ constant.numeric
+                   ^^^^^ constant.numeric
+                         ^^^^^^ constant.numeric
+                                ^^^^^ constant.numeric
+                                      ^^^ constant.numeric
+                                         ^ punctuation
+                                           ^^^^^^^ support.type.property-name
+                                                  ^ punctuation
+                                                    ^^ constant.numeric
+                                                      ^ punctuation
+                                                        ^ punctuation
+.c { --empty:; --json: [1, 2]; color: /* inline */ red ! important; }
+^^ entity.other.attribute
+   ^ punctuation
+     ^^^^^^^ variable.other
+            ^^ punctuation
+               ^^^^^^ variable.other
+                     ^ punctuation
+                        ^ constant.numeric
+                         ^ punctuation
+                           ^ constant.numeric
+                             ^ punctuation
+                               ^^^^^ support.type.property-name
+                                    ^ punctuation
+                                      ^^^^^^^^^^^^ comment.block
+                                                       ^^^^^^^^^^^ keyword
+                                                                  ^ punctuation
+                                                                    ^ punctuation
+DIV.Upper { COLOR: RED; }
+^^^ entity.name.type
+   ^^^^^^ entity.other.attribute
+          ^ punctuation
+            ^^^^^ support.type.property-name
+                 ^ punctuation
+                      ^ punctuation
+                        ^ punctuation
+:is(h1, h2):where(.a) > p:has(> img) { all: revert-layer }
+^^^ entity.other.attribute
+   ^ punctuation
+    ^^ entity.name.type
+      ^ punctuation
+        ^^ entity.name.type
+          ^ punctuation
+           ^^^^^^ entity.other.attribute
+                 ^ punctuation
+                  ^^ entity.other.attribute
+                    ^ punctuation
+                      ^ punctuation
+                        ^ entity.name.type
+                         ^^^^ entity.other.attribute
+                             ^^ punctuation
+                                ^^^ entity.name.type
+                                   ^ punctuation
+                                     ^ punctuation
+                                       ^^^ support.type.property-name
+                                          ^ punctuation
+                                            ^^^^^^^^^^^^ constant.language
+                                                         ^ punctuation
+.emoji::before { content: "🧋 tea"; } .🧋 { x: y }
+^^^^^^^^^^^^^^ entity.other.attribute
+               ^ punctuation
+                 ^^^^^^^ support.type.property-name
+                        ^ punctuation
+                          ^^^^^^^ string.quoted
+                                 ^ punctuation
+                                   ^ punctuation
+                                        ^ punctuation
+                                          ^ support.type.property-name
+                                           ^ punctuation
+                                               ^ punctuation
+

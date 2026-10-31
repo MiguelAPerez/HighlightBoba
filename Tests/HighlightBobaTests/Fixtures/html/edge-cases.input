@@ -1,0 +1,21 @@
+<!doctype html>
+<script>if (a < b) { x = "<!-- not a comment"; }</SCRIPT >
+<Script Type='text/javascript'>let ok = 1</script>
+<script type=module>await go()</script>
+<script type="">var empty</script>
+<script type=>let none</script>
+<script type="text/babel">const el = <div/>;</script>
+<script type="importmap">{"imports": {"a": "./a.js"}}</script>
+<script data-type="json" type="speculationrules">{"prerender": []}</script>
+<style>p::after { content: "</style>"; }</style>
+<STYLE>p { color: blue }</STYLE>
+<div :style="{a: 1}" style='color: blue' data-style="x">vue</div>
+<a href=foo&amp;bar title="a > b" @click="go">x</a>
+<p>a < b and c<d</p>
+<!-- unclosed
+comment -->
+<title>A &amp; B</title>
+<iframe><b>raw</b></iframe>
+<p>🧋 &#x1F9CB; <em class="🧋">tea</em></p>
+<plaintext><b>everything after is text</b></plaintext>
+<p>still text

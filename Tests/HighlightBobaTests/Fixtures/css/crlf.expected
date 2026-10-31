@@ -1,0 +1,10 @@
+.crlf {
+^^^^^ entity.other.attribute
+      ^ punctuation
+  color: red;
+  ^^^^^ support.type.property-name
+       ^ punctuation
+            ^ punctuation
+}
+^ punctuation
+

@@ -237,6 +237,12 @@ let session = ParseSession(highlighter: highlighter, parser: SwiftParser())
 `LanguageSupport.highlight` falls back to the lexer for a language without a parser. The fixture
 tests go through it, so a language's `.expected` files show what an app would draw.
 
+CSS and HTML are lexer-only. Every construct either has a fixed opener (`@`, `.`, `#`, `[`, `<`,
+`</`, `<!--`) or is told apart by the state it's in, so the lexer already scopes it from local
+context. The one ambiguity, a declaration versus a nested selector inside a style block, is settled
+by looking ahead for a `{` on the line; a parser would only add the rare case of a selector list
+split across lines. See [Known limits](GRAMMAR.md#known-limits).
+
 ### Swift
 
 `SwiftParser` reads declarations (with generics, `where` clauses, attributes and modifiers),

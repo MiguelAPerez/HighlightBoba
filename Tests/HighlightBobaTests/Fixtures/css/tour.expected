@@ -1,0 +1,440 @@
+/* A tour of CSS:
+^^^^^^^^^^^^^^^^^ comment.block
+   every construct once. */
+^^^^^^^^^^^^^^^^^^^^^^^^^^^ comment.block
+@charset "utf-8";
+^^^^^^^^ keyword
+         ^^^^^^^ string.quoted
+                ^ punctuation
+@import url("theme.css") layer(base) supports(display: grid) screen;
+^^^^^^^ keyword
+        ^^^ support.function
+           ^ punctuation
+            ^^^^^^^^^^^ string.quoted
+                       ^ punctuation
+                         ^^^^^ support.function
+                              ^ punctuation
+                                   ^ punctuation
+                                     ^^^^^^^^ support.function
+                                             ^ punctuation
+                                                           ^ punctuation
+                                                                   ^ punctuation
+@import 'print.css' print;
+^^^^^^^ keyword
+        ^^^^^^^^^^^ string.quoted
+                         ^ punctuation
+@layer reset, base, components;
+^^^^^^ keyword
+            ^ punctuation
+                  ^ punctuation
+                              ^ punctuation
+
+:root {
+^^^^^ entity.other.attribute
+      ^ punctuation
+  --brand: #3a7bd5;
+  ^^^^^^^ variable.other
+         ^ punctuation
+           ^^^^^^^ constant.numeric
+                  ^ punctuation
+  --gap: calc(1rem + 2px);
+  ^^^^^ variable.other
+       ^ punctuation
+         ^^^^ support.function
+             ^ punctuation
+              ^^^^ constant.numeric
+                     ^^^ constant.numeric
+                        ^^ punctuation
+  color-scheme: light dark;
+  ^^^^^^^^^^^^ support.type.property-name
+              ^ punctuation
+                          ^ punctuation
+}
+^ punctuation
+
+html, body > main + aside ~ footer {
+^^^^ entity.name.type
+    ^ punctuation
+      ^^^^ entity.name.type
+           ^ punctuation
+             ^^^^ entity.name.type
+                  ^ punctuation
+                    ^^^^^ entity.name.type
+                          ^ punctuation
+                            ^^^^^^ entity.name.type
+                                   ^ punctuation
+  margin: 0;
+  ^^^^^^ support.type.property-name
+        ^ punctuation
+          ^ constant.numeric
+           ^ punctuation
+  font: 16px/1.5 "Helvetica Neue", sans-serif;
+  ^^^^ support.type.property-name
+      ^ punctuation
+        ^^^^ constant.numeric
+            ^ punctuation
+             ^^^ constant.numeric
+                 ^^^^^^^^^^^^^^^^ string.quoted
+                                 ^ punctuation
+                                             ^ punctuation
+}
+^ punctuation
+
+*, *::before, *::after { box-sizing: border-box; }
+^ entity.name.type
+ ^ punctuation
+   ^ entity.name.type
+    ^^^^^^^^ entity.other.attribute
+            ^ punctuation
+              ^ entity.name.type
+               ^^^^^^^ entity.other.attribute
+                       ^ punctuation
+                         ^^^^^^^^^^ support.type.property-name
+                                   ^ punctuation
+                                               ^ punctuation
+                                                 ^ punctuation
+
+a:hover, a:focus-visible { color: var(--brand, #00f) !important; }
+^ entity.name.type
+ ^^^^^^ entity.other.attribute
+       ^ punctuation
+         ^ entity.name.type
+          ^^^^^^^^^^^^^^ entity.other.attribute
+                         ^ punctuation
+                           ^^^^^ support.type.property-name
+                                ^ punctuation
+                                  ^^^ support.function
+                                     ^ punctuation
+                                      ^^^^^^^ variable.other
+                                             ^ punctuation
+                                               ^^^^ constant.numeric
+                                                   ^ punctuation
+                                                     ^^^^^^^^^^ keyword
+                                                               ^ punctuation
+                                                                 ^ punctuation
+input[type="checkbox" i]:checked + label { opacity: .5; }
+^^^^^ entity.name.type
+     ^ punctuation
+      ^^^^ entity.other.attribute
+          ^ punctuation
+           ^^^^^^^^^^ string.quoted
+                      ^ keyword
+                       ^ punctuation
+                        ^^^^^^^^ entity.other.attribute
+                                 ^ punctuation
+                                   ^^^^^ entity.name.type
+                                         ^ punctuation
+                                           ^^^^^^^ support.type.property-name
+                                                  ^ punctuation
+                                                    ^^ constant.numeric
+                                                      ^ punctuation
+                                                        ^ punctuation
+[data-state=open], [lang|=en], svg|rect { display: none; }
+^ punctuation
+ ^^^^^^^^^^ entity.other.attribute
+           ^ punctuation
+                ^^ punctuation
+                   ^ punctuation
+                    ^^^^ entity.other.attribute
+                        ^^ punctuation
+                            ^^ punctuation
+                               ^^^ entity.name.type
+                                  ^ punctuation
+                                   ^^^^ entity.name.type
+                                        ^ punctuation
+                                          ^^^^^^^ support.type.property-name
+                                                 ^ punctuation
+                                                       ^ punctuation
+                                                         ^ punctuation
+li:nth-child(2n + 1 of .item):not(.done, #first) { transform: rotate(-45deg) scale(1.5e2%); }
+^^ entity.name.type
+  ^^^^^^^^^^ entity.other.attribute
+            ^ punctuation
+             ^^ constant.numeric
+                ^ punctuation
+                  ^ constant.numeric
+                    ^^ keyword
+                       ^^^^^ entity.other.attribute
+                            ^ punctuation
+                             ^^^^ entity.other.attribute
+                                 ^ punctuation
+                                  ^^^^^ entity.other.attribute
+                                       ^ punctuation
+                                         ^^^^^^ entity.other.attribute
+                                               ^ punctuation
+                                                 ^ punctuation
+                                                   ^^^^^^^^^ support.type.property-name
+                                                            ^ punctuation
+                                                              ^^^^^^ support.function
+                                                                    ^ punctuation
+                                                                     ^^^^^^ constant.numeric
+                                                                           ^ punctuation
+                                                                             ^^^^^ support.function
+                                                                                  ^ punctuation
+                                                                                   ^^^^^^ constant.numeric
+                                                                                         ^^ punctuation
+                                                                                            ^ punctuation
+.md\:flex::-webkit-scrollbar { width: 0 }
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^ entity.other.attribute
+                             ^ punctuation
+                               ^^^^^ support.type.property-name
+                                    ^ punctuation
+                                      ^ constant.numeric
+                                        ^ punctuation
+
+.card {
+^^^^^ entity.other.attribute
+      ^ punctuation
+  background: rgb(10 20 30 / 50%) url(img/bg.png) no-repeat;
+  ^^^^^^^^^^ support.type.property-name
+            ^ punctuation
+              ^^^ support.function
+                 ^ punctuation
+                  ^^ constant.numeric
+                     ^^ constant.numeric
+                        ^^ constant.numeric
+                           ^ punctuation
+                             ^^^ constant.numeric
+                                ^ punctuation
+                                  ^^^ support.function
+                                     ^ punctuation
+                                      ^^^^^^^^^^ string.quoted
+                                                ^ punctuation
+                                                           ^ punctuation
+  border: 1px solid #ABCDEF80;
+  ^^^^^^ support.type.property-name
+        ^ punctuation
+          ^^^ constant.numeric
+                    ^^^^^^^^^ constant.numeric
+                             ^ punctuation
+  content: "\201C quoted \"text\"";
+  ^^^^^^^ support.type.property-name
+         ^ punctuation
+           ^ string.quoted
+            ^^^^^^ constant.character.escape
+                  ^^^^^^^ string.quoted
+                         ^^ constant.character.escape
+                           ^^^^ string.quoted
+                               ^^ constant.character.escape
+                                 ^ string.quoted
+                                  ^ punctuation
+  width: min(100%, calc(100vw - (2 * var(--gap))));
+  ^^^^^ support.type.property-name
+       ^ punctuation
+         ^^^ support.function
+            ^ punctuation
+             ^^^^ constant.numeric
+                 ^ punctuation
+                   ^^^^ support.function
+                       ^ punctuation
+                        ^^^^^ constant.numeric
+                                ^ punctuation
+                                 ^ constant.numeric
+                                     ^^^ support.function
+                                        ^ punctuation
+                                         ^^^^^ variable.other
+                                              ^^^^^ punctuation
+  color: inherit;
+  ^^^^^ support.type.property-name
+       ^ punctuation
+         ^^^^^^^ constant.language
+                ^ punctuation
+  -webkit-transition: all 0.3s ease-in-out;
+  ^^^^^^^^^^^^^^^^^^ support.type.property-name
+                    ^ punctuation
+                          ^^^^ constant.numeric
+                                          ^ punctuation
+
+  &:hover { color: red; }
+  ^ variable.language
+   ^^^^^^ entity.other.attribute
+          ^ punctuation
+            ^^^^^ support.type.property-name
+                 ^ punctuation
+                      ^ punctuation
+                        ^ punctuation
+  & > .title { font-weight: 700 }
+  ^ variable.language
+    ^ punctuation
+      ^^^^^^ entity.other.attribute
+             ^ punctuation
+               ^^^^^^^^^^^ support.type.property-name
+                          ^ punctuation
+                            ^^^ constant.numeric
+                                ^ punctuation
+  .icon:hover {
+  ^^^^^^^^^^^ entity.other.attribute
+              ^ punctuation
+    fill: currentColor;
+    ^^^^ support.type.property-name
+        ^ punctuation
+                      ^ punctuation
+  }
+  ^ punctuation
+  @media (width >= 600px) {
+  ^^^^^^ keyword
+         ^ punctuation
+                ^^ punctuation
+                   ^^^^^ constant.numeric
+                        ^ punctuation
+                          ^ punctuation
+    padding: 2em;
+    ^^^^^^^ support.type.property-name
+           ^ punctuation
+             ^^^ constant.numeric
+                ^ punctuation
+  }
+  ^ punctuation
+}
+^ punctuation
+
+@media screen and (min-width: 768px), print and (orientation: landscape) {
+^^^^^^ keyword
+              ^^^ keyword
+                  ^ punctuation
+                   ^^^^^^^^^ support.type.property-name
+                            ^ punctuation
+                              ^^^^^ constant.numeric
+                                   ^^ punctuation
+                                            ^^^ keyword
+                                                ^ punctuation
+                                                 ^^^^^^^^^^^ support.type.property-name
+                                                            ^ punctuation
+                                                                       ^ punctuation
+                                                                         ^ punctuation
+  .grid { display: grid; grid-template-columns: repeat(3, 1fr); }
+  ^^^^^ entity.other.attribute
+        ^ punctuation
+          ^^^^^^^ support.type.property-name
+                 ^ punctuation
+                       ^ punctuation
+                         ^^^^^^^^^^^^^^^^^^^^^ support.type.property-name
+                                              ^ punctuation
+                                                ^^^^^^ support.function
+                                                      ^ punctuation
+                                                       ^ constant.numeric
+                                                        ^ punctuation
+                                                          ^^^ constant.numeric
+                                                             ^^ punctuation
+                                                                ^ punctuation
+}
+^ punctuation
+
+@supports not (display: grid) {
+^^^^^^^^^ keyword
+          ^^^ keyword
+              ^ punctuation
+               ^^^^^^^ support.type.property-name
+                      ^ punctuation
+                            ^ punctuation
+                              ^ punctuation
+  .grid { float: left }
+  ^^^^^ entity.other.attribute
+        ^ punctuation
+          ^^^^^ support.type.property-name
+               ^ punctuation
+                      ^ punctuation
+}
+^ punctuation
+
+@container sidebar (min-width: 400px) {
+^^^^^^^^^^ keyword
+                   ^ punctuation
+                    ^^^^^^^^^ support.type.property-name
+                             ^ punctuation
+                               ^^^^^ constant.numeric
+                                    ^ punctuation
+                                      ^ punctuation
+  .card { flex-direction: row }
+  ^^^^^ entity.other.attribute
+        ^ punctuation
+          ^^^^^^^^^^^^^^ support.type.property-name
+                        ^ punctuation
+                              ^ punctuation
+}
+^ punctuation
+
+@font-face {
+^^^^^^^^^^ keyword
+           ^ punctuation
+  font-family: "Brand Sans";
+  ^^^^^^^^^^^ support.type.property-name
+             ^ punctuation
+               ^^^^^^^^^^^^ string.quoted
+                           ^ punctuation
+  src: url(fonts/brand.woff2) format("woff2"), url('fonts/brand.woff') format('woff');
+  ^^^ support.type.property-name
+     ^ punctuation
+       ^^^ support.function
+          ^ punctuation
+           ^^^^^^^^^^^^^^^^^ string.quoted
+                            ^ punctuation
+                              ^^^^^^ support.function
+                                    ^ punctuation
+                                     ^^^^^^^ string.quoted
+                                            ^^ punctuation
+                                               ^^^ support.function
+                                                  ^ punctuation
+                                                   ^^^^^^^^^^^^^^^^^^ string.quoted
+                                                                     ^ punctuation
+                                                                       ^^^^^^ support.function
+                                                                             ^ punctuation
+                                                                              ^^^^^^ string.quoted
+                                                                                    ^^ punctuation
+  unicode-range: U+0000-00FF;
+  ^^^^^^^^^^^^^ support.type.property-name
+               ^ punctuation
+                 ^^^^^^^^^^^ constant.numeric
+                            ^ punctuation
+}
+^ punctuation
+
+@keyframes slide-in {
+^^^^^^^^^^ keyword
+           ^^^^^^^^ entity.name.function
+                    ^ punctuation
+  from { transform: translateX(-100%); }
+  ^^^^ entity.name.type
+       ^ punctuation
+         ^^^^^^^^^ support.type.property-name
+                  ^ punctuation
+                    ^^^^^^^^^^ support.function
+                              ^ punctuation
+                               ^^^^^ constant.numeric
+                                    ^^ punctuation
+                                       ^ punctuation
+  50% { opacity: 0.5 }
+  ^^^ constant.numeric
+      ^ punctuation
+        ^^^^^^^ support.type.property-name
+               ^ punctuation
+                 ^^^ constant.numeric
+                     ^ punctuation
+  to { transform: translateX(0); }
+  ^^ entity.name.type
+     ^ punctuation
+       ^^^^^^^^^ support.type.property-name
+                ^ punctuation
+                  ^^^^^^^^^^ support.function
+                            ^ punctuation
+                             ^ constant.numeric
+                              ^^ punctuation
+                                 ^ punctuation
+}
+^ punctuation
+
+@layer components {
+^^^^^^ keyword
+                  ^ punctuation
+  .button { padding: 0.25em 1em; }
+  ^^^^^^^ entity.other.attribute
+          ^ punctuation
+            ^^^^^^^ support.type.property-name
+                   ^ punctuation
+                     ^^^^^^ constant.numeric
+                            ^^^ constant.numeric
+                               ^ punctuation
+                                 ^ punctuation
+}
+^ punctuation
+

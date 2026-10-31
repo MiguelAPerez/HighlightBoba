@@ -1,0 +1,258 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" 'http://www.w3.org/TR/html4/strict.dtd'>
+^^^^^^^^^^^^^^^^^^^^^^ meta.preprocessor
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^ string.quoted
+                                                 ^ meta.preprocessor
+                                                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ string.quoted
+                                                                                         ^ meta.preprocessor
+<!-- A tour of HTML:
+^^^^^^^^^^^^^^^^^^^^ comment.block
+     every construct once. -->
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ comment.block
+<html lang="en">
+^ punctuation
+ ^^^^ entity.name.type
+      ^^^^ entity.other.attribute
+          ^ punctuation
+           ^^^^ string.quoted
+               ^ punctuation
+<head>
+^ punctuation
+ ^^^^ entity.name.type
+     ^ punctuation
+  <meta charset=utf-8>
+  ^ punctuation
+   ^^^^ entity.name.type
+        ^^^^^^^ entity.other.attribute
+               ^ punctuation
+                ^^^^^ string.quoted
+                     ^ punctuation
+  <title>Fish &amp; Chips &lt;3 <b>not bold</b></title>
+  ^ punctuation
+   ^^^^^ entity.name.type
+        ^ punctuation
+              ^^^^^ constant.character.escape
+                          ^^^^ constant.character.escape
+                                               ^^ punctuation
+                                                 ^^^^^ entity.name.type
+                                                      ^ punctuation
+  <link rel='stylesheet' href="style.css?v=1&amp;x=2">
+  ^ punctuation
+   ^^^^ entity.name.type
+        ^^^ entity.other.attribute
+           ^ punctuation
+            ^^^^^^^^^^^^ string.quoted
+                         ^^^^ entity.other.attribute
+                             ^ punctuation
+                              ^^^^^^^^^^^^^^ string.quoted
+                                            ^^^^^ constant.character.escape
+                                                 ^^^^ string.quoted
+                                                     ^ punctuation
+  <style media="screen">
+  ^ punctuation
+   ^^^^^ entity.name.type
+         ^^^^^ entity.other.attribute
+              ^ punctuation
+               ^^^^^^^^ string.quoted
+                       ^ punctuation
+    body > .main { color: #333; }
+    ^^^^ entity.name.type
+         ^ punctuation
+           ^^^^^ entity.other.attribute
+                 ^ punctuation
+                   ^^^^^ support.type.property-name
+                        ^ punctuation
+                          ^^^^ constant.numeric
+                              ^ punctuation
+                                ^ punctuation
+  </style>
+  ^^ punctuation
+    ^^^^^ entity.name.type
+         ^ punctuation
+  <script type="module">
+  ^ punctuation
+   ^^^^^^ entity.name.type
+          ^^^^ entity.other.attribute
+              ^ punctuation
+               ^^^^^^^^ string.quoted
+                       ^ punctuation
+    import { a } from "./a.js";
+    ^^^^^^ keyword
+                 ^^^^ keyword
+                      ^^^^^^^^ string.quoted
+    const s = "</scrip" + `t>`;
+    ^^^^^ keyword
+              ^^^^^^^^^ string.quoted
+                          ^^^^ string.quoted
+  </script>
+  ^^ punctuation
+    ^^^^^^ entity.name.type
+          ^ punctuation
+  <script type="application/json">{"key": [1, true, null]}</script>
+  ^ punctuation
+   ^^^^^^ entity.name.type
+          ^^^^ entity.other.attribute
+              ^ punctuation
+               ^^^^^^^^^^^^^^^^^^ string.quoted
+                                 ^^ punctuation
+                                   ^^^^^ support.type.property-name
+                                        ^ punctuation
+                                          ^ punctuation
+                                           ^ constant.numeric
+                                            ^ punctuation
+                                              ^^^^ constant.language
+                                                  ^ punctuation
+                                                    ^^^^ constant.language
+                                                        ^^^^ punctuation
+                                                            ^^^^^^ entity.name.type
+                                                                  ^ punctuation
+  <script type="text/template"><div>{{ raw }}</div></script>
+  ^ punctuation
+   ^^^^^^ entity.name.type
+          ^^^^ entity.other.attribute
+              ^ punctuation
+               ^^^^^^^^^^^^^^^ string.quoted
+                              ^ punctuation
+                                                   ^^ punctuation
+                                                     ^^^^^^ entity.name.type
+                                                           ^ punctuation
+  <script src="app.js" defer></script>
+  ^ punctuation
+   ^^^^^^ entity.name.type
+          ^^^ entity.other.attribute
+             ^ punctuation
+              ^^^^^^^^ string.quoted
+                       ^^^^^ entity.other.attribute
+                            ^^^ punctuation
+                               ^^^^^^ entity.name.type
+                                     ^ punctuation
+</head>
+^^ punctuation
+  ^^^^ entity.name.type
+      ^ punctuation
+<BODY class="page dark" data-x = "1" hidden>
+^ punctuation
+ ^^^^ entity.name.type
+      ^^^^^ entity.other.attribute
+           ^ punctuation
+            ^^^^^^^^^^^ string.quoted
+                        ^^^^^^ entity.other.attribute
+                               ^ punctuation
+                                 ^^^ string.quoted
+                                     ^^^^^^ entity.other.attribute
+                                           ^ punctuation
+  <p style="color: red; margin: 0 auto !important">Hello&nbsp;world &#169; &#x1F9CB; &bogus</p>
+  ^ punctuation
+   ^ entity.name.type
+     ^^^^^ entity.other.attribute
+          ^ punctuation
+           ^ string.quoted
+            ^^^^^ support.type.property-name
+                 ^ punctuation
+                      ^ punctuation
+                        ^^^^^^ support.type.property-name
+                              ^ punctuation
+                                ^ constant.numeric
+                                       ^^^^^^^^^^ keyword
+                                                 ^ string.quoted
+                                                  ^ punctuation
+                                                        ^^^^^^ constant.character.escape
+                                                                    ^^^^^^ constant.character.escape
+                                                                           ^^^^^^^^^ constant.character.escape
+                                                                                           ^^ punctuation
+                                                                                             ^ entity.name.type
+                                                                                              ^ punctuation
+  <button onclick="go('home'); return false;" disabled>Go</button>
+  ^ punctuation
+   ^^^^^^ entity.name.type
+          ^^^^^^^ entity.other.attribute
+                 ^ punctuation
+                  ^ string.quoted
+                      ^^^^^^ string.quoted
+                               ^^^^^^ keyword
+                                      ^^^^^ constant.language
+                                            ^ string.quoted
+                                              ^^^^^^^^ entity.other.attribute
+                                                      ^ punctuation
+                                                         ^^ punctuation
+                                                           ^^^^^^ entity.name.type
+                                                                 ^ punctuation
+  <img src=logo.png alt="" width=100/>
+  ^ punctuation
+   ^^^ entity.name.type
+       ^^^ entity.other.attribute
+          ^ punctuation
+           ^^^^^^^^ string.quoted
+                    ^^^ entity.other.attribute
+                       ^ punctuation
+                        ^^ string.quoted
+                           ^^^^^ entity.other.attribute
+                                ^ punctuation
+                                 ^^^^ string.quoted
+                                     ^ punctuation
+  <br><hr/><input type=checkbox checked>
+  ^ punctuation
+   ^^ entity.name.type
+     ^^ punctuation
+       ^^ entity.name.type
+         ^^^ punctuation
+            ^^^^^ entity.name.type
+                  ^^^^ entity.other.attribute
+                      ^ punctuation
+                       ^^^^^^^^ string.quoted
+                                ^^^^^^^ entity.other.attribute
+                                       ^ punctuation
+  <textarea name="t">Raw <b>text</b> &amp; entities</textarea>
+  ^ punctuation
+   ^^^^^^^^ entity.name.type
+            ^^^^ entity.other.attribute
+                ^ punctuation
+                 ^^^ string.quoted
+                    ^ punctuation
+                                     ^^^^^ constant.character.escape
+                                                   ^^ punctuation
+                                                     ^^^^^^^^ entity.name.type
+                                                             ^ punctuation
+  <svg viewBox="0 0 10 10"><![CDATA[ x < y ]]></svg>
+  ^ punctuation
+   ^^^ entity.name.type
+       ^^^^^^^ entity.other.attribute
+              ^ punctuation
+               ^^^^^^^^^^^ string.quoted
+                          ^ punctuation
+                           ^^^^^^^^^ meta.preprocessor
+                                           ^^^ meta.preprocessor
+                                              ^^ punctuation
+                                                ^^^ entity.name.type
+                                                   ^ punctuation
+  <a
+  ^ punctuation
+   ^ entity.name.type
+    href="/multi"
+    ^^^^ entity.other.attribute
+        ^ punctuation
+         ^^^^^^^^ string.quoted
+    title='line'
+    ^^^^^ entity.other.attribute
+         ^ punctuation
+          ^^^^^^ string.quoted
+  >link</a>
+  ^ punctuation
+       ^^ punctuation
+         ^ entity.name.type
+          ^ punctuation
+  <?xml-stylesheet href="a.xsl"?>
+  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ meta.preprocessor
+  <!bogus comment>
+  ^^^^^^^^^^^^^^^^ comment.block
+  <!---->
+  ^^^^^^^ comment.block
+  if a < b && c > d
+</BODY>
+^^ punctuation
+  ^^^^ entity.name.type
+      ^ punctuation
+</html>
+^^ punctuation
+  ^^^^ entity.name.type
+      ^ punctuation
+

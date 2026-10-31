@@ -2,7 +2,7 @@
 
 A grammar-driven syntax highlighter for Swift, written from scratch with Apple frameworks only.
 
-**Status:** early. The engine works, with grammars for Swift, Python, JavaScript, TypeScript, Go, JSON, YAML, Markdown (fenced code highlighted in its own language) and shell. The API may still change.
+**Status:** early. The engine works, with grammars for Swift, Python, JavaScript, TypeScript, Go, JSON, YAML, Markdown (fenced code highlighted in its own language), shell, CSS and HTML (with `<style>`, `<script>` and `style="…"` highlighted as CSS, JavaScript or JSON). The API may still change.
 
 ```swift
 import HighlightBoba
