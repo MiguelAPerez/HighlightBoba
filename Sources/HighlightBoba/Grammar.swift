@@ -73,6 +73,8 @@ struct FlatRule: Sendable {
     var embedPart: Int32
     /// Index in `Grammar.embedNames`.
     var embedName: Int32
+    /// Index in `Grammar.embedNames`: the guest state to start in instead of the guest's initial one.
+    var embedState: Int32
     var notAfterWord: Bool
     var rememberIndent: Bool
     var needsParts: Bool
@@ -118,14 +120,16 @@ final class Rule: Sendable {
     let remember: MatchSlice?
     let rememberIndent: Bool
     let embed: EmbedSource?
+    /// The guest grammar's state to start in, instead of its initial state.
+    let embedState: String?
     let pushAtNextLine: Bool
     let continuesLine: Bool
     /// Whether matching must record where each `seq` part ends.
     let needsParts: Bool
 
     init(matcher: Matcher, scope: Int?, push: Int?, pop: Int, notAfterWord: Bool, notAfter: Int?,
-         captures: [Int?]?, remember: MatchSlice?, rememberIndent: Bool, embed: EmbedSource?, pushAtNextLine: Bool,
-         continuesLine: Bool = false) {
+         captures: [Int?]?, remember: MatchSlice?, rememberIndent: Bool, embed: EmbedSource?, embedState: String? = nil,
+         pushAtNextLine: Bool, continuesLine: Bool = false) {
         self.matcher = matcher
         self.scope = scope
         self.push = push
@@ -136,6 +140,7 @@ final class Rule: Sendable {
         self.remember = remember
         self.rememberIndent = rememberIndent
         self.embed = embed
+        self.embedState = embedState
         self.pushAtNextLine = pushAtNextLine
         self.continuesLine = continuesLine
         var parts = captures != nil
@@ -237,8 +242,8 @@ public final class Grammar: Sendable {
                     continue
                 }
                 try Self.checkKeys(rule, allowed: ["match", "scope", "push", "pop", "notAfterWord", "notAfter", "captures",
-                                                   "remember", "rememberIndent", "embed", "embedPart", "pushAtNextLine",
-                                                   "continuesLine"], at: at)
+                                                   "remember", "rememberIndent", "embed", "embedPart", "embedState",
+                                                   "pushAtNextLine", "continuesLine"], at: at)
                 guard let match = rule["match"] else { throw GrammarError("\(at) needs \"match\" or \"include\"") }
                 let matcher = try builder.matcher(match, at: at)
                 var push: Int?
@@ -287,6 +292,10 @@ public final class Grammar: Sendable {
                 } else if rule["embedPart"] != nil {
                     embed = .part(try partIndex("embedPart"))
                 }
+                let embedState = rule["embedState"] as? String
+                if embedState != nil && embed == nil {
+                    throw GrammarError("\(at): \"embedState\" names a state of the embedded grammar, so the rule needs \"embed\" or \"embedPart\"")
+                }
                 let rememberIndent = rule["rememberIndent"] as? Bool ?? false
                 let pushAtNextLine = rule["pushAtNextLine"] as? Bool ?? false
                 if push == nil, remember != nil || embed != nil || rememberIndent || pushAtNextLine {
@@ -296,7 +305,7 @@ public final class Grammar: Sendable {
                 parsed.append(.rule(Rule(matcher: matcher, scope: scope, push: push, pop: pop,
                                          notAfterWord: rule["notAfterWord"] as? Bool ?? false, notAfter: notAfter,
                                          captures: captures, remember: remember, rememberIndent: rememberIndent, embed: embed,
-                                         pushAtNextLine: pushAtNextLine,
+                                         embedState: embedState, pushAtNextLine: pushAtNextLine,
                                          continuesLine: rule["continuesLine"] as? Bool ?? false)))
             }
             rawRules.append(parsed)
@@ -355,7 +364,7 @@ public final class Grammar: Sendable {
         mutating func add(_ rule: Rule) {
             var flat = FlatRule(matcher: compile(rule.matcher), scope: Int32(rule.scope ?? -1), push: Int32(rule.push ?? -1),
                                 pop: Int32(rule.pop), notAfter: Int32(rule.notAfter ?? -1), capturesStart: 0, capturesCount: 0,
-                                remember: -2, embedPart: -1, embedName: -1, notAfterWord: rule.notAfterWord,
+                                remember: -2, embedPart: -1, embedName: -1, embedState: -1, notAfterWord: rule.notAfterWord,
                                 rememberIndent: rule.rememberIndent, needsParts: rule.needsParts,
                                 pushAtNextLine: rule.pushAtNextLine, continuesLine: rule.continuesLine)
             if let captures = rule.captures {
@@ -374,6 +383,10 @@ public final class Grammar: Sendable {
                 embedNames.append(name)
             case .part(let index): flat.embedPart = Int32(index)
             case nil: break
+            }
+            if let state = rule.embedState {
+                flat.embedState = Int32(embedNames.count)
+                embedNames.append(state)
             }
             rules.append(flat)
         }

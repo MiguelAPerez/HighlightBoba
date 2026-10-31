@@ -1,0 +1,208 @@
+<!doctype html>
+^^^^^^^^^^^^^^^ meta.preprocessor
+<script>if (a < b) { x = "<!-- not a comment"; }</SCRIPT >
+^ punctuation
+ ^^^^^^ entity.name.type
+       ^ punctuation
+        ^^ keyword
+                         ^^^^^^^^^^^^^^^^^^^^ string.quoted
+                                                ^^ punctuation
+                                                  ^^^^^^ entity.name.type
+                                                         ^ punctuation
+<Script Type='text/javascript'>let ok = 1</script>
+^ punctuation
+ ^^^^^^ entity.name.type
+        ^^^^ entity.other.attribute
+            ^ punctuation
+             ^^^^^^^^^^^^^^^^^ string.quoted
+                              ^ punctuation
+                               ^^^ keyword
+                                        ^ constant.numeric
+                                         ^^ punctuation
+                                           ^^^^^^ entity.name.type
+                                                 ^ punctuation
+<script type=module>await go()</script>
+^ punctuation
+ ^^^^^^ entity.name.type
+        ^^^^ entity.other.attribute
+            ^ punctuation
+             ^^^^^^ string.quoted
+                   ^ punctuation
+                    ^^^^^ keyword
+                              ^^ punctuation
+                                ^^^^^^ entity.name.type
+                                      ^ punctuation
+<script type="">var empty</script>
+^ punctuation
+ ^^^^^^ entity.name.type
+        ^^^^ entity.other.attribute
+            ^ punctuation
+             ^^ string.quoted
+               ^ punctuation
+                ^^^ keyword
+                         ^^ punctuation
+                           ^^^^^^ entity.name.type
+                                 ^ punctuation
+<script type=>let none</script>
+^ punctuation
+ ^^^^^^ entity.name.type
+        ^^^^ entity.other.attribute
+            ^^ punctuation
+              ^^^ keyword
+                      ^^ punctuation
+                        ^^^^^^ entity.name.type
+                              ^ punctuation
+<script type="text/babel">const el = <div/>;</script>
+^ punctuation
+ ^^^^^^ entity.name.type
+        ^^^^ entity.other.attribute
+            ^ punctuation
+             ^^^^^^^^^^^^ string.quoted
+                         ^ punctuation
+                                            ^^ punctuation
+                                              ^^^^^^ entity.name.type
+                                                    ^ punctuation
+<script type="importmap">{"imports": {"a": "./a.js"}}</script>
+^ punctuation
+ ^^^^^^ entity.name.type
+        ^^^^ entity.other.attribute
+            ^ punctuation
+             ^^^^^^^^^^^ string.quoted
+                        ^^ punctuation
+                          ^^^^^^^^^ support.type.property-name
+                                   ^ punctuation
+                                     ^ punctuation
+                                      ^^^ support.type.property-name
+                                         ^ punctuation
+                                           ^^^^^^^^ string.quoted
+                                                   ^^^^ punctuation
+                                                       ^^^^^^ entity.name.type
+                                                             ^ punctuation
+<script data-type="json" type="speculationrules">{"prerender": []}</script>
+^ punctuation
+ ^^^^^^ entity.name.type
+        ^^^^^^^^^ entity.other.attribute
+                 ^ punctuation
+                  ^^^^^^ string.quoted
+                         ^^^^ entity.other.attribute
+                             ^ punctuation
+                              ^^^^^^^^^^^^^^^^^^ string.quoted
+                                                ^^ punctuation
+                                                  ^^^^^^^^^^^ support.type.property-name
+                                                             ^ punctuation
+                                                               ^^^^^ punctuation
+                                                                    ^^^^^^ entity.name.type
+                                                                          ^ punctuation
+<style>p::after { content: "</style>"; }</style>
+^ punctuation
+ ^^^^^ entity.name.type
+      ^ punctuation
+       ^ entity.name.type
+        ^^^^^^^ entity.other.attribute
+                ^ punctuation
+                  ^^^^^^^ support.type.property-name
+                         ^ punctuation
+                           ^ string.quoted
+                            ^^ punctuation
+                              ^^^^^ entity.name.type
+                                   ^ punctuation
+                                        ^^ punctuation
+                                          ^^^^^ entity.name.type
+                                               ^ punctuation
+<STYLE>p { color: blue }</STYLE>
+^ punctuation
+ ^^^^^ entity.name.type
+      ^ punctuation
+       ^ entity.name.type
+         ^ punctuation
+           ^^^^^ support.type.property-name
+                ^ punctuation
+                       ^^^ punctuation
+                          ^^^^^ entity.name.type
+                               ^ punctuation
+<div :style="{a: 1}" style='color: blue' data-style="x">vue</div>
+^ punctuation
+ ^^^ entity.name.type
+     ^^^^^^ entity.other.attribute
+           ^ punctuation
+            ^^^^^^^^ string.quoted
+                     ^^^^^ entity.other.attribute
+                          ^ punctuation
+                           ^ string.quoted
+                            ^^^^^ support.type.property-name
+                                 ^ punctuation
+                                       ^ string.quoted
+                                         ^^^^^^^^^^ entity.other.attribute
+                                                   ^ punctuation
+                                                    ^^^ string.quoted
+                                                       ^ punctuation
+                                                           ^^ punctuation
+                                                             ^^^ entity.name.type
+                                                                ^ punctuation
+<a href=foo&amp;bar title="a > b" @click="go">x</a>
+^ punctuation
+ ^ entity.name.type
+   ^^^^ entity.other.attribute
+       ^ punctuation
+        ^^^ string.quoted
+           ^^^^^ constant.character.escape
+                ^^^ string.quoted
+                    ^^^^^ entity.other.attribute
+                         ^ punctuation
+                          ^^^^^^^ string.quoted
+                                  ^^^^^^ entity.other.attribute
+                                        ^ punctuation
+                                         ^^^^ string.quoted
+                                             ^ punctuation
+                                               ^^ punctuation
+                                                 ^ entity.name.type
+                                                  ^ punctuation
+<p>a < b and c<d</p>
+^ punctuation
+ ^ entity.name.type
+  ^ punctuation
+              ^ punctuation
+               ^^ entity.name.type
+                  ^ entity.other.attribute
+                   ^ punctuation
+<!-- unclosed
+^^^^^^^^^^^^^ comment.block
+comment -->
+^^^^^^^^^^^ comment.block
+<title>A &amp; B</title>
+^ punctuation
+ ^^^^^ entity.name.type
+      ^ punctuation
+         ^^^^^ constant.character.escape
+                ^^ punctuation
+                  ^^^^^ entity.name.type
+                       ^ punctuation
+<iframe><b>raw</b></iframe>
+^ punctuation
+ ^^^^^^ entity.name.type
+       ^ punctuation
+                  ^^ punctuation
+                    ^^^^^^ entity.name.type
+                          ^ punctuation
+<p>🧋 &#x1F9CB; <em class="🧋">tea</em></p>
+^ punctuation
+ ^ entity.name.type
+  ^ punctuation
+     ^^^^^^^^^ constant.character.escape
+               ^ punctuation
+                ^^ entity.name.type
+                   ^^^^^ entity.other.attribute
+                        ^ punctuation
+                         ^^^ string.quoted
+                            ^ punctuation
+                                ^^ punctuation
+                                  ^^ entity.name.type
+                                    ^^^ punctuation
+                                       ^ entity.name.type
+                                        ^ punctuation
+<plaintext><b>everything after is text</b></plaintext>
+^ punctuation
+ ^^^^^^^^^ entity.name.type
+          ^ punctuation
+<p>still text
+

@@ -63,6 +63,7 @@ It is **not** a regex engine and not a parser. Matchers come from a small closed
 | `remember` | On a push: save the match (`true`) or one `seq` part (its index) on the new state, for `remembered` to close on. |
 | `rememberIndent` | On a push: save the line's indentation, for `endsAtDedent`. |
 | `embed` / `embedPart` | On a push: highlight the new state's text with another grammar, named directly (`"embed": "swift"`) or by a `seq` part's text (a fence's language tag). Names and file extensions both resolve. The pushed state's own rules are tried first at every position, so they act as the terminator. An unknown name falls back to the state's scope. |
+| `embedState` | With `embed` or `embedPart`: start the guest in this state of its grammar instead of its initial one. HTML's `style="…"` attribute embeds CSS starting in `declarations`, since an attribute holds declarations, not rules. An unknown state falls back to the initial one. |
 | `pushAtNextLine` | On a push: enter the state at the end of this line instead of now, so the rest of the line stays in the current state. Several on one line are entered in the order they appeared (`cat <<A <<B`: A's body, then B's). |
 | `continuesLine` | When the match reaches the line end, the line break doesn't end `endsAtEOL` states: backslash continuation, `{"seq":[{"literal":"\\"},{"eol":true}]}`. |
 | `include` | Instead of `match`: splice in another state's rules here. |
@@ -94,6 +95,7 @@ Nothing ever backtracks: `repeat` keeps its whole run, and `anyOf` keeps its fir
 
 - **Heredoc:** `{"seq":[{"literal":"<<"},{"opt":{"literal":"-"}},{"wordStarting":"[A-Za-z_]"}]}` with `"push":"heredoc","remember":2`, closed in `heredoc` by `{"seq":[{"bol":true},{"repeat":"[\\t]"},{"remembered":true},{"eol":true}]}`.
 - **Fenced code:** remember the backtick run, `embedPart` the language tag, and close with `bol`, up to three spaces, `remembered`, then `{"repeat":"[`]"}` so a longer fence also closes it.
+- **Raw text up to a closing tag:** HTML's `<script>` pushes a body state that embeds JavaScript and whose only rule is the case-insensitive `</script` followed by a space, `/`, `>` or the line end. The host's rules come first, so the body ends there even inside a JavaScript string, as it does in a browser. The `type` attribute picks the body: its rule pops the tag state and pushes a sibling whose `>` pushes the JSON or raw-text body instead.
 - **Keys vs values:** use states, not lookahead. JSON's grammar has `object`, `member` and `array` states, so a string is a key exactly when it appears where a key belongs.
 
 ## Scopes
@@ -131,4 +133,6 @@ These are the lexer's. Where a language has a parser ([PARSER.md](PARSER.md#bund
 - Markdown strikethrough, tables and entities, and YAML timestamps, have no scope in the vocabulary, so they stay plain.
 - Python: an f-string field left open (`f"{a`) runs on to the next `}`, past its line. Soft keywords are guessed from the line alone; the parser decides them (see [PARSER.md](PARSER.md#python)).
 - JSON numbers are checked only for trailing ASCII letters: `1é` isn't flagged, and neither is a bare `-x`. Also unflagged: `01`, `1.` and `.5`.
+- CSS: a name and a colon start a declaration unless a `{` follows on the same line, which makes them a nested rule's selector (`a:hover {`). So a nested selector list split across lines (`a:hover,` then `b {` on the next line) reads its first line as a declaration. Rules at the top level of a stylesheet or of `@media` are never mistaken for declarations, only rules nested in a style block. Non-ASCII outside the BMP (emoji) in a class or id name isn't scoped as part of it.
+- HTML: a lexer doesn't track which elements are open, so a `<![CDATA[` section is recognised anywhere, not only inside SVG or MathML. `<script>` types are matched in lower case only (`text/JavaScript` stays raw text), and a second `type` after a JavaScript one switches the body again, where a browser keeps the first. Event handler attributes (`onclick="…"`) embed JavaScript, but entities in them (`&quot;`) aren't decoded first. Framework attributes (`:style`, `@click`, `v-bind:style`) stay plain strings.
 - Embedding nests at most four grammars deep, and a remembered delimiter is capped at 256 UTF-16 units.

@@ -175,6 +175,23 @@ import Testing
         #expect(Self.tokens("<py>None</py> None", grammar) == ["keyword:<py>", "constant.language:None", "keyword:</py>"])
     }
 
+    @Test func embedStateStartsTheGuestInANamedState() throws {
+        let grammar = try Self.grammar(#"""
+        {"text":{"rules":[
+          {"match":{"literal":"<d>"},"scope":"keyword","push":"inline","embed":"css","embedState":"declarations"},
+          {"match":{"literal":"<s>"},"scope":"keyword","push":"inline","embed":"css"},
+          {"match":{"literal":"<x>"},"scope":"keyword","push":"inline","embed":"css","embedState":"noSuchState"}]},
+         "inline":{"rules":[{"match":{"literal":"</>"},"scope":"keyword","pop":true}]}}
+        """#, initial: "text")
+        #expect(Self.tokens("<d>color: red</>", grammar) == [
+            "keyword:<d>", "support.type.property-name:color", "punctuation::", "keyword:</>"
+        ], "declarations, not a selector")
+        #expect(Self.tokens("<s>color</>", grammar) == ["keyword:<s>", "entity.name.type:color", "keyword:</>"],
+                "without embedState the guest starts in its initial state")
+        #expect(Self.tokens("<x>color</>", grammar) == ["keyword:<x>", "entity.name.type:color", "keyword:</>"],
+                "an unknown state falls back to the initial state")
+    }
+
     // MARK: validation
 
     @Test(arguments: [
@@ -183,6 +200,7 @@ import Testing
         (#"{"code":{"rules":[{"match":{"seq":[{"literal":"a"}]},"remember":0}]}}"#, "needs \"push\""),
         (#"{"code":{"rules":[{"match":{"seq":[{"literal":"a"}]},"push":"code","remember":3}]}}"#, "remember"),
         (#"{"code":{"rules":[{"match":{"literal":"a"},"embed":"swift"}]}}"#, "needs \"push\""),
+        (#"{"code":{"rules":[{"match":{"literal":"a"},"push":"code","embedState":"x"}]}}"#, "needs \"embed\""),
         (#"{"code":{"rules":[{"match":{"anyOf":[]}}]}}"#, "anyOf"),
         (#"{"code":{"rules":[{"match":{"literal":"a"},"notAfter":"oops"}]}}"#, "must look like")
     ])

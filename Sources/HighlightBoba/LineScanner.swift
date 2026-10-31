@@ -250,7 +250,8 @@ struct LineScanner {
                 ? grammar.embedNames[Int(rule.embedName)]
                 : String(decoding: text(part: rule.embedPart), as: UTF16.self)
             if let guest = registry.grammar(named: name) {
-                frame.guest = Guest(grammar: guest, stack: [Frame(state: guest.initial)])
+                let start = rule.embedState >= 0 ? guest.stateID(named: grammar.embedNames[Int(rule.embedState)]) : nil
+                frame.guest = Guest(grammar: guest, stack: [Frame(state: start ?? guest.initial)])
             }
         }
         if rule.pushAtNextLine {

@@ -1,0 +1,71 @@
+/* A tour of CSS:
+   every construct once. */
+@charset "utf-8";
+@import url("theme.css") layer(base) supports(display: grid) screen;
+@import 'print.css' print;
+@layer reset, base, components;
+
+:root {
+  --brand: #3a7bd5;
+  --gap: calc(1rem + 2px);
+  color-scheme: light dark;
+}
+
+html, body > main + aside ~ footer {
+  margin: 0;
+  font: 16px/1.5 "Helvetica Neue", sans-serif;
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+
+a:hover, a:focus-visible { color: var(--brand, #00f) !important; }
+input[type="checkbox" i]:checked + label { opacity: .5; }
+[data-state=open], [lang|=en], svg|rect { display: none; }
+li:nth-child(2n + 1 of .item):not(.done, #first) { transform: rotate(-45deg) scale(1.5e2%); }
+.md\:flex::-webkit-scrollbar { width: 0 }
+
+.card {
+  background: rgb(10 20 30 / 50%) url(img/bg.png) no-repeat;
+  border: 1px solid #ABCDEF80;
+  content: "\201C quoted \"text\"";
+  width: min(100%, calc(100vw - (2 * var(--gap))));
+  color: inherit;
+  -webkit-transition: all 0.3s ease-in-out;
+
+  &:hover { color: red; }
+  & > .title { font-weight: 700 }
+  .icon:hover {
+    fill: currentColor;
+  }
+  @media (width >= 600px) {
+    padding: 2em;
+  }
+}
+
+@media screen and (min-width: 768px), print and (orientation: landscape) {
+  .grid { display: grid; grid-template-columns: repeat(3, 1fr); }
+}
+
+@supports not (display: grid) {
+  .grid { float: left }
+}
+
+@container sidebar (min-width: 400px) {
+  .card { flex-direction: row }
+}
+
+@font-face {
+  font-family: "Brand Sans";
+  src: url(fonts/brand.woff2) format("woff2"), url('fonts/brand.woff') format('woff');
+  unicode-range: U+0000-00FF;
+}
+
+@keyframes slide-in {
+  from { transform: translateX(-100%); }
+  50% { opacity: 0.5 }
+  to { transform: translateX(0); }
+}
+
+@layer components {
+  .button { padding: 0.25em 1em; }
+}

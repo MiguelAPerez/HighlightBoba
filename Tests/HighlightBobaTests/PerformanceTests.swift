@@ -32,6 +32,15 @@ import Testing
         ("markdown", "real fence spam", { String(repeating: "```swift\n", count: $0 / 9) }),
         ("shell", "heredoc openers on one line", { String(repeating: "<<A ", count: $0 / 4) }),
         ("shell", "nested substitutions", { String(repeating: "$(", count: $0 / 2) }),
+        ("css", "declaration lookahead that never finds a brace", { "a{" + String(repeating: "b:c ", count: $0 / 4) }),
+        ("css", "open functions", { "a{b:" + String(repeating: "f(", count: $0 / 2) }),
+        ("css", "escapes in a selector", { String(repeating: ".a\\:", count: $0 / 4) }),
+        ("css", "nested blocks", { String(repeating: "a{", count: $0 / 2) }),
+        ("html", "open tags", { String(repeating: "<a ", count: $0 / 3) }),
+        ("html", "attribute soup", { "<a " + String(repeating: "b=c d='e' ", count: $0 / 10) }),
+        ("html", "script and style openers", { String(repeating: "<script><style>", count: $0 / 15) }),
+        ("html", "style attributes", { String(repeating: "<p style=\"a:b\" onclick='f()'>", count: $0 / 30) }),
+        ("html", "entity-like runs", { String(repeating: "&a&#x", count: $0 / 5) }),
         ("block", "deep indentation", { String(repeating: "a: |\n" + String(repeating: " ", count: 40) + "x\n", count: $0 / 48) })
     ]
 

@@ -29,7 +29,11 @@ struct SeededGenerator: RandomNumberGenerator {
         "shell": ["<<EOF", "<<'R'", "<<-T", "EOF", "R", "\tT", "\n", "$x", "${", "}", "$(", ")", "\"", "'", "#", "x", " ", "\\", "\\'"],
         "heredoc": ["<<EOF", "<<-'END'", "EOF", "END", "\t", "\n", "x", " ", "EOFX", "\r\n"],
         "fence": ["```", "````", "swift", "json", "\n", " ", "/*", "*/", "\"", "let", "x", "cobol"],
-        "block": ["key:", " |", " >", "\n", "  ", "    ", "line", "\n\n", "a"]
+        "block": ["key:", " |", " >", "\n", "  ", "    ", "line", "\n\n", "a"],
+        "css": ["/*", "*/", "{", "}", "a", ":hover", "color", ":", ";", " ", "\n", "\"", "'", "\\", "url(", "(", ")", "@media ",
+                "--x", "#fff", "1.5em", "!important", "[", "]", "&", "🧋"],
+        "html": ["<", ">", "</", "/>", "div", "script", "style", "<script>", "</script>", "<style>", "</style>", " ", "\n", "\"",
+                 "'", "=", "a", "style=\"", "onclick='", "type=json ", "<!--", "-->", "&amp;", "{", "color:", "🧋", "<textarea>"]
     ]
 
     /// Bundled grammars, plus the inline v1 grammars that exercise remembered delimiters, embedding and indentation.
@@ -46,7 +50,7 @@ struct SeededGenerator: RandomNumberGenerator {
         (0..<count).map { _ in pieces.randomElement(using: &rng)! }.joined()
     }
 
-    @Test(arguments: ["swift", "python", "json", "javascript", "typescript", "go", "yaml", "markdown", "shell", "heredoc", "fence", "block"])
+    @Test(arguments: ["swift", "python", "json", "javascript", "typescript", "go", "yaml", "markdown", "shell", "css", "html", "heredoc", "fence", "block"])
     func incrementalMatchesFullRehighlight(_ language: String) throws {
         let grammar = try Self.grammar(language)
         let pieces = Self.fragments[language]!
