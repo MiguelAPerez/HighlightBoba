@@ -1,0 +1,115 @@
+function* walk(node, depth = 0) { yield node; }
+^^^^^^^^ keyword
+          ^^^^ entity.name.function
+               ^^^^ variable.other
+                     ^^^^^ variable.other
+                             ^ constant.numeric
+                                  ^^^^^ keyword
+                                        ^^^^ variable.other
+async function load({ id, name: label = "x" }, [first, ...rest]) {}
+^^^^^ keyword
+      ^^^^^^^^ keyword
+               ^^^^ entity.name.function
+                      ^^ variable.other
+                          ^^^^ support.type.property-name
+                                ^^^^^ variable.other
+                                        ^^^ string.quoted
+                                                ^^^^^ variable.other
+                                                          ^^^^ variable.other
+const get = 1, set = 2, of = [], from = 3;
+^^^^^ keyword
+      ^^^ variable.other
+            ^ constant.numeric
+               ^^^ variable.other
+                     ^ constant.numeric
+                        ^^ variable.other
+                                 ^^^^ variable.other
+                                        ^ constant.numeric
+let pick = flag ? get : set;
+^^^ keyword
+    ^^^^ variable.other
+           ^^^^ variable.other
+                  ^^^ variable.other
+                        ^^^ variable.other
+for (const item of of) total += item;
+^^^ keyword
+     ^^^^^ keyword
+           ^^^^ variable.other
+                ^^ keyword
+                   ^^ variable.other
+                       ^^^^^ variable.other
+                                ^^^^ variable.other
+const o = { default: 1, if: 2, async: 3, get, of };
+^^^^^ keyword
+      ^ variable.other
+            ^^^^^^^ support.type.property-name
+                     ^ constant.numeric
+                        ^^ support.type.property-name
+                            ^ constant.numeric
+                               ^^^^^ support.type.property-name
+                                      ^ constant.numeric
+                                         ^^^ variable.other
+                                              ^^ variable.other
+const m = { get size() { return 1; }, set size(v) {}, async *each() {}, run() {} };
+^^^^^ keyword
+      ^ variable.other
+            ^^^ keyword
+                ^^^^ entity.name.function
+                         ^^^^^^ keyword
+                                ^ constant.numeric
+                                      ^^^ keyword
+                                          ^^^^ entity.name.function
+                                               ^ variable.other
+                                                      ^^^^^ keyword
+                                                             ^^^^ entity.name.function
+                                                                        ^^^ entity.name.function
+class Box extends Base {
+^^^^^ keyword
+      ^^^ entity.name.type
+          ^^^^^^^ keyword
+                  ^^^^ entity.name.type
+  static count = 0;
+  ^^^^^^ keyword
+         ^^^^^ support.type.property-name
+                 ^ constant.numeric
+  #secret = 1;
+  ^ support.type.property-name
+   ^^^^^^ support.type.property-name
+            ^ constant.numeric
+  get value() { return this.#secret; }
+  ^^^ keyword
+      ^^^^^ entity.name.function
+                ^^^^^^ keyword
+                       ^^^^ variable.language
+  static create(...args) { return new Box(...args); }
+  ^^^^^^ keyword
+         ^^^^^^ entity.name.function
+                   ^^^^ variable.other
+                           ^^^^^^ keyword
+                                  ^^^ keyword
+                                      ^^^ entity.name.type
+                                             ^^^^ variable.other
+  async() {}
+  ^^^^^ entity.name.function
+  static { Box.count++; }
+  ^^^^^^ keyword
+           ^^^ entity.name.type
+}
+outer: for (;;) { break outer; }
+^^^^^ variable.other
+       ^^^ keyword
+                  ^^^^^ keyword
+                        ^^^^^ variable.other
+const add = (a, b) => a + b, id = x => x, later = async () => {};
+^^^^^ keyword
+      ^^^ variable.other
+             ^ variable.other
+                ^ variable.other
+                      ^ variable.other
+                          ^ variable.other
+                             ^^ variable.other
+                                  ^ variable.other
+                                       ^ variable.other
+                                          ^^^^^ variable.other
+                                                  ^^^^^ keyword
+

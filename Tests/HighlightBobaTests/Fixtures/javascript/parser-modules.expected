@@ -1,0 +1,58 @@
+import fs, { readFile as read, default as main } from "node:fs";
+^^^^^^ keyword
+       ^^ variable.other
+             ^^^^^^^^ variable.other
+                         ^^^^ variable.other
+                               ^^^^^^^ keyword
+                                          ^^^^ variable.other
+                                                 ^^^^ keyword
+                                                      ^^^^^^^^^ string.quoted
+import * as path from 'node:path';
+^^^^^^ keyword
+            ^^^^ variable.other
+                 ^^^^ keyword
+                      ^^^^^^^^^^^ string.quoted
+import data from "./data.json" with { type: "json" };
+^^^^^^ keyword
+       ^^^^ variable.other
+            ^^^^ keyword
+                 ^^^^^^^^^^^^^ string.quoted
+                               ^^^^ keyword
+                                      ^^^^ support.type.property-name
+                                            ^^^^^^ string.quoted
+import "./side-effect.js";
+^^^^^^ keyword
+       ^^^^^^^^^^^^^^^^^^ string.quoted
+export { read, path as paths };
+^^^^^^ keyword
+         ^^^^ variable.other
+               ^^^^ variable.other
+                       ^^^^^ variable.other
+export * from "./all.js";
+^^^^^^ keyword
+         ^^^^ keyword
+              ^^^^^^^^^^ string.quoted
+export * as utils from "./utils.js";
+^^^^^^ keyword
+                  ^^^^ keyword
+                       ^^^^^^^^^^^^ string.quoted
+export default function main() {}
+^^^^^^ keyword
+       ^^^^^^^ keyword
+               ^^^^^^^^ keyword
+                        ^^^^ entity.name.function
+export const version = "1.0", from = 2;
+^^^^^^ keyword
+       ^^^^^ keyword
+             ^^^^^^^ variable.other
+                       ^^^^^ string.quoted
+                              ^^^^ variable.other
+                                     ^ constant.numeric
+const meta = import.meta.url, lazy = import("./lazy.js");
+^^^^^ keyword
+      ^^^^ variable.other
+             ^^^^^^ keyword
+                              ^^^^ variable.other
+                                     ^^^^^^ keyword
+                                            ^^^^^^^^^^^ string.quoted
+

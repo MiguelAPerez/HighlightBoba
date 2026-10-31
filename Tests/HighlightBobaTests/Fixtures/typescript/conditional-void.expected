@@ -18,12 +18,18 @@ type U<X> = X extends () => infer R ? R : void;
                                           ^^^^ entity.name.type
 const f = ok ? void 0 : 1;
 ^^^^^ keyword
-               ^^^^ entity.name.type
+      ^ variable.other
+          ^^ variable.other
+               ^^^^ keyword
                     ^ constant.numeric
                         ^ constant.numeric
 const o = { readonly: 1, type: 2, as: 3 };
 ^^^^^ keyword
+      ^ variable.other
+            ^^^^^^^^ support.type.property-name
                       ^ constant.numeric
+                         ^^^^ support.type.property-name
                                ^ constant.numeric
+                                  ^^ support.type.property-name
                                       ^ constant.numeric
 

@@ -1,0 +1,10 @@
+import fs, { readFile as read, default as main } from "node:fs";
+import * as path from 'node:path';
+import data from "./data.json" with { type: "json" };
+import "./side-effect.js";
+export { read, path as paths };
+export * from "./all.js";
+export * as utils from "./utils.js";
+export default function main() {}
+export const version = "1.0", from = 2;
+const meta = import.meta.url, lazy = import("./lazy.js");

@@ -1,0 +1,16 @@
+declare module "lib" {
+  export interface Options { verbose?: boolean }
+  export function run(opts?: Options): Promise<void>;
+  export default run;
+}
+declare global {
+  interface Window { app: unknown }
+}
+export declare class Client {
+  private constructor();
+  static connect(url: string): Client;
+  on(event: "open" | "close", cb: () => void): this;
+}
+export as namespace Lib;
+import fs = require("fs");
+export = Client;
