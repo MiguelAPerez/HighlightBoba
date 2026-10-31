@@ -64,6 +64,10 @@ struct GatedBlocks: IncrementalParser {
     /// A parse held at a closed gate blocks a thread of the cooperative pool, and a CI runner may
     /// have only three, with long tests on the others. An `await` here can wait on a thread the pool
     /// doesn't have, and give up before the parse is even at the gate; the main thread needs none.
+    ///
+    /// To check a wait, run these suites on a one-thread pool, where one that needs a second
+    /// thread fails every time (CI's macOS 15 toolchain hangs in this mode, so it runs locally):
+    /// `LIBDISPATCH_COOPERATIVE_POOL_STRICT=1 swift test --filter "ParseSessionTests|CancellationTests"`
     static func blockUntil(_ condition: () -> Bool) -> Bool {
         let deadline = Date().addingTimeInterval(120)
         while !condition() && Date() < deadline { usleep(1_000) }

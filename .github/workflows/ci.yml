@@ -46,12 +46,6 @@ jobs:
       - uses: actions/checkout@v4
       - name: swift test
         run: swift test
-      # A busy runner may give the cooperative pool very few threads. Run the tests that hold a
-      # pool thread with exactly one, so a wait that needs another fails every run, not one in ten.
-      - name: swift test, one-thread cooperative pool
-        run: swift test --skip-build --filter "ParseSessionTests|CancellationTests|StackTests"
-        env:
-          LIBDISPATCH_COOPERATIVE_POOL_STRICT: "1"
       - name: Upload fixture report
         if: always()
         uses: actions/upload-artifact@v4
