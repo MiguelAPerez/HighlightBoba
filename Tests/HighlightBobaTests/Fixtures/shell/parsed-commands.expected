@@ -1,0 +1,119 @@
+# Reserved words and builtin names are keywords only in command position.
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ comment.line
+echo if then else fi done esac true
+^^^^ support.function
+printf '%s\n' for while do; echo time in select
+^^^^^^ support.function
+       ^^^^^^ string.quoted
+                            ^^^^ support.function
+if true; then echo done; fi
+^^ keyword
+   ^^^^ support.function
+         ^^^^ keyword
+              ^^^^ support.function
+                         ^^ keyword
+x=1 y=$(true) if
+^ variable.other
+    ^ variable.other
+      ^^ punctuation.section.embedded
+        ^^^^ support.function
+            ^ punctuation.section.embedded
+              ^^ entity.name.function
+make CC=clang --jobs=4 -k -- target
+^^^^ entity.name.function
+              ^ variable.parameter
+               ^ variable.parameter
+                ^^^^ variable.parameter
+                       ^ variable.parameter
+                        ^ variable.parameter
+                          ^ variable.parameter
+                           ^ variable.parameter
+git-lfs pull; ./configure --prefix=/usr; /usr/bin/env bash -c 'exit 0'
+^^^ entity.name.function
+   ^ entity.name.function
+    ^^^ entity.name.function
+              ^ entity.name.function
+               ^ entity.name.function
+                ^^^^^^^^^ entity.name.function
+                          ^ variable.parameter
+                           ^ variable.parameter
+                            ^^^^^^ variable.parameter
+                                         ^ entity.name.function
+                                          ^^^ entity.name.function
+                                             ^ entity.name.function
+                                              ^^^ entity.name.function
+                                                 ^ entity.name.function
+                                                  ^^^ entity.name.function
+                                                           ^ variable.parameter
+                                                            ^ variable.parameter
+                                                              ^^^^^^^^ string.quoted
+sudo echo test; command -v echo
+^^^^ entity.name.function
+                ^^^^^^^ support.function
+                        ^ variable.parameter
+                         ^ variable.parameter
+export EDITOR=vim PAGER; local -a items=(one two) count
+^^^^^^ keyword
+       ^^^^^^ variable.other
+                  ^^^^^ variable.other
+                         ^^^^^ keyword
+                               ^ variable.parameter
+                                ^ variable.parameter
+                                  ^^^^^ variable.other
+                                                  ^^^^^ variable.other
+declare -A map=([key]=value); readonly LIMIT=5 test=1
+^^^^^^^ keyword
+        ^ variable.parameter
+         ^ variable.parameter
+           ^^^ variable.other
+                              ^^^^^^^^ keyword
+                                       ^^^^^ variable.other
+                                               ^^^^ variable.other
+read -r -d '' -a lines name; mapfile -t rows; unset -v old; unset -f handler
+^^^^ support.function
+     ^ variable.parameter
+      ^ variable.parameter
+        ^ variable.parameter
+         ^ variable.parameter
+           ^^ string.quoted
+              ^ variable.parameter
+               ^ variable.parameter
+                 ^^^^^ variable.other
+                       ^^^^ variable.other
+                             ^^^^^^^ support.function
+                                     ^ variable.parameter
+                                      ^ variable.parameter
+                                        ^^^^ variable.other
+                                              ^^^^^ keyword
+                                                    ^ variable.parameter
+                                                     ^ variable.parameter
+                                                       ^^^ variable.other
+                                                            ^^^^^ keyword
+                                                                  ^ variable.parameter
+                                                                   ^ variable.parameter
+getopts "ab:" flag; printf -v stamp '%(%F)T' -1
+^^^^^^^ support.function
+        ^^^^^ string.quoted
+              ^^^^ variable.other
+                    ^^^^^^ support.function
+                           ^ variable.parameter
+                            ^ variable.parameter
+                              ^^^^^ variable.other
+                                    ^^^^^^^^ string.quoted
+                                             ^ variable.parameter
+                                              ^ variable.parameter
+time -p sort file | uniq -c >counts 2>&1 &
+^^^^ keyword
+     ^ variable.parameter
+      ^ variable.parameter
+        ^^^^ entity.name.function
+                    ^^^^ entity.name.function
+                         ^ variable.parameter
+                          ^ variable.parameter
+! grep -q x file && echo missing || echo found
+  ^^^^ entity.name.function
+       ^ variable.parameter
+        ^ variable.parameter
+                    ^^^^ support.function
+                                    ^^^^ support.function
+

@@ -1,0 +1,169 @@
+greet() { echo "hi $1"; }
+^^^^^ entity.name.function
+          ^^^^ support.function
+               ^^^^ string.quoted
+                   ^^ variable.language
+                     ^ string.quoted
+function cleanup { rm -f "$tmp"; } > /dev/null
+^^^^^^^^ keyword
+         ^^^^^^^ entity.name.function
+                   ^^ entity.name.function
+                      ^ variable.parameter
+                       ^ variable.parameter
+                         ^ string.quoted
+                          ^^^^ variable.other
+                              ^ string.quoted
+function wrap() (cd /tmp && ls)
+^^^^^^^^ keyword
+         ^^^^ entity.name.function
+                 ^^ support.function
+                            ^^ entity.name.function
+my-tool::run () {
+^^ entity.name.function
+  ^ entity.name.function
+   ^^^^ entity.name.function
+       ^ entity.name.function
+        ^ entity.name.function
+         ^^^ entity.name.function
+  local dir=$1
+  ^^^^^ keyword
+        ^^^ variable.other
+            ^^ variable.language
+}
+for name in alpha beta; do echo "$name"; done
+^^^ keyword
+    ^^^^ variable.other
+         ^^ keyword
+                        ^^ keyword
+                           ^^^^ support.function
+                                ^ string.quoted
+                                 ^^^^^ variable.other
+                                      ^ string.quoted
+                                         ^^^^ keyword
+for ((i = 0; i < 3; i++)); do echo $i; done
+^^^ keyword
+      ^ variable.other
+             ^ variable.other
+                    ^ variable.other
+                           ^^ keyword
+                              ^^^^ support.function
+                                   ^^ variable.other
+                                       ^^^^ keyword
+for f in *.sh; { echo "$f"; }
+^^^ keyword
+    ^ variable.other
+      ^^ keyword
+                 ^^^^ support.function
+                      ^ string.quoted
+                       ^^ variable.other
+                         ^ string.quoted
+select choice in yes no; do break; done
+^^^^^^ keyword
+       ^^^^^^ variable.other
+              ^^ keyword
+                         ^^ keyword
+                            ^^^^^ keyword
+                                   ^^^^ keyword
+while read -r line; do :; done < input
+^^^^^ keyword
+      ^^^^ support.function
+           ^ variable.parameter
+            ^ variable.parameter
+              ^^^^ variable.other
+                    ^^ keyword
+                       ^ support.function
+                          ^^^^ keyword
+until [ -f ready ]; do sleep 1; done
+^^^^^ keyword
+      ^ support.function
+        ^ variable.parameter
+         ^ variable.parameter
+                    ^^ keyword
+                       ^^^^^ entity.name.function
+                                ^^^^ keyword
+case "$1" in
+^^^^ keyword
+     ^ string.quoted
+      ^^ variable.language
+        ^ string.quoted
+          ^^ keyword
+  start|run) echo go ;;
+  ^^^^^ string.regexp
+        ^^^ string.regexp
+             ^^^^ support.function
+  (stop) echo halt ;&
+   ^^^^ string.regexp
+         ^^^^ support.function
+  -h|--help) usage ;;&
+  ^ string.regexp
+   ^ string.regexp
+     ^ string.regexp
+      ^ string.regexp
+       ^^^^ string.regexp
+             ^^^^^ entity.name.function
+  *) echo "usage: $0" >&2; exit 1 ;;
+  ^ string.regexp
+     ^^^^ support.function
+          ^^^^^^^^ string.quoted
+                  ^^ variable.language
+                    ^ string.quoted
+                           ^^^^ keyword
+esac
+^^^^ keyword
+if [[ -n $x && $y == *.txt || ! -d $z ]]; then :; elif [[ $v =~ ^v([0-9]+)\.x$ ]]; then :; fi
+^^ keyword
+      ^ keyword
+       ^ keyword
+         ^^ variable.other
+            ^ keyword
+             ^ keyword
+               ^^ variable.other
+                  ^ keyword
+                   ^ keyword
+                           ^ keyword
+                            ^ keyword
+                              ^ keyword
+                                ^ keyword
+                                 ^ keyword
+                                   ^^ variable.other
+                                          ^^^^ keyword
+                                               ^ support.function
+                                                  ^^^^ keyword
+                                                          ^^ variable.other
+                                                             ^ keyword
+                                                              ^ keyword
+                                                                ^ string.regexp
+                                                                 ^ string.regexp
+                                                                  ^ string.regexp
+                                                                   ^ string.regexp
+                                                                    ^ string.regexp
+                                                                     ^ string.regexp
+                                                                      ^ string.regexp
+                                                                       ^ string.regexp
+                                                                        ^ string.regexp
+                                                                         ^ string.regexp
+                                                                          ^^ constant.character.escape
+                                                                            ^ string.regexp
+                                                                             ^ string.regexp
+                                                                                   ^^^^ keyword
+                                                                                        ^ support.function
+                                                                                           ^^ keyword
+(( count += 2, total = count * 3 ))
+   ^^^^^ variable.other
+               ^^^^^ variable.other
+                       ^^^^^ variable.other
+{ echo grouped; echo twice; } | wc -l
+  ^^^^ support.function
+                ^^^^ support.function
+                                ^^ entity.name.function
+                                   ^ variable.parameter
+                                    ^ variable.parameter
+( cd sub && make ) || exit
+  ^^ support.function
+            ^^^^ entity.name.function
+                      ^^^^ keyword
+coproc worker { cat; }
+^^^^^^ keyword
+       ^^^^^^ variable.other
+                ^^^ entity.name.function
+

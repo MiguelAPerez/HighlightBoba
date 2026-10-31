@@ -1,0 +1,51 @@
+lower=$(case "$1" in [A-Z]*) echo upper;; *) echo lower;; esac) after=done
+^^^^^ variable.other
+      ^^ punctuation.section.embedded
+        ^^^^ keyword
+             ^ string.quoted
+              ^^ variable.language
+                ^ string.quoted
+                  ^^ keyword
+                     ^ string.regexp
+                      ^ string.regexp
+                       ^ string.regexp
+                        ^ string.regexp
+                         ^ string.regexp
+                          ^ string.regexp
+                             ^^^^ support.function
+                                          ^ string.regexp
+                                             ^^^^ support.function
+                                                          ^^^^ keyword
+                                                              ^ punctuation.section.embedded
+                                                                ^^^^^ variable.other
+echo "$(case $x in a) echo a;; esac)" still a string
+^^^^ support.function
+     ^ string.quoted
+      ^^ punctuation.section.embedded
+        ^^^^ keyword
+             ^^ variable.other
+                ^^ keyword
+                   ^ string.regexp
+                      ^^^^ support.function
+                               ^^^^ keyword
+                                   ^ punctuation.section.embedded
+                                    ^ string.quoted
+echo $((1 << bits)) next
+^^^^ support.function
+     ^^^ punctuation.section.embedded
+             ^^^^ variable.other
+                 ^^ punctuation.section.embedded
+(( mask = 1 << shift )); echo after
+   ^^^^ variable.other
+               ^^^^^ variable.other
+                         ^^^^ support.function
+cat <<\END
+^^^ entity.name.function
+    ^^^^^^ keyword
+no $expansion in here
+^^^^^^^^^^^^^^^^^^^^^ string.quoted
+END
+^^^ keyword
+echo back to code
+^^^^ support.function
+

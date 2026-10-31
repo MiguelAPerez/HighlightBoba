@@ -1,0 +1,18 @@
+{
+  "format": 1,
+  "language": "shell",
+  "queries": [
+    { "in": "functionName", "scope": "entity.name.function" },
+    { "kind": "word", "in": "builtinName", "scope": "support.function" },
+    { "kind": "symbol", "in": "builtinName", "scope": "support.function" },
+    { "kind": "word", "in": "commandName", "scope": "entity.name.function" },
+    { "kind": "symbol", "in": "commandName", "scope": "entity.name.function" },
+    { "in": "variableName", "scope": "variable.other" },
+    { "in": "option", "scope": "variable.parameter" },
+    { "in": "testOperator", "scope": "keyword" },
+    { "kind": "word", "in": "casePattern", "scope": "string.regexp" },
+    { "kind": "symbol", "in": "casePattern", "scope": "string.regexp" },
+    { "kind": "word", "in": "regex", "scope": "string.regexp" },
+    { "kind": "symbol", "in": "regex", "scope": "string.regexp" }
+  ]
+}

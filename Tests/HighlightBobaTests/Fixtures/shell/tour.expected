@@ -1,6 +1,7 @@
 #!/bin/sh
 ^^^^^^^^^ comment.line
 arr=(one "two words" 'three')
+^^^ variable.other
          ^^^^^^^^^^^ string.quoted
                      ^^^^^^^ string.quoted
 echo "${arr[@]}" "${#arr[@]}" "${name:-default}" "${path//\//-}" "${v^^}"
@@ -27,8 +28,11 @@ case "$1" in
         ^ string.quoted
           ^^ keyword
   start|run) echo go ;;
+  ^^^^^ string.regexp
+        ^^^ string.regexp
              ^^^^ support.function
   *) echo "usage: $0 {start}" >&2; exit 1 ;;
+  ^ string.regexp
      ^^^^ support.function
           ^^^^^^^^ string.quoted
                   ^^ variable.language
@@ -38,12 +42,20 @@ esac
 ^^^^ keyword
 if [[ -n "$x" && $y == *.txt ]]; then :; elif (( n > 3 )); then true; else false; fi
 ^^ keyword
+      ^ keyword
+       ^ keyword
          ^ string.quoted
           ^^ variable.other
             ^ string.quoted
+              ^ keyword
+               ^ keyword
                  ^^ variable.other
+                    ^ keyword
+                     ^ keyword
                                  ^^^^ keyword
+                                      ^ support.function
                                          ^^^^ keyword
+                                                 ^ variable.other
                                                            ^^^^ keyword
                                                                 ^^^^ support.function
                                                                       ^^^^ keyword
@@ -52,6 +64,9 @@ if [[ -n "$x" && $y == *.txt ]]; then :; elif (( n > 3 )); then true; else false
 while read -r line; do printf '%s\n' "$line"; done < input.txt
 ^^^^^ keyword
       ^^^^ support.function
+           ^ variable.parameter
+            ^ variable.parameter
+              ^^^^ variable.other
                     ^^ keyword
                        ^^^^^^ support.function
                               ^^^^^^ string.quoted
@@ -66,22 +81,36 @@ until false; do break; done
                 ^^^^^ keyword
                        ^^^^ keyword
 diff <(sort a) <(sort b) 2>&1 | tee log >/dev/null
+^^^^ entity.name.function
+       ^^^^ entity.name.function
+                 ^^^^ entity.name.function
+                                ^^^ entity.name.function
 cmd <<< "here string $var"
+^^^ entity.name.function
     ^^^ keyword
         ^^^^^^^^^^^^^ string.quoted
                      ^^^^ variable.other
                          ^ string.quoted
 export PATH="$HOME/bin:$PATH" LANG=C
 ^^^^^^ keyword
+       ^^^^ variable.other
             ^ string.quoted
              ^^^^^ variable.other
                   ^^^^^ string.quoted
                        ^^^^^ variable.other
                             ^ string.quoted
+                              ^^^^ variable.other
 readonly MAX=10; declare -a list; local -r k=v
 ^^^^^^^^ keyword
+         ^^^ variable.other
                  ^^^^^^^ keyword
+                         ^ variable.parameter
+                          ^ variable.parameter
+                            ^^^^ variable.other
                                   ^^^^^ keyword
+                                        ^ variable.parameter
+                                         ^ variable.parameter
+                                           ^ variable.other
 echo "nested $(echo "inner $(date +%s)") done" 'it'\''s' "a\"b" \$HOME
 ^^^^ support.function
      ^^^^^^^^ string.quoted
@@ -89,6 +118,7 @@ echo "nested $(echo "inner $(date +%s)") done" 'it'\''s' "a\"b" \$HOME
                ^^^^ support.function
                     ^^^^^^^ string.quoted
                            ^^ punctuation.section.embedded
+                             ^^^^ entity.name.function
                                      ^ punctuation.section.embedded
                                       ^ string.quoted
                                        ^ punctuation.section.embedded
@@ -104,11 +134,15 @@ echo one \
 ^^^^ support.function
   two
 x=$((1 + 2 * 3)) y=$(( x << 2 ))
+^ variable.other
   ^^^ punctuation.section.embedded
               ^^ punctuation.section.embedded
+                 ^ variable.other
                    ^^^ punctuation.section.embedded
+                       ^ variable.other
                               ^^ punctuation.section.embedded
 [ "$a" = "b" ] && echo yes || echo no
+^ support.function
   ^ string.quoted
    ^^ variable.other
      ^ string.quoted
@@ -131,6 +165,7 @@ echo ~/dir ~user/x *.sh {a,b}.txt
 ^^^^ support.function
 select opt in a b; do break; done
 ^^^^^^ keyword
+       ^^^ variable.other
            ^^ keyword
                    ^^ keyword
                       ^^^^^ keyword

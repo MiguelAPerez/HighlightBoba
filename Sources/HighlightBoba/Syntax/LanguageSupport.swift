@@ -15,7 +15,8 @@ public struct LanguageSupport: Sendable {
     static let bundledParsers: [String: any IncrementalParser] = [
         "swift": SwiftParser(),
         "javascript": JSParser(dialect: .javascript),
-        "typescript": JSParser(dialect: .typescript)
+        "typescript": JSParser(dialect: .typescript),
+        "shell": ShellParser()
     ]
 
     private static let cache = Cache()
