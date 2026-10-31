@@ -4,7 +4,10 @@ import Testing
 
 /// The JavaScript/TypeScript parser over the JS and TS fixtures: the parsed highlight of each, the
 /// errors it finds, and that a block reparse is always the whole parse.
-@Suite struct JSParserTests {
+///
+/// Serialized: its many CPU-heavy cases would otherwise hold every concurrency thread on a small CI
+/// runner, while `ParseSessionTests` parks threads at its gates and needs one free to open them.
+@Suite(.serialized) struct JSParserTests {
     static let fixtures = Fixture.all().filter { $0.language == "javascript" || $0.language == "typescript" }
 
     static func parser(_ language: String) -> JSParser {
