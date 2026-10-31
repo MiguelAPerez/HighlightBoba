@@ -13,12 +13,14 @@ public final class Store: ObservableObject {
     private var count = 0x1F + 1_000 + 2.5e3
     ^^^^^^^ keyword
             ^^^ keyword
+                ^^^^^ variable.other
                         ^^^^ constant.numeric
                                ^^^^^ constant.numeric
                                        ^^^^^ constant.numeric
     func load(_ id: Int?) async throws -> [String] {
     ^^^^ keyword
          ^^^^ entity.name.function
+                ^^ variable.parameter
                     ^^^ entity.name.type
                           ^^^^^ keyword
                                 ^^^^^^ keyword
@@ -26,17 +28,20 @@ public final class Store: ObservableObject {
         guard let id, id > 0 else { return [] }
         ^^^^^ keyword
               ^^^ keyword
+                  ^^ variable.other
                            ^ constant.numeric
                              ^^^^ keyword
                                     ^^^^^^ keyword
         return self.items.map { $0.name } ?? nil
         ^^^^^^ keyword
                ^^^^ variable.language
+                          ^^^ support.function
                                              ^^^ constant.language
     }
 }
 let range = 1..<5
 ^^^ keyword
+    ^^^^^ variable.other
             ^ constant.numeric
                 ^ constant.numeric
 #if DEBUG
@@ -44,6 +49,7 @@ let range = 1..<5
     ^^^^^ entity.name.type
 let lookup = #selector(Store.load)
 ^^^ keyword
+    ^^^^^^ variable.other
              ^^^^^^^^^ meta.preprocessor
                        ^^^^^ entity.name.type
 #endif

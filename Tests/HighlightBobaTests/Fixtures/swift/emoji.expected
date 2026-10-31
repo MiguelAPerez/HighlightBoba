@@ -1,5 +1,6 @@
 let 🧋 = "boba 🧋 \(👩‍💻)" // 🍵
 ^^^ keyword
+    ^ variable.other
         ^^^^^^^^ string.quoted
                 ^^ punctuation.section.embedded
                    ^ punctuation.section.embedded

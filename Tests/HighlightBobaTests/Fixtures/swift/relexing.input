@@ -1,0 +1,7 @@
+let pair = ((1, 2), (3, 4))
+let a = pair.0.1, b = pair.1.0 + t.0.0
+let c = x!/2, d = y?/2, e = (z!)/2
+infix operator /+/: AdditionPrecedence
+prefix operator /-
+func /+/ (lhs: Int, rhs: Int) -> Int { lhs + rhs }
+let regex = /ab+c/, after = 1

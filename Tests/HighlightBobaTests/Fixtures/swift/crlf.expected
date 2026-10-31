@@ -1,10 +1,12 @@
 let a = 1
 ^^^ keyword
+    ^ variable.other
         ^ constant.numeric
 /* block
 ^^^^^^^^ comment.block
  */ let b = "x"
 ^^^ comment.block
     ^^^ keyword
+        ^ variable.other
             ^^^ string.quoted
 

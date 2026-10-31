@@ -1,7 +1,7 @@
 # Parser layer
 
 Lexer grammars ([GRAMMAR.md](GRAMMAR.md)) give every language instant, linear highlighting. Languages where
-context changes what a token means get a parser on top. It's hand-written recursive descent that builds a
+context changes what a token means get a parser on top ([bundled parsers](#bundled-parsers)). It's hand-written recursive descent that builds a
 lossless syntax tree, which highlight queries then use to refine scopes. This file covers the core the
 parsers share, from tokens to incremental reparsing.
 
@@ -206,3 +206,45 @@ that covers every edit since the last published tree. The builder notices cancel
 few thousand lookahead steps and stops early. A result is published, on the main actor, only if
 it is the newest parse and the text is still the revision it was parsed from. Anything older is
 dropped, never applied over newer text.
+
+## Bundled parsers
+
+`LanguageSupport` pairs a language's parser with its highlight queries (`Queries/<grammar>.json`):
+
+```swift
+let tokens = LanguageSupport.highlight(text, grammar: try Grammar.bundled("swift"))  // lex, parse, re-lex, refine
+let swift = LanguageSupport.bundled(for: "swift")!   // nil for a lexer-only language
+let session = ParseSession(highlighter: highlighter, parser: SwiftParser())
+```
+
+`LanguageSupport.highlight` falls back to the lexer for a language without a parser. The fixture
+tests go through it, so a language's `.expected` files show what an app would draw.
+
+### Swift
+
+`SwiftParser` reads declarations (with generics, `where` clauses, attributes and modifiers),
+statements, expressions by operator precedence, closures and trailing closures, key paths, string
+interpolation, patterns and types. Its queries refine:
+
+| What | Scope |
+|------|-------|
+| A declared type, generic parameter, `typealias` or `associatedtype` | `entity.name.type` |
+| A declared function, operator or macro | `entity.name.function` |
+| A parameter's label and name, an argument label | `variable.parameter` |
+| A declared variable, property or pattern binding | `variable.other` |
+| An enum case, declared or as `.member` | `variable.other.enummember` |
+| The function called: `f(…)`, `a.f(…)`, `f { … }` | `support.function` |
+| A contextual keyword used as a name (`let some = 1`) | `variable.other`, or its role above |
+| A lowercase name in a type position | `entity.name.type` |
+
+It re-lexes `t.0.1` as two tuple indices, a `/` right after a postfix `!` or `?` as division, and
+the `/` in an operator's name as an operator character (`infix operator /+/`).
+
+Its reparse boundaries are code blocks, type and extension bodies, accessor blocks and closures.
+Each resets every flag the parse carries at its `{`, so it parses the same anywhere. Whether a `{`
+starts a trailing closure (not in an `if` condition, not before a variable's `willSet`) is decided
+without looking past it.
+
+Nesting stops at 64 open nodes, or sooner when less than 160 KB of the thread's stack is left (a
+debug build's frames are several times a release build's). The rest of that construct goes into
+an `error` node and keeps the lexer's colours.

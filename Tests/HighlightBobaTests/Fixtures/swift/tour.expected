@@ -4,6 +4,7 @@ import SwiftUI
 #if DEBUG && os(iOS)
 ^^^ meta.preprocessor
     ^^^^^ entity.name.type
+             ^^ support.function
 @MainActor @Observable final class Model<T: Hashable>: Sendable where T: Codable {
 ^^^^^^^^^^ entity.other.attribute
            ^^^^^^^^^^^ entity.other.attribute
@@ -21,18 +22,24 @@ import SwiftUI
                ^^^^^^^ keyword
                        ^^^ keyword
                             ^^^ keyword
+                                ^^^^^ variable.other
                                         ^ entity.name.type
     nonisolated(unsafe) static var shared: Model?
     ^^^^^^^^^^^ keyword
                         ^^^^^^ keyword
                                ^^^ keyword
+                                   ^^^^^^ variable.other
                                            ^^^^^ entity.name.type
     #endif
     ^^^^^^ meta.preprocessor
     func load(_ id: T, `default`: Int = 0) async throws(MyError) -> some View {
     ^^^^ keyword
          ^^^^ entity.name.function
+                ^^ variable.parameter
                     ^ entity.name.type
+                       ^ variable.parameter
+                        ^^^^^^^ variable.parameter
+                               ^ variable.parameter
                                   ^^^ entity.name.type
                                         ^ constant.numeric
                                            ^^^^^ keyword
@@ -43,23 +50,31 @@ import SwiftUI
         guard let x = try? await fetch(id) else { return EmptyView() }
         ^^^^^ keyword
               ^^^ keyword
+                  ^ variable.other
                       ^^^ keyword
                            ^^^^^ keyword
+                                 ^^^^^ support.function
                                            ^^^^ keyword
                                                   ^^^^^^ keyword
                                                          ^^^^^^^^^ entity.name.type
         let doubled = items.map { $0 }.filter { _ in true }
         ^^^ keyword
+            ^^^^^^^ variable.other
+                            ^^^ support.function
+                                       ^^^^^^ support.function
                                                   ^^ keyword
                                                      ^^^^ constant.language
         let pattern = /(?<year>\d+)-(?<month>\d+)/
         ^^^ keyword
+            ^^^^^^^ variable.other
                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^ string.regexp
         let ratio = total / 2 / count
         ^^^ keyword
+            ^^^^^ variable.other
                             ^ constant.numeric
         let multi = """
         ^^^ keyword
+            ^^^^^ variable.other
                     ^^^ string.quoted
             line \(x) "quoted"
 ^^^^^^^^^^^^^^^^^ string.quoted
@@ -70,17 +85,22 @@ import SwiftUI
 ^^^^^^^^^^^^^^^ string.quoted
         let raw = #"no \(escape) here"#
         ^^^ keyword
+            ^^^ variable.other
                   ^^^^^^^^^^^^^^^^^^^^^ string.quoted
         if case .some(let v) = x, v is String { print(v as! String) }
         ^^ keyword
            ^^^^ keyword
+                 ^^^^ variable.other.enummember
                       ^^^ keyword
+                          ^ variable.other
                                     ^^ keyword
                                        ^^^^^^ entity.name.type
+                                                ^^^^^ support.function
                                                         ^^ keyword
                                                             ^^^^^^ entity.name.type
         defer { print(#file, #line, #function) }
         ^^^^^ keyword
+                ^^^^^ support.function
                       ^^^^^ meta.preprocessor
                              ^^^^^ meta.preprocessor
                                     ^^^^^^^^^ meta.preprocessor
@@ -97,6 +117,7 @@ extension Model: CustomStringConvertible { var description: String { "m" } }
           ^^^^^ entity.name.type
                  ^^^^^^^^^^^^^^^^^^^^^^^ entity.name.type
                                            ^^^ keyword
+                                               ^^^^^^^^^^^ variable.other
                                                             ^^^^^^ entity.name.type
                                                                      ^^^ string.quoted
 protocol P { associatedtype A; func f() -> any P }
@@ -113,29 +134,38 @@ enum E: Int { case a = 1, b; indirect case c(E) }
      ^ entity.name.type
         ^^^ entity.name.type
               ^^^^ keyword
+                   ^ variable.other.enummember
                        ^ constant.numeric
+                          ^ variable.other.enummember
                              ^^^^^^^^ keyword
                                       ^^^^ keyword
+                                           ^ variable.other.enummember
                                              ^ entity.name.type
 let closure: (Int) -> Void = { [weak self] value in self?.use(value) }
 ^^^ keyword
+    ^^^^^^^ variable.other
               ^^^ entity.name.type
                       ^^^^ entity.name.type
                                 ^^^^ keyword
                                      ^^^^ variable.language
+                                           ^^^^^ variable.parameter
                                                  ^^ keyword
                                                     ^^^^ variable.language
+                                                          ^^^ support.function
 precedencegroup Power { associativity: right }
 ^^^^^^^^^^^^^^^ keyword
                 ^^^^^ entity.name.type
 infix operator **: Power
 ^^^^^ keyword
       ^^^^^^^^ keyword
+               ^ entity.name.function
+                ^ entity.name.function
                    ^^^^^ entity.name.type
 struct S { subscript(i: Int) -> Int { get { i } set {} } }
 ^^^^^^ keyword
        ^ entity.name.type
            ^^^^^^^^^ keyword
+                     ^ variable.parameter
                         ^^^ entity.name.type
                                 ^^^ entity.name.type
                                       ^^^ keyword
@@ -151,11 +181,17 @@ actor A { consuming func take() {} borrowing func look() {} }
                                                   ^^^^ entity.name.function
 let r2 = #/a/b/#, r3 = f(/x\/y[/]z/), half = a / 2, q = (b) / c
 ^^^ keyword
+    ^^ variable.other
          ^^^^^^^ string.regexp
+                  ^^ variable.other
+                       ^ support.function
                          ^^^^^^^^^^ string.regexp
+                                      ^^^^ variable.other
                                                  ^ constant.numeric
+                                                    ^ variable.other
 let ext = #/
 ^^^ keyword
+    ^^^ variable.other
           ^^ string.regexp
   (?<n>\d+) # a number
 ^^^^^^^^^^^^^^^^^^^^^^ string.regexp
@@ -170,9 +206,16 @@ func g() -> Regex<Substring> { return /ab+/ }
                                       ^^^^^ string.regexp
 let notRegex = x /y
 ^^^ keyword
+    ^^^^^^^^ variable.other
 let m = Optional.some(1), s = super.init, k = .default
 ^^^ keyword
+    ^ variable.other
         ^^^^^^^^ entity.name.type
+                 ^^^^ support.function
                       ^ constant.numeric
+                          ^ variable.other
                               ^^^^^ variable.language
+                                    ^^^^ keyword
+                                          ^ variable.other
+                                               ^^^^^^^ variable.other.enummember
 

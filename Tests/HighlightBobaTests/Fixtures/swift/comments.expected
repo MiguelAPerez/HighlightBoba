@@ -4,12 +4,14 @@
 ^^^^^^^^^^^^^^^ comment.line
 let a = 1 /* inline */ + 2
 ^^^ keyword
+    ^ variable.other
         ^ constant.numeric
           ^^^^^^^^^^^^ comment.block
                          ^ constant.numeric
 /* outer /* nested */ still comment */ let b = 2
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ comment.block
                                        ^^^ keyword
+                                           ^ variable.other
                                                ^ constant.numeric
 /* spans
 ^^^^^^^^ comment.block
@@ -20,5 +22,6 @@ let a = 1 /* inline */ + 2
 */ let c = 3
 ^^ comment.block
    ^^^ keyword
+       ^ variable.other
            ^ constant.numeric
 

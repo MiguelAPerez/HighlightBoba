@@ -123,12 +123,10 @@ Columns count characters, so carets line up under emoji. Ranges in the API are U
 
 - Look-behind is limited to the current line: `notAfter` can't see a token on the previous line (so a JS regex that starts a continuation line is read as division only if the `/` follows an identifier on the same line).
 - Lexers don't know command position: shell keywords like `done` are highlighted as arguments too (`echo done`). The parser layer fixes this for languages that get one.
-- A Swift tuple index chain `t.0.1` reads as the number `0.1`; telling them apart needs the parser. (A not-after-`.` rule would break `1...5`.)
+- Lexers don't know what a name is for: Swift's scopes `get`, `some` or `async` as keywords wherever they appear, and every capitalized word as a type. Swift's parser fixes these ([PARSER.md](PARSER.md#swift)).
 - Markdown has no look-ahead to a closing delimiter, so an unclosed `*`, `_` or `` ` `` colours to the end of the line; setext heading text (the line above `===`) isn't scoped, only the underline; and indented code isn't told apart from list continuation. Without the previous line, a lone `===` after a blank line still reads as a setext underline, `a[i][j]` in prose reads as a reference link, and an HTML block inside a blockquote (`> <div>`) isn't recognised. HTML block tag names are matched in lower, UPPER or Title case only, so a mixed-case `<dIv>` reads as inline HTML.
 - An unterminated YAML quote runs on until the next matching quote, because YAML quoted strings may span lines.
 - Markdown strikethrough, tables and entities, and YAML timestamps, have no scope in the vocabulary, so they stay plain.
-- Swift: a custom operator ending in `/` at the end of a line (`infix operator /+/`) colours that last `/` as a regex opener.
-- Swift: a `/` right after `!` or `?` with no space (`x!/2`) reads as a regex opener, because `!/x/` (negated regex) looks the same one character back; spaced division (`x! / 2`) is fine.
 - JavaScript/TypeScript: `default` before `:` stays a keyword (a `switch` needs it), so `{ default: 1 }` scopes it; a keyword-like variable in a ternary (`a ? get : set`) reads as a keyword; and in TypeScript `void` is always a type, so the `void 0` operator and a `{ void: 1 }` key read as one.
 - Python: `match (x)` and `match [x]` at the start of a statement read as a match statement, though they may be a call or an index.
 - Python: `type` only starts an alias before an ASCII identifier, so `type Σ = int` stays plain; and `match not in xs` / `case not in xs` at the start of a statement read as a match statement.

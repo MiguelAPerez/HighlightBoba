@@ -1,0 +1,309 @@
+func run(values: [Int?], store: Store) async throws {
+^^^^ keyword
+     ^^^ entity.name.function
+         ^^^^^^ variable.parameter
+                  ^^^ entity.name.type
+                         ^^^^^ variable.parameter
+                                ^^^^^ entity.name.type
+                                       ^^^^^ keyword
+                                             ^^^^^^ keyword
+    outer: for case let value? in values where value > 0 {
+           ^^^ keyword
+               ^^^^ keyword
+                    ^^^ keyword
+                        ^^^^^ variable.other
+                               ^^ keyword
+                                         ^^^^^ keyword
+                                                       ^ constant.numeric
+        guard value != 13 else { continue outer }
+        ^^^^^ keyword
+                       ^^ constant.numeric
+                          ^^^^ keyword
+                                 ^^^^^^^^ keyword
+        if value.isMultiple(of: 2), let half = Optional(value / 2) {
+        ^^ keyword
+                 ^^^^^^^^^^ support.function
+                            ^^ variable.parameter
+                                ^ constant.numeric
+                                    ^^^ keyword
+                                        ^^^^ variable.other
+                                               ^^^^^^^^ entity.name.type
+                                                                ^ constant.numeric
+            print(half)
+            ^^^^^ support.function
+        } else if case .some(let x) = Optional(value) {
+          ^^^^ keyword
+               ^^ keyword
+                  ^^^^ keyword
+                        ^^^^ variable.other.enummember
+                             ^^^ keyword
+                                 ^ variable.other
+                                      ^^^^^^^^ entity.name.type
+            print(x)
+            ^^^^^ support.function
+        } else {
+          ^^^^ keyword
+            break outer
+            ^^^^^ keyword
+        }
+    }
+    for (index, element) in values.enumerated() { _ = (index, element) }
+    ^^^ keyword
+         ^^^^^ variable.other
+                ^^^^^^^ variable.other
+                         ^^ keyword
+                                   ^^^^^^^^^^ support.function
+    var i = 0
+    ^^^ keyword
+        ^ variable.other
+            ^ constant.numeric
+    while i < 3 { i += 1 }
+    ^^^^^ keyword
+              ^ constant.numeric
+                       ^ constant.numeric
+    repeat { i -= 1 } while i > 0
+    ^^^^^^ keyword
+                  ^ constant.numeric
+                      ^^^^^ keyword
+                                ^ constant.numeric
+    switch store.state {
+    ^^^^^^ keyword
+    case .idle, .paused(_):
+    ^^^^ keyword
+          ^^^^ variable.other.enummember
+                 ^^^^^^ variable.other.enummember
+        fallthrough
+        ^^^^^^^^^^^ keyword
+    case let .loading(progress) where progress < 0.5:
+    ^^^^ keyword
+         ^^^ keyword
+              ^^^^^^^ variable.other.enummember
+                      ^^^^^^^^ variable.other
+                                ^^^^^ keyword
+                                                 ^^^ constant.numeric
+        print("early \(progress, format: .percent)")
+        ^^^^^ support.function
+              ^^^^^^^ string.quoted
+                     ^^ punctuation.section.embedded
+                                 ^^^^^^ variable.parameter
+                                          ^^^^^^^ variable.other.enummember
+                                                 ^ punctuation.section.embedded
+                                                  ^ string.quoted
+    case .loaded(let items as [Int]), .cached(let items as [Int]):
+    ^^^^ keyword
+          ^^^^^^ variable.other.enummember
+                 ^^^ keyword
+                     ^^^^^ variable.other
+                           ^^ keyword
+                               ^^^ entity.name.type
+                                       ^^^^^^ variable.other.enummember
+                                              ^^^ keyword
+                                                  ^^^^^ variable.other
+                                                        ^^ keyword
+                                                            ^^^ entity.name.type
+        print(items.count)
+        ^^^^^ support.function
+    case is Error:
+    ^^^^ keyword
+         ^^ keyword
+            ^^^^^ entity.name.type
+        break
+        ^^^^^ keyword
+    @unknown default:
+    ^^^^^^^^ entity.other.attribute
+             ^^^^^^^ keyword
+        return
+        ^^^^^^ keyword
+    }
+    do {
+    ^^ keyword
+        try await store.save()
+        ^^^ keyword
+            ^^^^^ keyword
+                        ^^^^ support.function
+    } catch let error as URLError where error.code == .timedOut {
+      ^^^^^ keyword
+            ^^^ keyword
+                ^^^^^ variable.other
+                      ^^ keyword
+                         ^^^^^^^^ entity.name.type
+                                  ^^^^^ keyword
+                                                       ^^^^^^^^ variable.other.enummember
+        print(error)
+        ^^^^^ support.function
+    } catch {
+      ^^^^^ keyword
+        throw error
+        ^^^^^ keyword
+    }
+    defer { store.close() }
+    ^^^^^ keyword
+                  ^^^^^ support.function
+    let total = values.compactMap { $0 }.reduce(0) { partial, next in partial + next }
+    ^^^ keyword
+        ^^^^^ variable.other
+                       ^^^^^^^^^^ support.function
+                                         ^^^^^^ support.function
+                                                ^ constant.numeric
+                                                     ^^^^^^^ variable.parameter
+                                                              ^^^^ variable.parameter
+                                                                   ^^ keyword
+    let sorted = values.sorted { (a: Int?, b: Int?) -> Bool in (a ?? 0) < (b ?? 0) }
+    ^^^ keyword
+        ^^^^^^ variable.other
+                        ^^^^^^ support.function
+                                  ^ variable.parameter
+                                     ^^^ entity.name.type
+                                           ^ variable.parameter
+                                              ^^^ entity.name.type
+                                                       ^^^^ entity.name.type
+                                                            ^^ keyword
+                                                                     ^ constant.numeric
+                                                                                ^ constant.numeric
+    let task = Task { [weak store, count = values.count] in await store?.load(count) }
+    ^^^ keyword
+        ^^^^ variable.other
+               ^^^^ entity.name.type
+                       ^^^^ keyword
+                            ^^^^^ variable.other
+                                   ^^^^^ variable.other
+                                                         ^^ keyword
+                                                            ^^^^^ keyword
+                                                                         ^^^^ support.function
+    store.animate(duration: 0.3) {
+          ^^^^^^^ support.function
+                  ^^^^^^^^ variable.parameter
+                            ^^^ constant.numeric
+        store.opacity = 1
+                        ^ constant.numeric
+    } completion: { finished in
+      ^^^^^^^^^^ variable.parameter
+                    ^^^^^^^^ variable.parameter
+                             ^^ keyword
+        print(finished)
+        ^^^^^ support.function
+    }
+    let path = \Store.items[0].name, root = \.count
+    ^^^ keyword
+        ^^^^ variable.other
+                ^^^^^ entity.name.type
+                            ^ constant.numeric
+                                     ^^^^ variable.other
+    let lookup: [String: [Int]] = ["a": [1, 2], "b": []], empty: [String: Int] = [:]
+    ^^^ keyword
+        ^^^^^^ variable.other
+                 ^^^^^^ entity.name.type
+                          ^^^ entity.name.type
+                                   ^^^ string.quoted
+                                         ^ constant.numeric
+                                            ^ constant.numeric
+                                                ^^^ string.quoted
+                                                          ^^^^^ variable.other
+                                                                  ^^^^^^ entity.name.type
+                                                                          ^^^ entity.name.type
+    let mixed = cond ? [1] : [2], tuple = (x: 1, y: (2, 3))
+    ^^^ keyword
+        ^^^^^ variable.other
+                        ^ constant.numeric
+                              ^ constant.numeric
+                                  ^^^^^ variable.other
+                                           ^ variable.parameter
+                                              ^ constant.numeric
+                                                 ^ variable.parameter
+                                                     ^ constant.numeric
+                                                        ^ constant.numeric
+    let cast = store as? Saving, forced = store as! Saving, check = store is Saving
+    ^^^ keyword
+        ^^^^ variable.other
+                     ^^ keyword
+                         ^^^^^^ entity.name.type
+                                 ^^^^^^ variable.other
+                                                ^^ keyword
+                                                    ^^^^^^ entity.name.type
+                                                            ^^^^^ variable.other
+                                                                          ^^ keyword
+                                                                             ^^^^^^ entity.name.type
+    let chained = store.items.first?.name.uppercased() ?? "none"
+    ^^^ keyword
+        ^^^^^^^ variable.other
+                                          ^^^^^^^^^^ support.function
+                                                          ^^^^^^ string.quoted
+    let shifted = 1 << 2 + 3 * 4 - -5, bits = ~0 & 0xFF | 1 ^ 2
+    ^^^ keyword
+        ^^^^^^^ variable.other
+                  ^ constant.numeric
+                       ^ constant.numeric
+                           ^ constant.numeric
+                               ^ constant.numeric
+                                    ^ constant.numeric
+                                       ^^^^ variable.other
+                                               ^ constant.numeric
+                                                   ^^^^ constant.numeric
+                                                          ^ constant.numeric
+                                                              ^ constant.numeric
+    let range = 0..<10, closed = 0...10, open = ...5, from = 5...
+    ^^^ keyword
+        ^^^^^ variable.other
+                ^ constant.numeric
+                    ^^ constant.numeric
+                        ^^^^^^ variable.other
+                                 ^ constant.numeric
+                                     ^^ constant.numeric
+                                         ^^^^ variable.other
+                                                   ^ constant.numeric
+                                                      ^^^^ variable.other
+                                                             ^ constant.numeric
+    let generic = Array<Int>(repeating: 0, count: 3), compare = i < 3 && i > 1
+    ^^^ keyword
+        ^^^^^^^ variable.other
+                  ^^^^^ entity.name.type
+                        ^^^ entity.name.type
+                             ^^^^^^^^^ variable.parameter
+                                        ^ constant.numeric
+                                           ^^^^^ variable.parameter
+                                                  ^ constant.numeric
+                                                      ^^^^^^^ variable.other
+                                                                    ^ constant.numeric
+                                                                             ^ constant.numeric
+    let deep = Dictionary<String, Array<Int>>()
+    ^^^ keyword
+        ^^^^ variable.other
+               ^^^^^^^^^^ entity.name.type
+                          ^^^^^^ entity.name.type
+                                  ^^^^^ entity.name.type
+                                        ^^^ entity.name.type
+    let value = if i > 0 { "positive" } else { "other" }
+    ^^^ keyword
+        ^^^^^ variable.other
+                ^^ keyword
+                       ^ constant.numeric
+                           ^^^^^^^^^^ string.quoted
+                                        ^^^^ keyword
+                                               ^^^^^^^ string.quoted
+    #warning("check this")
+    ^^^^^^^^ meta.preprocessor
+             ^^^^^^^^^^^^ string.quoted
+    #Preview("Card") { CardView(title: "x") }
+    ^^^^^^^^ meta.preprocessor
+             ^^^^^^ string.quoted
+                       ^^^^^^^^ entity.name.type
+                                ^^^^^ variable.parameter
+                                       ^^^ string.quoted
+    let result = try? JSONDecoder().decode([Item].self, from: data)
+    ^^^ keyword
+        ^^^^^^ variable.other
+                 ^^^ keyword
+                      ^^^^^^^^^^^ entity.name.type
+                                    ^^^^^^ support.function
+                                            ^^^^ entity.name.type
+                                                  ^^^^ variable.language
+                                                        ^^^^ variable.parameter
+    store.items[keyPath: path].append(contentsOf: values.map(\.description))
+                ^^^^^^^ variable.parameter
+                               ^^^^^^ support.function
+                                      ^^^^^^^^^^ variable.parameter
+                                                         ^^^ support.function
+    _ = consume total
+        ^^^^^^^ keyword
+}
+

@@ -1,0 +1,268 @@
+import Foundation
+^^^^^^ keyword
+       ^^^^^^^^^^ entity.name.type
+@testable import struct Kit.Thing
+^^^^^^^^^ entity.other.attribute
+          ^^^^^^ keyword
+                 ^^^^^^ keyword
+                        ^^^ entity.name.type
+                            ^^^^^ entity.name.type
+
+public struct Stack<Element: Equatable, each T>: Collection, Sendable where Element: Hashable {
+^^^^^^ keyword
+       ^^^^^^ keyword
+              ^^^^^ entity.name.type
+                    ^^^^^^^ entity.name.type
+                             ^^^^^^^^^ entity.name.type
+                                             ^ entity.name.type
+                                                 ^^^^^^^^^^ entity.name.type
+                                                             ^^^^^^^^ entity.name.type
+                                                                      ^^^^^ keyword
+                                                                            ^^^^^^^ entity.name.type
+                                                                                     ^^^^^^^^ entity.name.type
+    private(set) var storage: [Element] = []
+    ^^^^^^^ keyword
+            ^^^ keyword
+                 ^^^ keyword
+                     ^^^^^^^ variable.other
+                               ^^^^^^^ entity.name.type
+    static let empty = Stack()
+    ^^^^^^ keyword
+           ^^^ keyword
+               ^^^^^ variable.other
+                       ^^^^^ entity.name.type
+    var count: Int { storage.count }
+    ^^^ keyword
+        ^^^^^ variable.other
+               ^^^ entity.name.type
+    var top: Element? {
+    ^^^ keyword
+        ^^^ variable.other
+             ^^^^^^^ entity.name.type
+        get { storage.last }
+        ^^^ keyword
+        set(newTop) { if let newTop { storage.append(newTop) } }
+        ^^^ keyword
+            ^^^^^^ variable.parameter
+                      ^^ keyword
+                         ^^^ keyword
+                             ^^^^^^ variable.other
+                                              ^^^^^^ support.function
+    }
+    var observed = 0 {
+    ^^^ keyword
+        ^^^^^^^^ variable.other
+                   ^ constant.numeric
+        willSet { print(newValue) }
+        ^^^^^^^ keyword
+                  ^^^^^ support.function
+        didSet(old) { log(old, to: observed) }
+        ^^^^^^ keyword
+               ^^^ variable.parameter
+                      ^^^ support.function
+                               ^^ variable.parameter
+    }
+    lazy var get = 1, set: Int = 2
+    ^^^^ keyword
+         ^^^ keyword
+             ^^^ variable.other
+                   ^ constant.numeric
+                      ^^^ variable.other
+                           ^^^ entity.name.type
+                                 ^ constant.numeric
+    init?(from items: [Element], _ extra: Int = 0) throws(StackError) where Element: Codable {
+    ^^^^ keyword
+          ^^^^ variable.parameter
+               ^^^^^ variable.parameter
+                       ^^^^^^^ entity.name.type
+                                   ^^^^^ variable.parameter
+                                          ^^^ entity.name.type
+                                                ^ constant.numeric
+                                                   ^^^^^^ keyword
+                                                          ^^^^^^^^^^ entity.name.type
+                                                                      ^^^^^ keyword
+                                                                            ^^^^^^^ entity.name.type
+                                                                                     ^^^^^^^ entity.name.type
+        self.storage = items
+        ^^^^ variable.language
+    }
+    convenience init() { self.init(from: [])! }
+    ^^^^^^^^^^^ keyword
+                ^^^^ keyword
+                         ^^^^ variable.language
+                              ^^^^ keyword
+                                   ^^^^ variable.parameter
+    deinit {}
+    ^^^^^^ keyword
+    subscript(index i: Int) -> Element { storage[i] }
+    ^^^^^^^^^ keyword
+              ^^^^^ variable.parameter
+                    ^ variable.parameter
+                       ^^^ entity.name.type
+                               ^^^^^^^ entity.name.type
+    mutating func push(_ element: __owned Element, into other: inout [Element]) async rethrows -> Self {
+    ^^^^^^^^ keyword
+             ^^^^ keyword
+                  ^^^^ entity.name.function
+                         ^^^^^^^ variable.parameter
+                                          ^^^^^^^ entity.name.type
+                                                   ^^^^ variable.parameter
+                                                        ^^^^^ variable.parameter
+                                                               ^^^^^ keyword
+                                                                      ^^^^^^^ entity.name.type
+                                                                                ^^^^^ keyword
+                                                                                      ^^^^^^^^ keyword
+                                                                                                  ^^^^ variable.language
+        other.append(element)
+              ^^^^^^ support.function
+        return self
+        ^^^^^^ keyword
+               ^^^^ variable.language
+    }
+    static func == (lhs: Self, rhs: Self) -> Bool { lhs.storage == rhs.storage }
+    ^^^^^^ keyword
+           ^^^^ keyword
+                ^ entity.name.function
+                 ^ entity.name.function
+                    ^^^ variable.parameter
+                         ^^^^ variable.language
+                               ^^^ variable.parameter
+                                    ^^^^ variable.language
+                                             ^^^^ entity.name.type
+    func map<U>(_ transform: @escaping (Element) throws -> U) rethrows -> [U] { try storage.map(transform) }
+    ^^^^ keyword
+         ^^^ entity.name.function
+             ^ entity.name.type
+                  ^^^^^^^^^ variable.parameter
+                             ^^^^^^^^^ entity.other.attribute
+                                        ^^^^^^^ entity.name.type
+                                                 ^^^^^^ keyword
+                                                           ^ entity.name.type
+                                                              ^^^^^^^^ keyword
+                                                                           ^ entity.name.type
+                                                                                ^^^ keyword
+                                                                                            ^^^ support.function
+}
+
+enum Token: Equatable {
+^^^^ keyword
+     ^^^^^ entity.name.type
+            ^^^^^^^^^ entity.name.type
+    case word(String, at: Int), number(Double = 0)
+    ^^^^ keyword
+         ^^^^ variable.other.enummember
+              ^^^^^^ entity.name.type
+                      ^^ variable.parameter
+                          ^^^ entity.name.type
+                                ^^^^^^ variable.other.enummember
+                                       ^^^^^^ entity.name.type
+                                                ^ constant.numeric
+    indirect case pair(Token, Token)
+    ^^^^^^^^ keyword
+             ^^^^ keyword
+                  ^^^^ variable.other.enummember
+                       ^^^^^ entity.name.type
+                              ^^^^^ entity.name.type
+    case Red
+    ^^^^ keyword
+         ^^^ variable.other.enummember
+}
+
+protocol Shape: AnyObject {
+^^^^^^^^ keyword
+         ^^^^^ entity.name.type
+                ^^^^^^^^^ entity.name.type
+    associatedtype Unit: Numeric = Double
+    ^^^^^^^^^^^^^^ keyword
+                   ^^^^ entity.name.type
+                         ^^^^^^^ entity.name.type
+                                   ^^^^^^ entity.name.type
+    var area: Unit { get async throws }
+    ^^^ keyword
+        ^^^^ variable.other
+              ^^^^ entity.name.type
+                     ^^^ keyword
+                         ^^^^^ keyword
+                               ^^^^^^ keyword
+    func scaled(by factor: Unit) -> some Shape
+    ^^^^ keyword
+         ^^^^^^ entity.name.function
+                ^^ variable.parameter
+                   ^^^^^^ variable.parameter
+                           ^^^^ entity.name.type
+                                    ^^^^ keyword
+                                         ^^^^^ entity.name.type
+}
+
+extension Array where Element == Int {
+^^^^^^^^^ keyword
+          ^^^^^ entity.name.type
+                ^^^^^ keyword
+                      ^^^^^^^ entity.name.type
+                                 ^^^ entity.name.type
+    func sum() -> Element { reduce(0, +) }
+    ^^^^ keyword
+         ^^^ entity.name.function
+                  ^^^^^^^ entity.name.type
+                            ^^^^^^ support.function
+                                   ^ constant.numeric
+}
+
+actor Counter { var value = 0 }
+^^^^^ keyword
+      ^^^^^^^ entity.name.type
+                ^^^ keyword
+                    ^^^^^ variable.other
+                            ^ constant.numeric
+typealias Handler<T> = (Result<T, any Error>) -> Void
+^^^^^^^^^ keyword
+          ^^^^^^^ entity.name.type
+                  ^ entity.name.type
+                        ^^^^^^ entity.name.type
+                               ^ entity.name.type
+                                  ^^^ keyword
+                                      ^^^^^ entity.name.type
+                                                 ^^^^ entity.name.type
+macro stringify<T>(_ value: T) -> (T, String) = #externalMacro(module: "Macros", type: "StringifyMacro")
+^^^^^ keyword
+      ^^^^^^^^^ entity.name.function
+                ^ entity.name.type
+                     ^^^^^ variable.parameter
+                            ^ entity.name.type
+                                   ^ entity.name.type
+                                      ^^^^^^ entity.name.type
+                                                ^^^^^^^^^^^^^^ meta.preprocessor
+                                                               ^^^^^^ variable.parameter
+                                                                       ^^^^^^^^ string.quoted
+                                                                                 ^^^^ variable.parameter
+                                                                                       ^^^^^^^^^^^^^^^^ string.quoted
+@available(*, deprecated, renamed: "newName", message: "use it")
+^^^^^^^^^^ entity.other.attribute
+                          ^^^^^^^ variable.parameter
+                                   ^^^^^^^^^ string.quoted
+                                              ^^^^^^^ variable.parameter
+                                                       ^^^^^^^^ string.quoted
+func oldName(async: Bool, some: Int, for item: String) {}
+^^^^ keyword
+     ^^^^^^^ entity.name.function
+             ^^^^^ variable.parameter
+                    ^^^^ entity.name.type
+                          ^^^^ variable.parameter
+                                ^^^ entity.name.type
+                                     ^^^ variable.parameter
+                                         ^^^^ variable.parameter
+                                               ^^^^^^ entity.name.type
+let some = 1, any = 2, actor = 3
+^^^ keyword
+    ^^^^ variable.other
+           ^ constant.numeric
+              ^^^ variable.other
+                    ^ constant.numeric
+                       ^^^^^ variable.other
+                               ^ constant.numeric
+let open = some + any
+^^^ keyword
+    ^^^^ variable.other
+           ^^^^ variable.other
+                  ^^^ variable.other
+

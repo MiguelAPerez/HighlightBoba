@@ -1,17 +1,21 @@
 let s = "a\(x
 ^^^ keyword
+    ^ variable.other
         ^^ string.quoted
           ^^ punctuation.section.embedded
 x) + 2
      ^ constant.numeric
 let t = "b\(f(y
 ^^^ keyword
+    ^ variable.other
         ^^ string.quoted
           ^^ punctuation.section.embedded
+            ^ support.function
 y)) + 3
       ^ constant.numeric
 let u = """
 ^^^ keyword
+    ^ variable.other
         ^^^ string.quoted
 c \(z) d
 ^^ string.quoted

@@ -23,6 +23,8 @@ public enum Scopes {
         "invalid",
         "string.regexp",
         "variable.other",
+        "variable.other.enummember",
+        "variable.parameter",
         "markup.heading",
         "markup.bold",
         "markup.italic",

@@ -1,0 +1,62 @@
+struct Broken {
+^^^^^^ keyword
+       ^^^^^^ entity.name.type
+    func half(_ x: Int -> Int {
+    ^^^^ keyword
+         ^^^^ entity.name.function
+                ^ variable.parameter
+                   ^^^ entity.name.type
+                          ^^^ entity.name.type
+        let y = x +
+        ^^^ keyword
+            ^ variable.other
+        return y
+        ^^^^^^ keyword
+    }
+    var name: String = "unterminated
+    ^^^ keyword
+        ^^^^ variable.other
+              ^^^^^^ entity.name.type
+                       ^^^^^^^^^^^^^ string.quoted
+    func ok() -> Bool { true }
+    ^^^^ keyword
+         ^^ entity.name.function
+                 ^^^^ entity.name.type
+                        ^^^^ constant.language
+}
+class Fine: { }
+^^^^^ keyword
+      ^^^^ entity.name.type
+let list = [1, 2,, 3
+^^^ keyword
+    ^^^^ variable.other
+            ^ constant.numeric
+               ^ constant.numeric
+                   ^ constant.numeric
+let dict = [1: , 2: 3]
+^^^ keyword
+    ^^^^ variable.other
+            ^ constant.numeric
+                 ^ constant.numeric
+                    ^ constant.numeric
+func next(a: Int, b c d: Int) { if a { } else }
+^^^^ keyword
+     ^^^^ entity.name.function
+          ^ variable.parameter
+             ^^^ entity.name.type
+                  ^ variable.parameter
+                    ^ variable.parameter
+                         ^^^ entity.name.type
+                                ^^ keyword
+                                         ^^^^ keyword
+enum E { case a( }
+^^^^ keyword
+     ^ entity.name.type
+         ^^^^ keyword
+              ^ variable.other.enummember
+let after = Broken().ok()
+^^^ keyword
+    ^^^^^ variable.other
+            ^^^^^^ entity.name.type
+                     ^^ support.function
+
