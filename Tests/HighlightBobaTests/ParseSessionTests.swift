@@ -13,9 +13,7 @@ final class Gate: @unchecked Sendable {
     private var closed = true
     private var waitingCount = 0
     private var cancelledCount = 0
-    /// Well past `ParseSessionTests.waitFor`'s, so a slow runner times a test out before a held parse
-    /// is let through uncancelled: on a loaded CI runner a parse can wait a minute for a thread.
-    static let limit: TimeInterval = 180
+    static let limit: TimeInterval = 20
 
     /// Parses waiting at the gate now.
     var waiting: Int { condition.withLock { waitingCount } }
@@ -61,10 +59,8 @@ struct GatedBlocks: IncrementalParser {
 
 @MainActor
 @Suite(.serialized) struct ParseSessionTests {
-    /// Waits up to a minute: a loaded CI runner's pool can keep a parse from starting for that long.
     static func waitFor(_ condition: () -> Bool) async {
-        let deadline = Date().addingTimeInterval(60)
-        while !condition() && Date() < deadline { try? await Task.sleep(for: .milliseconds(5)) }
+        for _ in 0..<2_000 where !condition() { try? await Task.sleep(for: .milliseconds(5)) }
         #expect(condition(), "timed out")
     }
 

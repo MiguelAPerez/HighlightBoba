@@ -96,7 +96,11 @@ the builder records "the parser stopped making progress here" and reads as at th
 A loop that never advances terminates, and `finish()` still puts every token in the tree.
 
 **Nesting.** `depth` counts the open nodes. A recursive parser checks it and stops nesting (recording
-an error) before its own call stack runs out on input like 100,000 `[`.
+an error) before its own call stack runs out on input like 100,000 `[`. The depth limit is what
+keeps a block's reparse the same as a whole parse, but a frame's size depends on the build, so
+every bundled parser also stops when `StackGuard` finds less than 160 KB of the thread's stack left.
+A background parse may get 512 KB (an iOS secondary thread's default); the tests run each parser's
+deepest inputs on 256 KB threads, all at once, so half of that is to spare.
 
 ## Re-lexing
 
@@ -334,8 +338,8 @@ scope, so `a ? get : set` and `{ default: 1 }` aren't keywords; a capitalised na
 `entity.name.type`. In TypeScript, `void` as an operator (`void 0`) is a keyword, and a primitive type's
 name used as a value (`const string = 1`) is a variable.
 
-**Depth.** Constructs nest at most 200 nodes deep (`JSParse.maxDepth`): deeper, the parser records an
-error and stops nesting, so a parse fits a background thread's 512 KB stack even in a debug build.
+**Depth.** Constructs nest at most 200 nodes deep (`JSParse.maxDepth`), or less when the stack runs
+low: deeper, the parser records an error and stops nesting.
 
 ### JSX and TSX
 

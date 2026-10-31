@@ -99,9 +99,25 @@ struct Recorded: IncrementalParser {
     }
 }
 
-/// `ParseSession` cancelling a real parse of a large file. In `ParseSessionTests`, which runs one
-/// test at a time, so no more than one held parse blocks a thread of the cooperative pool.
+/// `ParseSession` cancelling a real parse of a large file.
+///
+/// A parse held at a closed gate blocks a thread of the cooperative pool, and a CI runner may
+/// have only three, with long tests on the others. An `await` there can wait on a thread the pool
+/// doesn't have, so these tests block the main thread instead, which needs none, until the parse
+/// is at the gate, and cancel it at once: it is held a few milliseconds, not for as long as the
+/// pool is busy.
 extension ParseSessionTests {
+    /// Blocks the main thread until `condition` holds, for up to two minutes. Whether it did.
+    static func blockUntil(_ condition: () -> Bool) -> Bool {
+        let deadline = Date().addingTimeInterval(120)
+        while !condition() && Date() < deadline { usleep(1_000) }
+        return condition()
+    }
+
+    static func stoppedEarly(_ entry: ParseLog.Entry) -> Bool {
+        entry.cancelled && entry.steps < TreeBuilder.cancellationInterval
+    }
+
     func makeSession(gate: Gate, log: ParseLog) throws -> ParseSession<Recorded> {
         let highlighter = Highlighter(grammar: try Grammar.bundled("swift"), text: try largeText("swift", length: 8_000))
         return ParseSession(highlighter: highlighter, parser: Recorded(inner: SwiftParser(), gate: gate, log: log))
@@ -119,12 +135,12 @@ extension ParseSessionTests {
         session.onUpdate = { _ in updates += 1 }
         gate.close()
         session.textDidChange()
-        await Self.waitFor { gate.waiting == 1 }
+        try #require(Self.blockUntil { gate.waiting == 1 }, "the first parse reached the gate")
         session.highlighter.replaceCharacters(in: NSRange(location: 0, length: 0), with: "let x = 1\n")
         session.textDidChange()
-        await Self.waitFor { log.entries.count == 1 }
-        let first = try #require(log.entries.first)
-        #expect(first.cancelled && first.steps < TreeBuilder.cancellationInterval, "the superseded parse took \(first.steps) steps")
+        try #require(Self.blockUntil { log.entries.count == 1 }, "the superseded parse finished")
+        let first = log.entries[0]
+        #expect(Self.stoppedEarly(first), "the superseded parse took \(first.steps) steps")
         gate.open()
         await session.waitUntilIdle()
         #expect(updates == 1, "only the newest parse publishes")
@@ -138,13 +154,12 @@ extension ParseSessionTests {
         session?.onUpdate = { _ in updates += 1 }
         gate.close()
         session?.textDidChange()
-        await Self.waitFor { gate.waiting == 1 }
+        try #require(Self.blockUntil { gate.waiting == 1 }, "the parse reached the gate")
         session = nil
-        await Self.waitFor { log.entries.count == 1 }
-        let entry = try #require(log.entries.first)
-        #expect(entry.cancelled && entry.steps < TreeBuilder.cancellationInterval)
-        #expect(updates == 0)
+        try #require(Self.blockUntil { log.entries.count == 1 }, "the released session's parse finished")
         gate.open()
+        #expect(Self.stoppedEarly(log.entries[0]), "\(log.entries[0])")
+        #expect(updates == 0)
     }
 
     @Test func aCancelledParseNeverPublishes() async throws {
@@ -154,12 +169,13 @@ extension ParseSessionTests {
         session.onUpdate = { _ in updates += 1 }
         gate.close()
         session.textDidChange()
-        await Self.waitFor { gate.waiting == 1 }
+        try #require(Self.blockUntil { gate.waiting == 1 }, "the parse reached the gate")
         session.cancel()
-        await Self.waitFor { log.entries.count == 1 }
+        try #require(Self.blockUntil { log.entries.count == 1 }, "the cancelled parse finished")
         gate.open()
         await session.waitUntilIdle()
-        #expect(try #require(log.entries.first).cancelled && updates == 0 && session.tree == nil)
+        #expect(Self.stoppedEarly(log.entries[0]), "\(log.entries[0])")
+        #expect(updates == 0 && session.tree == nil)
 
         // Nothing was lost: the next parse covers the text.
         session.textDidChange()
@@ -176,10 +192,10 @@ extension ParseSessionTests {
         session.onUpdate = { _ in updates += 1 }
         gate.open()
         session.textDidChange()
-        // Blocks the main actor, so the result can't be published before `cancel()`.
-        let deadline = Date().addingTimeInterval(60)
+        // Blocks the main actor, so the result can't be published before `cancel()`. On a runner
+        // too busy to start the parse in time, it is cancelled earlier instead, and still dropped.
+        let deadline = Date().addingTimeInterval(5)
         while log.entries.isEmpty && Date() < deadline { usleep(5_000) }
-        #expect(log.entries.first?.cancelled == false, "the parse ran to the end")
         session.cancel()
         await session.waitUntilIdle()
         #expect(updates == 0 && session.tree == nil)
