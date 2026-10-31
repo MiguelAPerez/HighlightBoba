@@ -1,4 +1,4 @@
-<!-- Outside PRs aren't open yet: see CONTRIBUTING.md. -->
+<!-- Thanks for contributing! Read CONTRIBUTING.md first. -->
 
 ## Lane
 

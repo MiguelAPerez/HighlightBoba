@@ -1,9 +1,9 @@
 # Contributing to HighlightBoba
 
-> **Issues welcome, PRs not yet.** Until the grammar format is stable, pull requests
-> from outside contributors are closed without review. Bug reports, language requests
-> and design feedback are very welcome as issues. This guide describes how PRs will
-> work once they open, and the rules maintainers already follow.
+> **Pull requests are welcome**, and so are bug reports, language requests and design
+> feedback as issues. This guide covers how PRs work and the rules every PR follows,
+> maintainers' included. For a large change, such as a new language or a new grammar
+> or query feature, open an issue first so we can agree on the shape before you build it.
 
 ## Two lanes
 
