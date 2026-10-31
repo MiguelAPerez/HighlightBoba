@@ -373,7 +373,10 @@ lexer scopes their `<`, `/` and `>` as `punctuation` and entities (`&amp;`, `&#1
 
 **Recovery.** The lexer's stack holds a state per open element, so a broken element would make it
 read the rest of the file as JSX. The parser ends the element, records an error, and re-lexes the
-next token after popping the element's states (`jsxPop1`…`jsxPop16`), so what follows is code again:
+next token after popping the element's states (`jsxPop1`…`jsxPop32`), so what follows is code again.
+Pops asked for at the same token add up (a tag broken at a `}`, then the elements the `}` ends). So
+that every pop fits, a root nests at most 31 elements: a `<` deeper than that is re-lexed as text,
+with an error. The cases:
 
 - A tag that meets anything an attribute can't start with (`<div className=` and a `}`) ends there.
 - A quoted value that runs past its line and holds `<`, `>`, `{`, `}` or `=`, or doesn't close,

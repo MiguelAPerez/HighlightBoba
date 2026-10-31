@@ -91,6 +91,13 @@ extension JSParse {
             case .expression:
                 jsxExpression()
             case .element:
+                if open.count + 1 >= Self.jsxMaxNesting {
+                    // Deeper, recovery couldn't pop the lexer out at once: this `<` is text.
+                    error("too deeply nested")
+                    relex(.lessThan)
+                    if jsxChild() != .text { bump() }
+                    continue
+                }
                 guard jsxElement(open: open + [name]) else { continue }
                 // A child ended at something that closes an element around it; the lexer has
                 // already been told.

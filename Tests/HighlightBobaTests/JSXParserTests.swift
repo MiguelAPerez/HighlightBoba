@@ -134,6 +134,38 @@ import Testing
         }
     }
 
+    /// However deep the elements a stray `}` leaves open, the code after them is code again: the
+    /// lexer is never more elements deep in one root than it can be popped out of at once. (Each
+    /// `<` past that costs a re-lex, so on a tiny file the budget runs out some way past it.)
+    @Test(arguments: [10, 30, 31, 40])
+    func recoveryLeavesDeeplyNestedElements(_ depth: Int) throws {
+        for language in ["jsx", "tsx"] {
+            let elements = String(repeating: "<a>", count: depth)
+            for broken in [elements + "\n}", elements + "<b c=\n}", elements + "</r>\n}"] {
+                let text = "function f() {\n  return \(broken)\nfunction after(n) { return n }\n"
+                let (tokens, tree) = try Self.highlight(text, language)
+                #expect(leafText(tree.root) == text)
+                #expect(Self.scope(of: "after", in: text, tokens: tokens) == "entity.name.function", "\(language) \(depth) deep")
+                #expect(Self.scope(of: "function", in: text, tokens: tokens, after: "function after") == "keyword",
+                        "\(language) \(depth) deep: the lexer still reads JSX")
+                #expect(try Self.lexerDepthAtEnd(text, language) == 1, "\(language) \(depth) deep \(broken.suffix(6).debugDescription)")
+            }
+            // Valid, it parses: past the limit, the deepest elements are text, with an error.
+            let valid = "const x = \(elements)\(String(repeating: "</a>", count: depth));\nfunction after(n) { return n }\n"
+            let (tokens, tree) = try Self.highlight(valid, language)
+            #expect(tree.errors.isEmpty == (depth <= JSParse.jsxMaxNesting), "\(language) \(depth) deep: \(JSParserTests.errors(tree))")
+            #expect(Self.scope(of: "after", in: valid, tokens: tokens) == "entity.name.function", "\(language) \(depth) deep, valid")
+            #expect(try Self.lexerDepthAtEnd(valid, language) == 1, "\(language) \(depth) deep, valid")
+        }
+    }
+
+    /// How many states the lexer's stack holds at the end of `text`, once the parse's re-lexing is applied.
+    static func lexerDepthAtEnd(_ text: String, _ language: String) throws -> Int {
+        let highlighter = Highlighter(grammar: try Grammar.bundled(language), text: text)
+        _ = highlighter.applyRelexing(of: JSParserTests.parser(language).parse(highlighter.snapshot).tree)
+        return highlighter.lexing.lines.last?.endStack.count ?? 0
+    }
+
     /// An outer element's closing tag closes the ones left open inside it, and the lexer agrees.
     @Test func anOuterClosingTagClosesTheElementsInside() throws {
         let text = "const a = <div><p><b>x</div>;\nconst next = 1;\n"

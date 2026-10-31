@@ -1131,6 +1131,48 @@
         }
       ]
     },
+    "jsxPop17": {
+      "rules": [
+        {
+          "match": {
+            "followedBy": {
+              "opt": {
+                "literal": "<"
+              }
+            }
+          },
+          "pop": 17
+        }
+      ]
+    },
+    "jsxPop18": {
+      "rules": [
+        {
+          "match": {
+            "followedBy": {
+              "opt": {
+                "literal": "<"
+              }
+            }
+          },
+          "pop": 18
+        }
+      ]
+    },
+    "jsxPop19": {
+      "rules": [
+        {
+          "match": {
+            "followedBy": {
+              "opt": {
+                "literal": "<"
+              }
+            }
+          },
+          "pop": 19
+        }
+      ]
+    },
     "jsxPop2": {
       "rules": [
         {
@@ -1145,6 +1187,146 @@
         }
       ]
     },
+    "jsxPop20": {
+      "rules": [
+        {
+          "match": {
+            "followedBy": {
+              "opt": {
+                "literal": "<"
+              }
+            }
+          },
+          "pop": 20
+        }
+      ]
+    },
+    "jsxPop21": {
+      "rules": [
+        {
+          "match": {
+            "followedBy": {
+              "opt": {
+                "literal": "<"
+              }
+            }
+          },
+          "pop": 21
+        }
+      ]
+    },
+    "jsxPop22": {
+      "rules": [
+        {
+          "match": {
+            "followedBy": {
+              "opt": {
+                "literal": "<"
+              }
+            }
+          },
+          "pop": 22
+        }
+      ]
+    },
+    "jsxPop23": {
+      "rules": [
+        {
+          "match": {
+            "followedBy": {
+              "opt": {
+                "literal": "<"
+              }
+            }
+          },
+          "pop": 23
+        }
+      ]
+    },
+    "jsxPop24": {
+      "rules": [
+        {
+          "match": {
+            "followedBy": {
+              "opt": {
+                "literal": "<"
+              }
+            }
+          },
+          "pop": 24
+        }
+      ]
+    },
+    "jsxPop25": {
+      "rules": [
+        {
+          "match": {
+            "followedBy": {
+              "opt": {
+                "literal": "<"
+              }
+            }
+          },
+          "pop": 25
+        }
+      ]
+    },
+    "jsxPop26": {
+      "rules": [
+        {
+          "match": {
+            "followedBy": {
+              "opt": {
+                "literal": "<"
+              }
+            }
+          },
+          "pop": 26
+        }
+      ]
+    },
+    "jsxPop27": {
+      "rules": [
+        {
+          "match": {
+            "followedBy": {
+              "opt": {
+                "literal": "<"
+              }
+            }
+          },
+          "pop": 27
+        }
+      ]
+    },
+    "jsxPop28": {
+      "rules": [
+        {
+          "match": {
+            "followedBy": {
+              "opt": {
+                "literal": "<"
+              }
+            }
+          },
+          "pop": 28
+        }
+      ]
+    },
+    "jsxPop29": {
+      "rules": [
+        {
+          "match": {
+            "followedBy": {
+              "opt": {
+                "literal": "<"
+              }
+            }
+          },
+          "pop": 29
+        }
+      ]
+    },
     "jsxPop3": {
       "rules": [
         {
@@ -1156,6 +1338,48 @@
             }
           },
           "pop": 3
+        }
+      ]
+    },
+    "jsxPop30": {
+      "rules": [
+        {
+          "match": {
+            "followedBy": {
+              "opt": {
+                "literal": "<"
+              }
+            }
+          },
+          "pop": 30
+        }
+      ]
+    },
+    "jsxPop31": {
+      "rules": [
+        {
+          "match": {
+            "followedBy": {
+              "opt": {
+                "literal": "<"
+              }
+            }
+          },
+          "pop": 31
+        }
+      ]
+    },
+    "jsxPop32": {
+      "rules": [
+        {
+          "match": {
+            "followedBy": {
+              "opt": {
+                "literal": "<"
+              }
+            }
+          },
+          "pop": 32
         }
       ]
     },

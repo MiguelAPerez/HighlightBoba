@@ -135,7 +135,7 @@ The same script prepends the JSX queries to each base language's queries.
 - `jsxTag`, `jsxChildren` and `jsxClosingTag` are the element's: a tag's `>` replaces its state with
   the children's (`"pop": 1` with `"push"`), and a closing tag's `>` pops both. `jsxExpression` is
   code up to its `}`; `jsxTypeArguments` reads TSX's `<List<T>`.
-- `jsxStart`, `jsxLessThan`, `jsxLineString` and `jsxPop1`…`jsxPop16` exist only for the parser's
+- `jsxStart`, `jsxLessThan`, `jsxLineString` and `jsxPop1`…`jsxPop32` exist only for the parser's
   re-lex requests ([PARSER.md](PARSER.md#jsx-and-tsx)). A `jsxPop` state's one rule matches empty
   text and only pops, which a rule may do.
 
@@ -150,7 +150,7 @@ These are the lexer's. Where a language has a parser ([PARSER.md](PARSER.md#bund
 - An unterminated YAML quote runs on until the next matching quote, because YAML quoted strings may span lines.
 - Markdown strikethrough, tables and entities, and YAML timestamps, have no scope in the vocabulary, so they stay plain.
 - Python: an f-string field left open (`f"{a`) runs on to the next `}`, past its line. Soft keywords are guessed from the line alone; the parser decides them (see [PARSER.md](PARSER.md#python)).
-- JSX: an attribute whose value is an element (`<a b=<c />>`) isn't read, and neither is a namespace spaced out (`<svg : rect>`). Elements nested more than 16 deep inside one root recover less well, since only 16 can be popped at once. A `<` the lexer guessed wrong is fixed only when the parse runs ([PARSER.md](PARSER.md#jsx-and-tsx)).
+- JSX: an attribute whose value is an element (`<a b=<c />>`) isn't read, and neither is a namespace spaced out (`<svg : rect>`). Inside one root, elements nest at most 31 deep (`jsxPop32` is the most the parser can pop at once); a `<` deeper than that reads as text. A `<` the lexer guessed wrong is fixed only when the parse runs ([PARSER.md](PARSER.md#jsx-and-tsx)).
 - JSON numbers are checked only for trailing ASCII letters: `1é` isn't flagged, and neither is a bare `-x`. Also unflagged: `01`, `1.` and `.5`.
 - CSS: a name and a colon start a declaration unless a `{` follows on the same line, which makes them a nested rule's selector (`a:hover {`). So a nested selector list split across lines (`a:hover,` then `b {` on the next line) reads its first line as a declaration. Rules at the top level of a stylesheet or of `@media` are never mistaken for declarations, only rules nested in a style block. Non-ASCII outside the BMP (emoji) in a class or id name isn't scoped as part of it.
 - HTML: a lexer doesn't track which elements are open, so a `<![CDATA[` section is recognised anywhere, not only inside SVG or MathML. `<script>` types are matched in lower case only (`text/JavaScript` stays raw text), and a second `type` after a JavaScript one switches the body again, where a browser keeps the first. Event handler attributes (`onclick="…"`) embed JavaScript, but entities in them (`&quot;`) aren't decoded first. Framework attributes (`:style`, `@click`, `v-bind:style`) stay plain strings.

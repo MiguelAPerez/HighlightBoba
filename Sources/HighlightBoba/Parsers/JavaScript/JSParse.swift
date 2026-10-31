@@ -63,15 +63,26 @@ final class JSParse {
         if jsx && jsxPunctuation("<") { relex(.lessThan) }
     }
 
-    /// The JSX states the lexer can be asked to leave at once (`jsxPop1`…).
-    static let jsxPopLimit = 16
+    /// The JSX states the lexer can be asked to leave at once (`jsxPop1`…`jsxPop32`). A root nests
+    /// at most `jsxMaxNesting` elements, so recovery never needs more.
+    static let jsxPopLimit = 32
+    static let jsxMaxNesting = jsxPopLimit - 1
+
+    /// The last `relexPopping` request: where, and how many states it pops.
+    private(set) var lastPop: (location: Int, count: Int)?
 
     /// Re-lexes the next token after popping `count` of the lexer's JSX states, to leave elements
     /// the parser has ended: a half-typed tag, or ones a stray `}` or an outer closing tag ends.
+    /// Requests at the same token add up: a request replaces the one before it there, so a tag
+    /// broken at a `}` and the elements that `}` then ends are popped together.
     @discardableResult
     func relexPopping(_ count: Int) -> Bool {
-        guard count > 0, count <= Self.jsxPopLimit else { return false }
-        return b.relex(as: "jsxPop\(count)")
+        guard let token = cur, count > 0 else { return false }
+        var total = count
+        if let last = lastPop, last.location == token.location { total += last.count }
+        guard total <= Self.jsxPopLimit, b.relex(as: "jsxPop\(total)") else { return false }
+        lastPop = (token.location, total)
+        return true
     }
 
     // MARK: Reading
