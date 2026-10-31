@@ -1,5 +1,18 @@
 # Changelog
 
+## 0.3.0 (2026-10-31)
+
+### Feat
+
+- JSX and TSX, with highlight queries (#23)
+- PHP grammar, embedded in HTML (#22)
+- cancellable background parses (#20)
+- CSS and HTML grammars, with embedded CSS, JavaScript and JSON (#21)
+
+### Fix
+
+- keep every parser's deep nesting well inside a 512 KB stack (#24)
+
 ## 0.2.0 (2026-10-31)
 
 ### Feat
