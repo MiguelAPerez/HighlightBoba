@@ -29,7 +29,7 @@ type in xs
 type X = int
 ^^^^ keyword
      ^ entity.name.type
-         ^^^ support.function
+         ^^^ entity.name.type
 match -x:
 ^^^^^ keyword
 match *a, b:

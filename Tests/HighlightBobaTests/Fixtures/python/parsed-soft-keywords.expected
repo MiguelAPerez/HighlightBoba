@@ -1,0 +1,79 @@
+match (x)
+match [x]
+match(x).y = 1
+             ^ constant.numeric
+match[0]: int = 1
+      ^ constant.numeric
+          ^^^ entity.name.type
+                ^ constant.numeric
+if match not in xs: pass
+^^ keyword
+         ^^^ keyword
+             ^^ keyword
+                    ^^^^ keyword
+case not in xs
+     ^^^ keyword
+         ^^ keyword
+case(1)
+     ^ constant.numeric
+match = case = type = 0
+               ^^^^ variable.other
+                      ^ constant.numeric
+print(match, case, type)
+^^^^^ support.function
+                   ^^^^ support.function
+
+match (x):
+^^^^^ keyword
+    case [a, _]:
+    ^^^^ keyword
+             ^ keyword
+        _ = a
+    case _ if _:
+    ^^^^ keyword
+         ^ keyword
+           ^^ keyword
+        pass
+        ^^^^ keyword
+match [x]:
+^^^^^ keyword
+    case Point(x=_):
+    ^^^^ keyword
+         ^^^^^ entity.name.type
+               ^ variable.parameter
+                 ^ keyword
+        pass
+        ^^^^ keyword
+match -x:
+^^^^^ keyword
+    case -1:
+    ^^^^ keyword
+          ^ constant.numeric
+        pass
+        ^^^^ keyword
+match *rest, last:
+^^^^^ keyword
+    case _:
+    ^^^^ keyword
+         ^ keyword
+        pass
+        ^^^^ keyword
+
+type Σ = int
+^^^^ keyword
+     ^ entity.name.type
+         ^^^ entity.name.type
+type ListOrSet[T] = list[T] | set[T]
+^^^^ keyword
+     ^^^^^^^^^ entity.name.type
+               ^ entity.name.type
+                    ^^^^ entity.name.type
+                         ^ entity.name.type
+                              ^^^ entity.name.type
+                                  ^ entity.name.type
+type(x)
+^^^^ support.function
+type.mro
+^^^^ support.function
+x.match, x.case, x.type
+

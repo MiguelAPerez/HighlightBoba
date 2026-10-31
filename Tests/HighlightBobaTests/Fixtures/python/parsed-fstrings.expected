@@ -1,0 +1,98 @@
+a = f"{x!r:>{width}.{precision}} {y=} {z = !s:^10} {{escaped}}"
+    ^^ string.quoted
+      ^ punctuation.section.embedded
+           ^ string.quoted
+            ^ punctuation.section.embedded
+                  ^ punctuation.section.embedded
+                   ^ string.quoted
+                    ^ punctuation.section.embedded
+                              ^^ punctuation.section.embedded
+                                ^ string.quoted
+                                 ^ punctuation.section.embedded
+                                    ^ punctuation.section.embedded
+                                     ^ string.quoted
+                                      ^ punctuation.section.embedded
+                                              ^^^ string.quoted
+                                                 ^ punctuation.section.embedded
+                                                  ^ string.quoted
+                                                   ^^ constant.character.escape
+                                                     ^^^^^^^ string.quoted
+                                                            ^^ constant.character.escape
+                                                              ^ string.quoted
+b = f"{'nested' + f'{inner:{spec}}'}"
+    ^^ string.quoted
+      ^ punctuation.section.embedded
+       ^^^^^^^^ string.quoted
+                  ^^ string.quoted
+                    ^ punctuation.section.embedded
+                           ^ punctuation.section.embedded
+                                ^^ punctuation.section.embedded
+                                  ^ string.quoted
+                                   ^ punctuation.section.embedded
+                                    ^ string.quoted
+c = f"{d['key']:%Y-%m-%d} {[i for i in range(3)]} {(lambda: 1)}"
+    ^^ string.quoted
+      ^ punctuation.section.embedded
+         ^^^^^ string.quoted
+                ^^^^^^^^ string.quoted
+                        ^ punctuation.section.embedded
+                         ^ string.quoted
+                          ^ punctuation.section.embedded
+                              ^^^ keyword
+                                    ^^ keyword
+                                       ^^^^^ support.function
+                                             ^ constant.numeric
+                                                ^ punctuation.section.embedded
+                                                 ^ string.quoted
+                                                  ^ punctuation.section.embedded
+                                                    ^^^^^^ keyword
+                                                            ^ constant.numeric
+                                                              ^ punctuation.section.embedded
+                                                               ^ string.quoted
+d = rf"\d{n}" F'{v:x}' "plain"
+    ^^^^^ string.quoted
+         ^ punctuation.section.embedded
+           ^ punctuation.section.embedded
+            ^ string.quoted
+              ^^ string.quoted
+                ^ punctuation.section.embedded
+                   ^ string.quoted
+                    ^ punctuation.section.embedded
+                     ^ string.quoted
+                       ^^^^^^^ string.quoted
+e = f"""{
+    ^^^^ string.quoted
+        ^ punctuation.section.embedded
+    first +
+    second
+}"""
+^ punctuation.section.embedded
+ ^^^ string.quoted
+f = f"{match} {case} {type} {_}"
+    ^^ string.quoted
+      ^ punctuation.section.embedded
+            ^ punctuation.section.embedded
+             ^ string.quoted
+              ^ punctuation.section.embedded
+                   ^ punctuation.section.embedded
+                    ^ string.quoted
+                     ^ punctuation.section.embedded
+                      ^^^^ support.function
+                          ^ punctuation.section.embedded
+                           ^ string.quoted
+                            ^ punctuation.section.embedded
+                              ^ punctuation.section.embedded
+                               ^ string.quoted
+g = f"{x:{'>' if right else '<'}10}"
+    ^^ string.quoted
+      ^ punctuation.section.embedded
+         ^ punctuation.section.embedded
+          ^^^ string.quoted
+              ^^ keyword
+                       ^^^^ keyword
+                            ^^^ string.quoted
+                               ^ punctuation.section.embedded
+                                ^^ string.quoted
+                                  ^ punctuation.section.embedded
+                                   ^ string.quoted
+

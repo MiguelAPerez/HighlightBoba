@@ -1,0 +1,128 @@
+import builtins as list
+^^^^^^ keyword
+                ^^ keyword
+                   ^^^^ variable.other
+from typing import Callable as type
+^^^^ keyword
+            ^^^^^^ keyword
+                   ^^^^^^^^ entity.name.type
+                            ^^ keyword
+                               ^^^^ variable.other
+
+@property
+^^^^^^^^^ entity.other.attribute
+@ functools.cache
+^ entity.other.attribute
+  ^^^^^^^^^ entity.other.attribute
+            ^^^^^ entity.other.attribute
+@app.route("/", methods=["GET"])
+^^^^^^^^^^ entity.other.attribute
+           ^^^ string.quoted
+                ^^^^^^^ variable.parameter
+                         ^^^^^ string.quoted
+def handler[T](self, cls, value: int | None = None, *args: str, list=list, **kwargs) -> dict[str, T]:
+^^^ keyword
+    ^^^^^^^ entity.name.function
+            ^ entity.name.type
+               ^^^^ variable.language
+                     ^^^ variable.language
+                          ^^^^^ variable.parameter
+                                 ^^^ entity.name.type
+                                       ^^^^ constant.language
+                                              ^^^^ constant.language
+                                                     ^^^^ variable.parameter
+                                                           ^^^ entity.name.type
+                                                                ^^^^ variable.parameter
+                                                                     ^^^^ support.function
+                                                                             ^^^^^^ variable.parameter
+                                                                                        ^^^^ entity.name.type
+                                                                                             ^^^ entity.name.type
+                                                                                                  ^ entity.name.type
+    print(sorted(kwargs, key=len), len(args))
+    ^^^^^ support.function
+          ^^^^^^ support.function
+                         ^^^ variable.parameter
+                             ^^^ support.function
+                                   ^^^ support.function
+    for list, (dict, *set) in pairs:
+    ^^^ keyword
+        ^^^^ variable.other
+               ^^^^ variable.other
+                      ^^^ variable.other
+                           ^^ keyword
+        str = "{}".format(self.format)
+        ^^^ variable.other
+              ^^^^ string.quoted
+                          ^^^^ variable.language
+    with open(path) as file, ctx() as (input, max):
+    ^^^^ keyword
+         ^^^^ support.function
+                    ^^ keyword
+                                   ^^ keyword
+                                       ^^^^^ variable.other
+                                              ^^^ variable.other
+        pass
+        ^^^^ keyword
+    try:
+    ^^^ keyword
+        pass
+        ^^^^ keyword
+    except ValueError as type:
+    ^^^^^^ keyword
+           ^^^^^^^^^^ entity.name.type
+                      ^^ keyword
+                         ^^^^ variable.other
+        pass
+        ^^^^ keyword
+    sum: int = 0
+    ^^^ variable.other
+         ^^^ entity.name.type
+               ^ constant.numeric
+    if (filter := next(it)) is not None:
+    ^^ keyword
+        ^^^^^^ variable.other
+                  ^^^^ support.function
+                            ^^ keyword
+                               ^^^ keyword
+                                   ^^^^ constant.language
+        object.self.cls = self.min(cls)
+        ^^^^^^ support.function
+                          ^^^^ variable.language
+                                   ^^^ variable.language
+    return lambda len=1, *a: len + a @ b @c
+    ^^^^^^ keyword
+           ^^^^^^ keyword
+                  ^^^ variable.parameter
+                      ^ constant.numeric
+                          ^ variable.parameter
+                             ^^^ support.function
+
+
+class Model[T: (int, str) = int, *Ts, **P](Base, metaclass=Meta):
+^^^^^ keyword
+      ^^^^^ entity.name.type
+            ^ entity.name.type
+                ^^^ entity.name.type
+                     ^^^ entity.name.type
+                            ^^^ entity.name.type
+                                  ^^ entity.name.type
+                                        ^ entity.name.type
+                                           ^^^^ entity.name.type
+                                                 ^^^^^^^^^ variable.parameter
+                                                           ^^^^ entity.name.type
+    count: ClassVar[int] = 0
+           ^^^^^^^^ entity.name.type
+                    ^^^ entity.name.type
+                           ^ constant.numeric
+    def __init__(self, x: "Forward", f: Callable[[int], str]) -> None: ...
+    ^^^ keyword
+        ^^^^^^^^ entity.name.function
+                 ^^^^ variable.language
+                       ^ variable.parameter
+                          ^^^^^^^^^ string.quoted
+                                     ^ variable.parameter
+                                        ^^^^^^^^ entity.name.type
+                                                  ^^^ entity.name.type
+                                                        ^^^ entity.name.type
+                                                                 ^^^^ constant.language
+

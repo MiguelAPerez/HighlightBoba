@@ -6,7 +6,7 @@ a = f"hello {name}!"
 b = f"{x!r:>10} and {{literal}} braces"
     ^^ string.quoted
       ^ punctuation.section.embedded
-            ^^ constant.numeric
+           ^^^ string.quoted
               ^ punctuation.section.embedded
                ^^^^^ string.quoted
                     ^^ constant.character.escape

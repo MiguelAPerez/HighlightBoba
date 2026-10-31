@@ -1,0 +1,61 @@
+def half(a, b
+^^^ keyword
+    ^^^^ entity.name.function
+         ^ variable.parameter
+            ^ variable.parameter
+    return a
+    ^^^^^^ keyword
+
+def no_colon(x)
+^^^ keyword
+    ^^^^^^^^ entity.name.function
+             ^ variable.parameter
+    y = x
+
+if ready
+^^ keyword
+    go()
+
+value = compute(1, 2
+                ^ constant.numeric
+                   ^ constant.numeric
+items = [1, 2,
+         ^ constant.numeric
+            ^ constant.numeric
+for item in items:
+^^^ keyword
+         ^^ keyword
+    print(item
+    ^^^^^ support.function
+
+class Broken(:
+^^^^^ keyword
+      ^^^^^^ entity.name.type
+    def ok(self):
+    ^^^ keyword
+        ^^ entity.name.function
+           ^^^^ variable.language
+        return self
+        ^^^^^^ keyword
+               ^^^^ variable.language
+
+    else:
+    ^^^^ keyword
+        pass
+        ^^^^ keyword
+  odd = 1
+        ^ constant.numeric
+x = 1 )
+    ^ constant.numeric
+match
+lambda: (]
+^^^^^^ keyword
+@decorator
+^^^^^^^^^^ entity.other.attribute
+y = 2
+    ^ constant.numeric
+def last(): return
+^^^ keyword
+    ^^^^ entity.name.function
+            ^^^^^^ keyword
+

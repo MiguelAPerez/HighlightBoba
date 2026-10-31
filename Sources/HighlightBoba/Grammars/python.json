@@ -810,6 +810,12 @@
           "push": "fieldNested"
         },
         {
+          "match": {
+            "literal": ":"
+          },
+          "push": "formatSpec"
+        },
+        {
           "include": "code"
         }
       ]
@@ -1008,6 +1014,60 @@
             "remembered": true
           },
           "pop": true
+        }
+      ]
+    },
+    "identifier": {
+      "rules": [
+        {
+          "match": {
+            "wordStarting": "[A-Za-z_]"
+          }
+        }
+      ]
+    },
+    "matmulOperator": {
+      "rules": [
+        {
+          "match": {
+            "literal": "@"
+          }
+        }
+      ]
+    },
+    "softKeywordName": {
+      "rules": [
+        {
+          "match": {
+            "words": [
+              "type"
+            ]
+          },
+          "scope": "support.function"
+        },
+        {
+          "match": {
+            "wordStarting": "[A-Za-z_]"
+          }
+        }
+      ]
+    },
+    "formatSpec": {
+      "scope": "string.quoted",
+      "rules": [
+        {
+          "match": {
+            "literal": "}"
+          },
+          "scope": "punctuation.section.embedded",
+          "pop": 2
+        },
+        {
+          "match": {
+            "literal": "{"
+          },
+          "scope": "punctuation.section.embedded",
+          "push": "field"
         }
       ]
     }
