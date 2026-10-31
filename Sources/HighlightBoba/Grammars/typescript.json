@@ -3,8 +3,7 @@
   "fileExtensions": [
     "ts",
     "mts",
-    "cts",
-    "tsx"
+    "cts"
   ],
   "initial": "code",
   "wordCharacters": "[A-Za-z0-9_$]",

@@ -11,7 +11,12 @@ import Testing
     static let fixtures = Fixture.all().filter { $0.language == "javascript" || $0.language == "typescript" }
 
     static func parser(_ language: String) -> JSParser {
-        JSParser(dialect: language == "typescript" ? .typescript : .javascript)
+        switch language {
+        case "typescript": JSParser(dialect: .typescript)
+        case "jsx": JSParser(dialect: .jsx)
+        case "tsx": JSParser(dialect: .tsx)
+        default: JSParser(dialect: .javascript)
+        }
     }
 
     /// Parses `text`, applies the tree's re-lexing and runs the bundled queries.

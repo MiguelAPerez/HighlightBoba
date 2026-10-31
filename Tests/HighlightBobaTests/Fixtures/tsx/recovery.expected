@@ -1,0 +1,53 @@
+function half(props: Props) {
+^^^^^^^^ keyword
+         ^^^^ entity.name.function
+              ^^^^^ variable.other
+                     ^^^^^ entity.name.type
+  return <Button onClick={() => go(props.id)}
+  ^^^^^^ keyword
+         ^ punctuation
+          ^^^^^^ entity.name.type
+                 ^^^^^^^ entity.other.attribute
+                         ^ punctuation.section.embedded
+                                ^^ variable.other
+                                   ^^^^^ variable.other
+                                            ^ punctuation.section.embedded
+}
+function unclosed(): JSX.Element {
+^^^^^^^^ keyword
+         ^^^^^^^^ entity.name.function
+                     ^^^ entity.name.type
+                         ^^^^^^^ entity.name.type
+  return <Panel<Item> items={list}>
+  ^^^^^^ keyword
+         ^ punctuation
+          ^^^^^ entity.name.type
+                ^^^^ entity.name.type
+                      ^^^^^ entity.other.attribute
+                            ^ punctuation.section.embedded
+                             ^^^^ variable.other
+                                 ^ punctuation.section.embedded
+                                  ^ punctuation
+    {list.map((item: Item) => <Row key={item.id}>{item.name})}
+    ^ punctuation.section.embedded
+     ^^^^ variable.other
+               ^^^^ variable.other
+                     ^^^^ entity.name.type
+                              ^ punctuation
+                               ^^^ entity.name.type
+                                   ^^^ entity.other.attribute
+                                       ^ punctuation.section.embedded
+                                        ^^^^ variable.other
+                                               ^ punctuation.section.embedded
+                                                ^ punctuation
+                                                 ^ punctuation.section.embedded
+                                                  ^^^^ variable.other
+                                                           ^ punctuation.section.embedded
+                                                             ^ punctuation.section.embedded
+}
+const next: number = 1;
+^^^^^ keyword
+      ^^^^ variable.other
+            ^^^^^^ entity.name.type
+                     ^ constant.numeric
+

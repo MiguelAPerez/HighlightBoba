@@ -123,9 +123,25 @@ Columns count characters, so carets line up under emoji. Ranges in the API are U
 
 `swift test` also writes `.build/fixture-report/index.html`: every fixture coloured by scope, with expected vs actual for any mismatch. CI uploads it as an artifact.
 
+## JSX and TSX
+
+`jsx.json` and `tsx.json` are generated: `javascript.json` and `typescript.json`, plus the states
+named `jsx…` from `jsx.json`, with `code` trying `jsxGuess` first. Edit the base grammar, or the
+JSX states in `jsx.json`, then run `python3 scripts/sync-jsx.py`; a test fails while they differ.
+The same script prepends the JSX queries to each base language's queries.
+
+- `jsxGuess` opens an element at a `<` before a name or `>` (`notAfter` an operand), or after
+  `return`, `yield` and the like. It leaves `<T,>` and `<T extends` alone, for TSX's generic arrows.
+- `jsxTag`, `jsxChildren` and `jsxClosingTag` are the element's: a tag's `>` replaces its state with
+  the children's (`"pop": 1` with `"push"`), and a closing tag's `>` pops both. `jsxExpression` is
+  code up to its `}`; `jsxTypeArguments` reads TSX's `<List<T>`.
+- `jsxStart`, `jsxLessThan`, `jsxLineString` and `jsxPop1`…`jsxPop32` exist only for the parser's
+  re-lex requests ([PARSER.md](PARSER.md#jsx-and-tsx)). A `jsxPop` state's one rule matches empty
+  text and only pops, which a rule may do.
+
 ## Known limits
 
-These are the lexer's. Where a language has a parser ([PARSER.md](PARSER.md#bundled-parsers)), it fixes the ones that need context: in JavaScript and TypeScript, regex versus division across lines, keyword-like names and keys, and `void` as an operator; in shell, command position (`echo done`), a `case` pattern's `)` inside `$( )`, a `<<` shift in arithmetic and a `<<\EOF` heredoc.
+These are the lexer's. Where a language has a parser ([PARSER.md](PARSER.md#bundled-parsers)), it fixes the ones that need context: in JavaScript and TypeScript, regex versus division across lines, keyword-like names and keys, and `void` as an operator; in JSX and TSX, an element versus `<`; in shell, command position (`echo done`), a `case` pattern's `)` inside `$( )`, a `<<` shift in arithmetic and a `<<\EOF` heredoc.
 
 - Look-behind is limited to the current line: `notAfter` can't see a token on the previous line.
 - Shell: a `#` right after a closing quote (`"a"#b`) starts a comment, though the shell reads it as part of the word. A comment is trivia, so the shell parser ([PARSER.md](PARSER.md#shell)) can't re-lex it.
@@ -134,6 +150,7 @@ These are the lexer's. Where a language has a parser ([PARSER.md](PARSER.md#bund
 - An unterminated YAML quote runs on until the next matching quote, because YAML quoted strings may span lines.
 - Markdown strikethrough, tables and entities, and YAML timestamps, have no scope in the vocabulary, so they stay plain.
 - Python: an f-string field left open (`f"{a`) runs on to the next `}`, past its line. Soft keywords are guessed from the line alone; the parser decides them (see [PARSER.md](PARSER.md#python)).
+- JSX: an attribute whose value is an element (`<a b=<c />>`) isn't read, and neither is a namespace spaced out (`<svg : rect>`). Inside one root, elements nest at most 31 deep (`jsxPop32` is the most the parser can pop at once); a `<` deeper than that reads as text. A `<` the lexer guessed wrong is fixed only when the parse runs ([PARSER.md](PARSER.md#jsx-and-tsx)).
 - JSON numbers are checked only for trailing ASCII letters: `1é` isn't flagged, and neither is a bare `-x`. Also unflagged: `01`, `1.` and `.5`.
 - CSS: a name and a colon start a declaration unless a `{` follows on the same line, which makes them a nested rule's selector (`a:hover {`). So a nested selector list split across lines (`a:hover,` then `b {` on the next line) reads its first line as a declaration. Rules at the top level of a stylesheet or of `@media` are never mistaken for declarations, only rules nested in a style block. Non-ASCII outside the BMP (emoji) in a class or id name isn't scoped as part of it.
 - HTML: a lexer doesn't track which elements are open, so a `<![CDATA[` section is recognised anywhere, not only inside SVG or MathML. `<script>` types are matched in lower case only (`text/JavaScript` stays raw text), and a second `type` after a JavaScript one switches the body again, where a browser keeps the first. Event handler attributes (`onclick="…"`) embed JavaScript, but entities in them (`&quot;`) aren't decoded first. Framework attributes (`:style`, `@click`, `v-bind:style`) stay plain strings.

@@ -3,8 +3,7 @@
   "fileExtensions": [
     "js",
     "mjs",
-    "cjs",
-    "jsx"
+    "cjs"
   ],
   "initial": "code",
   "wordCharacters": "[A-Za-z0-9_$]",

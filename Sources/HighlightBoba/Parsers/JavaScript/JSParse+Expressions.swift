@@ -51,11 +51,27 @@ extension JSParse {
         if atWord("async") && !newlineBetween(0, 1) {
             if isIdentifier(1) && arrow(at: 2) { return true }
             if atSym("(", 1) { return arrowFollows(parenAt: 1) }
-            if ts && atSym("<", 1) { return genericArrow(at: 1) }
+            if ts && atSym("<", 1) { return typeParametersCanStart(at: 1) && genericArrow(at: 1) }
         }
         if atSym("(") { return arrowFollows(parenAt: 0) }
-        if ts && atSym("<") { return genericArrow(at: 0) }
+        if ts && (atSym("<") || jsxPunctuation("<")) && typeParametersCanStart(at: 0) {
+            angleIfNeeded()
+            return genericArrow(at: 0)
+        }
         return false
+    }
+
+    /// In TSX, `<T>` where an expression starts is an element, so type parameters there are
+    /// written `<T,>` or `<T extends U>`. Elsewhere any `<` may open them.
+    @inline(never)
+    func typeParametersCanStart(at start: Int) -> Bool {
+        guard jsx else { return true }
+        let name = atWord("const", start + 1) && isIdentifier(start + 2) ? start + 2 : start + 1
+        guard isIdentifier(name) else { return false }
+        if atSym(",", name + 1) { return true }
+        // `<T extends>` is an element with an attribute named `extends`.
+        guard atWord("extends", name + 1) else { return false }
+        return !atSym("=", name + 2) && !atSym(">", name + 2) && !atSym("/", name + 2)
     }
 
     func arrowFunction(noIn: Bool) {
@@ -118,6 +134,7 @@ extension JSParse {
         unary()
         while true {
             divisionIfNeeded()
+            angleIfNeeded()
             guard let (spelling, level) = binaryOperator(noIn: noIn), level >= minimum else { return }
             if spelling == "as" || spelling == "satisfies" {
                 typeCast(spelling, from: mark)
@@ -173,7 +190,7 @@ extension JSParse {
         switch word() {
         case "typeof", "void", "delete": return .keyword
         case "await": return .await
-        default: return ts && atSym("<") ? .assertion : .operand
+        default: return ts && !jsx && atSym("<") ? .assertion : .operand
         }
     }
 
@@ -225,6 +242,7 @@ extension JSParse {
 
     @inline(never)
     func chainStep(calls: Bool) -> ChainStep {
+        angleIfNeeded()
         guard let token = cur else { return .end }
         let spelling = op()
         if spelling == "." { return .member }
@@ -351,13 +369,14 @@ extension JSParse {
 
     enum PrimaryStart {
         case token, string, template, parenthesized, array, object, privateName, decoratedClass
-        case function, classExpression, new, identifier, missing
+        case function, classExpression, new, identifier, jsx, missing
     }
 
     /// What the primary expression at the next token is. A `/` the lexer took for division is
     /// re-lexed as a regex first, since an operand starts here.
     @inline(never)
     func primaryStart() -> PrimaryStart {
+        if jsx && atJSXElement { return .jsx }
         if atSym("/") { relex(.regex) }
         guard let token = cur else { return .missing }
         switch token.kind {
@@ -419,6 +438,7 @@ extension JSParse {
         case .classExpression: classDeclaration(JSKind.classExpression)
         case .new: newExpression()
         case .identifier: wrap(JSKind.identifier)
+        case .jsx: jsxRoot()
         case .missing: error("expected an expression")
         }
     }

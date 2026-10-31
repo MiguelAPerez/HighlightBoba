@@ -1,0 +1,28 @@
+import React, { useState } from "react";
+
+// A component: lowercase tags are elements, capitalised ones components.
+export default function TodoList({ items, onToggle, ...rest }) {
+  const [filter, setFilter] = useState("all");
+  const shown = items.filter(item => filter === "all" || item.done < 1);
+  return (
+    <section className="todos" data-filter={filter} {...rest}>
+      <Header.Title level={2}>Things to do &amp; done&#33;</Header.Title>
+      <ul aria-label='todo list'>
+        {shown.map(item => (
+          <li key={item.id} onClick={() => onToggle(item.id)}>
+            {item.done ? <s>{item.text}</s> : item.text}
+          </li>
+        ))}
+      </ul>
+      {/* if this is empty, say so */}
+      {shown.length === 0 && <p>Nothing here, it's if/else-free: return true</p>}
+      <svg:rect xlink:href="#shape" width="10" />
+      <my-widget disabled />
+      <>
+        Fragment text with a 'quote' and a "double" one
+      </>
+    </section>
+  );
+}
+
+const ratio = total / count < 2 ? <b>low</b> : /x/.test(s);

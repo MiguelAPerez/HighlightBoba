@@ -8,8 +8,11 @@ import Foundation
 /// token when its guess was wrong (see `JSParse.Relex`). In TypeScript it tells `f<T>(x)` from
 /// `a < b`, and closes `Map<K, Array<V>>` one `>` at a time: the lexer leaves operators as
 /// one-character symbols, so `>>` is never one token to split.
+///
+/// The JSX and TSX dialects add JSX elements. A `<` where an expression starts opens one, and the
+/// parser asks the lexer to read it in the grammar's JSX states (see `JSParse+JSX.swift`).
 public struct JSParser: IncrementalParser {
-    public enum Dialect: Sendable { case javascript, typescript }
+    public enum Dialect: Sendable { case javascript, typescript, jsx, tsx }
 
     public let dialect: Dialect
 
@@ -171,4 +174,21 @@ public enum JSKind {
     public static let parenthesizedType = SyntaxKind("parenthesized_type")
     public static let templateLiteralType = SyntaxKind("template_literal_type")
     public static let typePredicate = SyntaxKind("type_predicate")
+
+    // JSX.
+    /// An element or fragment: its opening tag, children and closing tag, or one self-closing tag.
+    public static let jsxElement = SyntaxKind("jsx_element")
+    /// An element's tags: `<a href="…">`, `<br />`, `</a>`; a fragment's are `<>` and `</>`.
+    public static let jsxOpeningTag = SyntaxKind("jsx_opening_tag")
+    public static let jsxSelfClosingTag = SyntaxKind("jsx_self_closing_tag")
+    public static let jsxClosingTag = SyntaxKind("jsx_closing_tag")
+    /// An intrinsic element's name: `div`, `my-element`, `svg:rect`.
+    public static let jsxTagName = SyntaxKind("jsx_tag_name")
+    /// A component's name: `Button`, `Foo.Bar`, `this.Item`.
+    public static let jsxComponentName = SyntaxKind("jsx_component_name")
+    public static let jsxAttribute = SyntaxKind("jsx_attribute")
+    public static let jsxAttributeName = SyntaxKind("jsx_attribute_name")
+    /// `{expression}`, `{...spread}` or an empty `{/* comment */}`, as an attribute or a child.
+    public static let jsxExpression = SyntaxKind("jsx_expression")
+    public static let jsxText = SyntaxKind("jsx_text")
 }

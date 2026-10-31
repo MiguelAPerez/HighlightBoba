@@ -1,0 +1,31 @@
+const small = total
+^^^^^ keyword
+      ^^^^^ variable.other
+              ^^^^^ variable.other
+  <limit && ok;
+   ^^^^^ variable.other
+            ^^ variable.other
+const html = render(<p>a</p>, root) < 2;
+^^^^^ keyword
+      ^^^^ variable.other
+             ^^^^^^ variable.other
+                    ^ punctuation
+                     ^ entity.name.tag
+                      ^ punctuation
+                        ^^ punctuation
+                          ^ entity.name.tag
+                           ^ punctuation
+                              ^^^^ variable.other
+                                      ^ constant.numeric
+const regex = (<b>x</b>) / 2 / 3;
+^^^^^ keyword
+      ^^^^^ variable.other
+               ^ punctuation
+                ^ entity.name.tag
+                 ^ punctuation
+                   ^^ punctuation
+                     ^ entity.name.tag
+                      ^ punctuation
+                           ^ constant.numeric
+                               ^ constant.numeric
+

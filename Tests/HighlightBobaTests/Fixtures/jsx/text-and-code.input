@@ -1,0 +1,10 @@
+const note = (
+  <p>
+    function return class if else "not a string" 'nor this' `nor this`
+    // not a comment
+    1 + 2 = {1 + 2}, a &lt; b is {String(a < b)}
+    &nbsp;&lt;tag&gt;&#169;&#xA9;&notAnEntity
+  </p>
+);
+const less = a < b && c > d;
+const nested = <A>{cond && <B>{list.map(x => <C key={x} />)}</B>}</A>;

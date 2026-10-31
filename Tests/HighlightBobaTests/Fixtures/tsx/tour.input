@@ -1,0 +1,26 @@
+import { useState, type ReactNode } from "react";
+
+interface CardProps<T> {
+  title: string;
+  items: readonly T[];
+  render?: (item: T) => ReactNode;
+}
+
+// In TSX `<T>` starts an element, so generic arrows are written `<T,>` or `<T extends U>`.
+export const identity = <T,>(value: T): T => value;
+const byKey = <K extends keyof Item>(key: K) => (item: Item) => item[key];
+
+export function Card<T extends { id: string }>({ title, items, render }: CardProps<T>) {
+  const [open, setOpen] = useState<boolean>(false);
+  const count = items.length as number;
+  const few = count < 3 && count > 0;
+  return (
+    <article className={open ? "open" : undefined} onClick={() => setOpen(!open)}>
+      <h2 title={title satisfies string}>{title} &mdash; {count}</h2>
+      <List<T> items={items} render={render ?? ((item: T) => <span>{item.id}</span>)} />
+      {few ? <Badge kind="few" /> : null}
+    </article>
+  );
+}
+
+const el = <T>not a cast</T>;

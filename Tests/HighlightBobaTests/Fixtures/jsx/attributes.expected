@@ -1,0 +1,100 @@
+const a = <input type="text" value={value} disabled />;
+^^^^^ keyword
+      ^ variable.other
+          ^ punctuation
+           ^^^^^ entity.name.tag
+                 ^^^^ entity.other.attribute
+                      ^^^^^^ string.quoted
+                             ^^^^^ entity.other.attribute
+                                   ^ punctuation.section.embedded
+                                    ^^^^^ variable.other
+                                         ^ punctuation.section.embedded
+                                           ^^^^^^^^ entity.other.attribute
+                                                    ^^ punctuation
+const b = <div style={{ color: "red", margin: 0 }} {...props} />;
+^^^^^ keyword
+      ^ variable.other
+          ^ punctuation
+           ^^^ entity.name.tag
+               ^^^^^ entity.other.attribute
+                     ^ punctuation.section.embedded
+                        ^^^^^ support.type.property-name
+                               ^^^^^ string.quoted
+                                      ^^^^^^ support.type.property-name
+                                              ^ constant.numeric
+                                                 ^ punctuation.section.embedded
+                                                   ^ punctuation.section.embedded
+                                                       ^^^^^ variable.other
+                                                            ^ punctuation.section.embedded
+                                                              ^^ punctuation
+const c = <img
+^^^^^ keyword
+      ^ variable.other
+          ^ punctuation
+           ^^^ entity.name.tag
+  src="a.png"
+  ^^^ entity.other.attribute
+      ^^^^^^^ string.quoted
+  alt="a picture
+  ^^^ entity.other.attribute
+      ^^^^^^^^^^ string.quoted
+       across lines"
+^^^^^^^^^^^^^^^^^^^^ string.quoted
+/>;
+^^ punctuation
+const d = <a href='https://x.test/?a=1&amp;b=2' title="&quot;hi&quot; &#x1F9CB;">link</a>;
+^^^^^ keyword
+      ^ variable.other
+          ^ punctuation
+           ^ entity.name.tag
+             ^^^^ entity.other.attribute
+                  ^^^^^^^^^^^^^^^^^^^^ string.quoted
+                                      ^^^^^ constant.character.escape
+                                           ^^^^ string.quoted
+                                                ^^^^^ entity.other.attribute
+                                                      ^ string.quoted
+                                                       ^^^^^^ constant.character.escape
+                                                             ^^ string.quoted
+                                                               ^^^^^^ constant.character.escape
+                                                                     ^ string.quoted
+                                                                      ^^^^^^^^^ constant.character.escape
+                                                                               ^ string.quoted
+                                                                                ^ punctuation
+                                                                                     ^^ punctuation
+                                                                                       ^ entity.name.tag
+                                                                                        ^ punctuation
+const e = <Foo.Bar.Baz this-is="ok" ns:attr="v" />;
+^^^^^ keyword
+      ^ variable.other
+          ^ punctuation
+           ^^^ entity.name.type
+               ^^^ entity.name.type
+                   ^^^ entity.name.type
+                       ^^^^ entity.other.attribute
+                           ^ entity.other.attribute
+                            ^^ entity.other.attribute
+                               ^^^^ string.quoted
+                                    ^^ entity.other.attribute
+                                      ^ entity.other.attribute
+                                       ^^^^ entity.other.attribute
+                                            ^^^ string.quoted
+                                                ^^ punctuation
+const f = <this.Item />;
+^^^^^ keyword
+      ^ variable.other
+          ^ punctuation
+           ^^^^ variable.language
+                ^^^^ entity.name.type
+                     ^^ punctuation
+const g = <div /* a comment */ id="x" // and another
+^^^^^ keyword
+      ^ variable.other
+          ^ punctuation
+           ^^^ entity.name.tag
+               ^^^^^^^^^^^^^^^ comment.block
+                               ^^ entity.other.attribute
+                                  ^^^ string.quoted
+                                      ^^^^^^^^^^^^^^ comment.line
+  />;
+  ^^ punctuation
+

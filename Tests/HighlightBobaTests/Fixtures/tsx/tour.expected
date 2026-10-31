@@ -1,0 +1,172 @@
+import { useState, type ReactNode } from "react";
+^^^^^^ keyword
+         ^^^^^^^^ variable.other
+                   ^^^^ keyword
+                        ^^^^^^^^^ entity.name.type
+                                    ^^^^ keyword
+                                         ^^^^^^^ string.quoted
+
+interface CardProps<T> {
+^^^^^^^^^ keyword
+          ^^^^^^^^^ entity.name.type
+                    ^ entity.name.type
+  title: string;
+  ^^^^^ support.type.property-name
+         ^^^^^^ entity.name.type
+  items: readonly T[];
+  ^^^^^ support.type.property-name
+         ^^^^^^^^ keyword
+                  ^ entity.name.type
+  render?: (item: T) => ReactNode;
+  ^^^^^^ support.type.property-name
+            ^^^^ variable.other
+                  ^ entity.name.type
+                        ^^^^^^^^^ entity.name.type
+}
+
+// In TSX `<T>` starts an element, so generic arrows are written `<T,>` or `<T extends U>`.
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ comment.line
+export const identity = <T,>(value: T): T => value;
+^^^^^^ keyword
+       ^^^^^ keyword
+             ^^^^^^^^ variable.other
+                         ^ entity.name.type
+                             ^^^^^ variable.other
+                                    ^ entity.name.type
+                                        ^ entity.name.type
+                                             ^^^^^ variable.other
+const byKey = <K extends keyof Item>(key: K) => (item: Item) => item[key];
+^^^^^ keyword
+      ^^^^^ variable.other
+               ^ entity.name.type
+                 ^^^^^^^ keyword
+                         ^^^^^ keyword
+                               ^^^^ entity.name.type
+                                     ^^^ variable.other
+                                          ^ entity.name.type
+                                                 ^^^^ variable.other
+                                                       ^^^^ entity.name.type
+                                                                ^^^^ variable.other
+                                                                     ^^^ variable.other
+
+export function Card<T extends { id: string }>({ title, items, render }: CardProps<T>) {
+^^^^^^ keyword
+       ^^^^^^^^ keyword
+                ^^^^ entity.name.function
+                     ^ entity.name.type
+                       ^^^^^^^ keyword
+                                 ^^ support.type.property-name
+                                     ^^^^^^ entity.name.type
+                                                 ^^^^^ variable.other
+                                                        ^^^^^ variable.other
+                                                               ^^^^^^ variable.other
+                                                                         ^^^^^^^^^ entity.name.type
+                                                                                   ^ entity.name.type
+  const [open, setOpen] = useState<boolean>(false);
+  ^^^^^ keyword
+         ^^^^ variable.other
+               ^^^^^^^ variable.other
+                          ^^^^^^^^ variable.other
+                                   ^^^^^^^ entity.name.type
+                                            ^^^^^ constant.language
+  const count = items.length as number;
+  ^^^^^ keyword
+        ^^^^^ variable.other
+                ^^^^^ variable.other
+                             ^^ keyword
+                                ^^^^^^ entity.name.type
+  const few = count < 3 && count > 0;
+  ^^^^^ keyword
+        ^^^ variable.other
+              ^^^^^ variable.other
+                      ^ constant.numeric
+                           ^^^^^ variable.other
+                                   ^ constant.numeric
+  return (
+  ^^^^^^ keyword
+    <article className={open ? "open" : undefined} onClick={() => setOpen(!open)}>
+    ^ punctuation
+     ^^^^^^^ entity.name.tag
+             ^^^^^^^^^ entity.other.attribute
+                       ^ punctuation.section.embedded
+                        ^^^^ variable.other
+                               ^^^^^^ string.quoted
+                                        ^^^^^^^^^ constant.language
+                                                 ^ punctuation.section.embedded
+                                                   ^^^^^^^ entity.other.attribute
+                                                           ^ punctuation.section.embedded
+                                                                  ^^^^^^^ variable.other
+                                                                           ^^^^ variable.other
+                                                                                ^ punctuation.section.embedded
+                                                                                 ^ punctuation
+      <h2 title={title satisfies string}>{title} &mdash; {count}</h2>
+      ^ punctuation
+       ^^ entity.name.tag
+          ^^^^^ entity.other.attribute
+                ^ punctuation.section.embedded
+                 ^^^^^ variable.other
+                       ^^^^^^^^^ keyword
+                                 ^^^^^^ entity.name.type
+                                       ^ punctuation.section.embedded
+                                        ^ punctuation
+                                         ^ punctuation.section.embedded
+                                          ^^^^^ variable.other
+                                               ^ punctuation.section.embedded
+                                                 ^^^^^^^ constant.character.escape
+                                                         ^ punctuation.section.embedded
+                                                          ^^^^^ variable.other
+                                                               ^ punctuation.section.embedded
+                                                                ^^ punctuation
+                                                                  ^^ entity.name.tag
+                                                                    ^ punctuation
+      <List<T> items={items} render={render ?? ((item: T) => <span>{item.id}</span>)} />
+      ^ punctuation
+       ^^^^ entity.name.type
+            ^ entity.name.type
+               ^^^^^ entity.other.attribute
+                     ^ punctuation.section.embedded
+                      ^^^^^ variable.other
+                           ^ punctuation.section.embedded
+                             ^^^^^^ entity.other.attribute
+                                    ^ punctuation.section.embedded
+                                     ^^^^^^ variable.other
+                                                 ^^^^ variable.other
+                                                       ^ entity.name.type
+                                                             ^ punctuation
+                                                              ^^^^ entity.name.tag
+                                                                  ^ punctuation
+                                                                   ^ punctuation.section.embedded
+                                                                    ^^^^ variable.other
+                                                                           ^ punctuation.section.embedded
+                                                                            ^^ punctuation
+                                                                              ^^^^ entity.name.tag
+                                                                                  ^ punctuation
+                                                                                    ^ punctuation.section.embedded
+                                                                                      ^^ punctuation
+      {few ? <Badge kind="few" /> : null}
+      ^ punctuation.section.embedded
+       ^^^ variable.other
+             ^ punctuation
+              ^^^^^ entity.name.type
+                    ^^^^ entity.other.attribute
+                         ^^^^^ string.quoted
+                               ^^ punctuation
+                                    ^^^^ constant.language
+                                        ^ punctuation.section.embedded
+    </article>
+    ^^ punctuation
+      ^^^^^^^ entity.name.tag
+             ^ punctuation
+  );
+}
+
+const el = <T>not a cast</T>;
+^^^^^ keyword
+      ^^ variable.other
+           ^ punctuation
+            ^ entity.name.type
+             ^ punctuation
+                        ^^ punctuation
+                          ^ entity.name.type
+                           ^ punctuation
+
