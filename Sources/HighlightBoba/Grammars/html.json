@@ -275,7 +275,7 @@
           },
           "captures": [
             "punctuation",
-            "entity.name.type"
+            "entity.name.tag"
           ],
           "push": "endTag"
         },
@@ -332,7 +332,7 @@
           },
           "captures": [
             "punctuation",
-            "entity.name.type",
+            "entity.name.tag",
             null
           ],
           "push": "plaintextTag"
@@ -387,7 +387,7 @@
           },
           "captures": [
             "punctuation",
-            "entity.name.type",
+            "entity.name.tag",
             null
           ],
           "push": "textareaTag"
@@ -442,7 +442,7 @@
           },
           "captures": [
             "punctuation",
-            "entity.name.type",
+            "entity.name.tag",
             null
           ],
           "push": "noframesTag"
@@ -494,7 +494,7 @@
           },
           "captures": [
             "punctuation",
-            "entity.name.type",
+            "entity.name.tag",
             null
           ],
           "push": "noembedTag"
@@ -543,7 +543,7 @@
           },
           "captures": [
             "punctuation",
-            "entity.name.type",
+            "entity.name.tag",
             null
           ],
           "push": "iframeTag"
@@ -592,7 +592,7 @@
           },
           "captures": [
             "punctuation",
-            "entity.name.type",
+            "entity.name.tag",
             null
           ],
           "push": "scriptJSTag"
@@ -638,7 +638,7 @@
           },
           "captures": [
             "punctuation",
-            "entity.name.type",
+            "entity.name.tag",
             null
           ],
           "push": "styleTag"
@@ -684,7 +684,7 @@
           },
           "captures": [
             "punctuation",
-            "entity.name.type",
+            "entity.name.tag",
             null
           ],
           "push": "titleTag"
@@ -724,7 +724,7 @@
           },
           "captures": [
             "punctuation",
-            "entity.name.type",
+            "entity.name.tag",
             null
           ],
           "push": "xmpTag"
@@ -749,7 +749,7 @@
           },
           "captures": [
             "punctuation",
-            "entity.name.type"
+            "entity.name.tag"
           ],
           "push": "tag"
         },
@@ -950,7 +950,7 @@
           },
           "captures": [
             "punctuation",
-            "entity.name.type",
+            "entity.name.tag",
             null
           ],
           "pop": true,
@@ -1029,7 +1029,7 @@
           },
           "captures": [
             "punctuation",
-            "entity.name.type",
+            "entity.name.tag",
             null
           ],
           "pop": true,
@@ -1111,7 +1111,7 @@
           },
           "captures": [
             "punctuation",
-            "entity.name.type",
+            "entity.name.tag",
             null
           ],
           "pop": true,
@@ -1234,7 +1234,7 @@
           },
           "captures": [
             "punctuation",
-            "entity.name.type",
+            "entity.name.tag",
             null
           ],
           "pop": true,
@@ -1288,7 +1288,7 @@
           },
           "captures": [
             "punctuation",
-            "entity.name.type",
+            "entity.name.tag",
             null
           ],
           "pop": true,
@@ -1434,7 +1434,7 @@
           },
           "captures": [
             "punctuation",
-            "entity.name.type",
+            "entity.name.tag",
             null
           ],
           "pop": true,
@@ -1841,7 +1841,7 @@
           },
           "captures": [
             "punctuation",
-            "entity.name.type",
+            "entity.name.tag",
             null
           ],
           "pop": true,
@@ -2190,7 +2190,7 @@
           },
           "captures": [
             "punctuation",
-            "entity.name.type",
+            "entity.name.tag",
             null
           ],
           "pop": true,
@@ -2266,7 +2266,7 @@
           },
           "captures": [
             "punctuation",
-            "entity.name.type",
+            "entity.name.tag",
             null
           ],
           "pop": true,
@@ -2353,7 +2353,7 @@
           },
           "captures": [
             "punctuation",
-            "entity.name.type",
+            "entity.name.tag",
             null
           ],
           "pop": true,

@@ -922,7 +922,7 @@
           "match": {
             "literal": "*"
           },
-          "scope": "entity.name.type"
+          "scope": "entity.name.tag"
         },
         {
           "match": {
@@ -963,7 +963,7 @@
               }
             ]
           },
-          "scope": "entity.name.type"
+          "scope": "entity.name.tag"
         },
         {
           "match": {

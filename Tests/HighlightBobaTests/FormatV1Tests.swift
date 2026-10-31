@@ -186,9 +186,9 @@ import Testing
         #expect(Self.tokens("<d>color: red</>", grammar) == [
             "keyword:<d>", "support.type.property-name:color", "punctuation::", "keyword:</>"
         ], "declarations, not a selector")
-        #expect(Self.tokens("<s>color</>", grammar) == ["keyword:<s>", "entity.name.type:color", "keyword:</>"],
+        #expect(Self.tokens("<s>color</>", grammar) == ["keyword:<s>", "entity.name.tag:color", "keyword:</>"],
                 "without embedState the guest starts in its initial state")
-        #expect(Self.tokens("<x>color</>", grammar) == ["keyword:<x>", "entity.name.type:color", "keyword:</>"],
+        #expect(Self.tokens("<x>color</>", grammar) == ["keyword:<x>", "entity.name.tag:color", "keyword:</>"],
                 "an unknown state falls back to the initial state")
     }
 

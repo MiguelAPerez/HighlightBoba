@@ -8,9 +8,9 @@ $a = 1; // c
 ^^ punctuation.section.embedded
 <p>x</p>
 ^ punctuation
- ^ entity.name.type
+ ^ entity.name.tag
   ^ punctuation
     ^^ punctuation
-      ^ entity.name.type
+      ^ entity.name.tag
        ^ punctuation
 

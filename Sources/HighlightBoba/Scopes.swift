@@ -14,6 +14,7 @@ public enum Scopes {
         "variable.language",
         "entity.name.type",
         "entity.name.function",
+        "entity.name.tag",
         "support.type.property-name",
         "entity.other.attribute",
         "meta.preprocessor",

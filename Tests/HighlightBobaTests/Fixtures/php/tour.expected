@@ -195,17 +195,17 @@ $raw = <<<'RAW'
              ^^ punctuation.section.embedded
 <title><?= htmlspecialchars($title) ?></title>
 ^ punctuation
- ^^^^^ entity.name.type
+ ^^^^^ entity.name.tag
       ^ punctuation
        ^^^ punctuation.section.embedded
                             ^^^^^^ variable.other
                                     ^^ punctuation.section.embedded
                                       ^^ punctuation
-                                        ^^^^^ entity.name.type
+                                        ^^^^^ entity.name.tag
                                              ^ punctuation
 <a href="/user/<?= $id ?>" class="<?php echo $cls; ?>">link</a>
 ^ punctuation
- ^ entity.name.type
+ ^ entity.name.tag
    ^^^^ entity.other.attribute
        ^ punctuation
         ^^^^^^^ string.quoted
@@ -223,11 +223,11 @@ $raw = <<<'RAW'
                                                      ^ string.quoted
                                                       ^ punctuation
                                                            ^^ punctuation
-                                                             ^ entity.name.type
+                                                             ^ entity.name.tag
                                                               ^ punctuation
 <script>let x = "<?= json_encode($data) ?>";</script>
 ^ punctuation
- ^^^^^^ entity.name.type
+ ^^^^^^ entity.name.tag
        ^ punctuation
         ^^^ keyword
                 ^ string.quoted
@@ -236,7 +236,7 @@ $raw = <<<'RAW'
                                         ^^ punctuation.section.embedded
                                           ^ string.quoted
                                             ^^ punctuation
-                                              ^^^^^^ entity.name.type
+                                              ^^^^^^ entity.name.tag
                                                     ^ punctuation
 <?php if ($ok): ?>
 ^^^^^ punctuation.section.embedded
@@ -245,10 +245,10 @@ $raw = <<<'RAW'
                 ^^ punctuation.section.embedded
   <b>yes</b>
   ^ punctuation
-   ^ entity.name.type
+   ^ entity.name.tag
     ^ punctuation
         ^^ punctuation
-          ^ entity.name.type
+          ^ entity.name.tag
            ^ punctuation
 <?php endif; # hash comment
 ^^^^^ punctuation.section.embedded

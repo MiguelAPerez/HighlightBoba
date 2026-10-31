@@ -130,10 +130,10 @@ $emoji = "🧋 $tea";
 ^^ punctuation.section.embedded
 <p>🧋 html</p>
 ^ punctuation
- ^ entity.name.type
+ ^ entity.name.tag
   ^ punctuation
          ^^ punctuation
-           ^ entity.name.type
+           ^ entity.name.tag
             ^ punctuation
 <? echo "short tag" ?>
 ^^ punctuation.section.embedded

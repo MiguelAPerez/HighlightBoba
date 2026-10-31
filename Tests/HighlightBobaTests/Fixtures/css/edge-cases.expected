@@ -1,10 +1,10 @@
 a{color:red}a:hover{color:blue}.x{b:c;d:hover{e:f}}
-^ entity.name.type
+^ entity.name.tag
  ^ punctuation
   ^^^^^ support.type.property-name
        ^ punctuation
            ^ punctuation
-            ^ entity.name.type
+            ^ entity.name.tag
              ^^^^^^ entity.other.attribute
                    ^ punctuation
                     ^^^^^ support.type.property-name
@@ -15,7 +15,7 @@ a{color:red}a:hover{color:blue}.x{b:c;d:hover{e:f}}
                                   ^ support.type.property-name
                                    ^ punctuation
                                      ^ punctuation
-                                      ^ entity.name.type
+                                      ^ entity.name.tag
                                        ^^^^^^ entity.other.attribute
                                              ^ punctuation
                                               ^ support.type.property-name
@@ -118,7 +118,7 @@ two"; background: url(unclosed
                                                                   ^ punctuation
                                                                     ^ punctuation
 DIV.Upper { COLOR: RED; }
-^^^ entity.name.type
+^^^ entity.name.tag
    ^^^^^^ entity.other.attribute
           ^ punctuation
             ^^^^^ support.type.property-name
@@ -128,19 +128,19 @@ DIV.Upper { COLOR: RED; }
 :is(h1, h2):where(.a) > p:has(> img) { all: revert-layer }
 ^^^ entity.other.attribute
    ^ punctuation
-    ^^ entity.name.type
+    ^^ entity.name.tag
       ^ punctuation
-        ^^ entity.name.type
+        ^^ entity.name.tag
           ^ punctuation
            ^^^^^^ entity.other.attribute
                  ^ punctuation
                   ^^ entity.other.attribute
                     ^ punctuation
                       ^ punctuation
-                        ^ entity.name.type
+                        ^ entity.name.tag
                          ^^^^ entity.other.attribute
                              ^^ punctuation
-                                ^^^ entity.name.type
+                                ^^^ entity.name.tag
                                    ^ punctuation
                                      ^ punctuation
                                        ^^^ support.type.property-name

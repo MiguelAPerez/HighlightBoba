@@ -12,7 +12,7 @@ Text
                  ^^ punctuation.section.embedded
 <p style="color: red">x</p>
 ^ punctuation
- ^ entity.name.type
+ ^ entity.name.tag
    ^^^^^ entity.other.attribute
         ^ punctuation
          ^ string.quoted
@@ -21,7 +21,7 @@ Text
                     ^ string.quoted
                      ^ punctuation
                        ^^ punctuation
-                         ^ entity.name.type
+                         ^ entity.name.tag
                           ^ punctuation
 ```
 ^^^ punctuation
