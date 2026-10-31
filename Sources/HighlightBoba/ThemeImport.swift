@@ -164,7 +164,11 @@ extension ParsedTheme {
         guard let root = json as? [String: Any] else { throw ThemeImportError.unreadable("not a JSON object") }
         let colors = root["colors"] as? [String: Any] ?? [:]
         let tokenColors = root["tokenColors"] as? [[String: Any]]
-        guard tokenColors != nil || !colors.isEmpty else { throw ThemeImportError.unreadable("no colors or tokenColors") }
+        // A theme has token colours or editor colours; any JSON with a
+        // "colors" object (a chart's, an app's settings) isn't one.
+        guard tokenColors != nil || colors.keys.contains(where: { $0.hasPrefix("editor.") }) else {
+            throw ThemeImportError.unreadable("no tokenColors or editor colors")
+        }
 
         let type = (root["type"] as? String)?.lowercased() ?? "dark"
         let dark = !(type == "light" || type == "hclight")

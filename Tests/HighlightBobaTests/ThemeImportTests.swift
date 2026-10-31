@@ -133,6 +133,14 @@ import Testing
         #expect(throws: ThemeImportError.self) { try Self.vsCode(text) }
     }
 
+    /// Any JSON object with a "colors" dictionary passed, so with no format
+    /// given, some other app's settings file "imported" as an empty theme
+    /// (cursor[bot] on #30).
+    @Test func colorsWithoutAnyEditorKeyIsntATheme() {
+        #expect(throws: ThemeImportError.self) { try Self.vsCode(##"{"colors": {"chart.primary": "#FF0000"}}"##) }
+        #expect(throws: ThemeImportError.self) { try HighlightTheme(importing: Data(##"{"colors": {"chart.primary": "#FF0000"}}"##.utf8)) }
+    }
+
     @Test func rejectsAHugeFile() {
         let huge = Data(repeating: 0x20, count: HighlightTheme.maximumImportSize + 1)
         #expect(throws: ThemeImportError.tooLarge(bytes: huge.count)) { try HighlightTheme(importing: huge) }
