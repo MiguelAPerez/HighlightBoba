@@ -41,12 +41,14 @@ struct Lexing: Sendable {
         self.grammar = grammar
         self.registry = registry
         self.units = units
+        initialStack = grammar.startStack(registry: registry)
         let scan = scan(from: 0, stack: initialStack) { _, _ in false }
         lines = scan.lines
         steps = scan.steps
     }
 
-    var initialStack: [Frame] { [Frame(state: grammar.initial)] }
+    /// The stack the text starts with, carrying the grammar's document embed.
+    let initialStack: [Frame]
 
     func startStack(ofLine index: Int) -> [Frame] { index == 0 ? initialStack : lines[index - 1].endStack }
 

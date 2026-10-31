@@ -1,0 +1,35 @@
+Text
+
+```php
+^^^ punctuation
+   ^^^ keyword
+<?php echo "$a"; ?>
+^^^^^ punctuation.section.embedded
+      ^^^^ keyword
+           ^ string.quoted
+            ^^ variable.other
+              ^ string.quoted
+                 ^^ punctuation.section.embedded
+<p style="color: red">x</p>
+^ punctuation
+ ^ entity.name.type
+   ^^^^^ entity.other.attribute
+        ^ punctuation
+         ^ string.quoted
+          ^^^^^ support.type.property-name
+               ^ punctuation
+                    ^ string.quoted
+                     ^ punctuation
+                       ^^ punctuation
+                         ^ entity.name.type
+                          ^ punctuation
+```
+^^^ punctuation
+
+```php
+^^^ punctuation
+   ^^^ keyword
+$plain = 1;
+```
+^^^ punctuation
+

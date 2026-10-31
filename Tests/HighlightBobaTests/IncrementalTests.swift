@@ -27,6 +27,8 @@ struct SeededGenerator: RandomNumberGenerator {
         "yaml": ["key: ", "- ", "|", ">-", "\n", "  ", "    ", "\"", "'", "#", "true", "1.5", "&a", "[", "]"],
         "markdown": ["```", "````", "~~~", "swift", "json", "yaml", "\n", " ", "**", "*", "_", "`", "# ", "> ", "- ", "/*", "\"", "x", "<div>", "<!--", "-->", "\n\n", "[a]: u", "][b]", "==="],
         "shell": ["<<EOF", "<<'R'", "<<-T", "EOF", "R", "\tT", "\n", "$x", "${", "}", "$(", ")", "\"", "'", "#", "x", " ", "\\", "\\'"],
+        "php": ["<?php ", "<?= ", "?>", "<p>", "</p>", "\n", " ", "$x", "\"", "'", "{$", "}", "${", "<<<EOT\n", "EOT;", "<<<'N'\n",
+                "N", "//", "#", "#[", "]", "/*", "*/", "\\", "<script>", "</script>", "(int)", "fn", "🧋"],
         "heredoc": ["<<EOF", "<<-'END'", "EOF", "END", "\t", "\n", "x", " ", "EOFX", "\r\n"],
         "fence": ["```", "````", "swift", "json", "\n", " ", "/*", "*/", "\"", "let", "x", "cobol"],
         "block": ["key:", " |", " >", "\n", "  ", "    ", "line", "\n\n", "a"],
@@ -50,7 +52,7 @@ struct SeededGenerator: RandomNumberGenerator {
         (0..<count).map { _ in pieces.randomElement(using: &rng)! }.joined()
     }
 
-    @Test(arguments: ["swift", "python", "json", "javascript", "typescript", "go", "yaml", "markdown", "shell", "css", "html", "heredoc", "fence", "block"])
+    @Test(arguments: ["swift", "python", "json", "javascript", "typescript", "go", "yaml", "markdown", "shell", "css", "html", "php", "heredoc", "fence", "block"])
     func incrementalMatchesFullRehighlight(_ language: String) throws {
         let grammar = try Self.grammar(language)
         let pieces = Self.fragments[language]!

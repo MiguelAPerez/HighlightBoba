@@ -169,8 +169,21 @@ public final class Grammar: Sendable {
     let capturePool: [Int32]
     let embedNames: [String]
     let initial: Int
+    /// A grammar that highlights the whole document beneath this one's rules: PHP's HTML.
+    let documentEmbed: String?
     let classes: [CharClass]
     let wordClass: Int
+
+    /// The stack a document starts with: the initial state, carrying the document embed if it resolves.
+    /// `depth` is how deeply this grammar is itself embedded.
+    func startStack(registry: GrammarRegistry, depth: Int = 0) -> [Frame] {
+        var frame = Frame(state: initial)
+        if depth < LineScanner.maxEmbedDepth, let documentEmbed, let guest = registry.grammar(named: documentEmbed),
+           guest !== self {
+            frame.guest = Guest(grammar: guest, stack: [Frame(state: guest.initial)])
+        }
+        return [frame]
+    }
 
     /// The id of the state named `name`, for re-lex requests.
     func stateID(named name: String) -> Int? { stateNames.firstIndex(of: name) }
@@ -204,7 +217,7 @@ public final class Grammar: Sendable {
     }
 
     private init(root: [String: Any]) throws {
-        try Self.checkKeys(root, allowed: ["name", "fileExtensions", "initial", "wordCharacters", "states"], at: "grammar")
+        try Self.checkKeys(root, allowed: ["name", "fileExtensions", "initial", "embed", "wordCharacters", "states"], at: "grammar")
         guard let name = root["name"] as? String, !name.isEmpty else { throw GrammarError("grammar needs a \"name\"") }
         guard let rawStates = root["states"] as? [String: Any], !rawStates.isEmpty else {
             throw GrammarError("grammar \(name) needs a non-empty \"states\" object")
@@ -345,6 +358,7 @@ public final class Grammar: Sendable {
         self.name = name
         self.fileExtensions = root["fileExtensions"] as? [String] ?? []
         self.initial = initial
+        self.documentEmbed = root["embed"] as? String
         self.scopes = builder.scopes
         self.scopeIDs = builder.scopes.map { Scopes.Table.shared.id(for: $0) }
         self.classes = builder.classes

@@ -41,6 +41,10 @@ import Testing
         ("html", "script and style openers", { String(repeating: "<script><style>", count: $0 / 15) }),
         ("html", "style attributes", { String(repeating: "<p style=\"a:b\" onclick='f()'>", count: $0 / 30) }),
         ("html", "entity-like runs", { String(repeating: "&a&#x", count: $0 / 5) }),
+        ("php", "open and close tags", { String(repeating: "<?php ?>", count: $0 / 8) }),
+        ("php", "heredoc openers on one line", { "<?php " + String(repeating: "<<<A ", count: $0 / 5) }),
+        ("php", "interpolation openers", { "<?php \"" + String(repeating: "{$a", count: $0 / 3) }),
+        ("php", "tags inside HTML attributes", { String(repeating: "<a b=\"<?= $c ?>\">", count: $0 / 18) }),
         ("block", "deep indentation", { String(repeating: "a: |\n" + String(repeating: " ", count: 40) + "x\n", count: $0 / 48) })
     ]
 

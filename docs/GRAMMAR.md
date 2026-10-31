@@ -36,6 +36,7 @@ It is **not** a regex engine and not a parser. Matchers come from a small closed
 | `name` | Must match the file name. |
 | `fileExtensions` | Extensions this grammar handles, without the dot. |
 | `initial` | The state at the start of the document. |
+| `embed` | Optional. A grammar that highlights the whole document beneath this one, as PHP's `"embed": "html"` does: the initial state's rules are tried first at every position, and text they don't match goes to the embedded grammar, whose state survives the pushes and pops above it. Counts toward the embedding depth cap. |
 | `wordCharacters` | Optional class used for word boundaries (`words`, `wordStarting`, `notAfterWord`). Default `[A-Za-z0-9_]`. |
 | `states` | Named states. |
 
@@ -96,6 +97,7 @@ Nothing ever backtracks: `repeat` keeps its whole run, and `anyOf` keeps its fir
 - **Heredoc:** `{"seq":[{"literal":"<<"},{"opt":{"literal":"-"}},{"wordStarting":"[A-Za-z_]"}]}` with `"push":"heredoc","remember":2`, closed in `heredoc` by `{"seq":[{"bol":true},{"repeat":"[\\t]"},{"remembered":true},{"eol":true}]}`.
 - **Fenced code:** remember the backtick run, `embedPart` the language tag, and close with `bol`, up to three spaces, `remembered`, then `{"repeat":"[`]"}` so a longer fence also closes it.
 - **Raw text up to a closing tag:** HTML's `<script>` pushes a body state that embeds JavaScript and whose only rule is the case-insensitive `</script` followed by a space, `/`, `>` or the line end. The host's rules come first, so the body ends there even inside a JavaScript string, as it does in a browser. The `type` attribute picks the body: its rule pops the tag state and pushes a sibling whose `>` pushes the JSON or raw-text body instead.
+- **Islands in a document:** PHP's initial state has only the `<?php`, `<?=` and `<?` openers, and its `embed` hands everything else to HTML. An opener pushes `code`, whose `?>` pops back, so HTML resumes exactly where it was, even mid-attribute (`href="<?= $u ?>"`) or inside an embedded script. Without a `?>` the file stays PHP to the end.
 - **Keys vs values:** use states, not lookahead. JSON's grammar has `object`, `member` and `array` states, so a string is a key exactly when it appears where a key belongs.
 
 ## Scopes
@@ -135,4 +137,5 @@ These are the lexer's. Where a language has a parser ([PARSER.md](PARSER.md#bund
 - JSON numbers are checked only for trailing ASCII letters: `1é` isn't flagged, and neither is a bare `-x`. Also unflagged: `01`, `1.` and `.5`.
 - CSS: a name and a colon start a declaration unless a `{` follows on the same line, which makes them a nested rule's selector (`a:hover {`). So a nested selector list split across lines (`a:hover,` then `b {` on the next line) reads its first line as a declaration. Rules at the top level of a stylesheet or of `@media` are never mistaken for declarations, only rules nested in a style block. Non-ASCII outside the BMP (emoji) in a class or id name isn't scoped as part of it.
 - HTML: a lexer doesn't track which elements are open, so a `<![CDATA[` section is recognised anywhere, not only inside SVG or MathML. `<script>` types are matched in lower case only (`text/JavaScript` stays raw text), and a second `type` after a JavaScript one switches the body again, where a browser keeps the first. Event handler attributes (`onclick="…"`) embed JavaScript, but entities in them (`&quot;`) aren't decoded first. Framework attributes (`:style`, `@click`, `v-bind:style`) stay plain strings.
+- PHP: `<?` alone opens PHP, as if `short_open_tag` were on. Keywords and `true`/`false`/`null` are matched in lower, UPPER or Title case only, so `ElseIf` isn't a keyword. A name and a colon after `(`, `,` or at a line start read as a named argument, so a `goto` label at a line start (`end:`) does too. Class names are recognised by shape: a capital followed somewhere by a lower-case letter, so `PHP_EOL` stays a constant but a lower-case class name isn't scoped. A ```` ```php ```` fence in Markdown without `<?php` reads as HTML, as the file would. Tags that PHP itself prints (`<<?= $tag ?>>`) aren't seen by HTML, and data after `__halt_compiler();` is still highlighted as PHP.
 - Embedding nests at most four grammars deep, and a remembered delimiter is capped at 256 UTF-16 units.

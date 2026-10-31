@@ -1,0 +1,61 @@
+<?php
+declare(strict_types=1);
+
+namespace App\Models;
+
+use App\Contracts\HasName;
+use function strlen as len;
+
+/**
+ * A tour of PHP: every construct once.
+ */
+#[Attribute(Attribute::TARGET_CLASS), Deprecated]
+final readonly class User implements HasName
+{
+    public const MAX = 0x7F_FF + 0b1010 + 0o17 + 017 + 1_000_000 + 1.5e-3 + .5;
+
+    public function __construct(
+        private string $name,
+        protected ?int $age = null,
+    ) {}
+
+    public static function make(string ...$names): static
+    {
+        return new static(name: $names[0], age: 30);
+    }
+
+    public function greet(): string
+    {
+        $fn = fn(int $x): int => $x * 2;
+        $n = (int) $this->age ?? 0;
+        $s = (string)$n . PHP_EOL . __CLASS__;
+        return "Hi $this->name, {$this->age} and ${n} and $list[0] \t\u{1F9CB}\$";
+    }
+}
+
+enum Suit: string
+{
+    case Hearts = 'H';
+    case Spades = 'S\'s';
+}
+
+$label = match (true) {
+    $user?->age > 18 => 'adult',
+    default => 'minor',
+};
+
+$html = <<<HTML
+    <p>{$user->name} costs \$5</p>
+    HTML;
+$raw = <<<'RAW'
+  no $interpolation {$here}
+  RAW;
+
+// a comment ?> back in HTML
+<title><?= htmlspecialchars($title) ?></title>
+<a href="/user/<?= $id ?>" class="<?php echo $cls; ?>">link</a>
+<script>let x = "<?= json_encode($data) ?>";</script>
+<?php if ($ok): ?>
+  <b>yes</b>
+<?php endif; # hash comment
+echo Suit::Hearts->value, Suit::class, TRUE, Null;

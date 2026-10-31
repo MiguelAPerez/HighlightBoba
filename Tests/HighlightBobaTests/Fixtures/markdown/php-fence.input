@@ -1,0 +1,10 @@
+Text
+
+```php
+<?php echo "$a"; ?>
+<p style="color: red">x</p>
+```
+
+```php
+$plain = 1;
+```

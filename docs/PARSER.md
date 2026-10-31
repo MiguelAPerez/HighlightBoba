@@ -243,6 +243,11 @@ context. The one ambiguity, a declaration versus a nested selector inside a styl
 by looking ahead for a `{` on the line; a parser would only add the rare case of a selector list
 split across lines. See [Known limits](GRAMMAR.md#known-limits).
 
+PHP is lexer-only too. Its fixtures needed no context the lexer lacks: casts, `?->`, `::class`, `fn`,
+`match`, enum cases, attributes and named arguments all have a local shape, and heredoc markers are
+remembered delimiters. What a parser could add is small (a `goto` label versus a named argument, a
+lower-case class name), so it isn't worth a second tokenizer's worth of code.
+
 ### Swift
 
 `SwiftParser` reads declarations (with generics, `where` clauses, attributes and modifiers),

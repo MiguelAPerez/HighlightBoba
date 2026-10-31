@@ -1,0 +1,148 @@
+<?PHP echo 1 ?><?php
+^^^^^ punctuation.section.embedded
+      ^^^^ keyword
+           ^ constant.numeric
+             ^^^^^^^ punctuation.section.embedded
+$a = "no ?> close in a string";
+^^ variable.other
+     ^^^^^^^^^^^^^^^^^^^^^^^^^ string.quoted
+/* nor ?> in a block comment */
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ comment.block
+$b = 'single $no {$interp}' . "multi
+^^ variable.other
+     ^^^^^^^^^^^^^^^^^^^^^^ string.quoted
+                              ^^^^^^ string.quoted
+line string with {$a['k']["c"]} and $obj?->prop";
+^^^^^^^^^^^^^^^^^ string.quoted
+                 ^ punctuation.section.embedded
+                  ^^ variable.other
+                     ^^^ string.quoted
+                          ^^^ string.quoted
+                              ^ punctuation.section.embedded
+                               ^^^^^ string.quoted
+                                    ^^^^^^^^^^^ variable.other
+                                               ^ string.quoted
+$c = <<<"EOT"
+^^ variable.other
+     ^^^^^^^^ keyword
+  EOTX is not the end
+^^^^^^^^^^^^^^^^^^^^^ string.quoted
+  value: {$a}
+^^^^^^^^^ string.quoted
+         ^ punctuation.section.embedded
+          ^^ variable.other
+            ^ punctuation.section.embedded
+  EOT . 'tail';
+^^^^^ keyword
+        ^^^^^^ string.quoted
+$d = foo(<<<EOT
+^^ variable.other
+         ^^^^^^ keyword
+    body
+^^^^^^^^ string.quoted
+    EOT, 2);
+^^^^^^^ keyword
+         ^ constant.numeric
+$e = 0X1F + 1e10 + 1_000.5_0 + 07_7;
+^^ variable.other
+     ^^^^ constant.numeric
+            ^^^^ constant.numeric
+                   ^^^^^^^^^ constant.numeric
+                               ^^^^ constant.numeric
+$f = ( float ) $x + (object)[] + (bool)$y;
+^^ variable.other
+     ^ punctuation
+       ^^^^^ entity.name.type
+             ^ punctuation
+               ^^ variable.other
+                    ^ punctuation
+                     ^^^^^^ entity.name.type
+                           ^ punctuation
+                                 ^ punctuation
+                                  ^^^^ entity.name.type
+                                      ^ punctuation
+                                       ^^ variable.other
+$g = $obj?->a?->b()::c;
+^^ variable.other
+     ^^^^ variable.other
+         ^^^ punctuation
+             ^^^ punctuation
+                   ^^ punctuation
+$h = $$name . $this . self::X . parent::y();
+^^ variable.other
+     ^^^^^^ variable.other
+              ^^^^^ variable.language
+                      ^^^^ variable.language
+                          ^^ punctuation
+                                ^^^^^^ variable.language
+                                      ^^ punctuation
+#not an attribute
+^^^^^^^^^^^^^^^^^ comment.line
+#[\Foo\Bar(1, [2, 3]), Baz]
+^^ punctuation
+  ^^^^^^^^ entity.name.type
+           ^ constant.numeric
+               ^ constant.numeric
+                  ^ constant.numeric
+                       ^^^ entity.name.type
+                          ^ punctuation
+function &ref(array &$arr = []): ?array { return $arr; }
+^^^^^^^^ keyword
+          ^^^ entity.name.function
+              ^^^^^ keyword
+                     ^^^^ variable.other
+                                  ^^^^^ keyword
+                                          ^^^^^^ keyword
+                                                 ^^^^ variable.other
+switch ($x) { case FOO: break; default: goto end; }
+^^^^^^ keyword
+        ^^ variable.other
+              ^^^^ keyword
+                        ^^^^^ keyword
+                               ^^^^^^^ keyword
+                                        ^^^^ keyword
+end: echo 1;
+^^^ variable.parameter
+     ^^^^ keyword
+          ^ constant.numeric
+$t = $x ? CONST_A : CONST_B;
+^^ variable.other
+     ^^ variable.other
+f(
+    first: 1,
+    ^^^^^ variable.parameter
+           ^ constant.numeric
+    second: 2,
+    ^^^^^^ variable.parameter
+            ^ constant.numeric
+);
+IF ($x) { ECHO "upper"; }
+^^ keyword
+    ^^ variable.other
+          ^^^^ keyword
+               ^^^^^^^ string.quoted
+$emoji = "🧋 $tea";
+^^^^^^ variable.other
+         ^^^ string.quoted
+            ^^^^ variable.other
+                ^ string.quoted
+?>
+^^ punctuation.section.embedded
+<p>🧋 html</p>
+^ punctuation
+ ^ entity.name.type
+  ^ punctuation
+         ^^ punctuation
+           ^ entity.name.type
+            ^ punctuation
+<? echo "short tag" ?>
+^^ punctuation.section.embedded
+   ^^^^ keyword
+        ^^^^^^^^^^^ string.quoted
+                    ^^ punctuation.section.embedded
+<?php
+^^^^^ punctuation.section.embedded
+// no closing tag: the rest stays PHP
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ comment.line
+<p>not html</p>
+

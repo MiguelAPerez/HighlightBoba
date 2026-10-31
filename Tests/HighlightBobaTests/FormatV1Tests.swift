@@ -192,6 +192,20 @@ import Testing
                 "an unknown state falls back to the initial state")
     }
 
+    @Test func documentEmbedHighlightsBetweenTheHostsIslands() throws {
+        let grammar = try Grammar(data: Data(#"""
+        {"name":"t","initial":"doc","embed":"json","states":{
+          "doc":{"rules":[{"match":{"literal":"<%"},"scope":"keyword","push":"island"}]},
+          "island":{"rules":[{"match":{"literal":"%>"},"scope":"keyword","pop":true},
+                             {"match":{"words":["x"]},"scope":"variable.other"}]}}}
+        """#.utf8))
+        #expect(Self.tokens("[true, \"a<% x %>b\"]\n<% x\n%> null", grammar) == [
+            "punctuation:[", "constant.language:true", "punctuation:,", "string.quoted:\"a", "keyword:<%",
+            "variable.other:x", "keyword:%>", "string.quoted:b\"", "punctuation:]", "keyword:<%", "variable.other:x",
+            "keyword:%>", "constant.language:null"
+        ], "the embedded document's state survives an island, across lines too")
+    }
+
     // MARK: validation
 
     @Test(arguments: [
