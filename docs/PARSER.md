@@ -291,3 +291,37 @@ name used as a value (`const string = 1`) is a variable.
 
 **Depth.** Constructs nest at most 200 nodes deep (`JSParse.maxDepth`): deeper, the parser records an
 error and stops nesting, so a parse fits a background thread's 512 KB stack even in a debug build.
+
+### Shell
+
+`ShellParser` reads POSIX sh and bash: simple commands with their assignments and redirections,
+pipelines (`|`, `|&`, `!`, `time`, `coproc`), `&&`/`||` lists, every compound command (`{ }`, `( )`,
+`if`, `while`, `until`, `for`, `select`, `case`, `(( ))`, `[[ ]]`), both forms of function
+definition, `$( )`, backticks, `<( )`, `${ }`, `$(( ))` and heredoc bodies, which it reads after the
+line their operator is on. It knows **command position**, so a reserved word is a keyword only where
+a command starts, and it re-lexes keywords and builtin names in an argument as plain words: in
+`echo if then done`, only `echo` is coloured. Its queries refine:
+
+| What | Scope |
+|------|-------|
+| A builtin used as a command (`echo`, `cd`, `[`, `.`) | `support.function`; `local`, `export`, `return`… keep `keyword` |
+| Any other command name (`ls`, `./configure`, `git-lfs`) | `entity.name.function` |
+| A declared function's name, `my-tool::run` included | `entity.name.function` |
+| A variable assigned, or named by `for`, `select`, `read`, `export`, `local`, `declare`, `unset`, `getopts`, `mapfile`, `printf -v`; a name in `(( ))` | `variable.other` |
+| An option: `-x`, `--flag` (not its `=value`), `--` | `variable.parameter` |
+| A `case` pattern, the regex after `=~` | `string.regexp` |
+| A test operator in `[[ ]]`: `-f`, `==`, `&&`, `!` | `keyword` |
+
+It also re-lexes the `)` ending a `case` pattern inside `$( )`, which the lexer takes for the
+substitution's end; a `<<` shift in `$(( ))` or `(( ))`, which the lexer takes for a heredoc; and a
+`<<\EOF` heredoc, which the lexer doesn't recognise.
+
+Its reparse boundaries are the compound commands and `$( )`, so a function body is one. Whether a
+token starts one is decided from the token and the character after it, never from lookahead, and
+`parseBlock` decides it again, so an edit that changes the decision falls back. Inside backticks, or
+on a line whose heredoc bodies are still to come, a compound command gets a twin kind
+(`braceGroupInContext`…) that isn't a boundary, because its parse depends on what is around it.
+Editing a heredoc's delimiter re-lexes the lines after it, so the lexer check sends that edit to a
+bigger block or a whole parse.
+
+Nesting stops at 64 open nodes, or sooner when less than 160 KB of the thread's stack is left.

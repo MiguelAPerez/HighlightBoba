@@ -1,10 +1,13 @@
 cat <<EOF | grep x
+^^^ entity.name.function
     ^^^^^ keyword
+            ^^^^ entity.name.function
 Hello $USER, today is $(date)
 ^^^^^^ string.quoted
       ^^^^^ variable.other
            ^^^^^^^^^^^ string.quoted
                       ^^ punctuation.section.embedded
+                        ^^^^ entity.name.function
                             ^ punctuation.section.embedded
 not EOF yet
 ^^^^^^^^^^^ string.quoted
@@ -13,18 +16,21 @@ EOFX
 EOF
 ^^^ keyword
 cat <<'RAW' > out.txt
+^^^ entity.name.function
     ^^^^^^^ keyword
 no $expansion here
 ^^^^^^^^^^^^^^^^^^ string.quoted
 RAW
 ^^^ keyword
 	cat <<-INDENT
+ ^^^ entity.name.function
      ^^^^^^^^^ keyword
 	tab-indented body
 ^^^^^^^^^^^^^^^^^^ string.quoted
 	INDENT
 ^^^^^^^ keyword
 cat <<A <<B
+^^^ entity.name.function
     ^^^ keyword
         ^^^ keyword
 first body

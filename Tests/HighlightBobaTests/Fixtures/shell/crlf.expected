@@ -1,4 +1,5 @@
 cat <<EOF
+^^^ entity.name.function
     ^^^^^ keyword
 body $x
 ^^^^^ string.quoted

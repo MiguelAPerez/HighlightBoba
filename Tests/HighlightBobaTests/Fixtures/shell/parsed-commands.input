@@ -1,0 +1,14 @@
+# Reserved words and builtin names are keywords only in command position.
+echo if then else fi done esac true
+printf '%s\n' for while do; echo time in select
+if true; then echo done; fi
+x=1 y=$(true) if
+make CC=clang --jobs=4 -k -- target
+git-lfs pull; ./configure --prefix=/usr; /usr/bin/env bash -c 'exit 0'
+sudo echo test; command -v echo
+export EDITOR=vim PAGER; local -a items=(one two) count
+declare -A map=([key]=value); readonly LIMIT=5 test=1
+read -r -d '' -a lines name; mapfile -t rows; unset -v old; unset -f handler
+getopts "ab:" flag; printf -v stamp '%(%F)T' -1
+time -p sort file | uniq -c >counts 2>&1 &
+! grep -q x file && echo missing || echo found

@@ -1,0 +1,40 @@
+if true; then echo missing fi
+^^ keyword
+   ^^^^ support.function
+         ^^^^ keyword
+              ^^^^ support.function
+echo next
+^^^^ support.function
+while; do done
+^^^^^ keyword
+       ^^ keyword
+          ^^^^ keyword
+{ echo unclosed
+  ^^^^ support.function
+fi
+^^ keyword
+case x in a) echo
+^^^^ keyword
+       ^^ keyword
+          ^ string.regexp
+             ^^^^ support.function
+done
+^^^^ keyword
+echo ) after
+^^^^ support.function
+       ^^^^^ entity.name.function
+[[ -f x
+   ^ keyword
+    ^ keyword
+x=(a b; echo after
+^ variable.other
+        ^^^^ support.function
+f() echo not a body
+^ entity.name.function
+    ^^^^ support.function
+echo && || echo
+^^^^ support.function
+           ^^^^ support.function
+echo last
+^^^^ support.function
+

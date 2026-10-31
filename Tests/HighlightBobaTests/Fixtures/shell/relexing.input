@@ -1,0 +1,8 @@
+lower=$(case "$1" in [A-Z]*) echo upper;; *) echo lower;; esac) after=done
+echo "$(case $x in a) echo a;; esac)" still a string
+echo $((1 << bits)) next
+(( mask = 1 << shift )); echo after
+cat <<\END
+no $expansion in here
+END
+echo back to code

@@ -1,0 +1,13 @@
+if true; then echo missing fi
+echo next
+while; do done
+{ echo unclosed
+fi
+case x in a) echo
+done
+echo ) after
+[[ -f x
+x=(a b; echo after
+f() echo not a body
+echo && || echo
+echo last

@@ -81,6 +81,15 @@
         }
       ]
     },
+    "caseClose": {
+      "rules": [
+        {
+          "match": {
+            "literal": ")"
+          }
+        }
+      ]
+    },
     "code": {
       "rules": [
         {
@@ -345,6 +354,37 @@
         }
       ]
     },
+    "escapedHeredoc": {
+      "rules": [
+        {
+          "match": {
+            "seq": [
+              {
+                "literal": "<<"
+              },
+              {
+                "opt": {
+                  "literal": "-"
+                }
+              },
+              {
+                "repeat": "[ \\t]"
+              },
+              {
+                "literal": "\\"
+              },
+              {
+                "wordStarting": "[A-Za-z_]"
+              }
+            ]
+          },
+          "scope": "keyword",
+          "push": "rawHeredoc",
+          "remember": 4,
+          "pushAtNextLine": true
+        }
+      ]
+    },
     "heredoc": {
       "scope": "string.quoted",
       "rules": [
@@ -399,6 +439,15 @@
         }
       ]
     },
+    "plainWord": {
+      "rules": [
+        {
+          "match": {
+            "wordStarting": "[A-Za-z_]"
+          }
+        }
+      ]
+    },
     "rawHeredoc": {
       "scope": "string.quoted",
       "rules": [
@@ -421,6 +470,15 @@
           },
           "scope": "keyword",
           "pop": true
+        }
+      ]
+    },
+    "shiftOperator": {
+      "rules": [
+        {
+          "match": {
+            "literal": "<<"
+          }
         }
       ]
     },

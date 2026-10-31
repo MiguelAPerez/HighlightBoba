@@ -4,7 +4,10 @@
 ^^^^^^^^^ comment.line
 set -euo pipefail
 ^^^ support.function
+    ^ variable.parameter
+     ^^^ variable.parameter
 name="world $USER ${HOME}/x \$literal"
+^^^^ variable.other
      ^^^^^^^ string.quoted
             ^^^^^ variable.other
                  ^ string.quoted
@@ -28,6 +31,7 @@ echo 'single $not' "$1 $@ $#" $'tab\there'
 greet() { local who=${1:-you}; printf "%s\n" "Hi $who"; }
 ^^^^^ entity.name.function
           ^^^^^ keyword
+                ^^^ variable.other
                     ^^^^^^^^^ variable.other
                                ^^^^^^ support.function
                                       ^^^^^^ string.quoted
@@ -37,34 +41,49 @@ greet() { local who=${1:-you}; printf "%s\n" "Hi $who"; }
 function cleanup { rm -rf "$tmp"; }
 ^^^^^^^^ keyword
          ^^^^^^^ entity.name.function
+                   ^^ entity.name.function
+                      ^ variable.parameter
+                       ^^ variable.parameter
                           ^ string.quoted
                            ^^^^ variable.other
                                ^ string.quoted
 files=$(ls "$dir" | grep -v '^\.') count=$(( ${#arr[@]} + 1 ))
+^^^^^ variable.other
       ^^ punctuation.section.embedded
+        ^^ entity.name.function
            ^ string.quoted
             ^^^^ variable.other
                 ^ string.quoted
+                    ^^^^ entity.name.function
+                         ^ variable.parameter
+                          ^ variable.parameter
                             ^^^^^ string.quoted
                                  ^ punctuation.section.embedded
+                                   ^^^^^ variable.other
                                          ^^^ punctuation.section.embedded
                                              ^^^^^^^^^^ variable.other
                                                             ^^ punctuation.section.embedded
 for f in *.txt; do if [ -f "$f" ]; then echo `basename $f`; fi; done
 ^^^ keyword
+    ^ variable.other
       ^^ keyword
                 ^^ keyword
                    ^^ keyword
+                      ^ support.function
+                        ^ variable.parameter
+                         ^ variable.parameter
                            ^ string.quoted
                             ^^ variable.other
                               ^ string.quoted
                                    ^^^^ keyword
                                         ^^^^ support.function
                                              ^ punctuation.section.embedded
+                                              ^^^^^^^^ entity.name.function
                                                        ^^ variable.other
                                                          ^ punctuation.section.embedded
                                                             ^^ keyword
                                                                 ^^^^ keyword
 url=http://host/a#b # real comment
+^^^ variable.other
                     ^^^^^^^^^^^^^^ comment.line
 

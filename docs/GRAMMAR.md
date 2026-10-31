@@ -121,10 +121,10 @@ Columns count characters, so carets line up under emoji. Ranges in the API are U
 
 ## Known limits
 
-These are the lexer's. Where a language has a parser ([PARSER.md](PARSER.md#bundled-parsers)), it fixes the ones that need context: in JavaScript and TypeScript, regex versus division across lines, keyword-like names and keys, and `void` as an operator.
+These are the lexer's. Where a language has a parser ([PARSER.md](PARSER.md#bundled-parsers)), it fixes the ones that need context: in JavaScript and TypeScript, regex versus division across lines, keyword-like names and keys, and `void` as an operator; in shell, command position (`echo done`), a `case` pattern's `)` inside `$( )`, a `<<` shift in arithmetic and a `<<\EOF` heredoc.
 
 - Look-behind is limited to the current line: `notAfter` can't see a token on the previous line.
-- Lexers don't know command position: shell keywords like `done` are highlighted as arguments too (`echo done`). The parser layer fixes this for languages that get one.
+- Shell: a `#` right after a closing quote (`"a"#b`) starts a comment, though the shell reads it as part of the word. A comment is trivia, so the shell parser ([PARSER.md](PARSER.md#shell)) can't re-lex it.
 - Lexers don't know what a name is for: Swift's scopes `get`, `some` or `async` as keywords wherever they appear, and every capitalized word as a type. Swift's parser fixes these ([PARSER.md](PARSER.md#swift)).
 - Markdown has no look-ahead to a closing delimiter, so an unclosed `*`, `_` or `` ` `` colours to the end of the line; setext heading text (the line above `===`) isn't scoped, only the underline; and indented code isn't told apart from list continuation. Without the previous line, a lone `===` after a blank line still reads as a setext underline, `a[i][j]` in prose reads as a reference link, and an HTML block inside a blockquote (`> <div>`) isn't recognised. HTML block tag names are matched in lower, UPPER or Title case only, so a mixed-case `<dIv>` reads as inline HTML.
 - An unterminated YAML quote runs on until the next matching quote, because YAML quoted strings may span lines.
