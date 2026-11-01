@@ -1,0 +1,6 @@
+def a
+  "crlf #{b}"
+end
+t = <<~X
+  body
+  X

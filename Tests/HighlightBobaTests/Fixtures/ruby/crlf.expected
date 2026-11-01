@@ -1,0 +1,17 @@
+def a
+^^^ keyword
+    ^ entity.name.function
+  "crlf #{b}"
+  ^^^^^^ string.quoted
+        ^^ punctuation.section.embedded
+           ^ punctuation.section.embedded
+            ^ string.quoted
+end
+^^^ keyword
+t = <<~X
+    ^^^^ string.quoted
+  body
+^^^^^^ string.quoted
+  X
+^^^ string.quoted
+

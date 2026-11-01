@@ -1,0 +1,22 @@
+x = 1 # trailing
+    ^ constant.numeric
+      ^^^^^^^^^^ comment.line
+=begin
+^^^^^^ comment.block
+A block comment.
+^^^^^^^^^^^^^^^^ comment.block
+def not_code; end
+^^^^^^^^^^^^^^^^^ comment.block
+=end
+^^^^ comment.block
+y = 2
+    ^ constant.numeric
+=beginning is not a block comment opener
+              ^^^ keyword
+=begin
+^^^^^^ comment.block
+an unterminated block comment
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ comment.block
+z = 3
+^^^^^ comment.block
+

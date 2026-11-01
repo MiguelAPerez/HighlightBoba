@@ -1,0 +1,28 @@
+name = "Boba"
+a = "Hello, #{name.upcase}! #{[1, 2].map { |x| x * 2 }.sum} #@ivar #$global \t\" \x41 \e bad\q"
+b = 'single #{not} \' \\ \n stays'
+c = `ls #{dir}`
+d = %w[one two (three)] + %i(a b) + %q{raw {nested} #{no}} + %Q<interp #{name} <nested>>
+e = %(bare #{name} (nested)) + %r{^/path/#{name}$}i + %x|echo #{name}|
+f = /a\/b #{name} [0-9]+/m =~ "a/b"
+g = "multi
+line #{name}
+string"
+h = :"sym #{name}"
+text = <<~EOS
+  Dear #{name},
+  "quotes" and \t escapes, 日本語 🧋 ✓
+  EOS
+raw = <<-'RAW'
+  no #{interp} here \n
+  RAW
+first, second = <<A, <<B
+a body
+A
+b body
+B
+caps = <<EOS
+  EOS is indented, so not the end
+EOS
+open = "never closed
+x = 1

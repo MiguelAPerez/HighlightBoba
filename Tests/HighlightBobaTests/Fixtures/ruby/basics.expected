@@ -1,0 +1,126 @@
+# frozen_string_literal: true
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ comment.line
+require "json"
+^^^^^^^ support.function
+        ^^^^^^ string.quoted
+require_relative 'lib/boba'
+^^^^^^^^^^^^^^^^ support.function
+                 ^^^^^^^^^^ string.quoted
+
+module Boba
+^^^^^^ keyword
+       ^^^^ entity.name.type
+  class Shop < Base
+  ^^^^^ keyword
+        ^^^^ entity.name.type
+               ^^^^ entity.name.type
+    include Comparable
+    ^^^^^^^ support.function
+            ^^^^^^^^^^ entity.name.type
+    attr_accessor :name, :stock
+    ^^^^^^^^^^^^^ support.function
+                  ^^^^^ constant.language
+                         ^^^^^^ constant.language
+    MAX_STOCK = 1_000
+                ^^^^^ constant.numeric
+
+    def initialize(name:, stock: 0)
+    ^^^ keyword
+        ^^^^^^^^^^ entity.name.function
+                   ^^^^^ constant.language
+                          ^^^^^^ constant.language
+                                 ^ constant.numeric
+      @name = name
+      ^^^^^ variable.other
+      @stock = stock
+      ^^^^^^ variable.other
+      @@count ||= 0
+      ^^^^^^^ variable.other
+                  ^ constant.numeric
+      $shops = []
+      ^^^^^^ variable.other
+    end
+    ^^^ keyword
+
+    def self.open?(hour) = hour.between?(9, 17)
+    ^^^ keyword
+        ^^^^^ variable.language
+             ^^^^^ entity.name.function
+                                         ^ constant.numeric
+                                            ^^ constant.numeric
+
+    def restock!(amount)
+    ^^^ keyword
+        ^^^^^^^^ entity.name.function
+      return if amount.zero? || !defined?(@stock)
+      ^^^^^^ keyword
+             ^^ keyword
+                                 ^^^^^^^^ keyword
+                                          ^^^^^^ variable.other
+      @stock += amount unless amount > MAX_STOCK
+      ^^^^^^ variable.other
+                       ^^^^^^ keyword
+      yield self if block_given?
+      ^^^^^ keyword
+            ^^^^ variable.language
+                 ^^ keyword
+    rescue ArgumentError => e
+    ^^^^^^ keyword
+           ^^^^^^^^^^^^^ entity.name.type
+      raise e
+      ^^^^^ support.function
+    ensure
+    ^^^^^^ keyword
+      puts "done"
+      ^^^^ support.function
+           ^^^^^^ string.quoted
+    end
+    ^^^ keyword
+
+    def ==(other) = other.is_a?(Shop) && name == other.name
+    ^^^ keyword
+                                ^^^^ entity.name.type
+  end
+  ^^^ keyword
+end
+^^^ keyword
+
+shop = Boba::Shop.new(name: "Tea", stock: 5)
+       ^^^^ entity.name.type
+             ^^^^ entity.name.type
+                      ^^^^^ constant.language
+                            ^^^^^ string.quoted
+                                   ^^^^^^ constant.language
+                                          ^ constant.numeric
+nums = [1, 2.5, 0xFF, 0b1010, 0o17, 1e3, 3r, 2i, 1_000.5]
+        ^ constant.numeric
+           ^^^ constant.numeric
+                ^^^^ constant.numeric
+                      ^^^^^^ constant.numeric
+                              ^^^^ constant.numeric
+                                    ^^^ constant.numeric
+                                         ^^ constant.numeric
+                                             ^^ constant.numeric
+                                                 ^^^^^^^ constant.numeric
+hash = { key: :value, "str" => :"quoted sym", nil => true, other: false }
+         ^^^^ constant.language
+              ^^^^^^ constant.language
+                      ^^^^^ string.quoted
+                               ^^^^^^^^^^^^^ constant.language
+                                              ^^^ constant.language
+                                                     ^^^^ constant.language
+                                                           ^^^^^^ constant.language
+                                                                  ^^^^^ constant.language
+nums.each { |n| p n * 2 } if nums.any? && $stdout.tty?
+                ^ support.function
+                      ^ constant.numeric
+                          ^^ keyword
+                                          ^^^^^^^ variable.other
+ratio = 10 / 2 / 1
+        ^^ constant.numeric
+             ^ constant.numeric
+                 ^ constant.numeric
+lambda { |x| x.to_s }.call(__LINE__)
+^^^^^^ support.function
+                           ^^^^^^^^ keyword
+

@@ -1,0 +1,4858 @@
+{
+  "name": "ruby",
+  "fileExtensions": [
+    "rb",
+    "rake",
+    "gemspec",
+    "ru",
+    "rbw",
+    "podspec",
+    "jbuilder"
+  ],
+  "initial": "code",
+  "states": {
+    "backtick": {
+      "scope": "string.quoted",
+      "rules": [
+        {
+          "match": {
+            "seq": [
+              {
+                "literal": "\\x"
+              },
+              {
+                "repeat": "[0-9A-Fa-f]",
+                "min": 1,
+                "max": 2
+              }
+            ]
+          },
+          "scope": "constant.character.escape"
+        },
+        {
+          "match": {
+            "seq": [
+              {
+                "literal": "\\u{"
+              },
+              {
+                "repeat": "[0-9A-Fa-f ]",
+                "min": 1
+              },
+              {
+                "literal": "}"
+              }
+            ]
+          },
+          "scope": "constant.character.escape"
+        },
+        {
+          "match": {
+            "seq": [
+              {
+                "literal": "\\u"
+              },
+              {
+                "repeat": "[0-9A-Fa-f]",
+                "min": 4,
+                "max": 4
+              }
+            ]
+          },
+          "scope": "constant.character.escape"
+        },
+        {
+          "match": {
+            "seq": [
+              {
+                "literal": "\\"
+              },
+              {
+                "repeat": "[0-7]",
+                "min": 1,
+                "max": 3
+              }
+            ]
+          },
+          "scope": "constant.character.escape"
+        },
+        {
+          "match": {
+            "seq": [
+              {
+                "literal": "\\"
+              },
+              {
+                "anyOf": [
+                  {
+                    "seq": [
+                      {
+                        "class": "[cC]"
+                      },
+                      {
+                        "opt": {
+                          "literal": "-"
+                        }
+                      },
+                      {
+                        "class": "[^\\r\\n]"
+                      }
+                    ]
+                  },
+                  {
+                    "seq": [
+                      {
+                        "class": "[M]"
+                      },
+                      {
+                        "literal": "-"
+                      },
+                      {
+                        "class": "[^\\r\\n]"
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          },
+          "scope": "constant.character.escape"
+        },
+        {
+          "match": {
+            "seq": [
+              {
+                "literal": "\\"
+              },
+              {
+                "class": "[^\\r\\n]"
+              }
+            ]
+          },
+          "scope": "constant.character.escape"
+        },
+        {
+          "match": {
+            "seq": [
+              {
+                "literal": "\\"
+              },
+              {
+                "eol": true
+              }
+            ]
+          },
+          "scope": "constant.character.escape"
+        },
+        {
+          "match": {
+            "literal": "#{"
+          },
+          "scope": "punctuation.section.embedded",
+          "push": "interpolation"
+        },
+        {
+          "match": {
+            "seq": [
+              {
+                "literal": "#"
+              },
+              {
+                "anyOf": [
+                  {
+                    "seq": [
+                      {
+                        "literal": "@@"
+                      },
+                      {
+                        "seq": [
+                          {
+                            "class": "[A-Za-z_]"
+                          },
+                          {
+                            "repeat": "[A-Za-z0-9_]"
+                          }
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "seq": [
+                      {
+                        "literal": "@"
+                      },
+                      {
+                        "seq": [
+                          {
+                            "class": "[A-Za-z_]"
+                          },
+                          {
+                            "repeat": "[A-Za-z0-9_]"
+                          }
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "seq": [
+                      {
+                        "literal": "$"
+                      },
+                      {
+                        "seq": [
+                          {
+                            "class": "[A-Za-z_]"
+                          },
+                          {
+                            "repeat": "[A-Za-z0-9_]"
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          },
+          "captures": [
+            "punctuation.section.embedded",
+            "variable.other"
+          ]
+        },
+        {
+          "match": {
+            "literal": "`"
+          },
+          "pop": true
+        }
+      ]
+    },
+    "braces": {
+      "rules": [
+        {
+          "match": {
+            "literal": "}"
+          },
+          "pop": true
+        },
+        {
+          "match": {
+            "literal": "{"
+          },
+          "push": "braces"
+        },
+        {
+          "include": "code"
+        }
+      ]
+    },
+    "capsHeredoc": {
+      "scope": "string.quoted",
+      "rules": [
+        {
+          "match": {
+            "seq": [
+              {
+                "bol": true
+              },
+              {
+                "remembered": true
+              },
+              {
+                "eol": true
+              }
+            ]
+          },
+          "pop": true
+        },
+        {
+          "match": {
+            "seq": [
+              {
+                "literal": "\\x"
+              },
+              {
+                "repeat": "[0-9A-Fa-f]",
+                "min": 1,
+                "max": 2
+              }
+            ]
+          },
+          "scope": "constant.character.escape"
+        },
+        {
+          "match": {
+            "seq": [
+              {
+                "literal": "\\u{"
+              },
+              {
+                "repeat": "[0-9A-Fa-f ]",
+                "min": 1
+              },
+              {
+                "literal": "}"
+              }
+            ]
+          },
+          "scope": "constant.character.escape"
+        },
+        {
+          "match": {
+            "seq": [
+              {
+                "literal": "\\u"
+              },
+              {
+                "repeat": "[0-9A-Fa-f]",
+                "min": 4,
+                "max": 4
+              }
+            ]
+          },
+          "scope": "constant.character.escape"
+        },
+        {
+          "match": {
+            "seq": [
+              {
+                "literal": "\\"
+              },
+              {
+                "repeat": "[0-7]",
+                "min": 1,
+                "max": 3
+              }
+            ]
+          },
+          "scope": "constant.character.escape"
+        },
+        {
+          "match": {
+            "seq": [
+              {
+                "literal": "\\"
+              },
+              {
+                "anyOf": [
+                  {
+                    "seq": [
+                      {
+                        "class": "[cC]"
+                      },
+                      {
+                        "opt": {
+                          "literal": "-"
+                        }
+                      },
+                      {
+                        "class": "[^\\r\\n]"
+                      }
+                    ]
+                  },
+                  {
+                    "seq": [
+                      {
+                        "class": "[M]"
+                      },
+                      {
+                        "literal": "-"
+                      },
+                      {
+                        "class": "[^\\r\\n]"
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          },
+          "scope": "constant.character.escape"
+        },
+        {
+          "match": {
+            "seq": [
+              {
+                "literal": "\\"
+              },
+              {
+                "class": "[^\\r\\n]"
+              }
+            ]
+          },
+          "scope": "constant.character.escape"
+        },
+        {
+          "match": {
+            "seq": [
+              {
+                "literal": "\\"
+              },
+              {
+                "eol": true
+              }
+            ]
+          },
+          "scope": "constant.character.escape"
+        },
+        {
+          "match": {
+            "literal": "#{"
+          },
+          "scope": "punctuation.section.embedded",
+          "push": "interpolation"
+        },
+        {
+          "match": {
+            "seq": [
+              {
+                "literal": "#"
+              },
+              {
+                "anyOf": [
+                  {
+                    "seq": [
+                      {
+                        "literal": "@@"
+                      },
+                      {
+                        "seq": [
+                          {
+                            "class": "[A-Za-z_]"
+                          },
+                          {
+                            "repeat": "[A-Za-z0-9_]"
+                          }
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "seq": [
+                      {
+                        "literal": "@"
+                      },
+                      {
+                        "seq": [
+                          {
+                            "class": "[A-Za-z_]"
+                          },
+                          {
+                            "repeat": "[A-Za-z0-9_]"
+                          }
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "seq": [
+                      {
+                        "literal": "$"
+                      },
+                      {
+                        "seq": [
+                          {
+                            "class": "[A-Za-z_]"
+                          },
+                          {
+                            "repeat": "[A-Za-z0-9_]"
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          },
+          "captures": [
+            "punctuation.section.embedded",
+            "variable.other"
+          ]
+        }
+      ]
+    },
+    "code": {
+      "rules": [
+        {
+          "match": {
+            "seq": [
+              {
+                "bol": true
+              },
+              {
+                "literal": "=begin"
+              },
+              {
+                "notFollowedBy": {
+                  "class": "[A-Za-z0-9_]"
+                }
+              }
+            ]
+          },
+          "scope": "comment.block",
+          "push": "docComment"
+        },
+        {
+          "match": {
+            "seq": [
+              {
+                "bol": true
+              },
+              {
+                "literal": "__END__"
+              },
+              {
+                "eol": true
+              }
+            ]
+          },
+          "scope": "comment.block",
+          "push": "data"
+        },
+        {
+          "match": {
+            "seq": [
+              {
+                "literal": "#"
+              },
+              {
+                "repeat": "[^\\r\\n]"
+              }
+            ]
+          },
+          "scope": "comment.line"
+        },
+        {
+          "match": {
+            "seq": [
+              {
+                "literal": "<<"
+              },
+              {
+                "opt": {
+                  "class": "[~-]"
+                }
+              },
+              {
+                "literal": "'"
+              },
+              {
+                "seq": [
+                  {
+                    "class": "[A-Za-z_]"
+                  },
+                  {
+                    "repeat": "[A-Za-z0-9_]"
+                  }
+                ]
+              },
+              {
+                "literal": "'"
+              }
+            ]
+          },
+          "scope": "string.quoted",
+          "push": "rawHeredoc",
+          "remember": 3,
+          "pushAtNextLine": true
+        },
+        {
+          "match": {
+            "seq": [
+              {
+                "literal": "<<"
+              },
+              {
+                "opt": {
+                  "class": "[~-]"
+                }
+              },
+              {
+                "class": "[\"`]"
+              },
+              {
+                "seq": [
+                  {
+                    "class": "[A-Za-z_]"
+                  },
+                  {
+                    "repeat": "[A-Za-z0-9_]"
+                  }
+                ]
+              },
+              {
+                "class": "[\"`]"
+              }
+            ]
+          },
+          "scope": "string.quoted",
+          "push": "heredoc",
+          "remember": 3,
+          "pushAtNextLine": true
+        },
+        {
+          "match": {
+            "seq": [
+              {
+                "literal": "<<"
+              },
+              {
+                "class": "[~-]"
+              },
+              {
+                "seq": [
+                  {
+                    "class": "[A-Za-z_]"
+                  },
+                  {
+                    "repeat": "[A-Za-z0-9_]"
+                  }
+                ]
+              }
+            ]
+          },
+          "scope": "string.quoted",
+          "push": "heredoc",
+          "remember": 2,
+          "pushAtNextLine": true
+        },
+        {
+          "match": {
+            "seq": [
+              {
+                "literal": "<<"
+              },
+              {
+                "seq": [
+                  {
+                    "class": "[A-Z]"
+                  },
+                  {
+                    "repeat": "[A-Z0-9_]"
+                  }
+                ]
+              }
+            ]
+          },
+          "scope": "string.quoted",
+          "push": "capsHeredoc",
+          "remember": 1,
+          "pushAtNextLine": true
+        },
+        {
+          "match": {
+            "literal": "\""
+          },
+          "scope": "string.quoted",
+          "push": "double"
+        },
+        {
+          "match": {
+            "literal": "'"
+          },
+          "scope": "string.quoted",
+          "push": "single"
+        },
+        {
+          "match": {
+            "literal": "`"
+          },
+          "scope": "string.quoted",
+          "push": "backtick"
+        },
+        {
+          "match": {
+            "seq": [
+              {
+                "literal": "%"
+              },
+              {
+                "class": "[qwis]"
+              },
+              {
+                "literal": "("
+              }
+            ]
+          },
+          "scope": "string.quoted",
+          "push": "percentRawParen",
+          "notAfterWord": true
+        },
+        {
+          "match": {
+            "seq": [
+              {
+                "literal": "%"
+              },
+              {
+                "class": "[qwis]"
+              },
+              {
+                "literal": "["
+              }
+            ]
+          },
+          "scope": "string.quoted",
+          "push": "percentRawBracket",
+          "notAfterWord": true
+        },
+        {
+          "match": {
+            "seq": [
+              {
+                "literal": "%"
+              },
+              {
+                "class": "[qwis]"
+              },
+              {
+                "literal": "{"
+              }
+            ]
+          },
+          "scope": "string.quoted",
+          "push": "percentRawBrace",
+          "notAfterWord": true
+        },
+        {
+          "match": {
+            "seq": [
+              {
+                "literal": "%"
+              },
+              {
+                "class": "[qwis]"
+              },
+              {
+                "literal": "<"
+              }
+            ]
+          },
+          "scope": "string.quoted",
+          "push": "percentRawAngle",
+          "notAfterWord": true
+        },
+        {
+          "match": {
+            "seq": [
+              {
+                "literal": "%"
+              },
+              {
+                "class": "[qwis]"
+              },
+              {
+                "class": "[^A-Za-z0-9\\s(\\[{<]"
+              }
+            ]
+          },
+          "scope": "string.quoted",
+          "push": "percentRawOther",
+          "remember": 2,
+          "notAfterWord": true
+        },
+        {
+          "match": {
+            "seq": [
+              {
+                "literal": "%"
+              },
+              {
+                "class": "[QWIx]"
+              },
+              {
+                "literal": "("
+              }
+            ]
+          },
+          "scope": "string.quoted",
+          "push": "percentInterpParen",
+          "notAfterWord": true
+        },
+        {
+          "match": {
+            "seq": [
+              {
+                "literal": "%"
+              },
+              {
+                "class": "[QWIx]"
+              },
+              {
+                "literal": "["
+              }
+            ]
+          },
+          "scope": "string.quoted",
+          "push": "percentInterpBracket",
+          "notAfterWord": true
+        },
+        {
+          "match": {
+            "seq": [
+              {
+                "literal": "%"
+              },
+              {
+                "class": "[QWIx]"
+              },
+              {
+                "literal": "{"
+              }
+            ]
+          },
+          "scope": "string.quoted",
+          "push": "percentInterpBrace",
+          "notAfterWord": true
+        },
+        {
+          "match": {
+            "seq": [
+              {
+                "literal": "%"
+              },
+              {
+                "class": "[QWIx]"
+              },
+              {
+                "literal": "<"
+              }
+            ]
+          },
+          "scope": "string.quoted",
+          "push": "percentInterpAngle",
+          "notAfterWord": true
+        },
+        {
+          "match": {
+            "seq": [
+              {
+                "literal": "%"
+              },
+              {
+                "class": "[QWIx]"
+              },
+              {
+                "class": "[^A-Za-z0-9\\s(\\[{<]"
+              }
+            ]
+          },
+          "scope": "string.quoted",
+          "push": "percentInterpOther",
+          "remember": 2,
+          "notAfterWord": true
+        },
+        {
+          "match": {
+            "seq": [
+              {
+                "literal": "%"
+              },
+              {
+                "class": "[r]"
+              },
+              {
+                "literal": "("
+              }
+            ]
+          },
+          "scope": "string.regexp",
+          "push": "percentRegexpParen",
+          "notAfterWord": true
+        },
+        {
+          "match": {
+            "seq": [
+              {
+                "literal": "%"
+              },
+              {
+                "class": "[r]"
+              },
+              {
+                "literal": "["
+              }
+            ]
+          },
+          "scope": "string.regexp",
+          "push": "percentRegexpBracket",
+          "notAfterWord": true
+        },
+        {
+          "match": {
+            "seq": [
+              {
+                "literal": "%"
+              },
+              {
+                "class": "[r]"
+              },
+              {
+                "literal": "{"
+              }
+            ]
+          },
+          "scope": "string.regexp",
+          "push": "percentRegexpBrace",
+          "notAfterWord": true
+        },
+        {
+          "match": {
+            "seq": [
+              {
+                "literal": "%"
+              },
+              {
+                "class": "[r]"
+              },
+              {
+                "literal": "<"
+              }
+            ]
+          },
+          "scope": "string.regexp",
+          "push": "percentRegexpAngle",
+          "notAfterWord": true
+        },
+        {
+          "match": {
+            "seq": [
+              {
+                "literal": "%"
+              },
+              {
+                "class": "[r]"
+              },
+              {
+                "class": "[^A-Za-z0-9\\s(\\[{<]"
+              }
+            ]
+          },
+          "scope": "string.regexp",
+          "push": "percentRegexpOther",
+          "remember": 2,
+          "notAfterWord": true
+        },
+        {
+          "match": {
+            "literal": "%("
+          },
+          "scope": "string.quoted",
+          "push": "percentInterpParen",
+          "notAfter": "[A-Za-z0-9_)\\]}\"'`]"
+        },
+        {
+          "match": {
+            "literal": "%["
+          },
+          "scope": "string.quoted",
+          "push": "percentInterpBracket",
+          "notAfter": "[A-Za-z0-9_)\\]}\"'`]"
+        },
+        {
+          "match": {
+            "literal": "%{"
+          },
+          "scope": "string.quoted",
+          "push": "percentInterpBrace",
+          "notAfter": "[A-Za-z0-9_)\\]}\"'`]"
+        },
+        {
+          "match": {
+            "literal": "%<"
+          },
+          "scope": "string.quoted",
+          "push": "percentInterpAngle",
+          "notAfter": "[A-Za-z0-9_)\\]}\"'`]"
+        },
+        {
+          "match": {
+            "literal": "/"
+          },
+          "scope": "string.regexp",
+          "push": "regexp",
+          "notAfter": "[A-Za-z0-9_)\\]}\"'`]"
+        },
+        {
+          "match": {
+            "literal": "::"
+          }
+        },
+        {
+          "match": {
+            "seq": [
+              {
+                "literal": ":"
+              },
+              {
+                "literal": "\""
+              }
+            ]
+          },
+          "scope": "constant.language",
+          "push": "symbolString"
+        },
+        {
+          "match": {
+            "seq": [
+              {
+                "literal": ":"
+              },
+              {
+                "anyOf": [
+                  {
+                    "seq": [
+                      {
+                        "literal": "@@"
+                      },
+                      {
+                        "seq": [
+                          {
+                            "class": "[A-Za-z_]"
+                          },
+                          {
+                            "repeat": "[A-Za-z0-9_]"
+                          }
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "seq": [
+                      {
+                        "literal": "@"
+                      },
+                      {
+                        "seq": [
+                          {
+                            "class": "[A-Za-z_]"
+                          },
+                          {
+                            "repeat": "[A-Za-z0-9_]"
+                          }
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "seq": [
+                      {
+                        "literal": "$"
+                      },
+                      {
+                        "seq": [
+                          {
+                            "class": "[A-Za-z_]"
+                          },
+                          {
+                            "repeat": "[A-Za-z0-9_]"
+                          }
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "seq": [
+                      {
+                        "seq": [
+                          {
+                            "class": "[A-Za-z_]"
+                          },
+                          {
+                            "repeat": "[A-Za-z0-9_]"
+                          }
+                        ]
+                      },
+                      {
+                        "opt": {
+                          "class": "[?!=]"
+                        }
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          },
+          "scope": "constant.language",
+          "notAfterWord": true
+        },
+        {
+          "match": {
+            "seq": [
+              {
+                "seq": [
+                  {
+                    "class": "[A-Za-z_]"
+                  },
+                  {
+                    "repeat": "[A-Za-z0-9_]"
+                  }
+                ]
+              },
+              {
+                "opt": {
+                  "class": "[?!]"
+                }
+              },
+              {
+                "literal": ":"
+              },
+              {
+                "notFollowedBy": {
+                  "class": "[:]"
+                }
+              }
+            ]
+          },
+          "scope": "constant.language",
+          "notAfterWord": true
+        },
+        {
+          "match": {
+            "seq": [
+              {
+                "literal": "@@"
+              },
+              {
+                "seq": [
+                  {
+                    "class": "[A-Za-z_]"
+                  },
+                  {
+                    "repeat": "[A-Za-z0-9_]"
+                  }
+                ]
+              }
+            ]
+          },
+          "scope": "variable.other"
+        },
+        {
+          "match": {
+            "seq": [
+              {
+                "literal": "@"
+              },
+              {
+                "seq": [
+                  {
+                    "class": "[A-Za-z_]"
+                  },
+                  {
+                    "repeat": "[A-Za-z0-9_]"
+                  }
+                ]
+              }
+            ]
+          },
+          "scope": "variable.other"
+        },
+        {
+          "match": {
+            "seq": [
+              {
+                "literal": "$"
+              },
+              {
+                "anyOf": [
+                  {
+                    "seq": [
+                      {
+                        "class": "[A-Za-z_]"
+                      },
+                      {
+                        "repeat": "[A-Za-z0-9_]"
+                      }
+                    ]
+                  },
+                  {
+                    "repeat": "[0-9]",
+                    "min": 1
+                  },
+                  {
+                    "class": "[!@&`'+~=/\\\\,;.<>_*$?:\"]"
+                  }
+                ]
+              }
+            ]
+          },
+          "scope": "variable.other"
+        },
+        {
+          "match": {
+            "anyOf": [
+              {
+                "seq": [
+                  {
+                    "literal": "0"
+                  },
+                  {
+                    "class": "[xX]"
+                  },
+                  {
+                    "repeat": "[0-9A-Fa-f_]",
+                    "min": 1
+                  }
+                ]
+              },
+              {
+                "seq": [
+                  {
+                    "literal": "0"
+                  },
+                  {
+                    "class": "[bB]"
+                  },
+                  {
+                    "repeat": "[01_]",
+                    "min": 1
+                  }
+                ]
+              },
+              {
+                "seq": [
+                  {
+                    "literal": "0"
+                  },
+                  {
+                    "class": "[oO]"
+                  },
+                  {
+                    "repeat": "[0-7_]",
+                    "min": 1
+                  }
+                ]
+              },
+              {
+                "seq": [
+                  {
+                    "literal": "0"
+                  },
+                  {
+                    "class": "[dD]"
+                  },
+                  {
+                    "repeat": "[0-9_]",
+                    "min": 1
+                  }
+                ]
+              },
+              {
+                "seq": [
+                  {
+                    "class": "[0-9]"
+                  },
+                  {
+                    "repeat": "[0-9_]"
+                  },
+                  {
+                    "opt": {
+                      "seq": [
+                        {
+                          "literal": "."
+                        },
+                        {
+                          "followedBy": {
+                            "class": "[0-9]"
+                          }
+                        },
+                        {
+                          "repeat": "[0-9_]"
+                        }
+                      ]
+                    }
+                  },
+                  {
+                    "opt": {
+                      "seq": [
+                        {
+                          "class": "[eE]"
+                        },
+                        {
+                          "opt": {
+                            "class": "[+-]"
+                          }
+                        },
+                        {
+                          "repeat": "[0-9_]",
+                          "min": 1
+                        }
+                      ]
+                    }
+                  },
+                  {
+                    "opt": {
+                      "class": "[r]"
+                    }
+                  },
+                  {
+                    "opt": {
+                      "class": "[i]"
+                    }
+                  }
+                ]
+              }
+            ]
+          },
+          "scope": "constant.numeric",
+          "notAfterWord": true
+        },
+        {
+          "match": {
+            "words": [
+              "nil",
+              "true",
+              "false"
+            ]
+          },
+          "scope": "constant.language"
+        },
+        {
+          "match": {
+            "words": [
+              "self",
+              "super"
+            ]
+          },
+          "scope": "variable.language"
+        },
+        {
+          "match": {
+            "seq": [
+              {
+                "words": [
+                  "def"
+                ]
+              },
+              {
+                "repeat": "[ \\t]",
+                "min": 1
+              },
+              {
+                "opt": {
+                  "literal": "self."
+                }
+              },
+              {
+                "seq": [
+                  {
+                    "class": "[A-Za-z_]"
+                  },
+                  {
+                    "repeat": "[A-Za-z0-9_]"
+                  }
+                ]
+              },
+              {
+                "opt": {
+                  "class": "[?!=]"
+                }
+              }
+            ]
+          },
+          "captures": [
+            "keyword",
+            null,
+            "variable.language",
+            "entity.name.function",
+            "entity.name.function"
+          ]
+        },
+        {
+          "match": {
+            "seq": [
+              {
+                "words": [
+                  "class",
+                  "module"
+                ]
+              },
+              {
+                "repeat": "[ \\t]",
+                "min": 1
+              },
+              {
+                "wordStarting": "[A-Z]"
+              }
+            ]
+          },
+          "captures": [
+            "keyword",
+            null,
+            "entity.name.type"
+          ]
+        },
+        {
+          "match": {
+            "seq": [
+              {
+                "words": [
+                  "defined"
+                ]
+              },
+              {
+                "literal": "?"
+              }
+            ]
+          },
+          "scope": "keyword"
+        },
+        {
+          "match": {
+            "words": [
+              "BEGIN",
+              "END",
+              "alias",
+              "and",
+              "begin",
+              "break",
+              "case",
+              "class",
+              "def",
+              "do",
+              "else",
+              "elsif",
+              "end",
+              "ensure",
+              "for",
+              "if",
+              "in",
+              "module",
+              "next",
+              "not",
+              "or",
+              "redo",
+              "rescue",
+              "retry",
+              "return",
+              "then",
+              "undef",
+              "unless",
+              "until",
+              "when",
+              "while",
+              "yield",
+              "__method__",
+              "__FILE__",
+              "__LINE__",
+              "__ENCODING__",
+              "__dir__"
+            ]
+          },
+          "scope": "keyword"
+        },
+        {
+          "match": {
+            "words": [
+              "require",
+              "require_relative",
+              "include",
+              "extend",
+              "prepend",
+              "attr_reader",
+              "attr_writer",
+              "attr_accessor",
+              "puts",
+              "print",
+              "p",
+              "raise",
+              "loop",
+              "lambda",
+              "proc",
+              "private",
+              "protected",
+              "public",
+              "module_function",
+              "private_constant"
+            ]
+          },
+          "scope": "support.function"
+        },
+        {
+          "match": {
+            "seq": [
+              {
+                "seq": [
+                  {
+                    "class": "[A-Za-z_]"
+                  },
+                  {
+                    "repeat": "[A-Za-z0-9_]"
+                  }
+                ]
+              },
+              {
+                "class": "[?!]"
+              },
+              {
+                "notFollowedBy": {
+                  "class": "[=]"
+                }
+              }
+            ]
+          },
+          "notAfterWord": true
+        },
+        {
+          "match": {
+            "seq": [
+              {
+                "class": "[A-Z]"
+              },
+              {
+                "class": "[A-Z0-9_]"
+              },
+              {
+                "repeat": "[A-Z0-9_]"
+              },
+              {
+                "notFollowedBy": {
+                  "class": "[a-z]"
+                }
+              }
+            ]
+          },
+          "notAfterWord": true
+        },
+        {
+          "match": {
+            "wordStarting": "[A-Z]"
+          },
+          "scope": "entity.name.type"
+        }
+      ]
+    },
+    "data": {
+      "scope": "comment.block",
+      "rules": []
+    },
+    "docComment": {
+      "scope": "comment.block",
+      "rules": [
+        {
+          "match": {
+            "seq": [
+              {
+                "bol": true
+              },
+              {
+                "literal": "=end"
+              },
+              {
+                "repeat": "[^\\r\\n]"
+              }
+            ]
+          },
+          "pop": true
+        }
+      ]
+    },
+    "double": {
+      "scope": "string.quoted",
+      "rules": [
+        {
+          "match": {
+            "seq": [
+              {
+                "literal": "\\x"
+              },
+              {
+                "repeat": "[0-9A-Fa-f]",
+                "min": 1,
+                "max": 2
+              }
+            ]
+          },
+          "scope": "constant.character.escape"
+        },
+        {
+          "match": {
+            "seq": [
+              {
+                "literal": "\\u{"
+              },
+              {
+                "repeat": "[0-9A-Fa-f ]",
+                "min": 1
+              },
+              {
+                "literal": "}"
+              }
+            ]
+          },
+          "scope": "constant.character.escape"
+        },
+        {
+          "match": {
+            "seq": [
+              {
+                "literal": "\\u"
+              },
+              {
+                "repeat": "[0-9A-Fa-f]",
+                "min": 4,
+                "max": 4
+              }
+            ]
+          },
+          "scope": "constant.character.escape"
+        },
+        {
+          "match": {
+            "seq": [
+              {
+                "literal": "\\"
+              },
+              {
+                "repeat": "[0-7]",
+                "min": 1,
+                "max": 3
+              }
+            ]
+          },
+          "scope": "constant.character.escape"
+        },
+        {
+          "match": {
+            "seq": [
+              {
+                "literal": "\\"
+              },
+              {
+                "anyOf": [
+                  {
+                    "seq": [
+                      {
+                        "class": "[cC]"
+                      },
+                      {
+                        "opt": {
+                          "literal": "-"
+                        }
+                      },
+                      {
+                        "class": "[^\\r\\n]"
+                      }
+                    ]
+                  },
+                  {
+                    "seq": [
+                      {
+                        "class": "[M]"
+                      },
+                      {
+                        "literal": "-"
+                      },
+                      {
+                        "class": "[^\\r\\n]"
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          },
+          "scope": "constant.character.escape"
+        },
+        {
+          "match": {
+            "seq": [
+              {
+                "literal": "\\"
+              },
+              {
+                "class": "[^\\r\\n]"
+              }
+            ]
+          },
+          "scope": "constant.character.escape"
+        },
+        {
+          "match": {
+            "seq": [
+              {
+                "literal": "\\"
+              },
+              {
+                "eol": true
+              }
+            ]
+          },
+          "scope": "constant.character.escape"
+        },
+        {
+          "match": {
+            "literal": "#{"
+          },
+          "scope": "punctuation.section.embedded",
+          "push": "interpolation"
+        },
+        {
+          "match": {
+            "seq": [
+              {
+                "literal": "#"
+              },
+              {
+                "anyOf": [
+                  {
+                    "seq": [
+                      {
+                        "literal": "@@"
+                      },
+                      {
+                        "seq": [
+                          {
+                            "class": "[A-Za-z_]"
+                          },
+                          {
+                            "repeat": "[A-Za-z0-9_]"
+                          }
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "seq": [
+                      {
+                        "literal": "@"
+                      },
+                      {
+                        "seq": [
+                          {
+                            "class": "[A-Za-z_]"
+                          },
+                          {
+                            "repeat": "[A-Za-z0-9_]"
+                          }
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "seq": [
+                      {
+                        "literal": "$"
+                      },
+                      {
+                        "seq": [
+                          {
+                            "class": "[A-Za-z_]"
+                          },
+                          {
+                            "repeat": "[A-Za-z0-9_]"
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          },
+          "captures": [
+            "punctuation.section.embedded",
+            "variable.other"
+          ]
+        },
+        {
+          "match": {
+            "literal": "\""
+          },
+          "pop": true
+        }
+      ]
+    },
+    "heredoc": {
+      "scope": "string.quoted",
+      "rules": [
+        {
+          "match": {
+            "seq": [
+              {
+                "bol": true
+              },
+              {
+                "repeat": "[ \\t]"
+              },
+              {
+                "remembered": true
+              },
+              {
+                "eol": true
+              }
+            ]
+          },
+          "pop": true
+        },
+        {
+          "match": {
+            "seq": [
+              {
+                "literal": "\\x"
+              },
+              {
+                "repeat": "[0-9A-Fa-f]",
+                "min": 1,
+                "max": 2
+              }
+            ]
+          },
+          "scope": "constant.character.escape"
+        },
+        {
+          "match": {
+            "seq": [
+              {
+                "literal": "\\u{"
+              },
+              {
+                "repeat": "[0-9A-Fa-f ]",
+                "min": 1
+              },
+              {
+                "literal": "}"
+              }
+            ]
+          },
+          "scope": "constant.character.escape"
+        },
+        {
+          "match": {
+            "seq": [
+              {
+                "literal": "\\u"
+              },
+              {
+                "repeat": "[0-9A-Fa-f]",
+                "min": 4,
+                "max": 4
+              }
+            ]
+          },
+          "scope": "constant.character.escape"
+        },
+        {
+          "match": {
+            "seq": [
+              {
+                "literal": "\\"
+              },
+              {
+                "repeat": "[0-7]",
+                "min": 1,
+                "max": 3
+              }
+            ]
+          },
+          "scope": "constant.character.escape"
+        },
+        {
+          "match": {
+            "seq": [
+              {
+                "literal": "\\"
+              },
+              {
+                "anyOf": [
+                  {
+                    "seq": [
+                      {
+                        "class": "[cC]"
+                      },
+                      {
+                        "opt": {
+                          "literal": "-"
+                        }
+                      },
+                      {
+                        "class": "[^\\r\\n]"
+                      }
+                    ]
+                  },
+                  {
+                    "seq": [
+                      {
+                        "class": "[M]"
+                      },
+                      {
+                        "literal": "-"
+                      },
+                      {
+                        "class": "[^\\r\\n]"
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          },
+          "scope": "constant.character.escape"
+        },
+        {
+          "match": {
+            "seq": [
+              {
+                "literal": "\\"
+              },
+              {
+                "class": "[^\\r\\n]"
+              }
+            ]
+          },
+          "scope": "constant.character.escape"
+        },
+        {
+          "match": {
+            "seq": [
+              {
+                "literal": "\\"
+              },
+              {
+                "eol": true
+              }
+            ]
+          },
+          "scope": "constant.character.escape"
+        },
+        {
+          "match": {
+            "literal": "#{"
+          },
+          "scope": "punctuation.section.embedded",
+          "push": "interpolation"
+        },
+        {
+          "match": {
+            "seq": [
+              {
+                "literal": "#"
+              },
+              {
+                "anyOf": [
+                  {
+                    "seq": [
+                      {
+                        "literal": "@@"
+                      },
+                      {
+                        "seq": [
+                          {
+                            "class": "[A-Za-z_]"
+                          },
+                          {
+                            "repeat": "[A-Za-z0-9_]"
+                          }
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "seq": [
+                      {
+                        "literal": "@"
+                      },
+                      {
+                        "seq": [
+                          {
+                            "class": "[A-Za-z_]"
+                          },
+                          {
+                            "repeat": "[A-Za-z0-9_]"
+                          }
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "seq": [
+                      {
+                        "literal": "$"
+                      },
+                      {
+                        "seq": [
+                          {
+                            "class": "[A-Za-z_]"
+                          },
+                          {
+                            "repeat": "[A-Za-z0-9_]"
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          },
+          "captures": [
+            "punctuation.section.embedded",
+            "variable.other"
+          ]
+        }
+      ]
+    },
+    "interpolation": {
+      "rules": [
+        {
+          "match": {
+            "literal": "}"
+          },
+          "scope": "punctuation.section.embedded",
+          "pop": true
+        },
+        {
+          "match": {
+            "literal": "{"
+          },
+          "push": "braces"
+        },
+        {
+          "include": "code"
+        }
+      ]
+    },
+    "percentInterpAngle": {
+      "scope": "string.quoted",
+      "rules": [
+        {
+          "match": {
+            "seq": [
+              {
+                "literal": "\\x"
+              },
+              {
+                "repeat": "[0-9A-Fa-f]",
+                "min": 1,
+                "max": 2
+              }
+            ]
+          },
+          "scope": "constant.character.escape"
+        },
+        {
+          "match": {
+            "seq": [
+              {
+                "literal": "\\u{"
+              },
+              {
+                "repeat": "[0-9A-Fa-f ]",
+                "min": 1
+              },
+              {
+                "literal": "}"
+              }
+            ]
+          },
+          "scope": "constant.character.escape"
+        },
+        {
+          "match": {
+            "seq": [
+              {
+                "literal": "\\u"
+              },
+              {
+                "repeat": "[0-9A-Fa-f]",
+                "min": 4,
+                "max": 4
+              }
+            ]
+          },
+          "scope": "constant.character.escape"
+        },
+        {
+          "match": {
+            "seq": [
+              {
+                "literal": "\\"
+              },
+              {
+                "repeat": "[0-7]",
+                "min": 1,
+                "max": 3
+              }
+            ]
+          },
+          "scope": "constant.character.escape"
+        },
+        {
+          "match": {
+            "seq": [
+              {
+                "literal": "\\"
+              },
+              {
+                "anyOf": [
+                  {
+                    "seq": [
+                      {
+                        "class": "[cC]"
+                      },
+                      {
+                        "opt": {
+                          "literal": "-"
+                        }
+                      },
+                      {
+                        "class": "[^\\r\\n]"
+                      }
+                    ]
+                  },
+                  {
+                    "seq": [
+                      {
+                        "class": "[M]"
+                      },
+                      {
+                        "literal": "-"
+                      },
+                      {
+                        "class": "[^\\r\\n]"
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          },
+          "scope": "constant.character.escape"
+        },
+        {
+          "match": {
+            "seq": [
+              {
+                "literal": "\\"
+              },
+              {
+                "class": "[^\\r\\n]"
+              }
+            ]
+          },
+          "scope": "constant.character.escape"
+        },
+        {
+          "match": {
+            "seq": [
+              {
+                "literal": "\\"
+              },
+              {
+                "eol": true
+              }
+            ]
+          },
+          "scope": "constant.character.escape"
+        },
+        {
+          "match": {
+            "literal": "#{"
+          },
+          "scope": "punctuation.section.embedded",
+          "push": "interpolation"
+        },
+        {
+          "match": {
+            "seq": [
+              {
+                "literal": "#"
+              },
+              {
+                "anyOf": [
+                  {
+                    "seq": [
+                      {
+                        "literal": "@@"
+                      },
+                      {
+                        "seq": [
+                          {
+                            "class": "[A-Za-z_]"
+                          },
+                          {
+                            "repeat": "[A-Za-z0-9_]"
+                          }
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "seq": [
+                      {
+                        "literal": "@"
+                      },
+                      {
+                        "seq": [
+                          {
+                            "class": "[A-Za-z_]"
+                          },
+                          {
+                            "repeat": "[A-Za-z0-9_]"
+                          }
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "seq": [
+                      {
+                        "literal": "$"
+                      },
+                      {
+                        "seq": [
+                          {
+                            "class": "[A-Za-z_]"
+                          },
+                          {
+                            "repeat": "[A-Za-z0-9_]"
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          },
+          "captures": [
+            "punctuation.section.embedded",
+            "variable.other"
+          ]
+        },
+        {
+          "match": {
+            "literal": "<"
+          },
+          "push": "percentInterpAngle"
+        },
+        {
+          "match": {
+            "literal": ">"
+          },
+          "pop": true
+        }
+      ]
+    },
+    "percentInterpBrace": {
+      "scope": "string.quoted",
+      "rules": [
+        {
+          "match": {
+            "seq": [
+              {
+                "literal": "\\x"
+              },
+              {
+                "repeat": "[0-9A-Fa-f]",
+                "min": 1,
+                "max": 2
+              }
+            ]
+          },
+          "scope": "constant.character.escape"
+        },
+        {
+          "match": {
+            "seq": [
+              {
+                "literal": "\\u{"
+              },
+              {
+                "repeat": "[0-9A-Fa-f ]",
+                "min": 1
+              },
+              {
+                "literal": "}"
+              }
+            ]
+          },
+          "scope": "constant.character.escape"
+        },
+        {
+          "match": {
+            "seq": [
+              {
+                "literal": "\\u"
+              },
+              {
+                "repeat": "[0-9A-Fa-f]",
+                "min": 4,
+                "max": 4
+              }
+            ]
+          },
+          "scope": "constant.character.escape"
+        },
+        {
+          "match": {
+            "seq": [
+              {
+                "literal": "\\"
+              },
+              {
+                "repeat": "[0-7]",
+                "min": 1,
+                "max": 3
+              }
+            ]
+          },
+          "scope": "constant.character.escape"
+        },
+        {
+          "match": {
+            "seq": [
+              {
+                "literal": "\\"
+              },
+              {
+                "anyOf": [
+                  {
+                    "seq": [
+                      {
+                        "class": "[cC]"
+                      },
+                      {
+                        "opt": {
+                          "literal": "-"
+                        }
+                      },
+                      {
+                        "class": "[^\\r\\n]"
+                      }
+                    ]
+                  },
+                  {
+                    "seq": [
+                      {
+                        "class": "[M]"
+                      },
+                      {
+                        "literal": "-"
+                      },
+                      {
+                        "class": "[^\\r\\n]"
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          },
+          "scope": "constant.character.escape"
+        },
+        {
+          "match": {
+            "seq": [
+              {
+                "literal": "\\"
+              },
+              {
+                "class": "[^\\r\\n]"
+              }
+            ]
+          },
+          "scope": "constant.character.escape"
+        },
+        {
+          "match": {
+            "seq": [
+              {
+                "literal": "\\"
+              },
+              {
+                "eol": true
+              }
+            ]
+          },
+          "scope": "constant.character.escape"
+        },
+        {
+          "match": {
+            "literal": "#{"
+          },
+          "scope": "punctuation.section.embedded",
+          "push": "interpolation"
+        },
+        {
+          "match": {
+            "seq": [
+              {
+                "literal": "#"
+              },
+              {
+                "anyOf": [
+                  {
+                    "seq": [
+                      {
+                        "literal": "@@"
+                      },
+                      {
+                        "seq": [
+                          {
+                            "class": "[A-Za-z_]"
+                          },
+                          {
+                            "repeat": "[A-Za-z0-9_]"
+                          }
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "seq": [
+                      {
+                        "literal": "@"
+                      },
+                      {
+                        "seq": [
+                          {
+                            "class": "[A-Za-z_]"
+                          },
+                          {
+                            "repeat": "[A-Za-z0-9_]"
+                          }
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "seq": [
+                      {
+                        "literal": "$"
+                      },
+                      {
+                        "seq": [
+                          {
+                            "class": "[A-Za-z_]"
+                          },
+                          {
+                            "repeat": "[A-Za-z0-9_]"
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          },
+          "captures": [
+            "punctuation.section.embedded",
+            "variable.other"
+          ]
+        },
+        {
+          "match": {
+            "literal": "{"
+          },
+          "push": "percentInterpBrace"
+        },
+        {
+          "match": {
+            "literal": "}"
+          },
+          "pop": true
+        }
+      ]
+    },
+    "percentInterpBracket": {
+      "scope": "string.quoted",
+      "rules": [
+        {
+          "match": {
+            "seq": [
+              {
+                "literal": "\\x"
+              },
+              {
+                "repeat": "[0-9A-Fa-f]",
+                "min": 1,
+                "max": 2
+              }
+            ]
+          },
+          "scope": "constant.character.escape"
+        },
+        {
+          "match": {
+            "seq": [
+              {
+                "literal": "\\u{"
+              },
+              {
+                "repeat": "[0-9A-Fa-f ]",
+                "min": 1
+              },
+              {
+                "literal": "}"
+              }
+            ]
+          },
+          "scope": "constant.character.escape"
+        },
+        {
+          "match": {
+            "seq": [
+              {
+                "literal": "\\u"
+              },
+              {
+                "repeat": "[0-9A-Fa-f]",
+                "min": 4,
+                "max": 4
+              }
+            ]
+          },
+          "scope": "constant.character.escape"
+        },
+        {
+          "match": {
+            "seq": [
+              {
+                "literal": "\\"
+              },
+              {
+                "repeat": "[0-7]",
+                "min": 1,
+                "max": 3
+              }
+            ]
+          },
+          "scope": "constant.character.escape"
+        },
+        {
+          "match": {
+            "seq": [
+              {
+                "literal": "\\"
+              },
+              {
+                "anyOf": [
+                  {
+                    "seq": [
+                      {
+                        "class": "[cC]"
+                      },
+                      {
+                        "opt": {
+                          "literal": "-"
+                        }
+                      },
+                      {
+                        "class": "[^\\r\\n]"
+                      }
+                    ]
+                  },
+                  {
+                    "seq": [
+                      {
+                        "class": "[M]"
+                      },
+                      {
+                        "literal": "-"
+                      },
+                      {
+                        "class": "[^\\r\\n]"
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          },
+          "scope": "constant.character.escape"
+        },
+        {
+          "match": {
+            "seq": [
+              {
+                "literal": "\\"
+              },
+              {
+                "class": "[^\\r\\n]"
+              }
+            ]
+          },
+          "scope": "constant.character.escape"
+        },
+        {
+          "match": {
+            "seq": [
+              {
+                "literal": "\\"
+              },
+              {
+                "eol": true
+              }
+            ]
+          },
+          "scope": "constant.character.escape"
+        },
+        {
+          "match": {
+            "literal": "#{"
+          },
+          "scope": "punctuation.section.embedded",
+          "push": "interpolation"
+        },
+        {
+          "match": {
+            "seq": [
+              {
+                "literal": "#"
+              },
+              {
+                "anyOf": [
+                  {
+                    "seq": [
+                      {
+                        "literal": "@@"
+                      },
+                      {
+                        "seq": [
+                          {
+                            "class": "[A-Za-z_]"
+                          },
+                          {
+                            "repeat": "[A-Za-z0-9_]"
+                          }
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "seq": [
+                      {
+                        "literal": "@"
+                      },
+                      {
+                        "seq": [
+                          {
+                            "class": "[A-Za-z_]"
+                          },
+                          {
+                            "repeat": "[A-Za-z0-9_]"
+                          }
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "seq": [
+                      {
+                        "literal": "$"
+                      },
+                      {
+                        "seq": [
+                          {
+                            "class": "[A-Za-z_]"
+                          },
+                          {
+                            "repeat": "[A-Za-z0-9_]"
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          },
+          "captures": [
+            "punctuation.section.embedded",
+            "variable.other"
+          ]
+        },
+        {
+          "match": {
+            "literal": "["
+          },
+          "push": "percentInterpBracket"
+        },
+        {
+          "match": {
+            "literal": "]"
+          },
+          "pop": true
+        }
+      ]
+    },
+    "percentInterpOther": {
+      "scope": "string.quoted",
+      "rules": [
+        {
+          "match": {
+            "seq": [
+              {
+                "literal": "\\x"
+              },
+              {
+                "repeat": "[0-9A-Fa-f]",
+                "min": 1,
+                "max": 2
+              }
+            ]
+          },
+          "scope": "constant.character.escape"
+        },
+        {
+          "match": {
+            "seq": [
+              {
+                "literal": "\\u{"
+              },
+              {
+                "repeat": "[0-9A-Fa-f ]",
+                "min": 1
+              },
+              {
+                "literal": "}"
+              }
+            ]
+          },
+          "scope": "constant.character.escape"
+        },
+        {
+          "match": {
+            "seq": [
+              {
+                "literal": "\\u"
+              },
+              {
+                "repeat": "[0-9A-Fa-f]",
+                "min": 4,
+                "max": 4
+              }
+            ]
+          },
+          "scope": "constant.character.escape"
+        },
+        {
+          "match": {
+            "seq": [
+              {
+                "literal": "\\"
+              },
+              {
+                "repeat": "[0-7]",
+                "min": 1,
+                "max": 3
+              }
+            ]
+          },
+          "scope": "constant.character.escape"
+        },
+        {
+          "match": {
+            "seq": [
+              {
+                "literal": "\\"
+              },
+              {
+                "anyOf": [
+                  {
+                    "seq": [
+                      {
+                        "class": "[cC]"
+                      },
+                      {
+                        "opt": {
+                          "literal": "-"
+                        }
+                      },
+                      {
+                        "class": "[^\\r\\n]"
+                      }
+                    ]
+                  },
+                  {
+                    "seq": [
+                      {
+                        "class": "[M]"
+                      },
+                      {
+                        "literal": "-"
+                      },
+                      {
+                        "class": "[^\\r\\n]"
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          },
+          "scope": "constant.character.escape"
+        },
+        {
+          "match": {
+            "seq": [
+              {
+                "literal": "\\"
+              },
+              {
+                "class": "[^\\r\\n]"
+              }
+            ]
+          },
+          "scope": "constant.character.escape"
+        },
+        {
+          "match": {
+            "seq": [
+              {
+                "literal": "\\"
+              },
+              {
+                "eol": true
+              }
+            ]
+          },
+          "scope": "constant.character.escape"
+        },
+        {
+          "match": {
+            "literal": "#{"
+          },
+          "scope": "punctuation.section.embedded",
+          "push": "interpolation"
+        },
+        {
+          "match": {
+            "seq": [
+              {
+                "literal": "#"
+              },
+              {
+                "anyOf": [
+                  {
+                    "seq": [
+                      {
+                        "literal": "@@"
+                      },
+                      {
+                        "seq": [
+                          {
+                            "class": "[A-Za-z_]"
+                          },
+                          {
+                            "repeat": "[A-Za-z0-9_]"
+                          }
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "seq": [
+                      {
+                        "literal": "@"
+                      },
+                      {
+                        "seq": [
+                          {
+                            "class": "[A-Za-z_]"
+                          },
+                          {
+                            "repeat": "[A-Za-z0-9_]"
+                          }
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "seq": [
+                      {
+                        "literal": "$"
+                      },
+                      {
+                        "seq": [
+                          {
+                            "class": "[A-Za-z_]"
+                          },
+                          {
+                            "repeat": "[A-Za-z0-9_]"
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          },
+          "captures": [
+            "punctuation.section.embedded",
+            "variable.other"
+          ]
+        },
+        {
+          "match": {
+            "remembered": true
+          },
+          "pop": true
+        }
+      ]
+    },
+    "percentInterpParen": {
+      "scope": "string.quoted",
+      "rules": [
+        {
+          "match": {
+            "seq": [
+              {
+                "literal": "\\x"
+              },
+              {
+                "repeat": "[0-9A-Fa-f]",
+                "min": 1,
+                "max": 2
+              }
+            ]
+          },
+          "scope": "constant.character.escape"
+        },
+        {
+          "match": {
+            "seq": [
+              {
+                "literal": "\\u{"
+              },
+              {
+                "repeat": "[0-9A-Fa-f ]",
+                "min": 1
+              },
+              {
+                "literal": "}"
+              }
+            ]
+          },
+          "scope": "constant.character.escape"
+        },
+        {
+          "match": {
+            "seq": [
+              {
+                "literal": "\\u"
+              },
+              {
+                "repeat": "[0-9A-Fa-f]",
+                "min": 4,
+                "max": 4
+              }
+            ]
+          },
+          "scope": "constant.character.escape"
+        },
+        {
+          "match": {
+            "seq": [
+              {
+                "literal": "\\"
+              },
+              {
+                "repeat": "[0-7]",
+                "min": 1,
+                "max": 3
+              }
+            ]
+          },
+          "scope": "constant.character.escape"
+        },
+        {
+          "match": {
+            "seq": [
+              {
+                "literal": "\\"
+              },
+              {
+                "anyOf": [
+                  {
+                    "seq": [
+                      {
+                        "class": "[cC]"
+                      },
+                      {
+                        "opt": {
+                          "literal": "-"
+                        }
+                      },
+                      {
+                        "class": "[^\\r\\n]"
+                      }
+                    ]
+                  },
+                  {
+                    "seq": [
+                      {
+                        "class": "[M]"
+                      },
+                      {
+                        "literal": "-"
+                      },
+                      {
+                        "class": "[^\\r\\n]"
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          },
+          "scope": "constant.character.escape"
+        },
+        {
+          "match": {
+            "seq": [
+              {
+                "literal": "\\"
+              },
+              {
+                "class": "[^\\r\\n]"
+              }
+            ]
+          },
+          "scope": "constant.character.escape"
+        },
+        {
+          "match": {
+            "seq": [
+              {
+                "literal": "\\"
+              },
+              {
+                "eol": true
+              }
+            ]
+          },
+          "scope": "constant.character.escape"
+        },
+        {
+          "match": {
+            "literal": "#{"
+          },
+          "scope": "punctuation.section.embedded",
+          "push": "interpolation"
+        },
+        {
+          "match": {
+            "seq": [
+              {
+                "literal": "#"
+              },
+              {
+                "anyOf": [
+                  {
+                    "seq": [
+                      {
+                        "literal": "@@"
+                      },
+                      {
+                        "seq": [
+                          {
+                            "class": "[A-Za-z_]"
+                          },
+                          {
+                            "repeat": "[A-Za-z0-9_]"
+                          }
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "seq": [
+                      {
+                        "literal": "@"
+                      },
+                      {
+                        "seq": [
+                          {
+                            "class": "[A-Za-z_]"
+                          },
+                          {
+                            "repeat": "[A-Za-z0-9_]"
+                          }
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "seq": [
+                      {
+                        "literal": "$"
+                      },
+                      {
+                        "seq": [
+                          {
+                            "class": "[A-Za-z_]"
+                          },
+                          {
+                            "repeat": "[A-Za-z0-9_]"
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          },
+          "captures": [
+            "punctuation.section.embedded",
+            "variable.other"
+          ]
+        },
+        {
+          "match": {
+            "literal": "("
+          },
+          "push": "percentInterpParen"
+        },
+        {
+          "match": {
+            "literal": ")"
+          },
+          "pop": true
+        }
+      ]
+    },
+    "percentRawAngle": {
+      "scope": "string.quoted",
+      "rules": [
+        {
+          "match": {
+            "seq": [
+              {
+                "literal": "\\"
+              },
+              {
+                "class": "[\\\\\\<\\>]"
+              }
+            ]
+          },
+          "scope": "constant.character.escape"
+        },
+        {
+          "match": {
+            "literal": "<"
+          },
+          "push": "percentRawAngle"
+        },
+        {
+          "match": {
+            "literal": ">"
+          },
+          "pop": true
+        }
+      ]
+    },
+    "percentRawBrace": {
+      "scope": "string.quoted",
+      "rules": [
+        {
+          "match": {
+            "seq": [
+              {
+                "literal": "\\"
+              },
+              {
+                "class": "[\\\\\\{\\}]"
+              }
+            ]
+          },
+          "scope": "constant.character.escape"
+        },
+        {
+          "match": {
+            "literal": "{"
+          },
+          "push": "percentRawBrace"
+        },
+        {
+          "match": {
+            "literal": "}"
+          },
+          "pop": true
+        }
+      ]
+    },
+    "percentRawBracket": {
+      "scope": "string.quoted",
+      "rules": [
+        {
+          "match": {
+            "seq": [
+              {
+                "literal": "\\"
+              },
+              {
+                "class": "[\\\\\\[\\]]"
+              }
+            ]
+          },
+          "scope": "constant.character.escape"
+        },
+        {
+          "match": {
+            "literal": "["
+          },
+          "push": "percentRawBracket"
+        },
+        {
+          "match": {
+            "literal": "]"
+          },
+          "pop": true
+        }
+      ]
+    },
+    "percentRawOther": {
+      "scope": "string.quoted",
+      "rules": [
+        {
+          "match": {
+            "seq": [
+              {
+                "literal": "\\"
+              },
+              {
+                "class": "[^\\r\\n]"
+              }
+            ]
+          },
+          "scope": "constant.character.escape"
+        },
+        {
+          "match": {
+            "remembered": true
+          },
+          "pop": true
+        }
+      ]
+    },
+    "percentRawParen": {
+      "scope": "string.quoted",
+      "rules": [
+        {
+          "match": {
+            "seq": [
+              {
+                "literal": "\\"
+              },
+              {
+                "class": "[\\\\\\(\\)]"
+              }
+            ]
+          },
+          "scope": "constant.character.escape"
+        },
+        {
+          "match": {
+            "literal": "("
+          },
+          "push": "percentRawParen"
+        },
+        {
+          "match": {
+            "literal": ")"
+          },
+          "pop": true
+        }
+      ]
+    },
+    "percentRegexpAngle": {
+      "scope": "string.regexp",
+      "rules": [
+        {
+          "match": {
+            "seq": [
+              {
+                "literal": "\\x"
+              },
+              {
+                "repeat": "[0-9A-Fa-f]",
+                "min": 1,
+                "max": 2
+              }
+            ]
+          },
+          "scope": "constant.character.escape"
+        },
+        {
+          "match": {
+            "seq": [
+              {
+                "literal": "\\u{"
+              },
+              {
+                "repeat": "[0-9A-Fa-f ]",
+                "min": 1
+              },
+              {
+                "literal": "}"
+              }
+            ]
+          },
+          "scope": "constant.character.escape"
+        },
+        {
+          "match": {
+            "seq": [
+              {
+                "literal": "\\u"
+              },
+              {
+                "repeat": "[0-9A-Fa-f]",
+                "min": 4,
+                "max": 4
+              }
+            ]
+          },
+          "scope": "constant.character.escape"
+        },
+        {
+          "match": {
+            "seq": [
+              {
+                "literal": "\\"
+              },
+              {
+                "repeat": "[0-7]",
+                "min": 1,
+                "max": 3
+              }
+            ]
+          },
+          "scope": "constant.character.escape"
+        },
+        {
+          "match": {
+            "seq": [
+              {
+                "literal": "\\"
+              },
+              {
+                "anyOf": [
+                  {
+                    "seq": [
+                      {
+                        "class": "[cC]"
+                      },
+                      {
+                        "opt": {
+                          "literal": "-"
+                        }
+                      },
+                      {
+                        "class": "[^\\r\\n]"
+                      }
+                    ]
+                  },
+                  {
+                    "seq": [
+                      {
+                        "class": "[M]"
+                      },
+                      {
+                        "literal": "-"
+                      },
+                      {
+                        "class": "[^\\r\\n]"
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          },
+          "scope": "constant.character.escape"
+        },
+        {
+          "match": {
+            "seq": [
+              {
+                "literal": "\\"
+              },
+              {
+                "class": "[^\\r\\n]"
+              }
+            ]
+          },
+          "scope": "constant.character.escape"
+        },
+        {
+          "match": {
+            "seq": [
+              {
+                "literal": "\\"
+              },
+              {
+                "eol": true
+              }
+            ]
+          },
+          "scope": "constant.character.escape"
+        },
+        {
+          "match": {
+            "literal": "#{"
+          },
+          "scope": "punctuation.section.embedded",
+          "push": "interpolation"
+        },
+        {
+          "match": {
+            "seq": [
+              {
+                "literal": "#"
+              },
+              {
+                "anyOf": [
+                  {
+                    "seq": [
+                      {
+                        "literal": "@@"
+                      },
+                      {
+                        "seq": [
+                          {
+                            "class": "[A-Za-z_]"
+                          },
+                          {
+                            "repeat": "[A-Za-z0-9_]"
+                          }
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "seq": [
+                      {
+                        "literal": "@"
+                      },
+                      {
+                        "seq": [
+                          {
+                            "class": "[A-Za-z_]"
+                          },
+                          {
+                            "repeat": "[A-Za-z0-9_]"
+                          }
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "seq": [
+                      {
+                        "literal": "$"
+                      },
+                      {
+                        "seq": [
+                          {
+                            "class": "[A-Za-z_]"
+                          },
+                          {
+                            "repeat": "[A-Za-z0-9_]"
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          },
+          "captures": [
+            "punctuation.section.embedded",
+            "variable.other"
+          ]
+        },
+        {
+          "match": {
+            "literal": "<"
+          },
+          "push": "percentRegexpAngle"
+        },
+        {
+          "match": {
+            "literal": ">"
+          },
+          "pop": true
+        }
+      ]
+    },
+    "percentRegexpBrace": {
+      "scope": "string.regexp",
+      "rules": [
+        {
+          "match": {
+            "seq": [
+              {
+                "literal": "\\x"
+              },
+              {
+                "repeat": "[0-9A-Fa-f]",
+                "min": 1,
+                "max": 2
+              }
+            ]
+          },
+          "scope": "constant.character.escape"
+        },
+        {
+          "match": {
+            "seq": [
+              {
+                "literal": "\\u{"
+              },
+              {
+                "repeat": "[0-9A-Fa-f ]",
+                "min": 1
+              },
+              {
+                "literal": "}"
+              }
+            ]
+          },
+          "scope": "constant.character.escape"
+        },
+        {
+          "match": {
+            "seq": [
+              {
+                "literal": "\\u"
+              },
+              {
+                "repeat": "[0-9A-Fa-f]",
+                "min": 4,
+                "max": 4
+              }
+            ]
+          },
+          "scope": "constant.character.escape"
+        },
+        {
+          "match": {
+            "seq": [
+              {
+                "literal": "\\"
+              },
+              {
+                "repeat": "[0-7]",
+                "min": 1,
+                "max": 3
+              }
+            ]
+          },
+          "scope": "constant.character.escape"
+        },
+        {
+          "match": {
+            "seq": [
+              {
+                "literal": "\\"
+              },
+              {
+                "anyOf": [
+                  {
+                    "seq": [
+                      {
+                        "class": "[cC]"
+                      },
+                      {
+                        "opt": {
+                          "literal": "-"
+                        }
+                      },
+                      {
+                        "class": "[^\\r\\n]"
+                      }
+                    ]
+                  },
+                  {
+                    "seq": [
+                      {
+                        "class": "[M]"
+                      },
+                      {
+                        "literal": "-"
+                      },
+                      {
+                        "class": "[^\\r\\n]"
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          },
+          "scope": "constant.character.escape"
+        },
+        {
+          "match": {
+            "seq": [
+              {
+                "literal": "\\"
+              },
+              {
+                "class": "[^\\r\\n]"
+              }
+            ]
+          },
+          "scope": "constant.character.escape"
+        },
+        {
+          "match": {
+            "seq": [
+              {
+                "literal": "\\"
+              },
+              {
+                "eol": true
+              }
+            ]
+          },
+          "scope": "constant.character.escape"
+        },
+        {
+          "match": {
+            "literal": "#{"
+          },
+          "scope": "punctuation.section.embedded",
+          "push": "interpolation"
+        },
+        {
+          "match": {
+            "seq": [
+              {
+                "literal": "#"
+              },
+              {
+                "anyOf": [
+                  {
+                    "seq": [
+                      {
+                        "literal": "@@"
+                      },
+                      {
+                        "seq": [
+                          {
+                            "class": "[A-Za-z_]"
+                          },
+                          {
+                            "repeat": "[A-Za-z0-9_]"
+                          }
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "seq": [
+                      {
+                        "literal": "@"
+                      },
+                      {
+                        "seq": [
+                          {
+                            "class": "[A-Za-z_]"
+                          },
+                          {
+                            "repeat": "[A-Za-z0-9_]"
+                          }
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "seq": [
+                      {
+                        "literal": "$"
+                      },
+                      {
+                        "seq": [
+                          {
+                            "class": "[A-Za-z_]"
+                          },
+                          {
+                            "repeat": "[A-Za-z0-9_]"
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          },
+          "captures": [
+            "punctuation.section.embedded",
+            "variable.other"
+          ]
+        },
+        {
+          "match": {
+            "literal": "{"
+          },
+          "push": "percentRegexpBrace"
+        },
+        {
+          "match": {
+            "literal": "}"
+          },
+          "pop": true
+        }
+      ]
+    },
+    "percentRegexpBracket": {
+      "scope": "string.regexp",
+      "rules": [
+        {
+          "match": {
+            "seq": [
+              {
+                "literal": "\\x"
+              },
+              {
+                "repeat": "[0-9A-Fa-f]",
+                "min": 1,
+                "max": 2
+              }
+            ]
+          },
+          "scope": "constant.character.escape"
+        },
+        {
+          "match": {
+            "seq": [
+              {
+                "literal": "\\u{"
+              },
+              {
+                "repeat": "[0-9A-Fa-f ]",
+                "min": 1
+              },
+              {
+                "literal": "}"
+              }
+            ]
+          },
+          "scope": "constant.character.escape"
+        },
+        {
+          "match": {
+            "seq": [
+              {
+                "literal": "\\u"
+              },
+              {
+                "repeat": "[0-9A-Fa-f]",
+                "min": 4,
+                "max": 4
+              }
+            ]
+          },
+          "scope": "constant.character.escape"
+        },
+        {
+          "match": {
+            "seq": [
+              {
+                "literal": "\\"
+              },
+              {
+                "repeat": "[0-7]",
+                "min": 1,
+                "max": 3
+              }
+            ]
+          },
+          "scope": "constant.character.escape"
+        },
+        {
+          "match": {
+            "seq": [
+              {
+                "literal": "\\"
+              },
+              {
+                "anyOf": [
+                  {
+                    "seq": [
+                      {
+                        "class": "[cC]"
+                      },
+                      {
+                        "opt": {
+                          "literal": "-"
+                        }
+                      },
+                      {
+                        "class": "[^\\r\\n]"
+                      }
+                    ]
+                  },
+                  {
+                    "seq": [
+                      {
+                        "class": "[M]"
+                      },
+                      {
+                        "literal": "-"
+                      },
+                      {
+                        "class": "[^\\r\\n]"
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          },
+          "scope": "constant.character.escape"
+        },
+        {
+          "match": {
+            "seq": [
+              {
+                "literal": "\\"
+              },
+              {
+                "class": "[^\\r\\n]"
+              }
+            ]
+          },
+          "scope": "constant.character.escape"
+        },
+        {
+          "match": {
+            "seq": [
+              {
+                "literal": "\\"
+              },
+              {
+                "eol": true
+              }
+            ]
+          },
+          "scope": "constant.character.escape"
+        },
+        {
+          "match": {
+            "literal": "#{"
+          },
+          "scope": "punctuation.section.embedded",
+          "push": "interpolation"
+        },
+        {
+          "match": {
+            "seq": [
+              {
+                "literal": "#"
+              },
+              {
+                "anyOf": [
+                  {
+                    "seq": [
+                      {
+                        "literal": "@@"
+                      },
+                      {
+                        "seq": [
+                          {
+                            "class": "[A-Za-z_]"
+                          },
+                          {
+                            "repeat": "[A-Za-z0-9_]"
+                          }
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "seq": [
+                      {
+                        "literal": "@"
+                      },
+                      {
+                        "seq": [
+                          {
+                            "class": "[A-Za-z_]"
+                          },
+                          {
+                            "repeat": "[A-Za-z0-9_]"
+                          }
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "seq": [
+                      {
+                        "literal": "$"
+                      },
+                      {
+                        "seq": [
+                          {
+                            "class": "[A-Za-z_]"
+                          },
+                          {
+                            "repeat": "[A-Za-z0-9_]"
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          },
+          "captures": [
+            "punctuation.section.embedded",
+            "variable.other"
+          ]
+        },
+        {
+          "match": {
+            "literal": "["
+          },
+          "push": "percentRegexpBracket"
+        },
+        {
+          "match": {
+            "literal": "]"
+          },
+          "pop": true
+        }
+      ]
+    },
+    "percentRegexpOther": {
+      "scope": "string.regexp",
+      "rules": [
+        {
+          "match": {
+            "seq": [
+              {
+                "literal": "\\x"
+              },
+              {
+                "repeat": "[0-9A-Fa-f]",
+                "min": 1,
+                "max": 2
+              }
+            ]
+          },
+          "scope": "constant.character.escape"
+        },
+        {
+          "match": {
+            "seq": [
+              {
+                "literal": "\\u{"
+              },
+              {
+                "repeat": "[0-9A-Fa-f ]",
+                "min": 1
+              },
+              {
+                "literal": "}"
+              }
+            ]
+          },
+          "scope": "constant.character.escape"
+        },
+        {
+          "match": {
+            "seq": [
+              {
+                "literal": "\\u"
+              },
+              {
+                "repeat": "[0-9A-Fa-f]",
+                "min": 4,
+                "max": 4
+              }
+            ]
+          },
+          "scope": "constant.character.escape"
+        },
+        {
+          "match": {
+            "seq": [
+              {
+                "literal": "\\"
+              },
+              {
+                "repeat": "[0-7]",
+                "min": 1,
+                "max": 3
+              }
+            ]
+          },
+          "scope": "constant.character.escape"
+        },
+        {
+          "match": {
+            "seq": [
+              {
+                "literal": "\\"
+              },
+              {
+                "anyOf": [
+                  {
+                    "seq": [
+                      {
+                        "class": "[cC]"
+                      },
+                      {
+                        "opt": {
+                          "literal": "-"
+                        }
+                      },
+                      {
+                        "class": "[^\\r\\n]"
+                      }
+                    ]
+                  },
+                  {
+                    "seq": [
+                      {
+                        "class": "[M]"
+                      },
+                      {
+                        "literal": "-"
+                      },
+                      {
+                        "class": "[^\\r\\n]"
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          },
+          "scope": "constant.character.escape"
+        },
+        {
+          "match": {
+            "seq": [
+              {
+                "literal": "\\"
+              },
+              {
+                "class": "[^\\r\\n]"
+              }
+            ]
+          },
+          "scope": "constant.character.escape"
+        },
+        {
+          "match": {
+            "seq": [
+              {
+                "literal": "\\"
+              },
+              {
+                "eol": true
+              }
+            ]
+          },
+          "scope": "constant.character.escape"
+        },
+        {
+          "match": {
+            "literal": "#{"
+          },
+          "scope": "punctuation.section.embedded",
+          "push": "interpolation"
+        },
+        {
+          "match": {
+            "seq": [
+              {
+                "literal": "#"
+              },
+              {
+                "anyOf": [
+                  {
+                    "seq": [
+                      {
+                        "literal": "@@"
+                      },
+                      {
+                        "seq": [
+                          {
+                            "class": "[A-Za-z_]"
+                          },
+                          {
+                            "repeat": "[A-Za-z0-9_]"
+                          }
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "seq": [
+                      {
+                        "literal": "@"
+                      },
+                      {
+                        "seq": [
+                          {
+                            "class": "[A-Za-z_]"
+                          },
+                          {
+                            "repeat": "[A-Za-z0-9_]"
+                          }
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "seq": [
+                      {
+                        "literal": "$"
+                      },
+                      {
+                        "seq": [
+                          {
+                            "class": "[A-Za-z_]"
+                          },
+                          {
+                            "repeat": "[A-Za-z0-9_]"
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          },
+          "captures": [
+            "punctuation.section.embedded",
+            "variable.other"
+          ]
+        },
+        {
+          "match": {
+            "remembered": true
+          },
+          "pop": true
+        }
+      ]
+    },
+    "percentRegexpParen": {
+      "scope": "string.regexp",
+      "rules": [
+        {
+          "match": {
+            "seq": [
+              {
+                "literal": "\\x"
+              },
+              {
+                "repeat": "[0-9A-Fa-f]",
+                "min": 1,
+                "max": 2
+              }
+            ]
+          },
+          "scope": "constant.character.escape"
+        },
+        {
+          "match": {
+            "seq": [
+              {
+                "literal": "\\u{"
+              },
+              {
+                "repeat": "[0-9A-Fa-f ]",
+                "min": 1
+              },
+              {
+                "literal": "}"
+              }
+            ]
+          },
+          "scope": "constant.character.escape"
+        },
+        {
+          "match": {
+            "seq": [
+              {
+                "literal": "\\u"
+              },
+              {
+                "repeat": "[0-9A-Fa-f]",
+                "min": 4,
+                "max": 4
+              }
+            ]
+          },
+          "scope": "constant.character.escape"
+        },
+        {
+          "match": {
+            "seq": [
+              {
+                "literal": "\\"
+              },
+              {
+                "repeat": "[0-7]",
+                "min": 1,
+                "max": 3
+              }
+            ]
+          },
+          "scope": "constant.character.escape"
+        },
+        {
+          "match": {
+            "seq": [
+              {
+                "literal": "\\"
+              },
+              {
+                "anyOf": [
+                  {
+                    "seq": [
+                      {
+                        "class": "[cC]"
+                      },
+                      {
+                        "opt": {
+                          "literal": "-"
+                        }
+                      },
+                      {
+                        "class": "[^\\r\\n]"
+                      }
+                    ]
+                  },
+                  {
+                    "seq": [
+                      {
+                        "class": "[M]"
+                      },
+                      {
+                        "literal": "-"
+                      },
+                      {
+                        "class": "[^\\r\\n]"
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          },
+          "scope": "constant.character.escape"
+        },
+        {
+          "match": {
+            "seq": [
+              {
+                "literal": "\\"
+              },
+              {
+                "class": "[^\\r\\n]"
+              }
+            ]
+          },
+          "scope": "constant.character.escape"
+        },
+        {
+          "match": {
+            "seq": [
+              {
+                "literal": "\\"
+              },
+              {
+                "eol": true
+              }
+            ]
+          },
+          "scope": "constant.character.escape"
+        },
+        {
+          "match": {
+            "literal": "#{"
+          },
+          "scope": "punctuation.section.embedded",
+          "push": "interpolation"
+        },
+        {
+          "match": {
+            "seq": [
+              {
+                "literal": "#"
+              },
+              {
+                "anyOf": [
+                  {
+                    "seq": [
+                      {
+                        "literal": "@@"
+                      },
+                      {
+                        "seq": [
+                          {
+                            "class": "[A-Za-z_]"
+                          },
+                          {
+                            "repeat": "[A-Za-z0-9_]"
+                          }
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "seq": [
+                      {
+                        "literal": "@"
+                      },
+                      {
+                        "seq": [
+                          {
+                            "class": "[A-Za-z_]"
+                          },
+                          {
+                            "repeat": "[A-Za-z0-9_]"
+                          }
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "seq": [
+                      {
+                        "literal": "$"
+                      },
+                      {
+                        "seq": [
+                          {
+                            "class": "[A-Za-z_]"
+                          },
+                          {
+                            "repeat": "[A-Za-z0-9_]"
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          },
+          "captures": [
+            "punctuation.section.embedded",
+            "variable.other"
+          ]
+        },
+        {
+          "match": {
+            "literal": "("
+          },
+          "push": "percentRegexpParen"
+        },
+        {
+          "match": {
+            "literal": ")"
+          },
+          "pop": true
+        }
+      ]
+    },
+    "rawHeredoc": {
+      "scope": "string.quoted",
+      "rules": [
+        {
+          "match": {
+            "seq": [
+              {
+                "bol": true
+              },
+              {
+                "repeat": "[ \\t]"
+              },
+              {
+                "remembered": true
+              },
+              {
+                "eol": true
+              }
+            ]
+          },
+          "pop": true
+        }
+      ]
+    },
+    "regexp": {
+      "scope": "string.regexp",
+      "endsAtEOL": true,
+      "rules": [
+        {
+          "match": {
+            "seq": [
+              {
+                "literal": "\\x"
+              },
+              {
+                "repeat": "[0-9A-Fa-f]",
+                "min": 1,
+                "max": 2
+              }
+            ]
+          },
+          "scope": "constant.character.escape"
+        },
+        {
+          "match": {
+            "seq": [
+              {
+                "literal": "\\u{"
+              },
+              {
+                "repeat": "[0-9A-Fa-f ]",
+                "min": 1
+              },
+              {
+                "literal": "}"
+              }
+            ]
+          },
+          "scope": "constant.character.escape"
+        },
+        {
+          "match": {
+            "seq": [
+              {
+                "literal": "\\u"
+              },
+              {
+                "repeat": "[0-9A-Fa-f]",
+                "min": 4,
+                "max": 4
+              }
+            ]
+          },
+          "scope": "constant.character.escape"
+        },
+        {
+          "match": {
+            "seq": [
+              {
+                "literal": "\\"
+              },
+              {
+                "repeat": "[0-7]",
+                "min": 1,
+                "max": 3
+              }
+            ]
+          },
+          "scope": "constant.character.escape"
+        },
+        {
+          "match": {
+            "seq": [
+              {
+                "literal": "\\"
+              },
+              {
+                "anyOf": [
+                  {
+                    "seq": [
+                      {
+                        "class": "[cC]"
+                      },
+                      {
+                        "opt": {
+                          "literal": "-"
+                        }
+                      },
+                      {
+                        "class": "[^\\r\\n]"
+                      }
+                    ]
+                  },
+                  {
+                    "seq": [
+                      {
+                        "class": "[M]"
+                      },
+                      {
+                        "literal": "-"
+                      },
+                      {
+                        "class": "[^\\r\\n]"
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          },
+          "scope": "constant.character.escape"
+        },
+        {
+          "match": {
+            "seq": [
+              {
+                "literal": "\\"
+              },
+              {
+                "class": "[^\\r\\n]"
+              }
+            ]
+          },
+          "scope": "constant.character.escape"
+        },
+        {
+          "match": {
+            "seq": [
+              {
+                "literal": "\\"
+              },
+              {
+                "eol": true
+              }
+            ]
+          },
+          "scope": "constant.character.escape"
+        },
+        {
+          "match": {
+            "literal": "#{"
+          },
+          "scope": "punctuation.section.embedded",
+          "push": "interpolation"
+        },
+        {
+          "match": {
+            "seq": [
+              {
+                "literal": "#"
+              },
+              {
+                "anyOf": [
+                  {
+                    "seq": [
+                      {
+                        "literal": "@@"
+                      },
+                      {
+                        "seq": [
+                          {
+                            "class": "[A-Za-z_]"
+                          },
+                          {
+                            "repeat": "[A-Za-z0-9_]"
+                          }
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "seq": [
+                      {
+                        "literal": "@"
+                      },
+                      {
+                        "seq": [
+                          {
+                            "class": "[A-Za-z_]"
+                          },
+                          {
+                            "repeat": "[A-Za-z0-9_]"
+                          }
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "seq": [
+                      {
+                        "literal": "$"
+                      },
+                      {
+                        "seq": [
+                          {
+                            "class": "[A-Za-z_]"
+                          },
+                          {
+                            "repeat": "[A-Za-z0-9_]"
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          },
+          "captures": [
+            "punctuation.section.embedded",
+            "variable.other"
+          ]
+        },
+        {
+          "match": {
+            "seq": [
+              {
+                "literal": "/"
+              },
+              {
+                "repeat": "[imxounse]"
+              }
+            ]
+          },
+          "pop": true
+        }
+      ]
+    },
+    "single": {
+      "scope": "string.quoted",
+      "rules": [
+        {
+          "match": {
+            "seq": [
+              {
+                "literal": "\\"
+              },
+              {
+                "class": "[\\\\']"
+              }
+            ]
+          },
+          "scope": "constant.character.escape"
+        },
+        {
+          "match": {
+            "literal": "'"
+          },
+          "pop": true
+        }
+      ]
+    },
+    "symbolString": {
+      "scope": "constant.language",
+      "rules": [
+        {
+          "match": {
+            "seq": [
+              {
+                "literal": "\\x"
+              },
+              {
+                "repeat": "[0-9A-Fa-f]",
+                "min": 1,
+                "max": 2
+              }
+            ]
+          },
+          "scope": "constant.character.escape"
+        },
+        {
+          "match": {
+            "seq": [
+              {
+                "literal": "\\u{"
+              },
+              {
+                "repeat": "[0-9A-Fa-f ]",
+                "min": 1
+              },
+              {
+                "literal": "}"
+              }
+            ]
+          },
+          "scope": "constant.character.escape"
+        },
+        {
+          "match": {
+            "seq": [
+              {
+                "literal": "\\u"
+              },
+              {
+                "repeat": "[0-9A-Fa-f]",
+                "min": 4,
+                "max": 4
+              }
+            ]
+          },
+          "scope": "constant.character.escape"
+        },
+        {
+          "match": {
+            "seq": [
+              {
+                "literal": "\\"
+              },
+              {
+                "repeat": "[0-7]",
+                "min": 1,
+                "max": 3
+              }
+            ]
+          },
+          "scope": "constant.character.escape"
+        },
+        {
+          "match": {
+            "seq": [
+              {
+                "literal": "\\"
+              },
+              {
+                "anyOf": [
+                  {
+                    "seq": [
+                      {
+                        "class": "[cC]"
+                      },
+                      {
+                        "opt": {
+                          "literal": "-"
+                        }
+                      },
+                      {
+                        "class": "[^\\r\\n]"
+                      }
+                    ]
+                  },
+                  {
+                    "seq": [
+                      {
+                        "class": "[M]"
+                      },
+                      {
+                        "literal": "-"
+                      },
+                      {
+                        "class": "[^\\r\\n]"
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          },
+          "scope": "constant.character.escape"
+        },
+        {
+          "match": {
+            "seq": [
+              {
+                "literal": "\\"
+              },
+              {
+                "class": "[^\\r\\n]"
+              }
+            ]
+          },
+          "scope": "constant.character.escape"
+        },
+        {
+          "match": {
+            "seq": [
+              {
+                "literal": "\\"
+              },
+              {
+                "eol": true
+              }
+            ]
+          },
+          "scope": "constant.character.escape"
+        },
+        {
+          "match": {
+            "literal": "#{"
+          },
+          "scope": "punctuation.section.embedded",
+          "push": "interpolation"
+        },
+        {
+          "match": {
+            "seq": [
+              {
+                "literal": "#"
+              },
+              {
+                "anyOf": [
+                  {
+                    "seq": [
+                      {
+                        "literal": "@@"
+                      },
+                      {
+                        "seq": [
+                          {
+                            "class": "[A-Za-z_]"
+                          },
+                          {
+                            "repeat": "[A-Za-z0-9_]"
+                          }
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "seq": [
+                      {
+                        "literal": "@"
+                      },
+                      {
+                        "seq": [
+                          {
+                            "class": "[A-Za-z_]"
+                          },
+                          {
+                            "repeat": "[A-Za-z0-9_]"
+                          }
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "seq": [
+                      {
+                        "literal": "$"
+                      },
+                      {
+                        "seq": [
+                          {
+                            "class": "[A-Za-z_]"
+                          },
+                          {
+                            "repeat": "[A-Za-z0-9_]"
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          },
+          "captures": [
+            "punctuation.section.embedded",
+            "variable.other"
+          ]
+        },
+        {
+          "match": {
+            "literal": "\""
+          },
+          "pop": true
+        }
+      ]
+    }
+  }
+}
