@@ -1,0 +1,73 @@
+val name = "Boba"
+^^^ keyword
+           ^^^^^^ string.quoted
+val s = "Hello, $name! ${name.length} chars, ${list.map { it * 2 }} and \$literal \t\"q\" \u00e9 bad\q"
+^^^ keyword
+        ^^^^^^^^ string.quoted
+                ^ punctuation.section.embedded
+                 ^^^^ variable.other
+                     ^^ string.quoted
+                       ^^ punctuation.section.embedded
+                                    ^ punctuation.section.embedded
+                                     ^^^^^^^^ string.quoted
+                                             ^^ punctuation.section.embedded
+                                                          ^^ variable.language
+                                                               ^ constant.numeric
+                                                                  ^ punctuation.section.embedded
+                                                                   ^^^^^ string.quoted
+                                                                        ^^ constant.character.escape
+                                                                          ^^^^^^^^ string.quoted
+                                                                                  ^^^^ constant.character.escape
+                                                                                      ^ string.quoted
+                                                                                       ^^ constant.character.escape
+                                                                                         ^ string.quoted
+                                                                                          ^^^^^^ constant.character.escape
+                                                                                                ^^^^ string.quoted
+                                                                                                    ^ invalid
+                                                                                                     ^^ string.quoted
+val nested = "outer ${"inner $name"} done"
+^^^ keyword
+             ^^^^^^^ string.quoted
+                    ^^ punctuation.section.embedded
+                      ^^^^^^^ string.quoted
+                             ^ punctuation.section.embedded
+                              ^^^^ variable.other
+                                  ^ string.quoted
+                                   ^ punctuation.section.embedded
+                                    ^^^^^^ string.quoted
+val raw = """
+^^^ keyword
+          ^^^ string.quoted
+    raw $name and ${1 + 2}, no \n escapes
+^^^^^^^^ string.quoted
+        ^ punctuation.section.embedded
+         ^^^^ variable.other
+             ^^^^^ string.quoted
+                  ^^ punctuation.section.embedded
+                    ^ constant.numeric
+                        ^ constant.numeric
+                         ^ punctuation.section.embedded
+                          ^^^^^^^^^^^^^^^ string.quoted
+    "quotes" and ""double"" inside, 日本語 🧋 ✓
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ string.quoted
+"""
+^^^ string.quoted
+val fourQuotes = """ends with a quote""""
+^^^ keyword
+                 ^^^^^^^^^^^^^^^^^^^^^^^^ string.quoted
+val unclosed = "never closed ${name
+^^^ keyword
+               ^^^^^^^^^^^^^^ string.quoted
+                             ^^ punctuation.section.embedded
+val after = 1
+^^^ keyword
+            ^ constant.numeric
+/* outer /* nested */ still a comment */ val y = 2
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ comment.block
+                                         ^^^ keyword
+                                                 ^ constant.numeric
+/* unterminated /* nested
+^^^^^^^^^^^^^^^^^^^^^^^^^ comment.block
+val z = 3
+^^^^^^^^^ comment.block
+

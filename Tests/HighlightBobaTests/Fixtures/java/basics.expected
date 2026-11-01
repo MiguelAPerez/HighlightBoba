@@ -1,0 +1,134 @@
+package dev.boba.app;
+^^^^^^^ keyword
+
+import java.util.List;
+^^^^^^ keyword
+                 ^^^^ entity.name.type
+import static java.lang.Math.*;
+^^^^^^ keyword
+       ^^^^^^ keyword
+                        ^^^^ entity.name.type
+
+/**
+^^^ comment.block
+ * A greeter.
+^^^^^^^^^^^^^ comment.block
+ * @author someone
+^^^^^^^^^^^^^^^^^^ comment.block
+ */
+^^^ comment.block
+@SuppressWarnings("unchecked")
+^^^^^^^^^^^^^^^^^ meta.preprocessor
+                  ^^^^^^^^^^^ string.quoted
+public final class Greeter<T extends Comparable<T>> implements Runnable {
+^^^^^^ keyword
+       ^^^^^ keyword
+             ^^^^^ keyword
+                   ^^^^^^^ entity.name.type
+                           ^ entity.name.type
+                             ^^^^^^^ keyword
+                                     ^^^^^^^^^^ entity.name.type
+                                                ^ entity.name.type
+                                                    ^^^^^^^^^^ keyword
+                                                               ^^^^^^^^ entity.name.type
+    private static final int MAX_COUNT = 10;
+    ^^^^^^^ keyword
+            ^^^^^^ keyword
+                   ^^^^^ keyword
+                         ^^^ entity.name.type
+                                         ^^ constant.numeric
+    private final List<String> names;
+    ^^^^^^^ keyword
+            ^^^^^ keyword
+                  ^^^^ entity.name.type
+                       ^^^^^^ entity.name.type
+    private volatile boolean done = false;
+    ^^^^^^^ keyword
+            ^^^^^^^^ keyword
+                     ^^^^^^^ entity.name.type
+                                    ^^^^^ constant.language
+
+    @Override
+    ^^^^^^^^^ meta.preprocessor
+    public void run() {
+    ^^^^^^ keyword
+           ^^^^ entity.name.type
+        for (int i = 0; i < MAX_COUNT; i++) {
+        ^^^ keyword
+             ^^^ entity.name.type
+                     ^ constant.numeric
+            if (this.names == null || i >= names.size()) break;
+            ^^ keyword
+                ^^^^ variable.language
+                              ^^^^ constant.language
+                                                         ^^^^^ keyword
+            System.out.println("Hello, " + names.get(i) + '!');
+            ^^^^^^ entity.name.type
+                               ^^^^^^^^^ string.quoted
+                                                          ^^^ string.quoted
+        }
+        var total = 1_000_000L + 0x1F + 0b1010 + 017 + 3.14f + 2.5e-3d + .5 + 0x1.8p3;
+        ^^^ keyword
+                    ^^^^^^^^^^ constant.numeric
+                                 ^^^^ constant.numeric
+                                        ^^^^^^ constant.numeric
+                                                 ^^^ constant.numeric
+                                                       ^^^^^ constant.numeric
+                                                               ^^^^^^^ constant.numeric
+                                                                         ^^ constant.numeric
+                                                                              ^^^^^^^ constant.numeric
+        Object o = super.toString();
+        ^^^^^^ entity.name.type
+                   ^^^^^ variable.language
+        if (o instanceof String s && !s.isEmpty()) { yield(s); }
+        ^^ keyword
+              ^^^^^^^^^^ keyword
+                         ^^^^^^ entity.name.type
+                                                     ^^^^^ keyword
+    }
+
+    sealed interface Shape permits Circle, Square {}
+    ^^^^^^ keyword
+           ^^^^^^^^^ keyword
+                     ^^^^^ entity.name.type
+                           ^^^^^^^ keyword
+                                   ^^^^^^ entity.name.type
+                                           ^^^^^^ entity.name.type
+    record Circle(double radius) implements Shape {}
+    ^^^^^^ keyword
+           ^^^^^^ entity.name.type
+                  ^^^^^^ entity.name.type
+                                 ^^^^^^^^^^ keyword
+                                            ^^^^^ entity.name.type
+    non-sealed class Square implements Shape {}
+    ^^^^^^^^^^ keyword
+               ^^^^^ keyword
+                     ^^^^^^ entity.name.type
+                            ^^^^^^^^^^ keyword
+                                       ^^^^^ entity.name.type
+    enum Color { RED, GREEN }
+    ^^^^ keyword
+         ^^^^^ entity.name.type
+    @interface Marker {}
+    ^^^^^^^^^^ keyword
+               ^^^^^^ entity.name.type
+
+    int classify(Object o) {
+    ^^^ entity.name.type
+                 ^^^^^^ entity.name.type
+        return switch (o) {
+        ^^^^^^ keyword
+               ^^^^^^ keyword
+            case Integer n when n > 0 -> 1;
+            ^^^^ keyword
+                 ^^^^^^^ entity.name.type
+                           ^^^^ keyword
+                                    ^ constant.numeric
+                                         ^ constant.numeric
+            default -> 0;
+            ^^^^^^^ keyword
+                       ^ constant.numeric
+        };
+    }
+}
+
