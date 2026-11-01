@@ -1,0 +1,42 @@
+//! Crate docs.
+use std::collections::HashMap;
+
+/// A point in space.
+#[derive(Debug, Clone, PartialEq)]
+pub struct Point<'a, T: Copy> {
+    pub x: T,
+    label: &'a str,
+}
+
+const MAX_POINTS: usize = 1_000;
+static GREETING: &str = "hi";
+
+impl<'a, T: Copy + Into<f64>> Point<'a, T> {
+    pub fn new(x: T, label: &'a str) -> Self {
+        Self { x, label }
+    }
+
+    async fn distance(&self, other: &Self) -> Result<f64, Box<dyn std::error::Error>> {
+        let d = (self.x.into() - other.x.into()).abs();
+        if d != 0.0 && !self.label.is_empty() {
+            println!("{} is {d:.2} away", self.label);
+        }
+        Ok(d)
+    }
+}
+
+enum Shape { Circle(f32), Square { side: u8 } }
+trait Area { fn area(&self) -> f64; }
+type Map = HashMap<String, Vec<i32>>;
+
+fn main() {
+    let mut v = vec![1, 2, 3];
+    for i in 0..v.len() { v[i] *= 2; }
+    let t = (1, 2.5e-3, 0xFF_u8, 0o17, 0b1010_1010, 3.0f32, 1usize);
+    let second = t.1;
+    match v.as_slice() {
+        [first, .., last] => assert_eq!(*first, 2),
+        _ => unreachable!(),
+    }
+    let c = crate::util::helper(super::VALUE, MAX_POINTS);
+}

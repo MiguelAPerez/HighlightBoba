@@ -1,0 +1,706 @@
+{
+  "name": "rust",
+  "fileExtensions": [
+    "rs"
+  ],
+  "initial": "code",
+  "states": {
+    "attribute": {
+      "scope": "meta.preprocessor",
+      "rules": [
+        {
+          "match": {
+            "literal": "\""
+          },
+          "scope": "string.quoted",
+          "push": "string"
+        },
+        {
+          "match": {
+            "literal": "["
+          },
+          "push": "attributeBracket"
+        },
+        {
+          "match": {
+            "literal": "]"
+          },
+          "pop": true
+        }
+      ]
+    },
+    "attributeBracket": {
+      "scope": "meta.preprocessor",
+      "rules": [
+        {
+          "match": {
+            "literal": "\""
+          },
+          "scope": "string.quoted",
+          "push": "string"
+        },
+        {
+          "match": {
+            "literal": "["
+          },
+          "push": "attributeBracket"
+        },
+        {
+          "match": {
+            "literal": "]"
+          },
+          "pop": true
+        }
+      ]
+    },
+    "blockComment": {
+      "scope": "comment.block",
+      "rules": [
+        {
+          "match": {
+            "literal": "/*"
+          },
+          "push": "blockComment"
+        },
+        {
+          "match": {
+            "literal": "*/"
+          },
+          "pop": true
+        }
+      ]
+    },
+    "code": {
+      "rules": [
+        {
+          "match": {
+            "seq": [
+              {
+                "literal": "//"
+              },
+              {
+                "repeat": "[^\\r\\n]"
+              }
+            ]
+          },
+          "scope": "comment.line"
+        },
+        {
+          "match": {
+            "literal": "/*"
+          },
+          "scope": "comment.block",
+          "push": "blockComment"
+        },
+        {
+          "match": {
+            "seq": [
+              {
+                "literal": "#"
+              },
+              {
+                "opt": {
+                  "literal": "!"
+                }
+              },
+              {
+                "literal": "["
+              }
+            ]
+          },
+          "scope": "meta.preprocessor",
+          "push": "attribute"
+        },
+        {
+          "match": {
+            "seq": [
+              {
+                "opt": {
+                  "class": "[bc]"
+                }
+              },
+              {
+                "literal": "r"
+              },
+              {
+                "repeat": "[#]",
+                "min": 1
+              },
+              {
+                "literal": "\""
+              }
+            ]
+          },
+          "scope": "string.quoted",
+          "push": "rawString",
+          "remember": 2,
+          "notAfterWord": true
+        },
+        {
+          "match": {
+            "seq": [
+              {
+                "opt": {
+                  "class": "[bc]"
+                }
+              },
+              {
+                "literal": "r\""
+              }
+            ]
+          },
+          "scope": "string.quoted",
+          "push": "rawPlain",
+          "notAfterWord": true
+        },
+        {
+          "match": {
+            "seq": [
+              {
+                "opt": {
+                  "class": "[bc]"
+                }
+              },
+              {
+                "literal": "\""
+              }
+            ]
+          },
+          "scope": "string.quoted",
+          "push": "string",
+          "notAfterWord": true
+        },
+        {
+          "match": {
+            "seq": [
+              {
+                "opt": {
+                  "literal": "b"
+                }
+              },
+              {
+                "literal": "'"
+              },
+              {
+                "anyOf": [
+                  {
+                    "seq": [
+                      {
+                        "literal": "\\x"
+                      },
+                      {
+                        "class": "[0-7]"
+                      },
+                      {
+                        "class": "[0-9A-Fa-f]"
+                      }
+                    ]
+                  },
+                  {
+                    "seq": [
+                      {
+                        "literal": "\\u{"
+                      },
+                      {
+                        "repeat": "[0-9A-Fa-f_]",
+                        "min": 1,
+                        "max": 8
+                      },
+                      {
+                        "literal": "}"
+                      }
+                    ]
+                  },
+                  {
+                    "seq": [
+                      {
+                        "literal": "\\"
+                      },
+                      {
+                        "class": "[nrt\\\\0'\"]"
+                      }
+                    ]
+                  },
+                  {
+                    "repeat": "[^'\\\\\\r\\n]",
+                    "min": 1,
+                    "max": 2
+                  }
+                ]
+              },
+              {
+                "literal": "'"
+              }
+            ]
+          },
+          "scope": "string.quoted",
+          "notAfterWord": true
+        },
+        {
+          "match": {
+            "seq": [
+              {
+                "literal": "'"
+              },
+              {
+                "seq": [
+                  {
+                    "class": "[A-Za-z_]"
+                  },
+                  {
+                    "repeat": "[A-Za-z0-9_]"
+                  }
+                ]
+              }
+            ]
+          },
+          "scope": "entity.name.type"
+        },
+        {
+          "match": {
+            "anyOf": [
+              {
+                "seq": [
+                  {
+                    "literal": "0x"
+                  },
+                  {
+                    "repeat": "[0-9A-Fa-f_]",
+                    "min": 1
+                  },
+                  {
+                    "opt": {
+                      "seq": [
+                        {
+                          "class": "[iuf]"
+                        },
+                        {
+                          "repeat": "[0-9a-z]",
+                          "min": 1
+                        }
+                      ]
+                    }
+                  }
+                ]
+              },
+              {
+                "seq": [
+                  {
+                    "literal": "0o"
+                  },
+                  {
+                    "repeat": "[0-7_]",
+                    "min": 1
+                  },
+                  {
+                    "opt": {
+                      "seq": [
+                        {
+                          "class": "[iuf]"
+                        },
+                        {
+                          "repeat": "[0-9a-z]",
+                          "min": 1
+                        }
+                      ]
+                    }
+                  }
+                ]
+              },
+              {
+                "seq": [
+                  {
+                    "literal": "0b"
+                  },
+                  {
+                    "repeat": "[01_]",
+                    "min": 1
+                  },
+                  {
+                    "opt": {
+                      "seq": [
+                        {
+                          "class": "[iuf]"
+                        },
+                        {
+                          "repeat": "[0-9a-z]",
+                          "min": 1
+                        }
+                      ]
+                    }
+                  }
+                ]
+              },
+              {
+                "seq": [
+                  {
+                    "class": "[0-9]"
+                  },
+                  {
+                    "repeat": "[0-9_]"
+                  },
+                  {
+                    "opt": {
+                      "seq": [
+                        {
+                          "literal": "."
+                        },
+                        {
+                          "notFollowedBy": {
+                            "class": "[.A-Za-z_]"
+                          }
+                        },
+                        {
+                          "repeat": "[0-9_]"
+                        }
+                      ]
+                    }
+                  },
+                  {
+                    "opt": {
+                      "seq": [
+                        {
+                          "class": "[eE]"
+                        },
+                        {
+                          "opt": {
+                            "class": "[+-]"
+                          }
+                        },
+                        {
+                          "repeat": "[0-9_]",
+                          "min": 1
+                        }
+                      ]
+                    }
+                  },
+                  {
+                    "opt": {
+                      "seq": [
+                        {
+                          "class": "[iuf]"
+                        },
+                        {
+                          "repeat": "[0-9a-z]",
+                          "min": 1
+                        }
+                      ]
+                    }
+                  }
+                ]
+              }
+            ]
+          },
+          "scope": "constant.numeric",
+          "notAfterWord": true
+        },
+        {
+          "match": {
+            "words": [
+              "true",
+              "false"
+            ]
+          },
+          "scope": "constant.language"
+        },
+        {
+          "match": {
+            "words": [
+              "self",
+              "Self",
+              "super",
+              "crate"
+            ]
+          },
+          "scope": "variable.language"
+        },
+        {
+          "match": {
+            "seq": [
+              {
+                "words": [
+                  "fn"
+                ]
+              },
+              {
+                "repeat": "[ \\t]",
+                "min": 1
+              },
+              {
+                "wordStarting": "[A-Za-z_]"
+              }
+            ]
+          },
+          "captures": [
+            "keyword",
+            null,
+            "entity.name.function"
+          ]
+        },
+        {
+          "match": {
+            "seq": [
+              {
+                "words": [
+                  "struct",
+                  "enum",
+                  "trait",
+                  "type",
+                  "union"
+                ]
+              },
+              {
+                "repeat": "[ \\t]",
+                "min": 1
+              },
+              {
+                "wordStarting": "[A-Za-z_]"
+              }
+            ]
+          },
+          "captures": [
+            "keyword",
+            null,
+            "entity.name.type"
+          ]
+        },
+        {
+          "match": {
+            "seq": [
+              {
+                "seq": [
+                  {
+                    "class": "[A-Za-z_]"
+                  },
+                  {
+                    "repeat": "[A-Za-z0-9_]"
+                  }
+                ]
+              },
+              {
+                "literal": "!"
+              },
+              {
+                "notFollowedBy": {
+                  "literal": "="
+                }
+              }
+            ]
+          },
+          "scope": "support.function",
+          "notAfterWord": true
+        },
+        {
+          "match": {
+            "words": [
+              "bool",
+              "char",
+              "str",
+              "i8",
+              "i16",
+              "i32",
+              "i64",
+              "i128",
+              "isize",
+              "u8",
+              "u16",
+              "u32",
+              "u64",
+              "u128",
+              "usize",
+              "f32",
+              "f64"
+            ]
+          },
+          "scope": "entity.name.type"
+        },
+        {
+          "match": {
+            "words": [
+              "as",
+              "async",
+              "await",
+              "break",
+              "const",
+              "continue",
+              "dyn",
+              "else",
+              "enum",
+              "extern",
+              "fn",
+              "for",
+              "if",
+              "impl",
+              "in",
+              "let",
+              "loop",
+              "match",
+              "mod",
+              "move",
+              "mut",
+              "pub",
+              "ref",
+              "return",
+              "static",
+              "struct",
+              "trait",
+              "type",
+              "union",
+              "unsafe",
+              "use",
+              "where",
+              "while",
+              "abstract",
+              "become",
+              "box",
+              "do",
+              "final",
+              "gen",
+              "macro",
+              "override",
+              "priv",
+              "try",
+              "typeof",
+              "unsized",
+              "virtual",
+              "yield"
+            ]
+          },
+          "scope": "keyword"
+        },
+        {
+          "match": {
+            "seq": [
+              {
+                "class": "[A-Z]"
+              },
+              {
+                "class": "[A-Z0-9_]"
+              },
+              {
+                "repeat": "[A-Z0-9_]"
+              },
+              {
+                "notFollowedBy": {
+                  "class": "[a-z]"
+                }
+              }
+            ]
+          },
+          "notAfterWord": true
+        },
+        {
+          "match": {
+            "wordStarting": "[A-Z]"
+          },
+          "scope": "entity.name.type"
+        }
+      ]
+    },
+    "rawPlain": {
+      "scope": "string.quoted",
+      "rules": [
+        {
+          "match": {
+            "literal": "\""
+          },
+          "pop": true
+        }
+      ]
+    },
+    "rawString": {
+      "scope": "string.quoted",
+      "rules": [
+        {
+          "match": {
+            "seq": [
+              {
+                "literal": "\""
+              },
+              {
+                "remembered": true
+              }
+            ]
+          },
+          "pop": true
+        }
+      ]
+    },
+    "string": {
+      "scope": "string.quoted",
+      "rules": [
+        {
+          "match": {
+            "seq": [
+              {
+                "literal": "\\x"
+              },
+              {
+                "repeat": "[0-9A-Fa-f]",
+                "min": 2,
+                "max": 2
+              }
+            ]
+          },
+          "scope": "constant.character.escape"
+        },
+        {
+          "match": {
+            "seq": [
+              {
+                "literal": "\\u{"
+              },
+              {
+                "repeat": "[0-9A-Fa-f_]",
+                "min": 1,
+                "max": 8
+              },
+              {
+                "literal": "}"
+              }
+            ]
+          },
+          "scope": "constant.character.escape"
+        },
+        {
+          "match": {
+            "seq": [
+              {
+                "literal": "\\"
+              },
+              {
+                "class": "[nrt\\\\0'\"]"
+              }
+            ]
+          },
+          "scope": "constant.character.escape"
+        },
+        {
+          "match": {
+            "seq": [
+              {
+                "literal": "\\"
+              },
+              {
+                "eol": true
+              }
+            ]
+          },
+          "scope": "constant.character.escape"
+        },
+        {
+          "match": {
+            "literal": "\\"
+          },
+          "scope": "invalid"
+        },
+        {
+          "match": {
+            "literal": "\""
+          },
+          "pop": true
+        }
+      ]
+    }
+  }
+}

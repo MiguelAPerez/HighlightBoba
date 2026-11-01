@@ -1,0 +1,7 @@
+fn f() {} /* open /* nested */ only one level closed
+^^ keyword
+   ^ entity.name.function
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ comment.block
+fn g() {}
+^^^^^^^^^ comment.block
+

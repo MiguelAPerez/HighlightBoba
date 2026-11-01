@@ -1,0 +1,2 @@
+fn f() {} /* open /* nested */ only one level closed
+fn g() {}
