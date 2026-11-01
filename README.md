@@ -28,6 +28,8 @@ let styles = theme.stylesByScope // look up once, then style each token by token
 
 `readable(ratio:)` raises any colour below a WCAG contrast ratio on the theme's background just far enough to reach it, keeping its hue.
 
+`HighlightTheme(importing:format:name:)` reads another editor's theme: a VS Code colour theme (JSON, comments allowed), a TextMate `.tmTheme` or an Xcode `.xccolortheme`. Each vocabulary scope takes the style of the first name the theme styles from a short list of common ones, so `keyword` also finds `storage.type`. Colours with alpha are laid over the background; files over 1 MB are refused.
+
 ## Contributing
 
 **Pull requests are welcome.** So are bug reports, language requests and design feedback as issues. Read [CONTRIBUTING.md](CONTRIBUTING.md) first: every PR belongs to the data lane (grammars, fixtures, queries) or the engine lane (Swift code), and both need a fixture or test that fails without the change. To report a vulnerability privately, see [SECURITY.md](SECURITY.md).
