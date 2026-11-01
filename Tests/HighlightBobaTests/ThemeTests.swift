@@ -109,6 +109,16 @@ import Testing
         #expect(byScope["keyword"]?.color == nil)
     }
 
+    @Test func aMarkupSelectorReachesTheDiffScopes() {
+        let theme = Self.theme([
+            "markup.inserted": HighlightStyle(color: Self.green),
+            "markup.deleted": HighlightStyle(color: Self.red)
+        ])
+        let byScope = theme.stylesByScope
+        #expect(byScope["markup.inserted"]?.color == Self.green)
+        #expect(byScope["markup.deleted"]?.color == Self.red)
+    }
+
     @Test func readableThemeRaisesTextAndEveryColourButKeepsTheRest() throws {
         let yellow = try #require(HighlightColor(hex: "#FFFF00"))
         var theme = Self.theme([
