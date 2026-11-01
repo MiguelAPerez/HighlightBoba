@@ -189,10 +189,9 @@
                         "literal": "\\x"
                       },
                       {
-                        "class": "[0-7]"
-                      },
-                      {
-                        "class": "[0-9A-Fa-f]"
+                        "repeat": "[0-9A-Fa-f]",
+                        "min": 2,
+                        "max": 2
                       }
                     ]
                   },

@@ -45,7 +45,7 @@ second line \
             ^ constant.character.escape
     continued";
 ^^^^^^^^^^^^^^ string.quoted
-let chars = ['a', '\n', '\'', '\\', '\x41', '\u{e9}', '🧋', b'z'];
+let chars = ['a', '\n', '\'', '\\', '\x41', '\u{e9}', '🧋', b'z', b'\xFF', b'\x80'];
 ^^^ keyword
              ^^^ string.quoted
                   ^^^^ string.quoted
@@ -55,6 +55,8 @@ let chars = ['a', '\n', '\'', '\\', '\x41', '\u{e9}', '🧋', b'z'];
                                             ^^^^^^^^ string.quoted
                                                       ^^^ string.quoted
                                                            ^^^^ string.quoted
+                                                                 ^^^^^^^ string.quoted
+                                                                          ^^^^^^^ string.quoted
 let lifetimes: &'static str = "日本語 ✓";
 ^^^ keyword
                 ^^^^^^^ entity.name.type
