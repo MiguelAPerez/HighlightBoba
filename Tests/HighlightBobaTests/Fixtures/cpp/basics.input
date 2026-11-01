@@ -1,0 +1,30 @@
+#include <vector>
+#include <string_view>
+import std;
+
+namespace boba::shop {
+
+template <typename T, class U = int>
+concept Drinkable = requires(T t) { t.sip(); };
+
+class [[nodiscard]] Cup final : public Vessel {
+public:
+    explicit Cup(std::size_t ml) noexcept : ml_{ml} {}
+    virtual ~Cup() override = default;
+    auto operator<=>(const Cup&) const = default;
+    [[deprecated("use pour")]] void fill(int amount);
+
+private:
+    std::size_t ml_ = 0;
+    static constexpr double kRatio = 1.5;
+};
+
+enum class Size : unsigned char { Small, Large };
+struct Point { int x; int y; };
+
+co_await something();
+auto lambda = [this, &x](auto&& v) mutable -> decltype(auto) { return v; };
+auto n = 1'000'000ull + 0xFF'FFu + 0b1010 + 10ms + 2.5_km + 'c';
+bool b = nullptr == this && true;
+auto s = static_cast<int>(3.0) + reinterpret_cast<long>(p);
+}  // namespace boba::shop

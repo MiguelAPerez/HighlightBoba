@@ -1,0 +1,41 @@
+auto a = "escapes\t\"\x41\101 bad\q"s;
+^^^^ keyword
+         ^^^^^^^^ string.quoted
+                 ^^^^^^^^^^^^ constant.character.escape
+                             ^^^^ string.quoted
+                                 ^ invalid
+                                  ^^ string.quoted
+auto raw = R"(a raw string with "quotes" and \n kept)";
+^^^^ keyword
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ string.quoted
+auto delim = R"xyz(contains )" and )abc" but ends here)xyz";
+^^^^ keyword
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ string.quoted
+auto prefixed = u8R"js(console.log("日本語 🧋 ✓");)js";
+^^^^ keyword
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ string.quoted
+auto wide = LR"(wide raw)" L"wide" u"utf16" U"utf32";
+^^^^ keyword
+            ^^^^^^^^^^^^^^ string.quoted
+                           ^^^^^^^ string.quoted
+                                   ^^^^^^^^ string.quoted
+                                            ^^^^^^^^ string.quoted
+auto multi = R"sql(
+^^^^ keyword
+             ^^^^^^ string.quoted
+SELECT 1;
+^^^^^^^^^ string.quoted
+)sql";
+^^^^^ string.quoted
+auto open = "never closed;
+^^^^ keyword
+            ^^^^^^^^^^^^^^ string.quoted
+int after = 1;
+^^^ entity.name.type
+            ^ constant.numeric
+auto rawOpen = R"end(a raw string that never closes
+^^^^ keyword
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ string.quoted
+int still = 2;
+^^^^^^^^^^^^^^ string.quoted
+

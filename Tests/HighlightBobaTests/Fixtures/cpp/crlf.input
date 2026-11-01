@@ -1,0 +1,4 @@
+#define X 1 \
+    + 2
+auto r = R"(crlf
+raw)";
