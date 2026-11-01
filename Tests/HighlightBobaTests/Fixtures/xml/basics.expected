@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+^^^^^ meta.preprocessor
+      ^^^^^^^ entity.other.attribute
+             ^ punctuation
+              ^^^^^ string.quoted
+                    ^^^^^^^^ entity.other.attribute
+                            ^ punctuation
+                             ^^^^^^^ string.quoted
+                                     ^^^^^^^^^^ entity.other.attribute
+                                               ^ punctuation
+                                                ^^^^^ string.quoted
+                                                     ^^ meta.preprocessor
+<?xml-stylesheet type="text/xsl" href="style.xsl"?>
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ meta.preprocessor
+<!-- A catalog -->
+^^^^^^^^^^^^^^^^^^ comment.block
+<catalog xmlns="urn:example" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+^ punctuation
+ ^^^^^^^ entity.name.tag
+         ^^^^^ entity.other.attribute
+              ^ punctuation
+               ^^^^^^^^^^^^^ string.quoted
+                             ^^^^^^^^^ entity.other.attribute
+                                      ^ punctuation
+                                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ string.quoted
+                                                                                  ^ punctuation
+  <book id="bk101" lang='en'>
+  ^ punctuation
+   ^^^^ entity.name.tag
+        ^^ entity.other.attribute
+          ^ punctuation
+           ^^^^^^^ string.quoted
+                   ^^^^ entity.other.attribute
+                       ^ punctuation
+                        ^^^^ string.quoted
+                            ^ punctuation
+    <title>XML &amp; You &#169; &#x1F9CB;</title>
+    ^ punctuation
+     ^^^^^ entity.name.tag
+          ^ punctuation
+               ^^^^^ constant.character.escape
+                         ^^^^^^ constant.character.escape
+                                ^^^^^^^^^ constant.character.escape
+                                         ^^ punctuation
+                                           ^^^^^ entity.name.tag
+                                                ^ punctuation
+    <empty/>
+    ^ punctuation
+     ^^^^^ entity.name.tag
+          ^^ punctuation
+    <price currency="EUR">44.95</price>
+    ^ punctuation
+     ^^^^^ entity.name.tag
+           ^^^^^^^^ entity.other.attribute
+                   ^ punctuation
+                    ^^^^^ string.quoted
+                         ^ punctuation
+                               ^^ punctuation
+                                 ^^^^^ entity.name.tag
+                                      ^ punctuation
+    <note><![CDATA[<not> & a tag]]></note>
+    ^ punctuation
+     ^^^^ entity.name.tag
+         ^ punctuation
+          ^^^^^^^^^ meta.preprocessor
+                                ^^^ meta.preprocessor
+                                   ^^ punctuation
+                                     ^^^^ entity.name.tag
+                                         ^ punctuation
+  </book>
+  ^^ punctuation
+    ^^^^ entity.name.tag
+        ^ punctuation
+  <xsi:custom xsi:type="x"/>
+  ^ punctuation
+   ^^^^^^^^^^ entity.name.tag
+              ^^^^^^^^ entity.other.attribute
+                      ^ punctuation
+                       ^^^ string.quoted
+                          ^^ punctuation
+</catalog>
+^^ punctuation
+  ^^^^^^^ entity.name.tag
+         ^ punctuation
+

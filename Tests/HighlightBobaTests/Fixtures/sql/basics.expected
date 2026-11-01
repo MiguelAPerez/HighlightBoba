@@ -1,0 +1,159 @@
+-- Monthly totals per customer
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ comment.line
+SELECT c.id, c."Display Name", COUNT(*) AS orders, SUM(o.total)::numeric(10, 2)
+^^^^^^ keyword
+           ^ punctuation
+               ^^^^^^^^^^^^^^ variable.other
+                             ^ punctuation
+                               ^^^^^ support.function
+                                    ^ punctuation
+                                      ^ punctuation
+                                        ^^ keyword
+                                                 ^ punctuation
+                                                   ^^^ support.function
+                                                      ^ punctuation
+                                                              ^^^ punctuation
+                                                                 ^^^^^^^ entity.name.type
+                                                                        ^ punctuation
+                                                                         ^^ constant.numeric
+                                                                           ^ punctuation
+                                                                             ^ constant.numeric
+                                                                              ^ punctuation
+FROM customers AS c
+^^^^ keyword
+               ^^ keyword
+LEFT JOIN orders o ON o.customer_id = c.id AND o.status <> 'void'
+^^^^ keyword
+     ^^^^ keyword
+                   ^^ keyword
+                                           ^^^ keyword
+                                                           ^^^^^^ string.quoted
+WHERE c.created_at >= DATE '2024-01-01' AND c.email ILIKE '%@example.com'
+^^^^^ keyword
+                      ^^^^ entity.name.type
+                           ^^^^^^^^^^^^ string.quoted
+                                        ^^^ keyword
+                                                    ^^^^^ keyword
+                                                          ^^^^^^^^^^^^^^^ string.quoted
+GROUP BY c.id
+^^^^^ keyword
+      ^^ keyword
+HAVING count(*) > 3
+^^^^^^ keyword
+       ^^^^^ support.function
+            ^ punctuation
+              ^ punctuation
+                  ^ constant.numeric
+ORDER BY orders DESC NULLS LAST
+^^^^^ keyword
+      ^^ keyword
+                ^^^^ keyword
+                     ^^^^^ keyword
+                           ^^^^ keyword
+LIMIT 10 OFFSET 20;
+^^^^^ keyword
+      ^^ constant.numeric
+         ^^^^^^ keyword
+                ^^ constant.numeric
+                  ^ punctuation
+
+insert into tags (name, weight) values ('boba', 1.5e3), ('tea', .25), (null, 0x1F)
+^^^^^^ keyword
+       ^^^^ keyword
+                 ^ punctuation
+                      ^ punctuation
+                              ^ punctuation
+                                ^^^^^^ keyword
+                                       ^ punctuation
+                                        ^^^^^^ string.quoted
+                                              ^ punctuation
+                                                ^^^^^ constant.numeric
+                                                     ^^ punctuation
+                                                        ^ punctuation
+                                                         ^^^^^ string.quoted
+                                                              ^ punctuation
+                                                                ^^^ constant.numeric
+                                                                   ^^ punctuation
+                                                                      ^ punctuation
+                                                                       ^^^^ constant.language
+                                                                           ^ punctuation
+                                                                             ^^^^ constant.numeric
+                                                                                 ^ punctuation
+on conflict (name) do nothing returning id;
+^^ keyword
+   ^^^^^^^^ keyword
+            ^ punctuation
+                 ^ punctuation
+                   ^^ keyword
+                      ^^^^^^^ keyword
+                              ^^^^^^^^^ keyword
+                                          ^ punctuation
+
+CREATE TABLE IF NOT EXISTS items (
+^^^^^^ keyword
+       ^^^^^ keyword
+             ^^ keyword
+                ^^^ keyword
+                    ^^^^^^ keyword
+                                 ^ punctuation
+    id BIGSERIAL PRIMARY KEY,
+       ^^^^^^^^^ entity.name.type
+                 ^^^^^^^ keyword
+                         ^^^ keyword
+                            ^ punctuation
+    label VARCHAR(80) NOT NULL DEFAULT '',
+          ^^^^^^^ entity.name.type
+                 ^ punctuation
+                  ^^ constant.numeric
+                    ^ punctuation
+                      ^^^ keyword
+                          ^^^^ constant.language
+                               ^^^^^^^ keyword
+                                       ^^ string.quoted
+                                         ^ punctuation
+    price DECIMAL(8, 2) CHECK (price >= 0),
+          ^^^^^^^ entity.name.type
+                 ^ punctuation
+                  ^ constant.numeric
+                   ^ punctuation
+                     ^ constant.numeric
+                      ^ punctuation
+                        ^^^^^ keyword
+                              ^ punctuation
+                                        ^ constant.numeric
+                                         ^^ punctuation
+    flags BIT(4) DEFAULT B'0101',
+          ^^^ entity.name.type
+             ^ punctuation
+              ^ constant.numeric
+               ^ punctuation
+                 ^^^^^^^ keyword
+                         ^^^^^^^ constant.numeric
+                                ^ punctuation
+    seen TIMESTAMP WITH TIME ZONE DEFAULT now()
+         ^^^^^^^^^ entity.name.type
+                   ^^^^ keyword
+                        ^^^^ entity.name.type
+                             ^^^^ entity.name.type
+                                  ^^^^^^^ keyword
+                                          ^^^ support.function
+                                             ^^ punctuation
+);
+^^ punctuation
+
+Update `legacy table` Set `count` = `count` + 1 Where id = ? Or id = :id Or id = $1 Or id = @id;
+^^^^^^ keyword
+       ^^^^^^^^^^^^^^ variable.other
+                      ^^^ keyword
+                          ^^^^^^^ variable.other
+                                    ^^^^^^^ variable.other
+                                              ^ constant.numeric
+                                                ^^^^^ keyword
+                                                             ^^ keyword
+                                                                     ^^^ variable.parameter
+                                                                         ^^ keyword
+                                                                                 ^^ variable.parameter
+                                                                                    ^^ keyword
+                                                                                            ^^^ variable.other
+                                                                                               ^ punctuation
+

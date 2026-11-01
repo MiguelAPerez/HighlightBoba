@@ -1,0 +1,1181 @@
+{
+  "name": "sql",
+  "fileExtensions": [
+    "sql",
+    "psql",
+    "pgsql",
+    "mysql",
+    "sqlite"
+  ],
+  "initial": "code",
+  "states": {
+    "backtickIdentifier": {
+      "scope": "variable.other",
+      "rules": [
+        {
+          "match": {
+            "literal": "``"
+          },
+          "scope": "constant.character.escape"
+        },
+        {
+          "match": {
+            "literal": "`"
+          },
+          "pop": true
+        }
+      ]
+    },
+    "bitString": {
+      "scope": "constant.numeric",
+      "rules": [
+        {
+          "match": {
+            "literal": "'"
+          },
+          "pop": true
+        }
+      ]
+    },
+    "blockComment": {
+      "scope": "comment.block",
+      "rules": [
+        {
+          "match": {
+            "literal": "/*"
+          },
+          "push": "blockComment"
+        },
+        {
+          "match": {
+            "literal": "*/"
+          },
+          "pop": true
+        }
+      ]
+    },
+    "code": {
+      "rules": [
+        {
+          "match": {
+            "seq": [
+              {
+                "literal": "--"
+              },
+              {
+                "repeat": "[^\\r\\n]"
+              }
+            ]
+          },
+          "scope": "comment.line"
+        },
+        {
+          "match": {
+            "literal": "/*"
+          },
+          "scope": "comment.block",
+          "push": "blockComment"
+        },
+        {
+          "match": {
+            "seq": [
+              {
+                "class": "[eE]"
+              },
+              {
+                "literal": "'"
+              }
+            ]
+          },
+          "scope": "string.quoted",
+          "push": "escapeString",
+          "notAfterWord": true
+        },
+        {
+          "match": {
+            "seq": [
+              {
+                "class": "[nN]"
+              },
+              {
+                "literal": "'"
+              }
+            ]
+          },
+          "scope": "string.quoted",
+          "push": "string",
+          "notAfterWord": true
+        },
+        {
+          "match": {
+            "seq": [
+              {
+                "class": "[xXbB]"
+              },
+              {
+                "literal": "'"
+              }
+            ]
+          },
+          "scope": "constant.numeric",
+          "push": "bitString",
+          "notAfterWord": true
+        },
+        {
+          "match": {
+            "literal": "'"
+          },
+          "scope": "string.quoted",
+          "push": "string"
+        },
+        {
+          "match": {
+            "literal": "\""
+          },
+          "scope": "variable.other",
+          "push": "quotedIdentifier"
+        },
+        {
+          "match": {
+            "literal": "`"
+          },
+          "scope": "variable.other",
+          "push": "backtickIdentifier"
+        },
+        {
+          "match": {
+            "seq": [
+              {
+                "literal": "$"
+              },
+              {
+                "opt": {
+                  "seq": [
+                    {
+                      "class": "[A-Za-z_]"
+                    },
+                    {
+                      "repeat": "[A-Za-z0-9_]"
+                    }
+                  ]
+                }
+              },
+              {
+                "literal": "$"
+              }
+            ]
+          },
+          "scope": "string.quoted",
+          "push": "dollarString",
+          "remember": true
+        },
+        {
+          "match": {
+            "seq": [
+              {
+                "literal": "$"
+              },
+              {
+                "repeat": "[0-9]",
+                "min": 1
+              }
+            ]
+          },
+          "scope": "variable.parameter"
+        },
+        {
+          "match": {
+            "literal": "::"
+          },
+          "scope": "punctuation"
+        },
+        {
+          "match": {
+            "seq": [
+              {
+                "literal": ":"
+              },
+              {
+                "seq": [
+                  {
+                    "class": "[A-Za-z_]"
+                  },
+                  {
+                    "repeat": "[A-Za-z0-9_]"
+                  }
+                ]
+              }
+            ]
+          },
+          "scope": "variable.parameter"
+        },
+        {
+          "match": {
+            "seq": [
+              {
+                "repeat": "[@]",
+                "min": 1,
+                "max": 2
+              },
+              {
+                "seq": [
+                  {
+                    "class": "[A-Za-z_]"
+                  },
+                  {
+                    "repeat": "[A-Za-z0-9_]"
+                  }
+                ]
+              }
+            ]
+          },
+          "scope": "variable.other"
+        },
+        {
+          "match": {
+            "anyOf": [
+              {
+                "seq": [
+                  {
+                    "literal": "0"
+                  },
+                  {
+                    "class": "[xX]"
+                  },
+                  {
+                    "repeat": "[0-9A-Fa-f]",
+                    "min": 1
+                  }
+                ]
+              },
+              {
+                "seq": [
+                  {
+                    "repeat": "[0-9]",
+                    "min": 1
+                  },
+                  {
+                    "opt": {
+                      "seq": [
+                        {
+                          "literal": "."
+                        },
+                        {
+                          "repeat": "[0-9]"
+                        }
+                      ]
+                    }
+                  },
+                  {
+                    "opt": {
+                      "seq": [
+                        {
+                          "class": "[eE]"
+                        },
+                        {
+                          "opt": {
+                            "class": "[+-]"
+                          }
+                        },
+                        {
+                          "repeat": "[0-9]",
+                          "min": 1
+                        }
+                      ]
+                    }
+                  }
+                ]
+              },
+              {
+                "seq": [
+                  {
+                    "literal": "."
+                  },
+                  {
+                    "repeat": "[0-9]",
+                    "min": 1
+                  },
+                  {
+                    "opt": {
+                      "seq": [
+                        {
+                          "class": "[eE]"
+                        },
+                        {
+                          "opt": {
+                            "class": "[+-]"
+                          }
+                        },
+                        {
+                          "repeat": "[0-9]",
+                          "min": 1
+                        }
+                      ]
+                    }
+                  }
+                ]
+              }
+            ]
+          },
+          "scope": "constant.numeric",
+          "notAfterWord": true
+        },
+        {
+          "match": {
+            "words": [
+              "null",
+              "NULL",
+              "Null",
+              "true",
+              "TRUE",
+              "True",
+              "false",
+              "FALSE",
+              "False",
+              "unknown",
+              "UNKNOWN",
+              "Unknown"
+            ]
+          },
+          "scope": "constant.language"
+        },
+        {
+          "match": {
+            "seq": [
+              {
+                "words": [
+                  "function",
+                  "FUNCTION",
+                  "Function",
+                  "procedure",
+                  "PROCEDURE",
+                  "Procedure"
+                ]
+              },
+              {
+                "repeat": "[ \\t]",
+                "min": 1
+              },
+              {
+                "wordStarting": "[A-Za-z_]"
+              }
+            ]
+          },
+          "captures": [
+            "keyword",
+            null,
+            "entity.name.function"
+          ]
+        },
+        {
+          "match": {
+            "seq": [
+              {
+                "words": [
+                  "abs",
+                  "ABS",
+                  "Abs",
+                  "array_agg",
+                  "ARRAY_AGG",
+                  "Array_agg",
+                  "avg",
+                  "AVG",
+                  "Avg",
+                  "cast",
+                  "CAST",
+                  "Cast",
+                  "ceil",
+                  "CEIL",
+                  "Ceil",
+                  "coalesce",
+                  "COALESCE",
+                  "Coalesce",
+                  "concat",
+                  "CONCAT",
+                  "Concat",
+                  "convert",
+                  "CONVERT",
+                  "Convert",
+                  "count",
+                  "COUNT",
+                  "Count",
+                  "current_date",
+                  "CURRENT_DATE",
+                  "Current_date",
+                  "current_timestamp",
+                  "CURRENT_TIMESTAMP",
+                  "Current_timestamp",
+                  "date_trunc",
+                  "DATE_TRUNC",
+                  "Date_trunc",
+                  "dense_rank",
+                  "DENSE_RANK",
+                  "Dense_rank",
+                  "extract",
+                  "EXTRACT",
+                  "Extract",
+                  "floor",
+                  "FLOOR",
+                  "Floor",
+                  "greatest",
+                  "GREATEST",
+                  "Greatest",
+                  "json_agg",
+                  "JSON_AGG",
+                  "Json_agg",
+                  "lag",
+                  "LAG",
+                  "Lag",
+                  "lead",
+                  "LEAD",
+                  "Lead",
+                  "least",
+                  "LEAST",
+                  "Least",
+                  "left",
+                  "LEFT",
+                  "Left",
+                  "length",
+                  "LENGTH",
+                  "Length",
+                  "lower",
+                  "LOWER",
+                  "Lower",
+                  "max",
+                  "MAX",
+                  "Max",
+                  "min",
+                  "MIN",
+                  "Min",
+                  "now",
+                  "NOW",
+                  "Now",
+                  "nullif",
+                  "NULLIF",
+                  "Nullif",
+                  "rank",
+                  "RANK",
+                  "Rank",
+                  "replace",
+                  "REPLACE",
+                  "Replace",
+                  "right",
+                  "RIGHT",
+                  "Right",
+                  "round",
+                  "ROUND",
+                  "Round",
+                  "row_number",
+                  "ROW_NUMBER",
+                  "Row_number",
+                  "string_agg",
+                  "STRING_AGG",
+                  "String_agg",
+                  "substring",
+                  "SUBSTRING",
+                  "Substring",
+                  "sum",
+                  "SUM",
+                  "Sum",
+                  "trim",
+                  "TRIM",
+                  "Trim",
+                  "upper",
+                  "UPPER",
+                  "Upper"
+                ]
+              },
+              {
+                "followedBy": {
+                  "seq": [
+                    {
+                      "repeat": "[ \\t]"
+                    },
+                    {
+                      "literal": "("
+                    }
+                  ]
+                }
+              }
+            ]
+          },
+          "scope": "support.function"
+        },
+        {
+          "match": {
+            "words": [
+              "array",
+              "ARRAY",
+              "Array",
+              "bigint",
+              "BIGINT",
+              "Bigint",
+              "bigserial",
+              "BIGSERIAL",
+              "Bigserial",
+              "binary",
+              "BINARY",
+              "Binary",
+              "bit",
+              "BIT",
+              "Bit",
+              "blob",
+              "BLOB",
+              "Blob",
+              "bool",
+              "BOOL",
+              "Bool",
+              "boolean",
+              "BOOLEAN",
+              "Boolean",
+              "bytea",
+              "BYTEA",
+              "Bytea",
+              "char",
+              "CHAR",
+              "Char",
+              "character",
+              "CHARACTER",
+              "Character",
+              "clob",
+              "CLOB",
+              "Clob",
+              "date",
+              "DATE",
+              "Date",
+              "decimal",
+              "DECIMAL",
+              "Decimal",
+              "double",
+              "DOUBLE",
+              "Double",
+              "float",
+              "FLOAT",
+              "Float",
+              "int",
+              "INT",
+              "Int",
+              "integer",
+              "INTEGER",
+              "Integer",
+              "interval",
+              "INTERVAL",
+              "Interval",
+              "json",
+              "JSON",
+              "Json",
+              "jsonb",
+              "JSONB",
+              "Jsonb",
+              "money",
+              "MONEY",
+              "Money",
+              "nchar",
+              "NCHAR",
+              "Nchar",
+              "numeric",
+              "NUMERIC",
+              "Numeric",
+              "nvarchar",
+              "NVARCHAR",
+              "Nvarchar",
+              "precision",
+              "PRECISION",
+              "Precision",
+              "real",
+              "REAL",
+              "Real",
+              "serial",
+              "SERIAL",
+              "Serial",
+              "smallint",
+              "SMALLINT",
+              "Smallint",
+              "text",
+              "TEXT",
+              "Text",
+              "time",
+              "TIME",
+              "Time",
+              "timestamp",
+              "TIMESTAMP",
+              "Timestamp",
+              "timestamptz",
+              "TIMESTAMPTZ",
+              "Timestamptz",
+              "tinyint",
+              "TINYINT",
+              "Tinyint",
+              "uuid",
+              "UUID",
+              "Uuid",
+              "varbinary",
+              "VARBINARY",
+              "Varbinary",
+              "varchar",
+              "VARCHAR",
+              "Varchar",
+              "varying",
+              "VARYING",
+              "Varying",
+              "xml",
+              "XML",
+              "Xml",
+              "zone",
+              "ZONE",
+              "Zone"
+            ]
+          },
+          "scope": "entity.name.type"
+        },
+        {
+          "match": {
+            "words": [
+              "add",
+              "ADD",
+              "Add",
+              "after",
+              "AFTER",
+              "After",
+              "all",
+              "ALL",
+              "All",
+              "alter",
+              "ALTER",
+              "Alter",
+              "analyze",
+              "ANALYZE",
+              "Analyze",
+              "and",
+              "AND",
+              "And",
+              "any",
+              "ANY",
+              "Any",
+              "as",
+              "AS",
+              "As",
+              "asc",
+              "ASC",
+              "Asc",
+              "before",
+              "BEFORE",
+              "Before",
+              "begin",
+              "BEGIN",
+              "Begin",
+              "between",
+              "BETWEEN",
+              "Between",
+              "by",
+              "BY",
+              "By",
+              "call",
+              "CALL",
+              "Call",
+              "cascade",
+              "CASCADE",
+              "Cascade",
+              "case",
+              "CASE",
+              "Case",
+              "check",
+              "CHECK",
+              "Check",
+              "collate",
+              "COLLATE",
+              "Collate",
+              "column",
+              "COLUMN",
+              "Column",
+              "commit",
+              "COMMIT",
+              "Commit",
+              "conflict",
+              "CONFLICT",
+              "Conflict",
+              "constraint",
+              "CONSTRAINT",
+              "Constraint",
+              "create",
+              "CREATE",
+              "Create",
+              "cross",
+              "CROSS",
+              "Cross",
+              "current",
+              "CURRENT",
+              "Current",
+              "database",
+              "DATABASE",
+              "Database",
+              "declare",
+              "DECLARE",
+              "Declare",
+              "default",
+              "DEFAULT",
+              "Default",
+              "delete",
+              "DELETE",
+              "Delete",
+              "desc",
+              "DESC",
+              "Desc",
+              "distinct",
+              "DISTINCT",
+              "Distinct",
+              "do",
+              "DO",
+              "Do",
+              "drop",
+              "DROP",
+              "Drop",
+              "each",
+              "EACH",
+              "Each",
+              "else",
+              "ELSE",
+              "Else",
+              "end",
+              "END",
+              "End",
+              "enum",
+              "ENUM",
+              "Enum",
+              "escape",
+              "ESCAPE",
+              "Escape",
+              "except",
+              "EXCEPT",
+              "Except",
+              "execute",
+              "EXECUTE",
+              "Execute",
+              "exists",
+              "EXISTS",
+              "Exists",
+              "explain",
+              "EXPLAIN",
+              "Explain",
+              "extension",
+              "EXTENSION",
+              "Extension",
+              "fetch",
+              "FETCH",
+              "Fetch",
+              "filter",
+              "FILTER",
+              "Filter",
+              "first",
+              "FIRST",
+              "First",
+              "following",
+              "FOLLOWING",
+              "Following",
+              "for",
+              "FOR",
+              "For",
+              "foreign",
+              "FOREIGN",
+              "Foreign",
+              "from",
+              "FROM",
+              "From",
+              "full",
+              "FULL",
+              "Full",
+              "function",
+              "FUNCTION",
+              "Function",
+              "grant",
+              "GRANT",
+              "Grant",
+              "group",
+              "GROUP",
+              "Group",
+              "having",
+              "HAVING",
+              "Having",
+              "if",
+              "IF",
+              "If",
+              "ilike",
+              "ILIKE",
+              "Ilike",
+              "in",
+              "IN",
+              "In",
+              "index",
+              "INDEX",
+              "Index",
+              "last",
+              "LAST",
+              "Last",
+              "inner",
+              "INNER",
+              "Inner",
+              "insert",
+              "INSERT",
+              "Insert",
+              "instead",
+              "INSTEAD",
+              "Instead",
+              "intersect",
+              "INTERSECT",
+              "Intersect",
+              "into",
+              "INTO",
+              "Into",
+              "is",
+              "IS",
+              "Is",
+              "join",
+              "JOIN",
+              "Join",
+              "key",
+              "KEY",
+              "Key",
+              "language",
+              "LANGUAGE",
+              "Language",
+              "lateral",
+              "LATERAL",
+              "Lateral",
+              "left",
+              "LEFT",
+              "Left",
+              "like",
+              "LIKE",
+              "Like",
+              "limit",
+              "LIMIT",
+              "Limit",
+              "matched",
+              "MATCHED",
+              "Matched",
+              "merge",
+              "MERGE",
+              "Merge",
+              "natural",
+              "NATURAL",
+              "Natural",
+              "next",
+              "NEXT",
+              "Next",
+              "not",
+              "NOT",
+              "Not",
+              "nothing",
+              "NOTHING",
+              "Nothing",
+              "nulls",
+              "NULLS",
+              "Nulls",
+              "of",
+              "OF",
+              "Of",
+              "offset",
+              "OFFSET",
+              "Offset",
+              "on",
+              "ON",
+              "On",
+              "only",
+              "ONLY",
+              "Only",
+              "or",
+              "OR",
+              "Or",
+              "order",
+              "ORDER",
+              "Order",
+              "outer",
+              "OUTER",
+              "Outer",
+              "over",
+              "OVER",
+              "Over",
+              "partition",
+              "PARTITION",
+              "Partition",
+              "preceding",
+              "PRECEDING",
+              "Preceding",
+              "primary",
+              "PRIMARY",
+              "Primary",
+              "procedure",
+              "PROCEDURE",
+              "Procedure",
+              "range",
+              "RANGE",
+              "Range",
+              "recursive",
+              "RECURSIVE",
+              "Recursive",
+              "references",
+              "REFERENCES",
+              "References",
+              "rename",
+              "RENAME",
+              "Rename",
+              "replace",
+              "REPLACE",
+              "Replace",
+              "restrict",
+              "RESTRICT",
+              "Restrict",
+              "return",
+              "RETURN",
+              "Return",
+              "returning",
+              "RETURNING",
+              "Returning",
+              "returns",
+              "RETURNS",
+              "Returns",
+              "revoke",
+              "REVOKE",
+              "Revoke",
+              "right",
+              "RIGHT",
+              "Right",
+              "rollback",
+              "ROLLBACK",
+              "Rollback",
+              "row",
+              "ROW",
+              "Row",
+              "rows",
+              "ROWS",
+              "Rows",
+              "savepoint",
+              "SAVEPOINT",
+              "Savepoint",
+              "schema",
+              "SCHEMA",
+              "Schema",
+              "select",
+              "SELECT",
+              "Select",
+              "sequence",
+              "SEQUENCE",
+              "Sequence",
+              "set",
+              "SET",
+              "Set",
+              "some",
+              "SOME",
+              "Some",
+              "table",
+              "TABLE",
+              "Table",
+              "temp",
+              "TEMP",
+              "Temp",
+              "temporary",
+              "TEMPORARY",
+              "Temporary",
+              "then",
+              "THEN",
+              "Then",
+              "to",
+              "TO",
+              "To",
+              "transaction",
+              "TRANSACTION",
+              "Transaction",
+              "trigger",
+              "TRIGGER",
+              "Trigger",
+              "truncate",
+              "TRUNCATE",
+              "Truncate",
+              "type",
+              "TYPE",
+              "Type",
+              "unbounded",
+              "UNBOUNDED",
+              "Unbounded",
+              "union",
+              "UNION",
+              "Union",
+              "unique",
+              "UNIQUE",
+              "Unique",
+              "update",
+              "UPDATE",
+              "Update",
+              "using",
+              "USING",
+              "Using",
+              "values",
+              "VALUES",
+              "Values",
+              "view",
+              "VIEW",
+              "View",
+              "when",
+              "WHEN",
+              "When",
+              "where",
+              "WHERE",
+              "Where",
+              "window",
+              "WINDOW",
+              "Window",
+              "with",
+              "WITH",
+              "With",
+              "within",
+              "WITHIN",
+              "Within"
+            ]
+          },
+          "scope": "keyword"
+        },
+        {
+          "match": {
+            "class": "[;,()]"
+          },
+          "scope": "punctuation"
+        }
+      ]
+    },
+    "dollarString": {
+      "scope": "string.quoted",
+      "rules": [
+        {
+          "match": {
+            "remembered": true
+          },
+          "pop": true
+        }
+      ]
+    },
+    "escapeString": {
+      "scope": "string.quoted",
+      "rules": [
+        {
+          "match": {
+            "literal": "''"
+          },
+          "scope": "constant.character.escape"
+        },
+        {
+          "match": {
+            "seq": [
+              {
+                "literal": "\\x"
+              },
+              {
+                "repeat": "[0-9A-Fa-f]",
+                "min": 1,
+                "max": 2
+              }
+            ]
+          },
+          "scope": "constant.character.escape"
+        },
+        {
+          "match": {
+            "seq": [
+              {
+                "literal": "\\u"
+              },
+              {
+                "repeat": "[0-9A-Fa-f]",
+                "min": 4,
+                "max": 4
+              }
+            ]
+          },
+          "scope": "constant.character.escape"
+        },
+        {
+          "match": {
+            "seq": [
+              {
+                "literal": "\\U"
+              },
+              {
+                "repeat": "[0-9A-Fa-f]",
+                "min": 8,
+                "max": 8
+              }
+            ]
+          },
+          "scope": "constant.character.escape"
+        },
+        {
+          "match": {
+            "seq": [
+              {
+                "literal": "\\"
+              },
+              {
+                "repeat": "[0-7]",
+                "min": 1,
+                "max": 3
+              }
+            ]
+          },
+          "scope": "constant.character.escape"
+        },
+        {
+          "match": {
+            "seq": [
+              {
+                "literal": "\\"
+              },
+              {
+                "class": "[^\\r\\n]"
+              }
+            ]
+          },
+          "scope": "constant.character.escape"
+        },
+        {
+          "match": {
+            "literal": "'"
+          },
+          "pop": true
+        }
+      ]
+    },
+    "quotedIdentifier": {
+      "scope": "variable.other",
+      "rules": [
+        {
+          "match": {
+            "literal": "\"\""
+          },
+          "scope": "constant.character.escape"
+        },
+        {
+          "match": {
+            "literal": "\""
+          },
+          "pop": true
+        }
+      ]
+    },
+    "string": {
+      "scope": "string.quoted",
+      "rules": [
+        {
+          "match": {
+            "literal": "''"
+          },
+          "scope": "constant.character.escape"
+        },
+        {
+          "match": {
+            "literal": "'"
+          },
+          "pop": true
+        }
+      ]
+    }
+  }
+}

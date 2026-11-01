@@ -1,0 +1,45 @@
+<!DOCTYPE note SYSTEM "note.dtd" [
+^^^^^^^^^^^^^^^^^^^^^^ meta.preprocessor
+                      ^^^^^^^^^^ string.quoted
+                                ^ meta.preprocessor
+                                 ^ punctuation
+  <!ELEMENT note (to, body)>
+  ^^^^^^^^^^^^^^^^^^^^^^^^^^ meta.preprocessor
+  <!ATTLIST note id CDATA #REQUIRED>
+  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ meta.preprocessor
+  <!ENTITY writer "Ann &amp; Bo">
+  ^^^^^^^^^^^^^^^^ meta.preprocessor
+                  ^^^^^^^^^^^^^^ string.quoted
+                                ^ meta.preprocessor
+  <!ENTITY % common SYSTEM "common.ent">
+  ^^^^^^^^^^^^^^^^^^^^^^^^^ meta.preprocessor
+                           ^^^^^^^^^^^^ string.quoted
+                                       ^ meta.preprocessor
+  %common;
+  ^^^^^^^^ variable.other
+  <!-- a comment in the subset -->
+  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ comment.block
+]>
+^ punctuation
+ ^ meta.preprocessor
+<note id="1"><to>Tove</to><body>&writer;</body></note>
+^ punctuation
+ ^^^^ entity.name.tag
+      ^^ entity.other.attribute
+        ^ punctuation
+         ^^^ string.quoted
+            ^^ punctuation
+              ^^ entity.name.tag
+                ^ punctuation
+                     ^^ punctuation
+                       ^^ entity.name.tag
+                         ^^ punctuation
+                           ^^^^ entity.name.tag
+                               ^ punctuation
+                                ^^^^^^^^ constant.character.escape
+                                        ^^ punctuation
+                                          ^^^^ entity.name.tag
+                                              ^^^ punctuation
+                                                 ^^^^ entity.name.tag
+                                                     ^ punctuation
+

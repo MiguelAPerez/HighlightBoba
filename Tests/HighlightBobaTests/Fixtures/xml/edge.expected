@@ -1,0 +1,44 @@
+<root>
+^ punctuation
+ ^^^^ entity.name.tag
+     ^ punctuation
+  <!-- bad -- comment -->
+  ^^^^^^^^^ comment.block
+           ^^ invalid
+             ^^^^^^^^^^^^ comment.block
+  <a href="x < y">fish & chips</a>
+  ^ punctuation
+   ^ entity.name.tag
+     ^^^^ entity.other.attribute
+         ^ punctuation
+          ^^^ string.quoted
+                       ^ invalid
+                              ^^ punctuation
+                                ^ entity.name.tag
+                                 ^ punctuation
+  <名前 属性="値">日本語 🧋 ✓</名前>
+  ^ punctuation
+   ^^ entity.name.tag
+      ^^ entity.other.attribute
+        ^ punctuation
+         ^^^ string.quoted
+            ^ punctuation
+                    ^^ punctuation
+                      ^^ entity.name.tag
+                        ^ punctuation
+  <unclosed attr="never closed>
+  ^ punctuation
+   ^^^^^^^^ entity.name.tag
+            ^^^^ entity.other.attribute
+                ^ punctuation
+                 ^^^^^^^^^^^^^^ string.quoted
+  <next/>
+^^ string.quoted
+  ^ punctuation
+   ^^^^ entity.name.tag
+       ^^ punctuation
+</root>
+^^ punctuation
+  ^^^^ entity.name.tag
+      ^ punctuation
+

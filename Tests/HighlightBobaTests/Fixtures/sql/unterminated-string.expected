@@ -1,0 +1,6 @@
+SELECT 'open string;
+^^^^^^ keyword
+       ^^^^^^^^^^^^^ string.quoted
+SELECT 2;
+^^^^^^^^^ string.quoted
+

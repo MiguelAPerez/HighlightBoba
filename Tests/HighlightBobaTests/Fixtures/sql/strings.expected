@@ -1,0 +1,95 @@
+SELECT 'it''s', E'tab\t quote\' octal\101 hex\x41 \u00e9', N'national', X'DEADBEEF';
+^^^^^^ keyword
+       ^^^ string.quoted
+          ^^ constant.character.escape
+            ^^ string.quoted
+              ^ punctuation
+                ^^^^^ string.quoted
+                     ^^ constant.character.escape
+                       ^^^^^^ string.quoted
+                             ^^ constant.character.escape
+                               ^^^^^^ string.quoted
+                                     ^^^^ constant.character.escape
+                                         ^^^^ string.quoted
+                                             ^^^^ constant.character.escape
+                                                 ^ string.quoted
+                                                  ^^^^^^ constant.character.escape
+                                                        ^ string.quoted
+                                                         ^ punctuation
+                                                           ^^^^^^^^^^^ string.quoted
+                                                                      ^ punctuation
+                                                                        ^^^^^^^^^^^ constant.numeric
+                                                                                   ^ punctuation
+SELECT "a ""quoted"" identifier", 'spans
+^^^^^^ keyword
+       ^^^ variable.other
+          ^^ constant.character.escape
+            ^^^^^^ variable.other
+                  ^^ constant.character.escape
+                    ^^^^^^^^^^^^ variable.other
+                                ^ punctuation
+                                  ^^^^^^ string.quoted
+two lines';
+^^^^^^^^^^ string.quoted
+          ^ punctuation
+CREATE OR REPLACE FUNCTION add_one(n integer) RETURNS integer AS $$
+^^^^^^ keyword
+       ^^ keyword
+          ^^^^^^^ keyword
+                  ^^^^^^^^ keyword
+                           ^^^^^^^ entity.name.function
+                                  ^ punctuation
+                                     ^^^^^^^ entity.name.type
+                                            ^ punctuation
+                                              ^^^^^^^ keyword
+                                                      ^^^^^^^ entity.name.type
+                                                              ^^ keyword
+                                                                 ^^ string.quoted
+    SELECT n + 1; -- 'not a string end'
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ string.quoted
+$$ LANGUAGE sql;
+^^ string.quoted
+   ^^^^^^^^ keyword
+               ^ punctuation
+CREATE FUNCTION tagged() RETURNS text AS $body$ SELECT $$ inside $$; $body$ LANGUAGE sql;
+^^^^^^ keyword
+       ^^^^^^^^ keyword
+                ^^^^^^ entity.name.function
+                      ^^ punctuation
+                         ^^^^^^^ keyword
+                                 ^^^^ entity.name.type
+                                      ^^ keyword
+                                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ string.quoted
+                                                                            ^^^^^^^^ keyword
+                                                                                        ^ punctuation
+/* outer /* nested */ still a comment */ SELECT 1;
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ comment.block
+                                         ^^^^^^ keyword
+                                                ^ constant.numeric
+                                                 ^ punctuation
+SELECT '日本語 🧋 ✓' AS emoji;
+^^^^^^ keyword
+       ^^^^^^^^^ string.quoted
+                 ^^ keyword
+                         ^ punctuation
+SELECT left(name, 3), replace(name, 'a', 'b') FROM t LEFT JOIN u USING (id);
+^^^^^^ keyword
+       ^^^^ support.function
+           ^ punctuation
+                ^ punctuation
+                  ^ constant.numeric
+                   ^^ punctuation
+                      ^^^^^^^ support.function
+                             ^ punctuation
+                                  ^ punctuation
+                                    ^^^ string.quoted
+                                       ^ punctuation
+                                         ^^^ string.quoted
+                                            ^ punctuation
+                                              ^^^^ keyword
+                                                     ^^^^ keyword
+                                                          ^^^^ keyword
+                                                                 ^^^^^ keyword
+                                                                       ^ punctuation
+                                                                          ^^ punctuation
+

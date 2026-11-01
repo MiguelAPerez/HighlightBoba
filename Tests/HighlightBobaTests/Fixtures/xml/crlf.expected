@@ -1,0 +1,20 @@
+<?xml version="1.0"?>
+^^^^^ meta.preprocessor
+      ^^^^^^^ entity.other.attribute
+             ^ punctuation
+              ^^^^^ string.quoted
+                   ^^ meta.preprocessor
+<a b="c">
+^ punctuation
+ ^ entity.name.tag
+   ^ entity.other.attribute
+    ^ punctuation
+     ^^^ string.quoted
+        ^ punctuation
+  text &lt;
+       ^^^^ constant.character.escape
+</a>
+^^ punctuation
+  ^ entity.name.tag
+   ^ punctuation
+

@@ -1,0 +1,9 @@
+<!DOCTYPE note SYSTEM "note.dtd" [
+  <!ELEMENT note (to, body)>
+  <!ATTLIST note id CDATA #REQUIRED>
+  <!ENTITY writer "Ann &amp; Bo">
+  <!ENTITY % common SYSTEM "common.ent">
+  %common;
+  <!-- a comment in the subset -->
+]>
+<note id="1"><to>Tove</to><body>&writer;</body></note>
