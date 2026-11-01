@@ -1,0 +1,14 @@
+crlf = "yes"
+^^^^ support.type.property-name
+     ^ punctuation
+       ^^^^^ string.quoted
+[table]
+^ punctuation
+ ^^^^^ entity.name.type
+      ^ punctuation
+key = 1 # comment
+^^^ support.type.property-name
+    ^ punctuation
+      ^ constant.numeric
+        ^^^^^^^^^ comment.line
+

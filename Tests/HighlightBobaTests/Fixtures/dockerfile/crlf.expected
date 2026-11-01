@@ -1,0 +1,16 @@
+FROM alpine AS base
+^^^^ keyword
+            ^^ keyword
+               ^^^^ entity.name.type
+RUN echo hi \
+^^^ keyword
+    ^^^^ support.function
+            ^ constant.character.escape
+    && echo there
+       ^^^^ support.function
+CMD ["sh"]
+^^^ keyword
+   ^^ punctuation
+     ^^^^ string.quoted
+         ^ punctuation
+

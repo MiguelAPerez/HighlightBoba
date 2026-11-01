@@ -1,0 +1,15 @@
+ints = [+99, 42, 0, -17, 1_000, 0xDEAD_beef, 0o755, 0b1101]
+floats = [+1.0, 3.1415, -0.01, 5e+22, 1e06, -2E-2, 6.626e-34, 224_617.445_991]
+specials = [inf, +inf, -inf, nan, +nan, -nan]
+dates = [1979-05-27 07:32:00Z, 1979-05-27T00:32:00.999999-07:00]
+escapes = "tab\t quote\" slash\\ \u00E9 \U0001F9CB esc\e bad\q"
+multi = """
+Roses are red
+  Violets are \
+  blue"""
+quotes = """Here are two quotation marks: "". Simple enough."""
+five = """""five quotes"""""
+lit = '''
+The first newline is
+trimmed in raw strings. \n stays.'''
+apos = ''''That,' she said, 'is still pointless.''''

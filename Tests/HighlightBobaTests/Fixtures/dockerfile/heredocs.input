@@ -1,0 +1,13 @@
+# syntax=docker/dockerfile:1
+RUN <<EOF
+set -e
+echo "inside a heredoc: $HOME"
+EOF
+RUN <<-'SCRIPT' bash
+	if true; then echo ok; fi
+	SCRIPT
+COPY <<EOF /etc/app.conf
+port = 8080
+RUN this is file content, not an instruction
+EOF
+CMD echo finished

@@ -24,6 +24,15 @@ import Testing
         }
     }
 
+    @Test(arguments: Grammar.bundledNames)
+    func sharedRegistryFindsEveryBundledGrammarByNameAndExtension(_ name: String) throws {
+        let grammar = try #require(GrammarRegistry.shared.grammar(named: name))
+        #expect(grammar.name == name)
+        for ext in grammar.fileExtensions {
+            #expect(GrammarRegistry.shared.grammar(named: ext) != nil, "\(name)'s extension \(ext) doesn't resolve")
+        }
+    }
+
     @Test func shipsTheStarterLanguages() {
         #expect(Set(Grammar.bundledNames).isSuperset(of: ["json", "swift", "python"]))
     }

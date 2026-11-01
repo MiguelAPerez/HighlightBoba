@@ -1,0 +1,44 @@
+RUN apt-get update \
+^^^ keyword
+                   ^ constant.character.escape
+    && apt-get install -y --no-install-recommends \
+                                                  ^ constant.character.escape
+       curl ca-certificates \
+                            ^ constant.character.escape
+# a comment line inside the command
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ comment.line
+    && rm -rf /var/lib/apt/lists/*
+RUN \
+^^^ keyword
+    ^ constant.character.escape
+apk add git
+RUN echo "string spans \
+^^^ keyword
+    ^^^^ support.function
+         ^^^^^^^^^^^^^^ string.quoted
+                       ^ constant.character.escape
+a continuation"
+^^^^^^^^^^^^^^^ string.quoted
+ENTRYPOINT ["/bin/echo", \
+^^^^^^^^^^ keyword
+          ^^ punctuation
+            ^^^^^^^^^^^ string.quoted
+                       ^ punctuation
+                         ^ constant.character.escape
+            "hello"]
+            ^^^^^^^ string.quoted
+                   ^ punctuation
+ENV A=1 \
+^^^ keyword
+    ^ variable.other
+     ^ punctuation
+      ^ constant.numeric
+        ^ constant.character.escape
+    B=2
+    ^ variable.other
+     ^ punctuation
+      ^ constant.numeric
+run echo lowercase works
+^^^ keyword
+    ^^^^ support.function
+

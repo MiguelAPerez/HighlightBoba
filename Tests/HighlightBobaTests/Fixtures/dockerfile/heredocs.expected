@@ -1,0 +1,38 @@
+# syntax=docker/dockerfile:1
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^ meta.preprocessor
+RUN <<EOF
+^^^ keyword
+    ^^^^^ keyword
+set -e
+^^^ support.function
+echo "inside a heredoc: $HOME"
+^^^^ support.function
+     ^^^^^^^^^^^^^^^^^^^ string.quoted
+                        ^^^^^ variable.other
+                             ^ string.quoted
+EOF
+^^^ keyword
+RUN <<-'SCRIPT' bash
+^^^ keyword
+    ^^^^^^^^^^^ keyword
+	if true; then echo ok; fi
+ ^^ keyword
+    ^^^^ support.function
+          ^^^^ keyword
+               ^^^^ support.function
+                        ^^ keyword
+	SCRIPT
+^^^^^^^ keyword
+COPY <<EOF /etc/app.conf
+^^^^ keyword
+     ^^^^^ keyword
+port = 8080
+^^^^^^^^^^^ string.quoted
+RUN this is file content, not an instruction
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ string.quoted
+EOF
+^^^ keyword
+CMD echo finished
+^^^ keyword
+    ^^^^ support.function
+

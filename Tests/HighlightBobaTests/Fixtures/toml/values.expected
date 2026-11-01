@@ -1,0 +1,115 @@
+ints = [+99, 42, 0, -17, 1_000, 0xDEAD_beef, 0o755, 0b1101]
+^^^^ support.type.property-name
+     ^ punctuation
+       ^ punctuation
+        ^^^ constant.numeric
+           ^ punctuation
+             ^^ constant.numeric
+               ^ punctuation
+                 ^ constant.numeric
+                  ^ punctuation
+                    ^^^ constant.numeric
+                       ^ punctuation
+                         ^^^^^ constant.numeric
+                              ^ punctuation
+                                ^^^^^^^^^^^ constant.numeric
+                                           ^ punctuation
+                                             ^^^^^ constant.numeric
+                                                  ^ punctuation
+                                                    ^^^^^^ constant.numeric
+                                                          ^ punctuation
+floats = [+1.0, 3.1415, -0.01, 5e+22, 1e06, -2E-2, 6.626e-34, 224_617.445_991]
+^^^^^^ support.type.property-name
+       ^ punctuation
+         ^ punctuation
+          ^^^^ constant.numeric
+              ^ punctuation
+                ^^^^^^ constant.numeric
+                      ^ punctuation
+                        ^^^^^ constant.numeric
+                             ^ punctuation
+                               ^^^^^ constant.numeric
+                                    ^ punctuation
+                                      ^^^^ constant.numeric
+                                          ^ punctuation
+                                            ^^^^^ constant.numeric
+                                                 ^ punctuation
+                                                   ^^^^^^^^^ constant.numeric
+                                                            ^ punctuation
+                                                              ^^^^^^^^^^^^^^^ constant.numeric
+                                                                             ^ punctuation
+specials = [inf, +inf, -inf, nan, +nan, -nan]
+^^^^^^^^ support.type.property-name
+         ^ punctuation
+           ^ punctuation
+            ^^^ constant.numeric
+               ^ punctuation
+                 ^^^^ constant.numeric
+                     ^ punctuation
+                       ^^^^ constant.numeric
+                           ^ punctuation
+                             ^^^ constant.numeric
+                                ^ punctuation
+                                  ^^^^ constant.numeric
+                                      ^ punctuation
+                                        ^^^^ constant.numeric
+                                            ^ punctuation
+dates = [1979-05-27 07:32:00Z, 1979-05-27T00:32:00.999999-07:00]
+^^^^^ support.type.property-name
+      ^ punctuation
+        ^ punctuation
+         ^^^^^^^^^^ constant.numeric
+                    ^^^^^^^^^ constant.numeric
+                             ^ punctuation
+                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ constant.numeric
+                                                               ^ punctuation
+escapes = "tab\t quote\" slash\\ \u00E9 \U0001F9CB esc\e bad\q"
+^^^^^^^ support.type.property-name
+        ^ punctuation
+          ^^^^ string.quoted
+              ^^ constant.character.escape
+                ^^^^^^ string.quoted
+                      ^^ constant.character.escape
+                        ^^^^^^ string.quoted
+                              ^^ constant.character.escape
+                                ^ string.quoted
+                                 ^^^^^^ constant.character.escape
+                                       ^ string.quoted
+                                        ^^^^^^^^^^ constant.character.escape
+                                                  ^^^^ string.quoted
+                                                      ^^ constant.character.escape
+                                                        ^^^^ string.quoted
+                                                            ^ invalid
+                                                             ^^ string.quoted
+multi = """
+^^^^^ support.type.property-name
+      ^ punctuation
+        ^^^ string.quoted
+Roses are red
+^^^^^^^^^^^^^ string.quoted
+  Violets are \
+^^^^^^^^^^^^^^ string.quoted
+              ^ constant.character.escape
+  blue"""
+^^^^^^^^^ string.quoted
+quotes = """Here are two quotation marks: "". Simple enough."""
+^^^^^^ support.type.property-name
+       ^ punctuation
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ string.quoted
+five = """""five quotes"""""
+^^^^ support.type.property-name
+     ^ punctuation
+       ^^^^^^^^^^^^^^^^^^^^^ string.quoted
+lit = '''
+^^^ support.type.property-name
+    ^ punctuation
+      ^^^ string.quoted
+The first newline is
+^^^^^^^^^^^^^^^^^^^^ string.quoted
+trimmed in raw strings. \n stays.'''
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ string.quoted
+apos = ''''That,' she said, 'is still pointless.''''
+^^^^ support.type.property-name
+     ^ punctuation
+       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ string.quoted
+

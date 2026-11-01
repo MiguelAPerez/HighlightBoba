@@ -1,0 +1,902 @@
+{
+  "name": "dockerfile",
+  "fileExtensions": [
+    "dockerfile",
+    "containerfile"
+  ],
+  "initial": "document",
+  "states": {
+    "arguments": {
+      "endsAtEOL": true,
+      "rules": [
+        {
+          "match": {
+            "seq": [
+              {
+                "literal": "\\"
+              },
+              {
+                "repeat": "[ \\t]"
+              },
+              {
+                "eol": true
+              }
+            ]
+          },
+          "scope": "constant.character.escape",
+          "continuesLine": true
+        },
+        {
+          "match": {
+            "seq": [
+              {
+                "literal": "--"
+              },
+              {
+                "repeat": "[A-Za-z0-9_-]",
+                "min": 1
+              },
+              {
+                "opt": {
+                  "seq": [
+                    {
+                      "literal": "="
+                    },
+                    {
+                      "repeat": "[^ \\t\\r\\n\\\\]"
+                    }
+                  ]
+                }
+              }
+            ]
+          },
+          "scope": "entity.other.attribute"
+        },
+        {
+          "match": {
+            "seq": [
+              {
+                "literal": "<<"
+              },
+              {
+                "opt": {
+                  "literal": "-"
+                }
+              },
+              {
+                "opt": {
+                  "class": "[\"']"
+                }
+              },
+              {
+                "wordStarting": "[A-Za-z_]"
+              },
+              {
+                "opt": {
+                  "class": "[\"']"
+                }
+              }
+            ]
+          },
+          "scope": "keyword",
+          "push": "fileHeredoc",
+          "remember": 3,
+          "pushAtNextLine": true
+        },
+        {
+          "match": {
+            "literal": "\""
+          },
+          "scope": "string.quoted",
+          "push": "doubleString"
+        },
+        {
+          "match": {
+            "literal": "'"
+          },
+          "scope": "string.quoted",
+          "push": "singleString"
+        },
+        {
+          "match": {
+            "seq": [
+              {
+                "literal": "${"
+              },
+              {
+                "repeat": "[^}\\r\\n]"
+              },
+              {
+                "literal": "}"
+              }
+            ]
+          },
+          "scope": "variable.other"
+        },
+        {
+          "match": {
+            "seq": [
+              {
+                "literal": "$"
+              },
+              {
+                "wordStarting": "[A-Za-z_]"
+              }
+            ]
+          },
+          "scope": "variable.other"
+        },
+        {
+          "match": {
+            "literal": "["
+          },
+          "scope": "punctuation",
+          "push": "execForm"
+        },
+        {
+          "match": {
+            "seq": [
+              {
+                "repeat": "[A-Za-z0-9_.-]",
+                "min": 1
+              },
+              {
+                "followedBy": {
+                  "literal": "="
+                }
+              }
+            ]
+          },
+          "scope": "variable.other",
+          "notAfterWord": true
+        },
+        {
+          "match": {
+            "literal": "="
+          },
+          "scope": "punctuation"
+        },
+        {
+          "match": {
+            "seq": [
+              {
+                "repeat": "[0-9]",
+                "min": 1
+              },
+              {
+                "opt": {
+                  "seq": [
+                    {
+                      "literal": "-"
+                    },
+                    {
+                      "repeat": "[0-9]",
+                      "min": 1
+                    }
+                  ]
+                }
+              },
+              {
+                "notFollowedBy": {
+                  "class": "[A-Za-z0-9_.]"
+                }
+              }
+            ]
+          },
+          "scope": "constant.numeric",
+          "notAfterWord": true,
+          "notAfter": "[.]"
+        }
+      ]
+    },
+    "commandStart": {
+      "endsAtEOL": true,
+      "rules": [
+        {
+          "match": {
+            "seq": [
+              {
+                "literal": "\\"
+              },
+              {
+                "repeat": "[ \\t]"
+              },
+              {
+                "eol": true
+              }
+            ]
+          },
+          "scope": "constant.character.escape",
+          "continuesLine": true
+        },
+        {
+          "match": {
+            "seq": [
+              {
+                "repeat": "[ \\t]"
+              },
+              {
+                "seq": [
+                  {
+                    "literal": "--"
+                  },
+                  {
+                    "repeat": "[A-Za-z0-9_-]",
+                    "min": 1
+                  },
+                  {
+                    "opt": {
+                      "seq": [
+                        {
+                          "literal": "="
+                        },
+                        {
+                          "repeat": "[^ \\t\\r\\n\\\\]"
+                        }
+                      ]
+                    }
+                  }
+                ]
+              }
+            ]
+          },
+          "scope": "entity.other.attribute"
+        },
+        {
+          "match": {
+            "seq": [
+              {
+                "repeat": "[ \\t]"
+              },
+              {
+                "literal": "["
+              }
+            ]
+          },
+          "scope": "punctuation",
+          "pop": 1,
+          "push": "execForm"
+        },
+        {
+          "match": {
+            "seq": [
+              {
+                "literal": "<<"
+              },
+              {
+                "opt": {
+                  "literal": "-"
+                }
+              },
+              {
+                "opt": {
+                  "class": "[\"']"
+                }
+              },
+              {
+                "wordStarting": "[A-Za-z_]"
+              },
+              {
+                "opt": {
+                  "class": "[\"']"
+                }
+              }
+            ]
+          },
+          "scope": "keyword",
+          "push": "shellHeredoc",
+          "remember": 3,
+          "pushAtNextLine": true,
+          "embed": "shell"
+        },
+        {
+          "match": {
+            "seq": [
+              {
+                "repeat": "[ \\t]",
+                "min": 1
+              },
+              {
+                "notFollowedBy": {
+                  "literal": "--"
+                }
+              }
+            ]
+          },
+          "pop": 1,
+          "push": "shellCommand",
+          "embed": "shell"
+        },
+        {
+          "match": {
+            "repeat": "[A-Za-z0-9_./-]",
+            "min": 1
+          },
+          "pop": 1,
+          "push": "shellCommand",
+          "embed": "shell"
+        }
+      ]
+    },
+    "document": {
+      "rules": [
+        {
+          "match": {
+            "seq": [
+              {
+                "literal": "#"
+              },
+              {
+                "repeat": "[ \\t]"
+              },
+              {
+                "words": [
+                  "syntax",
+                  "SYNTAX",
+                  "Syntax",
+                  "escape",
+                  "ESCAPE",
+                  "Escape",
+                  "check",
+                  "CHECK",
+                  "Check"
+                ]
+              },
+              {
+                "repeat": "[ \\t]"
+              },
+              {
+                "literal": "="
+              },
+              {
+                "repeat": "[^\\r\\n]"
+              }
+            ]
+          },
+          "scope": "meta.preprocessor"
+        },
+        {
+          "match": {
+            "seq": [
+              {
+                "literal": "#"
+              },
+              {
+                "repeat": "[^\\r\\n]"
+              }
+            ]
+          },
+          "scope": "comment.line"
+        },
+        {
+          "match": {
+            "seq": [
+              {
+                "words": [
+                  "from",
+                  "FROM",
+                  "From"
+                ]
+              }
+            ]
+          },
+          "scope": "keyword",
+          "push": "from"
+        },
+        {
+          "match": {
+            "words": [
+              "run",
+              "RUN",
+              "Run",
+              "cmd",
+              "CMD",
+              "Cmd",
+              "entrypoint",
+              "ENTRYPOINT",
+              "Entrypoint"
+            ]
+          },
+          "scope": "keyword",
+          "push": "commandStart"
+        },
+        {
+          "match": {
+            "words": [
+              "shell",
+              "SHELL",
+              "Shell"
+            ]
+          },
+          "scope": "keyword",
+          "push": "commandStart"
+        },
+        {
+          "match": {
+            "words": [
+              "healthcheck",
+              "HEALTHCHECK",
+              "Healthcheck"
+            ]
+          },
+          "scope": "keyword",
+          "push": "healthcheck"
+        },
+        {
+          "match": {
+            "words": [
+              "onbuild",
+              "ONBUILD",
+              "Onbuild"
+            ]
+          },
+          "scope": "keyword"
+        },
+        {
+          "match": {
+            "words": [
+              "add",
+              "ADD",
+              "Add",
+              "arg",
+              "ARG",
+              "Arg",
+              "copy",
+              "COPY",
+              "Copy",
+              "env",
+              "ENV",
+              "Env",
+              "expose",
+              "EXPOSE",
+              "Expose",
+              "label",
+              "LABEL",
+              "Label",
+              "maintainer",
+              "MAINTAINER",
+              "Maintainer",
+              "stopsignal",
+              "STOPSIGNAL",
+              "Stopsignal",
+              "user",
+              "USER",
+              "User",
+              "volume",
+              "VOLUME",
+              "Volume",
+              "workdir",
+              "WORKDIR",
+              "Workdir"
+            ]
+          },
+          "scope": "keyword",
+          "push": "arguments"
+        }
+      ]
+    },
+    "doubleString": {
+      "scope": "string.quoted",
+      "endsAtEOL": true,
+      "rules": [
+        {
+          "match": {
+            "seq": [
+              {
+                "literal": "\\"
+              },
+              {
+                "class": "[^\\r\\n]"
+              }
+            ]
+          },
+          "scope": "constant.character.escape"
+        },
+        {
+          "match": {
+            "seq": [
+              {
+                "literal": "${"
+              },
+              {
+                "repeat": "[^}\\r\\n]"
+              },
+              {
+                "literal": "}"
+              }
+            ]
+          },
+          "scope": "variable.other"
+        },
+        {
+          "match": {
+            "seq": [
+              {
+                "literal": "$"
+              },
+              {
+                "wordStarting": "[A-Za-z_]"
+              }
+            ]
+          },
+          "scope": "variable.other"
+        },
+        {
+          "match": {
+            "literal": "\""
+          },
+          "pop": true
+        }
+      ]
+    },
+    "execForm": {
+      "endsAtEOL": true,
+      "rules": [
+        {
+          "match": {
+            "seq": [
+              {
+                "literal": "\\"
+              },
+              {
+                "repeat": "[ \\t]"
+              },
+              {
+                "eol": true
+              }
+            ]
+          },
+          "scope": "constant.character.escape",
+          "continuesLine": true
+        },
+        {
+          "match": {
+            "literal": "\""
+          },
+          "scope": "string.quoted",
+          "push": "jsonString"
+        },
+        {
+          "match": {
+            "literal": ","
+          },
+          "scope": "punctuation"
+        },
+        {
+          "match": {
+            "literal": "]"
+          },
+          "scope": "punctuation",
+          "pop": true
+        }
+      ]
+    },
+    "fileHeredoc": {
+      "scope": "string.quoted",
+      "rules": [
+        {
+          "match": {
+            "seq": [
+              {
+                "bol": true
+              },
+              {
+                "repeat": "[\\t]"
+              },
+              {
+                "remembered": true
+              },
+              {
+                "eol": true
+              }
+            ]
+          },
+          "scope": "keyword",
+          "pop": true
+        }
+      ]
+    },
+    "from": {
+      "endsAtEOL": true,
+      "rules": [
+        {
+          "match": {
+            "seq": [
+              {
+                "literal": "\\"
+              },
+              {
+                "repeat": "[ \\t]"
+              },
+              {
+                "eol": true
+              }
+            ]
+          },
+          "scope": "constant.character.escape",
+          "continuesLine": true
+        },
+        {
+          "match": {
+            "seq": [
+              {
+                "literal": "--"
+              },
+              {
+                "repeat": "[A-Za-z0-9_-]",
+                "min": 1
+              },
+              {
+                "opt": {
+                  "seq": [
+                    {
+                      "literal": "="
+                    },
+                    {
+                      "repeat": "[^ \\t\\r\\n\\\\]"
+                    }
+                  ]
+                }
+              }
+            ]
+          },
+          "scope": "entity.other.attribute"
+        },
+        {
+          "match": {
+            "seq": [
+              {
+                "literal": "${"
+              },
+              {
+                "repeat": "[^}\\r\\n]"
+              },
+              {
+                "literal": "}"
+              }
+            ]
+          },
+          "scope": "variable.other"
+        },
+        {
+          "match": {
+            "seq": [
+              {
+                "literal": "$"
+              },
+              {
+                "wordStarting": "[A-Za-z_]"
+              }
+            ]
+          },
+          "scope": "variable.other"
+        },
+        {
+          "match": {
+            "seq": [
+              {
+                "words": [
+                  "as",
+                  "AS",
+                  "As"
+                ]
+              },
+              {
+                "repeat": "[ \\t]",
+                "min": 1
+              },
+              {
+                "wordStarting": "[A-Za-z0-9_]"
+              }
+            ]
+          },
+          "captures": [
+            "keyword",
+            null,
+            "entity.name.type"
+          ]
+        }
+      ]
+    },
+    "healthcheck": {
+      "endsAtEOL": true,
+      "rules": [
+        {
+          "match": {
+            "seq": [
+              {
+                "literal": "\\"
+              },
+              {
+                "repeat": "[ \\t]"
+              },
+              {
+                "eol": true
+              }
+            ]
+          },
+          "scope": "constant.character.escape",
+          "continuesLine": true
+        },
+        {
+          "match": {
+            "seq": [
+              {
+                "literal": "--"
+              },
+              {
+                "repeat": "[A-Za-z0-9_-]",
+                "min": 1
+              },
+              {
+                "opt": {
+                  "seq": [
+                    {
+                      "literal": "="
+                    },
+                    {
+                      "repeat": "[^ \\t\\r\\n\\\\]"
+                    }
+                  ]
+                }
+              }
+            ]
+          },
+          "scope": "entity.other.attribute"
+        },
+        {
+          "match": {
+            "words": [
+              "none",
+              "NONE",
+              "None"
+            ]
+          },
+          "scope": "constant.language"
+        },
+        {
+          "match": {
+            "words": [
+              "cmd",
+              "CMD",
+              "Cmd"
+            ]
+          },
+          "scope": "keyword",
+          "pop": 1,
+          "push": "commandStart"
+        }
+      ]
+    },
+    "jsonString": {
+      "scope": "string.quoted",
+      "endsAtEOL": true,
+      "rules": [
+        {
+          "match": {
+            "seq": [
+              {
+                "literal": "\\u"
+              },
+              {
+                "repeat": "[0-9A-Fa-f]",
+                "min": 4,
+                "max": 4
+              }
+            ]
+          },
+          "scope": "constant.character.escape"
+        },
+        {
+          "match": {
+            "seq": [
+              {
+                "literal": "\\"
+              },
+              {
+                "class": "[\"\\\\/bfnrt]"
+              }
+            ]
+          },
+          "scope": "constant.character.escape"
+        },
+        {
+          "match": {
+            "literal": "\""
+          },
+          "pop": true
+        }
+      ]
+    },
+    "shellCommand": {
+      "endsAtEOL": true,
+      "rules": [
+        {
+          "match": {
+            "seq": [
+              {
+                "literal": "\\"
+              },
+              {
+                "repeat": "[ \\t]"
+              },
+              {
+                "eol": true
+              }
+            ]
+          },
+          "scope": "constant.character.escape",
+          "continuesLine": true
+        },
+        {
+          "match": {
+            "seq": [
+              {
+                "literal": "<<"
+              },
+              {
+                "opt": {
+                  "literal": "-"
+                }
+              },
+              {
+                "opt": {
+                  "class": "[\"']"
+                }
+              },
+              {
+                "wordStarting": "[A-Za-z_]"
+              },
+              {
+                "opt": {
+                  "class": "[\"']"
+                }
+              }
+            ]
+          },
+          "scope": "keyword",
+          "push": "shellHeredoc",
+          "remember": 3,
+          "pushAtNextLine": true,
+          "embed": "shell"
+        }
+      ]
+    },
+    "shellHeredoc": {
+      "rules": [
+        {
+          "match": {
+            "seq": [
+              {
+                "bol": true
+              },
+              {
+                "repeat": "[\\t]"
+              },
+              {
+                "remembered": true
+              },
+              {
+                "eol": true
+              }
+            ]
+          },
+          "scope": "keyword",
+          "pop": true
+        }
+      ]
+    },
+    "singleString": {
+      "scope": "string.quoted",
+      "endsAtEOL": true,
+      "rules": [
+        {
+          "match": {
+            "literal": "'"
+          },
+          "pop": true
+        }
+      ]
+    }
+  }
+}
