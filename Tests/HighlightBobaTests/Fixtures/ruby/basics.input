@@ -1,0 +1,39 @@
+# frozen_string_literal: true
+require "json"
+require_relative 'lib/boba'
+
+module Boba
+  class Shop < Base
+    include Comparable
+    attr_accessor :name, :stock
+    MAX_STOCK = 1_000
+
+    def initialize(name:, stock: 0)
+      @name = name
+      @stock = stock
+      @@count ||= 0
+      $shops = []
+    end
+
+    def self.open?(hour) = hour.between?(9, 17)
+
+    def restock!(amount)
+      return if amount.zero? || !defined?(@stock)
+      @stock += amount unless amount > MAX_STOCK
+      yield self if block_given?
+    rescue ArgumentError => e
+      raise e
+    ensure
+      puts "done"
+    end
+
+    def ==(other) = other.is_a?(Shop) && name == other.name
+  end
+end
+
+shop = Boba::Shop.new(name: "Tea", stock: 5)
+nums = [1, 2.5, 0xFF, 0b1010, 0o17, 1e3, 3r, 2i, 1_000.5]
+hash = { key: :value, "str" => :"quoted sym", nil => true, other: false }
+nums.each { |n| p n * 2 } if nums.any? && $stdout.tty?
+ratio = 10 / 2 / 1
+lambda { |x| x.to_s }.call(__LINE__)

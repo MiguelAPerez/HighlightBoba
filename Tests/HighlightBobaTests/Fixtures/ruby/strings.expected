@@ -1,0 +1,121 @@
+name = "Boba"
+       ^^^^^^ string.quoted
+a = "Hello, #{name.upcase}! #{[1, 2].map { |x| x * 2 }.sum} #@ivar #$global \t\" \x41 \e bad\q"
+    ^^^^^^^^ string.quoted
+            ^^ punctuation.section.embedded
+                         ^ punctuation.section.embedded
+                          ^^ string.quoted
+                            ^^ punctuation.section.embedded
+                               ^ constant.numeric
+                                  ^ constant.numeric
+                                                   ^ constant.numeric
+                                                          ^ punctuation.section.embedded
+                                                           ^ string.quoted
+                                                            ^ punctuation.section.embedded
+                                                             ^^^^^ variable.other
+                                                                  ^ string.quoted
+                                                                   ^ punctuation.section.embedded
+                                                                    ^^^^^^^ variable.other
+                                                                           ^ string.quoted
+                                                                            ^^^^ constant.character.escape
+                                                                                ^ string.quoted
+                                                                                 ^^^^ constant.character.escape
+                                                                                     ^ string.quoted
+                                                                                      ^^ constant.character.escape
+                                                                                        ^^^^ string.quoted
+                                                                                            ^^ constant.character.escape
+                                                                                              ^ string.quoted
+b = 'single #{not} \' \\ \n stays'
+    ^^^^^^^^^^^^^^^ string.quoted
+                   ^^ constant.character.escape
+                     ^ string.quoted
+                      ^^ constant.character.escape
+                        ^^^^^^^^^^ string.quoted
+c = `ls #{dir}`
+    ^^^^ string.quoted
+        ^^ punctuation.section.embedded
+             ^ punctuation.section.embedded
+              ^ string.quoted
+d = %w[one two (three)] + %i(a b) + %q{raw {nested} #{no}} + %Q<interp #{name} <nested>>
+    ^^^^^^^^^^^^^^^^^^^ string.quoted
+                          ^^^^^^^ string.quoted
+                                    ^^^^^^^^^^^^^^^^^^^^^^ string.quoted
+                                                             ^^^^^^^^^^ string.quoted
+                                                                       ^^ punctuation.section.embedded
+                                                                             ^ punctuation.section.embedded
+                                                                              ^^^^^^^^^^ string.quoted
+e = %(bare #{name} (nested)) + %r{^/path/#{name}$}i + %x|echo #{name}|
+    ^^^^^^^ string.quoted
+           ^^ punctuation.section.embedded
+                 ^ punctuation.section.embedded
+                  ^^^^^^^^^^ string.quoted
+                               ^^^^^^^^^^ string.regexp
+                                         ^^ punctuation.section.embedded
+                                               ^ punctuation.section.embedded
+                                                ^^ string.regexp
+                                                      ^^^^^^^^ string.quoted
+                                                              ^^ punctuation.section.embedded
+                                                                    ^ punctuation.section.embedded
+                                                                     ^ string.quoted
+f = /a\/b #{name} [0-9]+/m =~ "a/b"
+    ^^ string.regexp
+      ^^ constant.character.escape
+        ^^ string.regexp
+          ^^ punctuation.section.embedded
+                ^ punctuation.section.embedded
+                 ^^^^^^^^^ string.regexp
+                              ^^^^^ string.quoted
+g = "multi
+    ^^^^^^ string.quoted
+line #{name}
+^^^^^ string.quoted
+     ^^ punctuation.section.embedded
+           ^ punctuation.section.embedded
+string"
+^^^^^^^ string.quoted
+h = :"sym #{name}"
+    ^^^^^^ constant.language
+          ^^ punctuation.section.embedded
+                ^ punctuation.section.embedded
+                 ^ constant.language
+text = <<~EOS
+       ^^^^^^ string.quoted
+  Dear #{name},
+^^^^^^^ string.quoted
+       ^^ punctuation.section.embedded
+             ^ punctuation.section.embedded
+              ^ string.quoted
+  "quotes" and \t escapes, 日本語 🧋 ✓
+^^^^^^^^^^^^^^^ string.quoted
+               ^^ constant.character.escape
+                 ^^^^^^^^^^^^^^^^^ string.quoted
+  EOS
+^^^^^ string.quoted
+raw = <<-'RAW'
+      ^^^^^^^^ string.quoted
+  no #{interp} here \n
+^^^^^^^^^^^^^^^^^^^^^^ string.quoted
+  RAW
+^^^^^ string.quoted
+first, second = <<A, <<B
+                ^^^ string.quoted
+                     ^^^ string.quoted
+a body
+^^^^^^ string.quoted
+A
+^ string.quoted
+b body
+^^^^^^ string.quoted
+B
+^ string.quoted
+caps = <<EOS
+       ^^^^^ string.quoted
+  EOS is indented, so not the end
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ string.quoted
+EOS
+^^^ string.quoted
+open = "never closed
+       ^^^^^^^^^^^^^ string.quoted
+x = 1
+^^^^^ string.quoted
+

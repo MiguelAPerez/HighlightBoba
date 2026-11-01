@@ -1,0 +1,10 @@
+x = 1 # trailing
+=begin
+A block comment.
+def not_code; end
+=end
+y = 2
+=beginning is not a block comment opener
+=begin
+an unterminated block comment
+z = 3
