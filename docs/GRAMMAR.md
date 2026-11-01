@@ -104,7 +104,7 @@ Nothing ever backtracks: `repeat` keeps its whole run, and `anyOf` keeps its fir
 
 Shipping grammars may only emit scopes in `Scopes.vocabulary` (`Sources/HighlightBoba/Scopes.swift`), so a typo fails CI instead of rendering as plain text:
 
-`comment.line` `comment.block` `string.quoted` `constant.character.escape` `constant.numeric` `constant.language` `keyword` `variable.language` `entity.name.type` `entity.other.attribute` `meta.preprocessor` `support.function` `punctuation` `punctuation.section.embedded` `invalid`
+`comment.line` `comment.block` `string.quoted` `constant.character.escape` `constant.numeric` `constant.language` `keyword` `variable.language` `entity.name.type` `entity.name.function` `entity.name.tag` `support.type.property-name` `entity.other.attribute` `meta.preprocessor` `support.function` `punctuation` `punctuation.section.embedded` `invalid` `string.regexp` `variable.other` `variable.other.enummember` `variable.parameter` `markup.heading` `markup.bold` `markup.italic` `markup.raw` `markup.link` `markup.inserted` `markup.deleted`
 
 ## Fixtures
 
