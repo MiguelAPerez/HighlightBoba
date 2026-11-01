@@ -1,0 +1,27 @@
+# A TOML document
+title = "TOML Example"
+"quoted key" = 'literal \n stays'
+site."google.com" = true
+3 = "a bare numeric key"
+true = false
+
+[owner]
+name = "Tom" # trailing comment
+dob = 1979-05-27T07:32:00-08:00
+lunch = 07:32:00.999
+day = 1979-05-27
+
+[servers.alpha]
+ip = "10.0.0.1"
+ports = [ 8000, 8001, 8002 ]
+nested = [[1, 2], ["a", 'b'], [{ x = 1, y = "two" }]]
+point = { x = 1, y = 2, inner = { z = [3] } }
+
+[[products]]
+name = "Hammer"
+sku = 738594937
+
+[[products]]  # an empty one
+
+[[ fruits . "varieties" ]]
+name = "plantain"

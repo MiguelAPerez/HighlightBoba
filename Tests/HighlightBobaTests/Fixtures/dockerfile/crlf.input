@@ -1,0 +1,4 @@
+FROM alpine AS base
+RUN echo hi \
+    && echo there
+CMD ["sh"]

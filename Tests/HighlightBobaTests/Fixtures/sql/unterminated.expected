@@ -1,0 +1,8 @@
+SELECT 1; /* a comment that never
+^^^^^^ keyword
+       ^ constant.numeric
+        ^ punctuation
+          ^^^^^^^^^^^^^^^^^^^^^^^ comment.block
+closes, so this SELECT stays in it
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ comment.block
+

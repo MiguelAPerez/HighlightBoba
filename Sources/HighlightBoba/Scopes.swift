@@ -30,7 +30,9 @@ public enum Scopes {
         "markup.bold",
         "markup.italic",
         "markup.raw",
-        "markup.link"
+        "markup.link",
+        "markup.inserted",
+        "markup.deleted"
     ]
 
     /// Every scope name any loaded grammar uses, interned so tokens carry an `Int` instead of a `String`.

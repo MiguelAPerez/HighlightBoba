@@ -1,0 +1,985 @@
+{
+  "name": "cpp",
+  "fileExtensions": [
+    "cpp",
+    "cc",
+    "cxx",
+    "c++",
+    "hpp",
+    "hh",
+    "hxx",
+    "h++",
+    "ipp",
+    "tpp",
+    "inl",
+    "ixx",
+    "cppm"
+  ],
+  "initial": "code",
+  "states": {
+    "attribute": {
+      "scope": "meta.preprocessor",
+      "rules": [
+        {
+          "match": {
+            "literal": "]]"
+          },
+          "scope": "meta.preprocessor",
+          "pop": true
+        },
+        {
+          "match": {
+            "literal": "\""
+          },
+          "scope": "string.quoted",
+          "push": "string"
+        }
+      ]
+    },
+    "blockComment": {
+      "scope": "comment.block",
+      "rules": [
+        {
+          "match": {
+            "literal": "*/"
+          },
+          "pop": true
+        }
+      ]
+    },
+    "char": {
+      "scope": "string.quoted",
+      "endsAtEOL": true,
+      "rules": [
+        {
+          "match": {
+            "seq": [
+              {
+                "literal": "\\x"
+              },
+              {
+                "repeat": "[0-9A-Fa-f]",
+                "min": 1
+              }
+            ]
+          },
+          "scope": "constant.character.escape"
+        },
+        {
+          "match": {
+            "seq": [
+              {
+                "literal": "\\u"
+              },
+              {
+                "repeat": "[0-9A-Fa-f]",
+                "min": 4,
+                "max": 4
+              }
+            ]
+          },
+          "scope": "constant.character.escape"
+        },
+        {
+          "match": {
+            "seq": [
+              {
+                "literal": "\\U"
+              },
+              {
+                "repeat": "[0-9A-Fa-f]",
+                "min": 8,
+                "max": 8
+              }
+            ]
+          },
+          "scope": "constant.character.escape"
+        },
+        {
+          "match": {
+            "seq": [
+              {
+                "literal": "\\"
+              },
+              {
+                "repeat": "[0-7]",
+                "min": 1,
+                "max": 3
+              }
+            ]
+          },
+          "scope": "constant.character.escape"
+        },
+        {
+          "match": {
+            "seq": [
+              {
+                "literal": "\\"
+              },
+              {
+                "class": "[abfnrtv\\\\'\"?e]"
+              }
+            ]
+          },
+          "scope": "constant.character.escape"
+        },
+        {
+          "match": {
+            "seq": [
+              {
+                "literal": "\\"
+              },
+              {
+                "eol": true
+              }
+            ]
+          },
+          "scope": "constant.character.escape",
+          "continuesLine": true
+        },
+        {
+          "match": {
+            "literal": "\\"
+          },
+          "scope": "invalid"
+        },
+        {
+          "match": {
+            "literal": "'"
+          },
+          "pop": true
+        }
+      ]
+    },
+    "code": {
+      "rules": [
+        {
+          "match": {
+            "seq": [
+              {
+                "literal": "//"
+              },
+              {
+                "repeat": "[^\\r\\n]"
+              }
+            ]
+          },
+          "scope": "comment.line"
+        },
+        {
+          "match": {
+            "literal": "/*"
+          },
+          "scope": "comment.block",
+          "push": "blockComment"
+        },
+        {
+          "match": {
+            "seq": [
+              {
+                "bol": true
+              },
+              {
+                "repeat": "[ \\t]"
+              },
+              {
+                "literal": "#"
+              },
+              {
+                "repeat": "[ \\t]"
+              },
+              {
+                "words": [
+                  "include",
+                  "include_next",
+                  "import",
+                  "embed"
+                ]
+              },
+              {
+                "repeat": "[ \\t]"
+              },
+              {
+                "literal": "<"
+              },
+              {
+                "repeat": "[^>\\r\\n]"
+              },
+              {
+                "literal": ">"
+              }
+            ]
+          },
+          "captures": [
+            null,
+            "meta.preprocessor",
+            "meta.preprocessor",
+            "meta.preprocessor",
+            "meta.preprocessor",
+            null,
+            "string.quoted",
+            "string.quoted",
+            "string.quoted"
+          ],
+          "push": "directive"
+        },
+        {
+          "match": {
+            "seq": [
+              {
+                "bol": true
+              },
+              {
+                "repeat": "[ \\t]"
+              },
+              {
+                "literal": "#"
+              },
+              {
+                "repeat": "[ \\t]"
+              },
+              {
+                "words": [
+                  "define"
+                ]
+              },
+              {
+                "repeat": "[ \\t]",
+                "min": 1
+              },
+              {
+                "seq": [
+                  {
+                    "class": "[A-Za-z_]"
+                  },
+                  {
+                    "repeat": "[A-Za-z0-9_]"
+                  }
+                ]
+              }
+            ]
+          },
+          "captures": [
+            null,
+            "meta.preprocessor",
+            "meta.preprocessor",
+            "meta.preprocessor",
+            "meta.preprocessor",
+            null,
+            "entity.name.function"
+          ],
+          "push": "directive"
+        },
+        {
+          "match": {
+            "seq": [
+              {
+                "bol": true
+              },
+              {
+                "repeat": "[ \\t]"
+              },
+              {
+                "literal": "#"
+              },
+              {
+                "repeat": "[ \\t]"
+              },
+              {
+                "opt": {
+                  "words": [
+                    "include",
+                    "include_next",
+                    "import",
+                    "define",
+                    "undef",
+                    "if",
+                    "ifdef",
+                    "ifndef",
+                    "elif",
+                    "elifdef",
+                    "elifndef",
+                    "else",
+                    "endif",
+                    "line",
+                    "error",
+                    "warning",
+                    "pragma",
+                    "embed"
+                  ]
+                }
+              }
+            ]
+          },
+          "captures": [
+            null,
+            "meta.preprocessor",
+            "meta.preprocessor",
+            "meta.preprocessor",
+            "meta.preprocessor"
+          ],
+          "push": "directive"
+        },
+        {
+          "match": {
+            "seq": [
+              {
+                "opt": {
+                  "anyOf": [
+                    {
+                      "literal": "u8"
+                    },
+                    {
+                      "class": "[LuU]"
+                    }
+                  ]
+                }
+              },
+              {
+                "literal": "R\""
+              },
+              {
+                "repeat": "[^()\\\\ \\t\\r\\n\"]",
+                "min": 1,
+                "max": 16
+              },
+              {
+                "literal": "("
+              }
+            ]
+          },
+          "scope": "string.quoted",
+          "push": "rawString",
+          "remember": 2,
+          "notAfterWord": true
+        },
+        {
+          "match": {
+            "seq": [
+              {
+                "opt": {
+                  "anyOf": [
+                    {
+                      "literal": "u8"
+                    },
+                    {
+                      "class": "[LuU]"
+                    }
+                  ]
+                }
+              },
+              {
+                "literal": "R\"("
+              }
+            ]
+          },
+          "scope": "string.quoted",
+          "push": "rawPlain",
+          "notAfterWord": true
+        },
+        {
+          "match": {
+            "seq": [
+              {
+                "opt": {
+                  "anyOf": [
+                    {
+                      "literal": "u8"
+                    },
+                    {
+                      "class": "[LuU]"
+                    }
+                  ]
+                }
+              },
+              {
+                "literal": "\""
+              }
+            ]
+          },
+          "scope": "string.quoted",
+          "push": "string",
+          "notAfterWord": true
+        },
+        {
+          "match": {
+            "seq": [
+              {
+                "opt": {
+                  "anyOf": [
+                    {
+                      "literal": "u8"
+                    },
+                    {
+                      "class": "[LuU]"
+                    }
+                  ]
+                }
+              },
+              {
+                "literal": "'"
+              }
+            ]
+          },
+          "scope": "string.quoted",
+          "push": "char",
+          "notAfterWord": true
+        },
+        {
+          "match": {
+            "literal": "[["
+          },
+          "scope": "meta.preprocessor",
+          "push": "attribute"
+        },
+        {
+          "match": {
+            "anyOf": [
+              {
+                "seq": [
+                  {
+                    "literal": "0"
+                  },
+                  {
+                    "class": "[xX]"
+                  },
+                  {
+                    "repeat": "[0-9A-Fa-f_']",
+                    "min": 1
+                  },
+                  {
+                    "opt": {
+                      "seq": [
+                        {
+                          "literal": "."
+                        },
+                        {
+                          "repeat": "[0-9A-Fa-f_']"
+                        }
+                      ]
+                    }
+                  },
+                  {
+                    "opt": {
+                      "seq": [
+                        {
+                          "class": "[pP]"
+                        },
+                        {
+                          "opt": {
+                            "class": "[+-]"
+                          }
+                        },
+                        {
+                          "repeat": "[0-9]",
+                          "min": 1
+                        }
+                      ]
+                    }
+                  },
+                  {
+                    "repeat": "[A-Za-z_0-9]"
+                  }
+                ]
+              },
+              {
+                "seq": [
+                  {
+                    "literal": "0"
+                  },
+                  {
+                    "class": "[bB]"
+                  },
+                  {
+                    "repeat": "[01']",
+                    "min": 1
+                  },
+                  {
+                    "repeat": "[A-Za-z_0-9]"
+                  }
+                ]
+              },
+              {
+                "seq": [
+                  {
+                    "class": "[0-9]"
+                  },
+                  {
+                    "repeat": "[0-9']"
+                  },
+                  {
+                    "opt": {
+                      "seq": [
+                        {
+                          "literal": "."
+                        },
+                        {
+                          "repeat": "[0-9']"
+                        }
+                      ]
+                    }
+                  },
+                  {
+                    "opt": {
+                      "seq": [
+                        {
+                          "class": "[eE]"
+                        },
+                        {
+                          "opt": {
+                            "class": "[+-]"
+                          }
+                        },
+                        {
+                          "repeat": "[0-9]",
+                          "min": 1
+                        }
+                      ]
+                    }
+                  },
+                  {
+                    "repeat": "[A-Za-z_0-9]"
+                  }
+                ]
+              },
+              {
+                "seq": [
+                  {
+                    "literal": "."
+                  },
+                  {
+                    "class": "[0-9]"
+                  },
+                  {
+                    "repeat": "[0-9']"
+                  },
+                  {
+                    "opt": {
+                      "seq": [
+                        {
+                          "class": "[eE]"
+                        },
+                        {
+                          "opt": {
+                            "class": "[+-]"
+                          }
+                        },
+                        {
+                          "repeat": "[0-9]",
+                          "min": 1
+                        }
+                      ]
+                    }
+                  },
+                  {
+                    "repeat": "[A-Za-z_0-9]"
+                  }
+                ]
+              }
+            ]
+          },
+          "scope": "constant.numeric",
+          "notAfterWord": true
+        },
+        {
+          "match": {
+            "words": [
+              "true",
+              "false",
+              "NULL",
+              "nullptr"
+            ]
+          },
+          "scope": "constant.language"
+        },
+        {
+          "match": {
+            "words": [
+              "this"
+            ]
+          },
+          "scope": "variable.language"
+        },
+        {
+          "match": {
+            "seq": [
+              {
+                "words": [
+                  "class",
+                  "struct",
+                  "union",
+                  "enum",
+                  "namespace",
+                  "concept"
+                ]
+              },
+              {
+                "repeat": "[ \\t]",
+                "min": 1
+              },
+              {
+                "opt": {
+                  "seq": [
+                    {
+                      "words": [
+                        "class",
+                        "struct"
+                      ]
+                    },
+                    {
+                      "repeat": "[ \\t]",
+                      "min": 1
+                    }
+                  ]
+                }
+              },
+              {
+                "opt": {
+                  "seq": [
+                    {
+                      "literal": "[["
+                    },
+                    {
+                      "repeat": "[^\\]\\r\\n]"
+                    },
+                    {
+                      "literal": "]]"
+                    },
+                    {
+                      "repeat": "[ \\t]",
+                      "min": 1
+                    }
+                  ]
+                }
+              },
+              {
+                "notFollowedBy": {
+                  "words": [
+                    "final"
+                  ]
+                }
+              },
+              {
+                "wordStarting": "[A-Za-z_]"
+              }
+            ]
+          },
+          "captures": [
+            "keyword",
+            null,
+            "keyword",
+            "meta.preprocessor",
+            null,
+            "entity.name.type"
+          ]
+        },
+        {
+          "match": {
+            "words": [
+              "char",
+              "double",
+              "float",
+              "int",
+              "long",
+              "short",
+              "signed",
+              "unsigned",
+              "void",
+              "bool",
+              "_Bool",
+              "_Complex",
+              "_Imaginary",
+              "size_t",
+              "ssize_t",
+              "ptrdiff_t",
+              "intptr_t",
+              "uintptr_t",
+              "intmax_t",
+              "uintmax_t",
+              "int8_t",
+              "int16_t",
+              "int32_t",
+              "int64_t",
+              "uint8_t",
+              "uint16_t",
+              "uint32_t",
+              "uint64_t",
+              "wchar_t",
+              "char8_t",
+              "char16_t",
+              "char32_t",
+              "FILE"
+            ]
+          },
+          "scope": "entity.name.type"
+        },
+        {
+          "match": {
+            "words": [
+              "auto",
+              "break",
+              "case",
+              "const",
+              "continue",
+              "default",
+              "do",
+              "else",
+              "enum",
+              "extern",
+              "for",
+              "goto",
+              "if",
+              "inline",
+              "register",
+              "restrict",
+              "return",
+              "sizeof",
+              "static",
+              "struct",
+              "switch",
+              "typedef",
+              "union",
+              "volatile",
+              "while",
+              "_Alignas",
+              "_Alignof",
+              "_Atomic",
+              "_Generic",
+              "_Noreturn",
+              "_Static_assert",
+              "_Thread_local",
+              "alignas",
+              "alignof",
+              "constexpr",
+              "static_assert",
+              "thread_local",
+              "typeof",
+              "typeof_unqual",
+              "and",
+              "and_eq",
+              "asm",
+              "bitand",
+              "bitor",
+              "catch",
+              "class",
+              "co_await",
+              "co_return",
+              "co_yield",
+              "compl",
+              "concept",
+              "consteval",
+              "constinit",
+              "const_cast",
+              "decltype",
+              "delete",
+              "dynamic_cast",
+              "explicit",
+              "export",
+              "final",
+              "friend",
+              "import",
+              "module",
+              "mutable",
+              "namespace",
+              "new",
+              "noexcept",
+              "not",
+              "not_eq",
+              "operator",
+              "or",
+              "or_eq",
+              "override",
+              "private",
+              "protected",
+              "public",
+              "reinterpret_cast",
+              "requires",
+              "static_cast",
+              "template",
+              "throw",
+              "try",
+              "typeid",
+              "typename",
+              "using",
+              "virtual",
+              "xor",
+              "xor_eq"
+            ]
+          },
+          "scope": "keyword"
+        }
+      ]
+    },
+    "directive": {
+      "endsAtEOL": true,
+      "rules": [
+        {
+          "match": {
+            "seq": [
+              {
+                "literal": "\\"
+              },
+              {
+                "eol": true
+              }
+            ]
+          },
+          "scope": "constant.character.escape",
+          "continuesLine": true
+        },
+        {
+          "match": {
+            "words": [
+              "defined",
+              "__has_include",
+              "__has_include_next",
+              "__has_c_attribute",
+              "__has_cpp_attribute",
+              "__has_embed"
+            ]
+          },
+          "scope": "meta.preprocessor"
+        },
+        {
+          "include": "code"
+        }
+      ]
+    },
+    "rawPlain": {
+      "scope": "string.quoted",
+      "rules": [
+        {
+          "match": {
+            "literal": ")\""
+          },
+          "pop": true
+        }
+      ]
+    },
+    "rawString": {
+      "scope": "string.quoted",
+      "rules": [
+        {
+          "match": {
+            "seq": [
+              {
+                "literal": ")"
+              },
+              {
+                "remembered": true
+              },
+              {
+                "literal": "\""
+              }
+            ]
+          },
+          "pop": true
+        }
+      ]
+    },
+    "string": {
+      "scope": "string.quoted",
+      "endsAtEOL": true,
+      "rules": [
+        {
+          "match": {
+            "seq": [
+              {
+                "literal": "\\x"
+              },
+              {
+                "repeat": "[0-9A-Fa-f]",
+                "min": 1
+              }
+            ]
+          },
+          "scope": "constant.character.escape"
+        },
+        {
+          "match": {
+            "seq": [
+              {
+                "literal": "\\u"
+              },
+              {
+                "repeat": "[0-9A-Fa-f]",
+                "min": 4,
+                "max": 4
+              }
+            ]
+          },
+          "scope": "constant.character.escape"
+        },
+        {
+          "match": {
+            "seq": [
+              {
+                "literal": "\\U"
+              },
+              {
+                "repeat": "[0-9A-Fa-f]",
+                "min": 8,
+                "max": 8
+              }
+            ]
+          },
+          "scope": "constant.character.escape"
+        },
+        {
+          "match": {
+            "seq": [
+              {
+                "literal": "\\"
+              },
+              {
+                "repeat": "[0-7]",
+                "min": 1,
+                "max": 3
+              }
+            ]
+          },
+          "scope": "constant.character.escape"
+        },
+        {
+          "match": {
+            "seq": [
+              {
+                "literal": "\\"
+              },
+              {
+                "class": "[abfnrtv\\\\'\"?e]"
+              }
+            ]
+          },
+          "scope": "constant.character.escape"
+        },
+        {
+          "match": {
+            "seq": [
+              {
+                "literal": "\\"
+              },
+              {
+                "eol": true
+              }
+            ]
+          },
+          "scope": "constant.character.escape",
+          "continuesLine": true
+        },
+        {
+          "match": {
+            "literal": "\\"
+          },
+          "scope": "invalid"
+        },
+        {
+          "match": {
+            "literal": "\""
+          },
+          "pop": true
+        }
+      ]
+    }
+  }
+}

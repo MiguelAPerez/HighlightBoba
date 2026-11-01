@@ -1,0 +1,6 @@
+- removed in a bare fragment
++ added in a bare fragment
+  unchanged context
+-日本語 and 🧋 boba
++日本語 und 🧋 Boba ✓
+Some prose with a - dash and a + plus mid-line.

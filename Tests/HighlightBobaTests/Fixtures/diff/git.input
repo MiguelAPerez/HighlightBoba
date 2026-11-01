@@ -1,0 +1,22 @@
+diff --git a/Sources/App/main.swift b/Sources/App/main.swift
+index 3b18e51..a9c4f02 100644
+--- a/Sources/App/main.swift
++++ b/Sources/App/main.swift
+@@ -1,5 +1,6 @@ struct App {
+ import Foundation
+-let greeting = "Hello"
++let greeting = "Hello, 🧋"
++let count = 2
+ print(greeting)
+ 
+@@ -20 +21 @@
+-}
++} // end
+\ No newline at end of file
+diff --git a/old.txt b/new.txt
+similarity index 90%
+rename from old.txt
+rename to new.txt
+diff --git a/logo.png b/logo.png
+new file mode 100644
+Binary files /dev/null and b/logo.png differ

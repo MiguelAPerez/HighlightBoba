@@ -1,0 +1,37 @@
+RUN echo "never closed
+^^^ keyword
+    ^^^^ support.function
+         ^^^^^^^^^^^^^ string.quoted
+CMD ["unclosed
+^^^ keyword
+   ^^ punctuation
+     ^^^^^^^^^ string.quoted
+LABEL emoji="🧋 boba ✓" note='日本語'
+^^^^^ keyword
+      ^^^^^ variable.other
+           ^ punctuation
+            ^^^^^^^^^^ string.quoted
+                       ^^^^ variable.other
+                           ^ punctuation
+                            ^^^^^ string.quoted
+ENV MSG="tab\t \"quoted\" ${NAME:-默认}"
+^^^ keyword
+    ^^^ variable.other
+       ^ punctuation
+        ^^^^ string.quoted
+            ^^ constant.character.escape
+              ^ string.quoted
+               ^^ constant.character.escape
+                 ^^^^^^ string.quoted
+                       ^^ constant.character.escape
+                         ^ string.quoted
+                          ^^^^^^^^^^^ variable.other
+                                     ^ string.quoted
+FROM alpine
+^^^^ keyword
+not_an_instruction here
+RUN echo 'single \ stays'
+^^^ keyword
+    ^^^^ support.function
+         ^^^^^^^^^^^^^^^^ string.quoted
+

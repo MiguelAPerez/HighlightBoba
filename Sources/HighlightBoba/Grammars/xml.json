@@ -1,0 +1,580 @@
+{
+  "name": "xml",
+  "fileExtensions": [
+    "xml",
+    "xsd",
+    "xsl",
+    "xslt",
+    "svg",
+    "plist",
+    "rss",
+    "atom",
+    "xaml",
+    "csproj",
+    "storyboard",
+    "xib",
+    "resx",
+    "wsdl",
+    "kml",
+    "gpx"
+  ],
+  "initial": "content",
+  "states": {
+    "cdata": {
+      "rules": [
+        {
+          "match": {
+            "literal": "]]>"
+          },
+          "scope": "meta.preprocessor",
+          "pop": true
+        }
+      ]
+    },
+    "comment": {
+      "scope": "comment.block",
+      "rules": [
+        {
+          "match": {
+            "literal": "-->"
+          },
+          "pop": true
+        },
+        {
+          "match": {
+            "seq": [
+              {
+                "literal": "--"
+              },
+              {
+                "notFollowedBy": {
+                  "literal": ">"
+                }
+              }
+            ]
+          },
+          "scope": "invalid"
+        }
+      ]
+    },
+    "content": {
+      "rules": [
+        {
+          "match": {
+            "literal": "<!--"
+          },
+          "scope": "comment.block",
+          "push": "comment"
+        },
+        {
+          "match": {
+            "literal": "<![CDATA["
+          },
+          "scope": "meta.preprocessor",
+          "push": "cdata"
+        },
+        {
+          "match": {
+            "seq": [
+              {
+                "literal": "<!DOCTYPE"
+              },
+              {
+                "notFollowedBy": {
+                  "class": "[A-Za-z_:\u00c0-\u00d6\u00d8-\u00f6\u00f8-\u02ff\u0370-\u037d\u037f-\u1fff\u200c-\u200d\u2070-\u218f\u2c00-\u2fef\u3001-\ud7ff\uf900-\ufdcf\ufdf0-\ufffd0-9.\u00b7\u0300-\u036f\u203f-\u2040\\-]"
+                }
+              }
+            ]
+          },
+          "scope": "meta.preprocessor",
+          "push": "doctype"
+        },
+        {
+          "match": {
+            "seq": [
+              {
+                "literal": "<?xml"
+              },
+              {
+                "notFollowedBy": {
+                  "class": "[A-Za-z_:\u00c0-\u00d6\u00d8-\u00f6\u00f8-\u02ff\u0370-\u037d\u037f-\u1fff\u200c-\u200d\u2070-\u218f\u2c00-\u2fef\u3001-\ud7ff\uf900-\ufdcf\ufdf0-\ufffd0-9.\u00b7\u0300-\u036f\u203f-\u2040\\-]"
+                }
+              }
+            ]
+          },
+          "scope": "meta.preprocessor",
+          "push": "declaration"
+        },
+        {
+          "match": {
+            "seq": [
+              {
+                "literal": "<?"
+              },
+              {
+                "seq": [
+                  {
+                    "class": "[A-Za-z_:\u00c0-\u00d6\u00d8-\u00f6\u00f8-\u02ff\u0370-\u037d\u037f-\u1fff\u200c-\u200d\u2070-\u218f\u2c00-\u2fef\u3001-\ud7ff\uf900-\ufdcf\ufdf0-\ufffd]"
+                  },
+                  {
+                    "repeat": "[A-Za-z_:\u00c0-\u00d6\u00d8-\u00f6\u00f8-\u02ff\u0370-\u037d\u037f-\u1fff\u200c-\u200d\u2070-\u218f\u2c00-\u2fef\u3001-\ud7ff\uf900-\ufdcf\ufdf0-\ufffd0-9.\u00b7\u0300-\u036f\u203f-\u2040\\-]"
+                  }
+                ]
+              }
+            ]
+          },
+          "scope": "meta.preprocessor",
+          "push": "processingInstruction"
+        },
+        {
+          "match": {
+            "seq": [
+              {
+                "literal": "</"
+              },
+              {
+                "seq": [
+                  {
+                    "class": "[A-Za-z_:\u00c0-\u00d6\u00d8-\u00f6\u00f8-\u02ff\u0370-\u037d\u037f-\u1fff\u200c-\u200d\u2070-\u218f\u2c00-\u2fef\u3001-\ud7ff\uf900-\ufdcf\ufdf0-\ufffd]"
+                  },
+                  {
+                    "repeat": "[A-Za-z_:\u00c0-\u00d6\u00d8-\u00f6\u00f8-\u02ff\u0370-\u037d\u037f-\u1fff\u200c-\u200d\u2070-\u218f\u2c00-\u2fef\u3001-\ud7ff\uf900-\ufdcf\ufdf0-\ufffd0-9.\u00b7\u0300-\u036f\u203f-\u2040\\-]"
+                  }
+                ]
+              }
+            ]
+          },
+          "captures": [
+            "punctuation",
+            "entity.name.tag"
+          ],
+          "push": "endTag"
+        },
+        {
+          "match": {
+            "seq": [
+              {
+                "literal": "<"
+              },
+              {
+                "seq": [
+                  {
+                    "class": "[A-Za-z_:\u00c0-\u00d6\u00d8-\u00f6\u00f8-\u02ff\u0370-\u037d\u037f-\u1fff\u200c-\u200d\u2070-\u218f\u2c00-\u2fef\u3001-\ud7ff\uf900-\ufdcf\ufdf0-\ufffd]"
+                  },
+                  {
+                    "repeat": "[A-Za-z_:\u00c0-\u00d6\u00d8-\u00f6\u00f8-\u02ff\u0370-\u037d\u037f-\u1fff\u200c-\u200d\u2070-\u218f\u2c00-\u2fef\u3001-\ud7ff\uf900-\ufdcf\ufdf0-\ufffd0-9.\u00b7\u0300-\u036f\u203f-\u2040\\-]"
+                  }
+                ]
+              }
+            ]
+          },
+          "captures": [
+            "punctuation",
+            "entity.name.tag"
+          ],
+          "push": "tag"
+        },
+        {
+          "include": "entities"
+        }
+      ]
+    },
+    "declaration": {
+      "rules": [
+        {
+          "match": {
+            "literal": "?>"
+          },
+          "scope": "meta.preprocessor",
+          "pop": true
+        },
+        {
+          "match": {
+            "seq": [
+              {
+                "class": "[A-Za-z_:\u00c0-\u00d6\u00d8-\u00f6\u00f8-\u02ff\u0370-\u037d\u037f-\u1fff\u200c-\u200d\u2070-\u218f\u2c00-\u2fef\u3001-\ud7ff\uf900-\ufdcf\ufdf0-\ufffd]"
+              },
+              {
+                "repeat": "[A-Za-z_:\u00c0-\u00d6\u00d8-\u00f6\u00f8-\u02ff\u0370-\u037d\u037f-\u1fff\u200c-\u200d\u2070-\u218f\u2c00-\u2fef\u3001-\ud7ff\uf900-\ufdcf\ufdf0-\ufffd0-9.\u00b7\u0300-\u036f\u203f-\u2040\\-]"
+              }
+            ]
+          },
+          "scope": "entity.other.attribute"
+        },
+        {
+          "match": {
+            "literal": "="
+          },
+          "scope": "punctuation"
+        },
+        {
+          "match": {
+            "literal": "\""
+          },
+          "scope": "string.quoted",
+          "push": "doubleValue"
+        },
+        {
+          "match": {
+            "literal": "'"
+          },
+          "scope": "string.quoted",
+          "push": "singleValue"
+        }
+      ]
+    },
+    "doctype": {
+      "scope": "meta.preprocessor",
+      "rules": [
+        {
+          "match": {
+            "literal": ">"
+          },
+          "pop": true
+        },
+        {
+          "match": {
+            "literal": "["
+          },
+          "scope": "punctuation",
+          "push": "internalSubset"
+        },
+        {
+          "match": {
+            "literal": "\""
+          },
+          "scope": "string.quoted",
+          "push": "doctypeDouble"
+        },
+        {
+          "match": {
+            "literal": "'"
+          },
+          "scope": "string.quoted",
+          "push": "doctypeSingle"
+        }
+      ]
+    },
+    "doctypeDouble": {
+      "scope": "string.quoted",
+      "rules": [
+        {
+          "match": {
+            "literal": "\""
+          },
+          "pop": true
+        }
+      ]
+    },
+    "doctypeSingle": {
+      "scope": "string.quoted",
+      "rules": [
+        {
+          "match": {
+            "literal": "'"
+          },
+          "pop": true
+        }
+      ]
+    },
+    "doubleValue": {
+      "scope": "string.quoted",
+      "rules": [
+        {
+          "match": {
+            "literal": "\""
+          },
+          "pop": true
+        },
+        {
+          "include": "entities"
+        },
+        {
+          "match": {
+            "followedBy": {
+              "literal": "<"
+            }
+          },
+          "pop": 2
+        }
+      ]
+    },
+    "endTag": {
+      "rules": [
+        {
+          "match": {
+            "literal": ">"
+          },
+          "scope": "punctuation",
+          "pop": true
+        }
+      ]
+    },
+    "entities": {
+      "rules": [
+        {
+          "match": {
+            "anyOf": [
+              {
+                "seq": [
+                  {
+                    "literal": "&#x"
+                  },
+                  {
+                    "repeat": "[0-9A-Fa-f]",
+                    "min": 1
+                  },
+                  {
+                    "literal": ";"
+                  }
+                ]
+              },
+              {
+                "seq": [
+                  {
+                    "literal": "&#"
+                  },
+                  {
+                    "repeat": "[0-9]",
+                    "min": 1
+                  },
+                  {
+                    "literal": ";"
+                  }
+                ]
+              },
+              {
+                "seq": [
+                  {
+                    "literal": "&"
+                  },
+                  {
+                    "seq": [
+                      {
+                        "class": "[A-Za-z_:\u00c0-\u00d6\u00d8-\u00f6\u00f8-\u02ff\u0370-\u037d\u037f-\u1fff\u200c-\u200d\u2070-\u218f\u2c00-\u2fef\u3001-\ud7ff\uf900-\ufdcf\ufdf0-\ufffd]"
+                      },
+                      {
+                        "repeat": "[A-Za-z_:\u00c0-\u00d6\u00d8-\u00f6\u00f8-\u02ff\u0370-\u037d\u037f-\u1fff\u200c-\u200d\u2070-\u218f\u2c00-\u2fef\u3001-\ud7ff\uf900-\ufdcf\ufdf0-\ufffd0-9.\u00b7\u0300-\u036f\u203f-\u2040\\-]"
+                      }
+                    ]
+                  },
+                  {
+                    "literal": ";"
+                  }
+                ]
+              }
+            ]
+          },
+          "scope": "constant.character.escape"
+        },
+        {
+          "match": {
+            "literal": "&"
+          },
+          "scope": "invalid"
+        }
+      ]
+    },
+    "internalSubset": {
+      "rules": [
+        {
+          "match": {
+            "literal": "]"
+          },
+          "scope": "punctuation",
+          "pop": true
+        },
+        {
+          "match": {
+            "literal": "<!--"
+          },
+          "scope": "comment.block",
+          "push": "comment"
+        },
+        {
+          "match": {
+            "seq": [
+              {
+                "literal": "<?"
+              },
+              {
+                "seq": [
+                  {
+                    "class": "[A-Za-z_:\u00c0-\u00d6\u00d8-\u00f6\u00f8-\u02ff\u0370-\u037d\u037f-\u1fff\u200c-\u200d\u2070-\u218f\u2c00-\u2fef\u3001-\ud7ff\uf900-\ufdcf\ufdf0-\ufffd]"
+                  },
+                  {
+                    "repeat": "[A-Za-z_:\u00c0-\u00d6\u00d8-\u00f6\u00f8-\u02ff\u0370-\u037d\u037f-\u1fff\u200c-\u200d\u2070-\u218f\u2c00-\u2fef\u3001-\ud7ff\uf900-\ufdcf\ufdf0-\ufffd0-9.\u00b7\u0300-\u036f\u203f-\u2040\\-]"
+                  }
+                ]
+              }
+            ]
+          },
+          "scope": "meta.preprocessor",
+          "push": "processingInstruction"
+        },
+        {
+          "match": {
+            "literal": "<!"
+          },
+          "scope": "meta.preprocessor",
+          "push": "markupDeclaration"
+        },
+        {
+          "match": {
+            "seq": [
+              {
+                "literal": "%"
+              },
+              {
+                "seq": [
+                  {
+                    "class": "[A-Za-z_:\u00c0-\u00d6\u00d8-\u00f6\u00f8-\u02ff\u0370-\u037d\u037f-\u1fff\u200c-\u200d\u2070-\u218f\u2c00-\u2fef\u3001-\ud7ff\uf900-\ufdcf\ufdf0-\ufffd]"
+                  },
+                  {
+                    "repeat": "[A-Za-z_:\u00c0-\u00d6\u00d8-\u00f6\u00f8-\u02ff\u0370-\u037d\u037f-\u1fff\u200c-\u200d\u2070-\u218f\u2c00-\u2fef\u3001-\ud7ff\uf900-\ufdcf\ufdf0-\ufffd0-9.\u00b7\u0300-\u036f\u203f-\u2040\\-]"
+                  }
+                ]
+              },
+              {
+                "literal": ";"
+              }
+            ]
+          },
+          "scope": "variable.other"
+        }
+      ]
+    },
+    "markupDeclaration": {
+      "scope": "meta.preprocessor",
+      "rules": [
+        {
+          "match": {
+            "literal": ">"
+          },
+          "pop": true
+        },
+        {
+          "match": {
+            "literal": "\""
+          },
+          "scope": "string.quoted",
+          "push": "doctypeDouble"
+        },
+        {
+          "match": {
+            "literal": "'"
+          },
+          "scope": "string.quoted",
+          "push": "doctypeSingle"
+        },
+        {
+          "match": {
+            "seq": [
+              {
+                "literal": "%"
+              },
+              {
+                "seq": [
+                  {
+                    "class": "[A-Za-z_:\u00c0-\u00d6\u00d8-\u00f6\u00f8-\u02ff\u0370-\u037d\u037f-\u1fff\u200c-\u200d\u2070-\u218f\u2c00-\u2fef\u3001-\ud7ff\uf900-\ufdcf\ufdf0-\ufffd]"
+                  },
+                  {
+                    "repeat": "[A-Za-z_:\u00c0-\u00d6\u00d8-\u00f6\u00f8-\u02ff\u0370-\u037d\u037f-\u1fff\u200c-\u200d\u2070-\u218f\u2c00-\u2fef\u3001-\ud7ff\uf900-\ufdcf\ufdf0-\ufffd0-9.\u00b7\u0300-\u036f\u203f-\u2040\\-]"
+                  }
+                ]
+              },
+              {
+                "literal": ";"
+              }
+            ]
+          },
+          "scope": "variable.other"
+        }
+      ]
+    },
+    "processingInstruction": {
+      "scope": "meta.preprocessor",
+      "rules": [
+        {
+          "match": {
+            "literal": "?>"
+          },
+          "pop": true
+        }
+      ]
+    },
+    "singleValue": {
+      "scope": "string.quoted",
+      "rules": [
+        {
+          "match": {
+            "literal": "'"
+          },
+          "pop": true
+        },
+        {
+          "include": "entities"
+        },
+        {
+          "match": {
+            "followedBy": {
+              "literal": "<"
+            }
+          },
+          "pop": 2
+        }
+      ]
+    },
+    "tag": {
+      "rules": [
+        {
+          "match": {
+            "literal": "/>"
+          },
+          "scope": "punctuation",
+          "pop": true
+        },
+        {
+          "match": {
+            "literal": ">"
+          },
+          "scope": "punctuation",
+          "pop": true
+        },
+        {
+          "match": {
+            "seq": [
+              {
+                "class": "[A-Za-z_:\u00c0-\u00d6\u00d8-\u00f6\u00f8-\u02ff\u0370-\u037d\u037f-\u1fff\u200c-\u200d\u2070-\u218f\u2c00-\u2fef\u3001-\ud7ff\uf900-\ufdcf\ufdf0-\ufffd]"
+              },
+              {
+                "repeat": "[A-Za-z_:\u00c0-\u00d6\u00d8-\u00f6\u00f8-\u02ff\u0370-\u037d\u037f-\u1fff\u200c-\u200d\u2070-\u218f\u2c00-\u2fef\u3001-\ud7ff\uf900-\ufdcf\ufdf0-\ufffd0-9.\u00b7\u0300-\u036f\u203f-\u2040\\-]"
+              }
+            ]
+          },
+          "scope": "entity.other.attribute"
+        },
+        {
+          "match": {
+            "literal": "="
+          },
+          "scope": "punctuation"
+        },
+        {
+          "match": {
+            "literal": "\""
+          },
+          "scope": "string.quoted",
+          "push": "doubleValue"
+        },
+        {
+          "match": {
+            "literal": "'"
+          },
+          "scope": "string.quoted",
+          "push": "singleValue"
+        }
+      ]
+    }
+  }
+}

@@ -1,0 +1,122 @@
+#include <stdio.h>
+^^^^^^^^ meta.preprocessor
+         ^^^^^^^^^ string.quoted
+#include "boba.h"
+^^^^^^^^ meta.preprocessor
+         ^^^^^^^^ string.quoted
+  #  define MAX(a, b) ((a) > (b) ? (a) : (b))
+^^^^^^^^^^^ meta.preprocessor
+            ^^^ entity.name.function
+#define GREETING "hello" \
+^^^^^^^ meta.preprocessor
+        ^^^^^^^^ entity.name.function
+                 ^^^^^^^ string.quoted
+                         ^ constant.character.escape
+    " world"
+    ^^^^^^^^ string.quoted
+#if defined(DEBUG) && DEBUG > 1 // trailing comment
+^^^ meta.preprocessor
+    ^^^^^^^ meta.preprocessor
+                              ^ constant.numeric
+                                ^^^^^^^^^^^^^^^^^^^ comment.line
+#pragma once
+^^^^^^^ meta.preprocessor
+#endif
+^^^^^^ meta.preprocessor
+
+/* A point. */
+^^^^^^^^^^^^^^ comment.block
+typedef struct point {
+^^^^^^^ keyword
+        ^^^^^^ keyword
+               ^^^^^ entity.name.type
+    int x, y;
+    ^^^ entity.name.type
+    const char *label;
+    ^^^^^ keyword
+          ^^^^ entity.name.type
+} point_t;
+
+enum color { RED, GREEN = 2 };
+^^^^ keyword
+     ^^^^^ entity.name.type
+                          ^ constant.numeric
+union value { long l; double d; };
+^^^^^ keyword
+      ^^^^^ entity.name.type
+              ^^^^ entity.name.type
+                      ^^^^^^ entity.name.type
+
+static inline unsigned long long area(const struct point *p) {
+^^^^^^ keyword
+       ^^^^^^ keyword
+              ^^^^^^^^ entity.name.type
+                       ^^^^ entity.name.type
+                            ^^^^ entity.name.type
+                                      ^^^^^ keyword
+                                            ^^^^^^ keyword
+                                                   ^^^^^ entity.name.type
+    size_t n = sizeof(*p);
+    ^^^^^^ entity.name.type
+               ^^^^^^ keyword
+    if (p == NULL) return 0ULL;
+    ^^ keyword
+             ^^^^ constant.language
+                   ^^^^^^ keyword
+                          ^^^^ constant.numeric
+    for (int i = 0; i < 10; i++) { n += i; }
+    ^^^ keyword
+         ^^^ entity.name.type
+                 ^ constant.numeric
+                        ^^ constant.numeric
+    return (unsigned long long)p->x * p->y + 0x1Fu + 017 + 0b1010 + 1'000'000 + 1.5e-3f + .25 + 0x1.8p3;
+    ^^^^^^ keyword
+            ^^^^^^^^ entity.name.type
+                     ^^^^ entity.name.type
+                          ^^^^ entity.name.type
+                                             ^^^^^ constant.numeric
+                                                     ^^^ constant.numeric
+                                                           ^^^^^^ constant.numeric
+                                                                    ^^^^^^^^^ constant.numeric
+                                                                                ^^^^^^^ constant.numeric
+                                                                                          ^^^ constant.numeric
+                                                                                                ^^^^^^^ constant.numeric
+}
+
+int main(void) {
+^^^ entity.name.type
+         ^^^^ entity.name.type
+    bool ok = true;
+    ^^^^ entity.name.type
+              ^^^^ constant.language
+    char c = 'a', nl = '\n', q = '\'', multi = 'ab';
+    ^^^^ entity.name.type
+             ^^^ string.quoted
+                       ^ string.quoted
+                        ^^ constant.character.escape
+                          ^ string.quoted
+                                 ^ string.quoted
+                                  ^^ constant.character.escape
+                                    ^ string.quoted
+                                               ^^^^ string.quoted
+    _Static_assert(sizeof(int) >= 2, "int too small");
+    ^^^^^^^^^^^^^^ keyword
+                   ^^^^^^ keyword
+                          ^^^ entity.name.type
+                                  ^ constant.numeric
+                                     ^^^^^^^^^^^^^^^ string.quoted
+    printf("%s %d\n", GREETING, MAX(1, 2));
+           ^^^^^^ string.quoted
+                 ^^ constant.character.escape
+                   ^ string.quoted
+                                    ^ constant.numeric
+                                       ^ constant.numeric
+    goto done;
+    ^^^^ keyword
+done:
+    return ok ? 0 : 1;
+    ^^^^^^ keyword
+                ^ constant.numeric
+                    ^ constant.numeric
+}
+

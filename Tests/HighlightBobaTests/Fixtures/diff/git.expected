@@ -1,0 +1,43 @@
+diff --git a/Sources/App/main.swift b/Sources/App/main.swift
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ markup.heading
+index 3b18e51..a9c4f02 100644
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ comment.line
+--- a/Sources/App/main.swift
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^ markup.heading
++++ b/Sources/App/main.swift
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^ markup.heading
+@@ -1,5 +1,6 @@ struct App {
+^^^^^^^^^^^^^^^ meta.preprocessor
+                ^^^^^^^^^^^^ entity.name.function
+ import Foundation
+-let greeting = "Hello"
+^^^^^^^^^^^^^^^^^^^^^^^ markup.deleted
++let greeting = "Hello, 🧋"
+^^^^^^^^^^^^^^^^^^^^^^^^^^ markup.inserted
++let count = 2
+^^^^^^^^^^^^^^ markup.inserted
+ print(greeting)
+ 
+@@ -20 +21 @@
+^^^^^^^^^^^^^ meta.preprocessor
+-}
+^^ markup.deleted
++} // end
+^^^^^^^^^ markup.inserted
+\ No newline at end of file
+^^^^^^^^^^^^^^^^^^^^^^^^^^^ comment.line
+diff --git a/old.txt b/new.txt
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ markup.heading
+similarity index 90%
+^^^^^^^^^^^^^^^^^^^^ comment.line
+rename from old.txt
+^^^^^^^^^^^^^^^^^^^ comment.line
+rename to new.txt
+^^^^^^^^^^^^^^^^^ comment.line
+diff --git a/logo.png b/logo.png
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ markup.heading
+new file mode 100644
+^^^^^^^^^^^^^^^^^^^^ comment.line
+Binary files /dev/null and b/logo.png differ
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ comment.line
+

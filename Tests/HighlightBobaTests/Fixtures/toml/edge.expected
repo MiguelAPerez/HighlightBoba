@@ -1,0 +1,29 @@
+open = "never closed
+^^^^ support.type.property-name
+     ^ punctuation
+       ^^^^^^^^^^^^^ string.quoted
+next = 'also open
+^^^^ support.type.property-name
+     ^ punctuation
+       ^^^^^^^^^^ string.quoted
+after = 1
+^^^^^ support.type.property-name
+      ^ punctuation
+        ^ constant.numeric
+emoji = "🧋 boba ✓ 日本語"
+^^^^^ support.type.property-name
+      ^ punctuation
+        ^^^^^^^^^^^^^^ string.quoted
+"🧋" = "key with emoji"
+^^^ support.type.property-name
+    ^ punctuation
+      ^^^^^^^^^^^^^^^^ string.quoted
+unterminated = """
+^^^^^^^^^^^^ support.type.property-name
+             ^ punctuation
+               ^^^ string.quoted
+still a string = 1
+^^^^^^^^^^^^^^^^^^ string.quoted
+[not.a.table]
+^^^^^^^^^^^^^ string.quoted
+

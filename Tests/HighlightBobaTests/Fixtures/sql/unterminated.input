@@ -1,0 +1,2 @@
+SELECT 1; /* a comment that never
+closes, so this SELECT stays in it

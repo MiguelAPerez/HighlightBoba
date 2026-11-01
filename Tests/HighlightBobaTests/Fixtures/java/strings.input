@@ -1,0 +1,13 @@
+String a = "tab\t quote\" octal\101\7\377 unicode\u00e9\uuuu0041 space\s bad\q";
+char c = '\n', d = '\'', e = 'é', f = '\u0041';
+String open = "never closed;
+int after = 1;
+String block = """
+    A text block with "quotes" and \"""escaped triple\""" quotes.
+    A line that continues \
+    here, 日本語 and 🧋 ✓
+    """;
+/* a block comment /* not nested */ int x = 2;
+// a line comment
+/* unterminated block comment
+int y = 3;

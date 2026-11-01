@@ -1,0 +1,9 @@
+puts DATA.read
+^^^^ support.function
+__END__
+^^^^^^^ comment.block
+def this_is_data; end
+^^^^^^^^^^^^^^^^^^^^^ comment.block
+"not a string"
+^^^^^^^^^^^^^^ comment.block
+

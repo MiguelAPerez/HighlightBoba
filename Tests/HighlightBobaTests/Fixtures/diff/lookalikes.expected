@@ -1,0 +1,23 @@
+--- a/schema.sql
+^^^^^^^^^^^^^^^^ markup.heading
++++ b/schema.sql
+^^^^^^^^^^^^^^^^ markup.heading
+@@ -1,6 +1,6 @@
+^^^^^^^^^^^^^^^ meta.preprocessor
+--- a SQL comment, removed
+^^^^^^^^^^^^^^^^^^^^^^^^^^ markup.deleted
++-- a SQL comment, kept
+^^^^^^^^^^^^^^^^^^^^^^^ markup.inserted
+---
+^^^ markup.deleted
++++ counter++;
+^^^^^^^^^^^^^^ markup.inserted
+ -- a context line
+-@@ not a hunk header in a removed line
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ markup.deleted
+ diff --git is just text here
++# a heading, not a comment
+^^^^^^^^^^^^^^^^^^^^^^^^^^^ markup.inserted
+-<!-- markup -->
+^^^^^^^^^^^^^^^^ markup.deleted
+

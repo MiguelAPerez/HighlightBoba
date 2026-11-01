@@ -1,0 +1,109 @@
+# syntax=docker/dockerfile:1
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^ meta.preprocessor
+# escape=\
+^^^^^^^^^^ meta.preprocessor
+# A comment, not a directive
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^ comment.line
+ARG GO_VERSION=1.22
+^^^ keyword
+    ^^^^^^^^^^ variable.other
+              ^ punctuation
+FROM --platform=$BUILDPLATFORM golang:${GO_VERSION}-alpine AS build
+^^^^ keyword
+     ^^^^^^^^^^^^^^^^^^^^^^^^^ entity.other.attribute
+                                      ^^^^^^^^^^^^^ variable.other
+                                                           ^^ keyword
+                                                              ^^^^^ entity.name.type
+WORKDIR /src
+^^^^^^^ keyword
+COPY --chown=app:app go.mod go.sum ./
+^^^^ keyword
+     ^^^^^^^^^^^^^^^ entity.other.attribute
+RUN --mount=type=cache,target=/root/.cache go mod download
+^^^ keyword
+   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ entity.other.attribute
+RUN go build -o /out/app ./cmd/app && echo "built $GOOS"
+^^^ keyword
+                                      ^^^^ support.function
+                                           ^^^^^^^ string.quoted
+                                                  ^^^^^ variable.other
+                                                       ^ string.quoted
+ENV CGO_ENABLED=0 PATH="/usr/local/bin:$PATH"
+^^^ keyword
+    ^^^^^^^^^^^ variable.other
+               ^ punctuation
+                ^ constant.numeric
+                  ^^^^ variable.other
+                      ^ punctuation
+                       ^^^^^^^^^^^^^^^^ string.quoted
+                                       ^^^^^ variable.other
+                                            ^ string.quoted
+LABEL org.opencontainers.image.title="boba" version='1.0'
+^^^^^ keyword
+      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ variable.other
+                                    ^ punctuation
+                                     ^^^^^^ string.quoted
+                                            ^^^^^^^ variable.other
+                                                   ^ punctuation
+                                                    ^^^^^ string.quoted
+EXPOSE 8080/tcp 9000-9010
+^^^^^^ keyword
+       ^^^^ constant.numeric
+                ^^^^^^^^^ constant.numeric
+USER 1000:1000
+^^^^ keyword
+     ^^^^ constant.numeric
+          ^^^^ constant.numeric
+
+FROM scratch as final
+^^^^ keyword
+             ^^ keyword
+                ^^^^^ entity.name.type
+COPY --from=build /out/app /app
+^^^^ keyword
+     ^^^^^^^^^^^^ entity.other.attribute
+VOLUME ["/data", "/cache"]
+^^^^^^ keyword
+       ^ punctuation
+        ^^^^^^^ string.quoted
+               ^ punctuation
+                 ^^^^^^^^ string.quoted
+                         ^ punctuation
+HEALTHCHECK --interval=30s --timeout=3s CMD curl -f http://localhost/ || exit 1
+^^^^^^^^^^^ keyword
+            ^^^^^^^^^^^^^^ entity.other.attribute
+                           ^^^^^^^^^^^^ entity.other.attribute
+                                        ^^^ keyword
+                                                                         ^^^^ keyword
+HEALTHCHECK NONE
+^^^^^^^^^^^ keyword
+            ^^^^ constant.language
+ENTRYPOINT ["/app", "--port", "8080"]
+^^^^^^^^^^ keyword
+          ^^ punctuation
+            ^^^^^^ string.quoted
+                  ^ punctuation
+                    ^^^^^^^^ string.quoted
+                            ^ punctuation
+                              ^^^^^^ string.quoted
+                                    ^ punctuation
+CMD ["serve"]
+^^^ keyword
+   ^^ punctuation
+     ^^^^^^^ string.quoted
+            ^ punctuation
+SHELL ["/bin/sh", "-c"]
+^^^^^ keyword
+     ^^ punctuation
+       ^^^^^^^^^ string.quoted
+                ^ punctuation
+                  ^^^^ string.quoted
+                      ^ punctuation
+STOPSIGNAL SIGTERM
+^^^^^^^^^^ keyword
+ONBUILD RUN echo "child build"
+^^^^^^^ keyword
+        ^^^ keyword
+            ^^^^ support.function
+                 ^^^^^^^^^^^^^ string.quoted
+

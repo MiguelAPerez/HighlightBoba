@@ -1,0 +1,83 @@
+let a = "tab\t newline\n quote\" nul\0 hex\x7F unicode\u{1F9CB} bad\q";
+^^^ keyword
+        ^^^^ string.quoted
+            ^^ constant.character.escape
+              ^^^^^^^^ string.quoted
+                      ^^ constant.character.escape
+                        ^^^^^^ string.quoted
+                              ^^ constant.character.escape
+                                ^^^^ string.quoted
+                                    ^^ constant.character.escape
+                                      ^^^^ string.quoted
+                                          ^^^^ constant.character.escape
+                                              ^^^^^^^^ string.quoted
+                                                      ^^^^^^^^^ constant.character.escape
+                                                               ^^^^ string.quoted
+                                                                   ^ invalid
+                                                                    ^^ string.quoted
+let b = b"bytes\xFF";
+^^^ keyword
+        ^^^^^^^ string.quoted
+               ^^^^ constant.character.escape
+                   ^ string.quoted
+let c = c"a C string";
+^^^ keyword
+        ^^^^^^^^^^^^^ string.quoted
+let raw = r"C:\path\no\escapes";
+^^^ keyword
+          ^^^^^^^^^^^^^^^^^^^^^ string.quoted
+let hashed = r#"a "quoted" word, a # hash and "" quotes"#;
+^^^ keyword
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ string.quoted
+let two = r##"contains "# without ending"##; let next = 2;
+^^^ keyword
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ string.quoted
+                                             ^^^ keyword
+                                                        ^ constant.numeric
+let byte_raw = br#"raw bytes \n"#;
+^^^ keyword
+               ^^^^^^^^^^^^^^^^^^ string.quoted
+let multi = "first line
+^^^ keyword
+            ^^^^^^^^^^^ string.quoted
+second line \
+^^^^^^^^^^^^ string.quoted
+            ^ constant.character.escape
+    continued";
+^^^^^^^^^^^^^^ string.quoted
+let chars = ['a', '\n', '\'', '\\', '\x41', '\u{e9}', '🧋', b'z', b'\xFF', b'\x80'];
+^^^ keyword
+             ^^^ string.quoted
+                  ^^^^ string.quoted
+                        ^^^^ string.quoted
+                              ^^^^ string.quoted
+                                    ^^^^^^ string.quoted
+                                            ^^^^^^^^ string.quoted
+                                                      ^^^ string.quoted
+                                                           ^^^^ string.quoted
+                                                                 ^^^^^^^ string.quoted
+                                                                          ^^^^^^^ string.quoted
+let lifetimes: &'static str = "日本語 ✓";
+^^^ keyword
+                ^^^^^^^ entity.name.type
+                        ^^^ entity.name.type
+                              ^^^^^^^ string.quoted
+fn longest<'a, 'b: 'a>(x: &'a str, _y: &'b str) -> &'a str { x }
+^^ keyword
+   ^^^^^^^ entity.name.function
+           ^^ entity.name.type
+               ^^ entity.name.type
+                   ^^ entity.name.type
+                           ^^ entity.name.type
+                              ^^^ entity.name.type
+                                        ^^ entity.name.type
+                                           ^^^ entity.name.type
+                                                    ^^ entity.name.type
+                                                       ^^^ entity.name.type
+/* outer /* nested */ still comment */ let after = 1;
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ comment.block
+                                       ^^^ keyword
+                                                   ^ constant.numeric
+/** doc block */
+^^^^^^^^^^^^^^^^ comment.block
+

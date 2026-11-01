@@ -1,0 +1,60 @@
+String a = "tab\t quote\" octal\101\7\377 unicode\u00e9\uuuu0041 space\s bad\q";
+^^^^^^ entity.name.type
+           ^^^^ string.quoted
+               ^^ constant.character.escape
+                 ^^^^^^ string.quoted
+                       ^^ constant.character.escape
+                         ^^^^^^ string.quoted
+                               ^^^^^^^^^^ constant.character.escape
+                                         ^^^^^^^^ string.quoted
+                                                 ^^^^^^^^^^^^^^^ constant.character.escape
+                                                                ^^^^^^ string.quoted
+                                                                      ^^ constant.character.escape
+                                                                        ^^^^ string.quoted
+                                                                            ^ invalid
+                                                                             ^^ string.quoted
+char c = '\n', d = '\'', e = 'é', f = '\u0041';
+^^^^ entity.name.type
+         ^ string.quoted
+          ^^ constant.character.escape
+            ^ string.quoted
+                   ^ string.quoted
+                    ^^ constant.character.escape
+                      ^ string.quoted
+                             ^^^ string.quoted
+                                      ^ string.quoted
+                                       ^^^^^^ constant.character.escape
+                                             ^ string.quoted
+String open = "never closed;
+^^^^^^ entity.name.type
+              ^^^^^^^^^^^^^^ string.quoted
+int after = 1;
+^^^ entity.name.type
+            ^ constant.numeric
+String block = """
+^^^^^^ entity.name.type
+               ^^^ string.quoted
+    A text block with "quotes" and \"""escaped triple\""" quotes.
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ string.quoted
+                                   ^^ constant.character.escape
+                                     ^^^^^^^^^^^^^^^^ string.quoted
+                                                     ^^ constant.character.escape
+                                                       ^^^^^^^^^^ string.quoted
+    A line that continues \
+^^^^^^^^^^^^^^^^^^^^^^^^^^ string.quoted
+                          ^ constant.character.escape
+    here, 日本語 and 🧋 ✓
+^^^^^^^^^^^^^^^^^^^^^ string.quoted
+    """;
+^^^^^^^ string.quoted
+/* a block comment /* not nested */ int x = 2;
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ comment.block
+                                    ^^^ entity.name.type
+                                            ^ constant.numeric
+// a line comment
+^^^^^^^^^^^^^^^^^ comment.line
+/* unterminated block comment
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ comment.block
+int y = 3;
+^^^^^^^^^^ comment.block
+

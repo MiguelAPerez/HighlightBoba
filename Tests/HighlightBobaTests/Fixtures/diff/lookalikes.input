@@ -1,0 +1,12 @@
+--- a/schema.sql
++++ b/schema.sql
+@@ -1,6 +1,6 @@
+--- a SQL comment, removed
++-- a SQL comment, kept
+---
++++ counter++;
+ -- a context line
+-@@ not a hunk header in a removed line
+ diff --git is just text here
++# a heading, not a comment
+-<!-- markup -->

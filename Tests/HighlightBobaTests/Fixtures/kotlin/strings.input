@@ -1,0 +1,13 @@
+val name = "Boba"
+val s = "Hello, $name! ${name.length} chars, ${list.map { it * 2 }} and \$literal \t\"q\" \u00e9 bad\q"
+val nested = "outer ${"inner $name"} done"
+val raw = """
+    raw $name and ${1 + 2}, no \n escapes
+    "quotes" and ""double"" inside, 日本語 🧋 ✓
+"""
+val fourQuotes = """ends with a quote""""
+val unclosed = "never closed ${name
+val after = 1
+/* outer /* nested */ still a comment */ val y = 2
+/* unterminated /* nested
+val z = 3

@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<?xml-stylesheet type="text/xsl" href="style.xsl"?>
+<!-- A catalog -->
+<catalog xmlns="urn:example" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <book id="bk101" lang='en'>
+    <title>XML &amp; You &#169; &#x1F9CB;</title>
+    <empty/>
+    <price currency="EUR">44.95</price>
+    <note><![CDATA[<not> & a tag]]></note>
+  </book>
+  <xsi:custom xsi:type="x"/>
+</catalog>

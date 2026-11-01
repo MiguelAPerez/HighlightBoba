@@ -1,0 +1,49 @@
+const char *a = "tab\t quote\" octal\101\7 hex\x41ff bell\a q\? bad\q";
+^^^^^ keyword
+      ^^^^ entity.name.type
+                ^^^^ string.quoted
+                    ^^ constant.character.escape
+                      ^^^^^^ string.quoted
+                            ^^ constant.character.escape
+                              ^^^^^^ string.quoted
+                                    ^^^^^^ constant.character.escape
+                                          ^^^^ string.quoted
+                                              ^^^^^^ constant.character.escape
+                                                    ^^^^^ string.quoted
+                                                         ^^ constant.character.escape
+                                                           ^^ string.quoted
+                                                             ^^ constant.character.escape
+                                                               ^^^^ string.quoted
+                                                                   ^ invalid
+                                                                    ^^ string.quoted
+const wchar_t *w = L"wide";
+^^^^^ keyword
+      ^^^^^^^ entity.name.type
+                   ^^^^^^^ string.quoted
+const char *u = u8"utf-8 日本語 🧋 ✓";
+^^^^^ keyword
+      ^^^^ entity.name.type
+                ^^^^^^^^^^^^^^^^^ string.quoted
+const char *open = "never closed;
+^^^^^ keyword
+      ^^^^ entity.name.type
+                   ^^^^^^^^^^^^^^ string.quoted
+int after = 1;
+^^^ entity.name.type
+            ^ constant.numeric
+const char *spliced = "first \
+^^^^^ keyword
+      ^^^^ entity.name.type
+                      ^^^^^^^ string.quoted
+                             ^ constant.character.escape
+second";
+^^^^^^^ string.quoted
+/* a block comment /* not nested */ int x = 2;
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ comment.block
+                                    ^^^ entity.name.type
+                                            ^ constant.numeric
+/* unterminated block comment
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ comment.block
+int y = 3;
+^^^^^^^^^^ comment.block
+

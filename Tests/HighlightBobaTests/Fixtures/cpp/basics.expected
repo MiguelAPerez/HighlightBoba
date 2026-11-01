@@ -1,0 +1,110 @@
+#include <vector>
+^^^^^^^^ meta.preprocessor
+         ^^^^^^^^ string.quoted
+#include <string_view>
+^^^^^^^^ meta.preprocessor
+         ^^^^^^^^^^^^^ string.quoted
+import std;
+^^^^^^ keyword
+
+namespace boba::shop {
+^^^^^^^^^ keyword
+          ^^^^ entity.name.type
+
+template <typename T, class U = int>
+^^^^^^^^ keyword
+          ^^^^^^^^ keyword
+                      ^^^^^ keyword
+                            ^ entity.name.type
+                                ^^^ entity.name.type
+concept Drinkable = requires(T t) { t.sip(); };
+^^^^^^^ keyword
+        ^^^^^^^^^ entity.name.type
+                    ^^^^^^^^ keyword
+
+class [[nodiscard]] Cup final : public Vessel {
+^^^^^ keyword
+      ^^^^^^^^^^^^^^ meta.preprocessor
+                    ^^^ entity.name.type
+                        ^^^^^ keyword
+                                ^^^^^^ keyword
+public:
+^^^^^^ keyword
+    explicit Cup(std::size_t ml) noexcept : ml_{ml} {}
+    ^^^^^^^^ keyword
+                      ^^^^^^ entity.name.type
+                                 ^^^^^^^^ keyword
+    virtual ~Cup() override = default;
+    ^^^^^^^ keyword
+                   ^^^^^^^^ keyword
+                              ^^^^^^^ keyword
+    auto operator<=>(const Cup&) const = default;
+    ^^^^ keyword
+         ^^^^^^^^ keyword
+                     ^^^^^ keyword
+                                 ^^^^^ keyword
+                                         ^^^^^^^ keyword
+    [[deprecated("use pour")]] void fill(int amount);
+    ^^^^^^^^^^^^^ meta.preprocessor
+                 ^^^^^^^^^^ string.quoted
+                           ^^^ meta.preprocessor
+                               ^^^^ entity.name.type
+                                         ^^^ entity.name.type
+
+private:
+^^^^^^^ keyword
+    std::size_t ml_ = 0;
+         ^^^^^^ entity.name.type
+                      ^ constant.numeric
+    static constexpr double kRatio = 1.5;
+    ^^^^^^ keyword
+           ^^^^^^^^^ keyword
+                     ^^^^^^ entity.name.type
+                                     ^^^ constant.numeric
+};
+
+enum class Size : unsigned char { Small, Large };
+^^^^ keyword
+     ^^^^^^ keyword
+           ^^^^ entity.name.type
+                  ^^^^^^^^ entity.name.type
+                           ^^^^ entity.name.type
+struct Point { int x; int y; };
+^^^^^^ keyword
+       ^^^^^ entity.name.type
+               ^^^ entity.name.type
+                      ^^^ entity.name.type
+
+co_await something();
+^^^^^^^^ keyword
+auto lambda = [this, &x](auto&& v) mutable -> decltype(auto) { return v; };
+^^^^ keyword
+               ^^^^ variable.language
+                         ^^^^ keyword
+                                   ^^^^^^^ keyword
+                                              ^^^^^^^^ keyword
+                                                       ^^^^ keyword
+                                                               ^^^^^^ keyword
+auto n = 1'000'000ull + 0xFF'FFu + 0b1010 + 10ms + 2.5_km + 'c';
+^^^^ keyword
+         ^^^^^^^^^^^^ constant.numeric
+                        ^^^^^^^^ constant.numeric
+                                   ^^^^^^ constant.numeric
+                                            ^^^^ constant.numeric
+                                                   ^^^^^^ constant.numeric
+                                                            ^^^ string.quoted
+bool b = nullptr == this && true;
+^^^^ entity.name.type
+         ^^^^^^^ constant.language
+                    ^^^^ variable.language
+                            ^^^^ constant.language
+auto s = static_cast<int>(3.0) + reinterpret_cast<long>(p);
+^^^^ keyword
+         ^^^^^^^^^^^ keyword
+                     ^^^ entity.name.type
+                          ^^^ constant.numeric
+                                 ^^^^^^^^^^^^^^^^ keyword
+                                                  ^^^^ entity.name.type
+}  // namespace boba::shop
+   ^^^^^^^^^^^^^^^^^^^^^^^ comment.line
+
