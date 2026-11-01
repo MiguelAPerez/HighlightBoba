@@ -1,0 +1,10 @@
+fn main() {
+^^ keyword
+   ^^^^ entity.name.function
+    let s = "crlf";
+    ^^^ keyword
+            ^^^^^^ string.quoted
+    // comment
+    ^^^^^^^^^^ comment.line
+}
+

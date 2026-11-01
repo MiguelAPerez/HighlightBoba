@@ -1,0 +1,147 @@
+//! Crate docs.
+^^^^^^^^^^^^^^^ comment.line
+use std::collections::HashMap;
+^^^ keyword
+                      ^^^^^^^ entity.name.type
+
+/// A point in space.
+^^^^^^^^^^^^^^^^^^^^^ comment.line
+#[derive(Debug, Clone, PartialEq)]
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ meta.preprocessor
+pub struct Point<'a, T: Copy> {
+^^^ keyword
+    ^^^^^^ keyword
+           ^^^^^ entity.name.type
+                 ^^ entity.name.type
+                     ^ entity.name.type
+                        ^^^^ entity.name.type
+    pub x: T,
+    ^^^ keyword
+           ^ entity.name.type
+    label: &'a str,
+            ^^ entity.name.type
+               ^^^ entity.name.type
+}
+
+const MAX_POINTS: usize = 1_000;
+^^^^^ keyword
+                  ^^^^^ entity.name.type
+                          ^^^^^ constant.numeric
+static GREETING: &str = "hi";
+^^^^^^ keyword
+                  ^^^ entity.name.type
+                        ^^^^ string.quoted
+
+impl<'a, T: Copy + Into<f64>> Point<'a, T> {
+^^^^ keyword
+     ^^ entity.name.type
+         ^ entity.name.type
+            ^^^^ entity.name.type
+                   ^^^^ entity.name.type
+                        ^^^ entity.name.type
+                              ^^^^^ entity.name.type
+                                    ^^ entity.name.type
+                                        ^ entity.name.type
+    pub fn new(x: T, label: &'a str) -> Self {
+    ^^^ keyword
+        ^^ keyword
+           ^^^ entity.name.function
+                  ^ entity.name.type
+                             ^^ entity.name.type
+                                ^^^ entity.name.type
+                                        ^^^^ variable.language
+        Self { x, label }
+        ^^^^ variable.language
+    }
+
+    async fn distance(&self, other: &Self) -> Result<f64, Box<dyn std::error::Error>> {
+    ^^^^^ keyword
+          ^^ keyword
+             ^^^^^^^^ entity.name.function
+                       ^^^^ variable.language
+                                     ^^^^ variable.language
+                                              ^^^^^^ entity.name.type
+                                                     ^^^ entity.name.type
+                                                          ^^^ entity.name.type
+                                                              ^^^ keyword
+                                                                              ^^^^^ entity.name.type
+        let d = (self.x.into() - other.x.into()).abs();
+        ^^^ keyword
+                 ^^^^ variable.language
+        if d != 0.0 && !self.label.is_empty() {
+        ^^ keyword
+                ^^^ constant.numeric
+                        ^^^^ variable.language
+            println!("{} is {d:.2} away", self.label);
+            ^^^^^^^^ support.function
+                     ^^^^^^^^^^^^^^^^^^^ string.quoted
+                                          ^^^^ variable.language
+        }
+        Ok(d)
+        ^^ entity.name.type
+    }
+}
+
+enum Shape { Circle(f32), Square { side: u8 } }
+^^^^ keyword
+     ^^^^^ entity.name.type
+             ^^^^^^ entity.name.type
+                    ^^^ entity.name.type
+                          ^^^^^^ entity.name.type
+                                         ^^ entity.name.type
+trait Area { fn area(&self) -> f64; }
+^^^^^ keyword
+      ^^^^ entity.name.type
+             ^^ keyword
+                ^^^^ entity.name.function
+                      ^^^^ variable.language
+                               ^^^ entity.name.type
+type Map = HashMap<String, Vec<i32>>;
+^^^^ keyword
+     ^^^ entity.name.type
+           ^^^^^^^ entity.name.type
+                   ^^^^^^ entity.name.type
+                           ^^^ entity.name.type
+                               ^^^ entity.name.type
+
+fn main() {
+^^ keyword
+   ^^^^ entity.name.function
+    let mut v = vec![1, 2, 3];
+    ^^^ keyword
+        ^^^ keyword
+                ^^^^ support.function
+                     ^ constant.numeric
+                        ^ constant.numeric
+                           ^ constant.numeric
+    for i in 0..v.len() { v[i] *= 2; }
+    ^^^ keyword
+          ^^ keyword
+             ^ constant.numeric
+                                  ^ constant.numeric
+    let t = (1, 2.5e-3, 0xFF_u8, 0o17, 0b1010_1010, 3.0f32, 1usize);
+    ^^^ keyword
+             ^ constant.numeric
+                ^^^^^^ constant.numeric
+                        ^^^^^^^ constant.numeric
+                                 ^^^^ constant.numeric
+                                       ^^^^^^^^^^^ constant.numeric
+                                                    ^^^^^^ constant.numeric
+                                                            ^^^^^^ constant.numeric
+    let second = t.1;
+    ^^^ keyword
+                   ^ constant.numeric
+    match v.as_slice() {
+    ^^^^^ keyword
+        [first, .., last] => assert_eq!(*first, 2),
+                             ^^^^^^^^^^ support.function
+                                                ^ constant.numeric
+        _ => unreachable!(),
+             ^^^^^^^^^^^^ support.function
+    }
+    let c = crate::util::helper(super::VALUE, MAX_POINTS);
+    ^^^ keyword
+            ^^^^^ variable.language
+                                ^^^^^ variable.language
+}
+

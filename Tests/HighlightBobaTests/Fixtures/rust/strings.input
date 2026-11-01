@@ -1,0 +1,15 @@
+let a = "tab\t newline\n quote\" nul\0 hex\x7F unicode\u{1F9CB} bad\q";
+let b = b"bytes\xFF";
+let c = c"a C string";
+let raw = r"C:\path\no\escapes";
+let hashed = r#"a "quoted" word, a # hash and "" quotes"#;
+let two = r##"contains "# without ending"##; let next = 2;
+let byte_raw = br#"raw bytes \n"#;
+let multi = "first line
+second line \
+    continued";
+let chars = ['a', '\n', '\'', '\\', '\x41', '\u{e9}', '🧋', b'z', b'\xFF', b'\x80'];
+let lifetimes: &'static str = "日本語 ✓";
+fn longest<'a, 'b: 'a>(x: &'a str, _y: &'b str) -> &'a str { x }
+/* outer /* nested */ still comment */ let after = 1;
+/** doc block */

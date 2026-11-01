@@ -1,0 +1,9 @@
+let ok = 1;
+^^^ keyword
+         ^ constant.numeric
+let s = r#"a raw string that never closes "
+^^^ keyword
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ string.quoted
+let still = "inside";
+^^^^^^^^^^^^^^^^^^^^^ string.quoted
+
