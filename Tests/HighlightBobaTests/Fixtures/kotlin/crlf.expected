@@ -1,0 +1,11 @@
+fun main() {
+^^^ keyword
+    ^^^^ entity.name.function
+    val s = "crlf $x"
+    ^^^ keyword
+            ^^^^^^ string.quoted
+                  ^ punctuation.section.embedded
+                   ^ variable.other
+                    ^ string.quoted
+}
+

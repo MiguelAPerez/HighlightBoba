@@ -1,0 +1,9 @@
+class A {
+^^^^^ keyword
+      ^ entity.name.type
+    String s = "crlf"; // c
+    ^^^^^^ entity.name.type
+               ^^^^^^ string.quoted
+                       ^^^^ comment.line
+}
+

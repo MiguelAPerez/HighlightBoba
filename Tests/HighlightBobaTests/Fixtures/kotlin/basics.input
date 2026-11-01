@@ -1,0 +1,38 @@
+@file:JvmName("Boba")
+package dev.boba.app
+
+import kotlinx.coroutines.*
+
+/** A shop. */
+data class Shop(val name: String, private var stock: Int = 0) : Comparable<Shop> {
+    companion object {
+        const val MAX_STOCK = 1_000
+    }
+
+    override fun compareTo(other: Shop): Int = stock.compareTo(other.stock)
+
+    suspend fun restock(amount: Int) {
+        if (amount !in 1..MAX_STOCK) return
+        stock += amount
+    }
+}
+
+sealed interface Drink
+object Tea : Drink
+typealias Menu = Map<String, List<Drink>>
+
+fun <T> List<T>.second(): T = this[1]
+fun `a test name`() = Unit
+
+@Suppress("UNUSED")
+fun main() {
+    val numbers = listOf(1, 2L, 3.5f, 0xFF, 0b1010, 7u, 9uL, 1e10, .5)
+    outer@ for (n in numbers) {
+        numbers.forEach {
+            if (it == n) return@forEach
+            if (it !is Int) break@outer
+        }
+    }
+    val c = 'x'; val e = '\n'; val u = '\u00e9'
+    val x = null ?: true && false
+}

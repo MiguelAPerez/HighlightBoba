@@ -1,0 +1,129 @@
+@file:JvmName("Boba")
+^^^^^^^^^^^^^ meta.preprocessor
+              ^^^^^^ string.quoted
+package dev.boba.app
+^^^^^^^ keyword
+
+import kotlinx.coroutines.*
+^^^^^^ keyword
+
+/** A shop. */
+^^^^^^^^^^^^^^ comment.block
+data class Shop(val name: String, private var stock: Int = 0) : Comparable<Shop> {
+^^^^ keyword
+     ^^^^^ keyword
+           ^^^^ entity.name.type
+                ^^^ keyword
+                          ^^^^^^ entity.name.type
+                                  ^^^^^^^ keyword
+                                          ^^^ keyword
+                                                     ^^^ entity.name.type
+                                                           ^ constant.numeric
+                                                                ^^^^^^^^^^ entity.name.type
+                                                                           ^^^^ entity.name.type
+    companion object {
+    ^^^^^^^^^ keyword
+              ^^^^^^ keyword
+        const val MAX_STOCK = 1_000
+        ^^^^^ keyword
+              ^^^ keyword
+                              ^^^^^ constant.numeric
+    }
+
+    override fun compareTo(other: Shop): Int = stock.compareTo(other.stock)
+    ^^^^^^^^ keyword
+             ^^^ keyword
+                 ^^^^^^^^^ entity.name.function
+                                  ^^^^ entity.name.type
+                                         ^^^ entity.name.type
+
+    suspend fun restock(amount: Int) {
+    ^^^^^^^ keyword
+            ^^^ keyword
+                ^^^^^^^ entity.name.function
+                                ^^^ entity.name.type
+        if (amount !in 1..MAX_STOCK) return
+        ^^ keyword
+                   ^^^ keyword
+                       ^ constant.numeric
+                                     ^^^^^^ keyword
+        stock += amount
+    }
+}
+
+sealed interface Drink
+^^^^^^ keyword
+       ^^^^^^^^^ keyword
+                 ^^^^^ entity.name.type
+object Tea : Drink
+^^^^^^ keyword
+       ^^^ entity.name.type
+             ^^^^^ entity.name.type
+typealias Menu = Map<String, List<Drink>>
+^^^^^^^^^ keyword
+          ^^^^ entity.name.type
+                 ^^^ entity.name.type
+                     ^^^^^^ entity.name.type
+                             ^^^^ entity.name.type
+                                  ^^^^^ entity.name.type
+
+fun <T> List<T>.second(): T = this[1]
+^^^ keyword
+     ^ entity.name.type
+        ^^^^ entity.name.type
+             ^ entity.name.type
+                          ^ entity.name.type
+                              ^^^^ variable.language
+                                   ^ constant.numeric
+fun `a test name`() = Unit
+^^^ keyword
+    ^^^^^^^^^^^^^ entity.name.function
+                      ^^^^ entity.name.type
+
+@Suppress("UNUSED")
+^^^^^^^^^ meta.preprocessor
+          ^^^^^^^^ string.quoted
+fun main() {
+^^^ keyword
+    ^^^^ entity.name.function
+    val numbers = listOf(1, 2L, 3.5f, 0xFF, 0b1010, 7u, 9uL, 1e10, .5)
+    ^^^ keyword
+                         ^ constant.numeric
+                            ^^ constant.numeric
+                                ^^^^ constant.numeric
+                                      ^^^^ constant.numeric
+                                            ^^^^^^ constant.numeric
+                                                    ^^ constant.numeric
+                                                        ^^^ constant.numeric
+                                                             ^^^^ constant.numeric
+                                                                   ^^ constant.numeric
+    outer@ for (n in numbers) {
+           ^^^ keyword
+                  ^^ keyword
+        numbers.forEach {
+            if (it == n) return@forEach
+            ^^ keyword
+                ^^ variable.language
+                         ^^^^^^^^^^^^^^ keyword
+            if (it !is Int) break@outer
+            ^^ keyword
+                ^^ variable.language
+                   ^^^ keyword
+                       ^^^ entity.name.type
+                            ^^^^^^^^^^^ keyword
+        }
+    }
+    val c = 'x'; val e = '\n'; val u = '\u00e9'
+    ^^^ keyword
+            ^^^ string.quoted
+                 ^^^ keyword
+                         ^^^^ string.quoted
+                               ^^^ keyword
+                                       ^^^^^^^^ string.quoted
+    val x = null ?: true && false
+    ^^^ keyword
+            ^^^^ constant.language
+                    ^^^^ constant.language
+                            ^^^^^ constant.language
+}
+
