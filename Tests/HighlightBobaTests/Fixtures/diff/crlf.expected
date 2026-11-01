@@ -1,0 +1,14 @@
+diff --git a/x b/x
+^^^^^^^^^^^^^^^^^^ markup.heading
+--- a/x
+^^^^^^^ markup.heading
++++ b/x
+^^^^^^^ markup.heading
+@@ -1 +1 @@
+^^^^^^^^^^^ meta.preprocessor
+-old
+^^^^ markup.deleted
++new
+^^^^ markup.inserted
+ context
+

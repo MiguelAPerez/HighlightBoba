@@ -1,0 +1,21 @@
+Index: README.md
+^^^^^^^^^^^^^^^^ markup.heading
+===================================================================
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ comment.line
+--- README.md	(revision 41)
+^^^^^^^^^^^^^^^^^^^^^^^^^^^ markup.heading
++++ README.md	(working copy)
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^ markup.heading
+@@ -3,2 +3,3 @@
+^^^^^^^^^^^^^^^ meta.preprocessor
+ Text
++More
+^^^^^ markup.inserted
+-Less
+^^^^^ markup.deleted
+Only in b: extra.txt
+^^^^^^^^^^^^^^^^^^^^ comment.line
+@@@ -1,2 -1,2 +1,3 @@@ combined
+^^^^^^^^^^^^^^^^^^^^^^ meta.preprocessor
+                       ^^^^^^^^ entity.name.function
+

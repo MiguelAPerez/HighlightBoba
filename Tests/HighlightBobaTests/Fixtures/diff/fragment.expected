@@ -1,0 +1,11 @@
+- removed in a bare fragment
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^ markup.deleted
++ added in a bare fragment
+^^^^^^^^^^^^^^^^^^^^^^^^^^ markup.inserted
+  unchanged context
+-日本語 and 🧋 boba
+^^^^^^^^^^^^^^^ markup.deleted
++日本語 und 🧋 Boba ✓
+^^^^^^^^^^^^^^^^^ markup.inserted
+Some prose with a - dash and a + plus mid-line.
+
