@@ -1,0 +1,12 @@
+auto a = "escapes\t\"\x41\101 bad\q"s;
+auto raw = R"(a raw string with "quotes" and \n kept)";
+auto delim = R"xyz(contains )" and )abc" but ends here)xyz";
+auto prefixed = u8R"js(console.log("日本語 🧋 ✓");)js";
+auto wide = LR"(wide raw)" L"wide" u"utf16" U"utf32";
+auto multi = R"sql(
+SELECT 1;
+)sql";
+auto open = "never closed;
+int after = 1;
+auto rawOpen = R"end(a raw string that never closes
+int still = 2;

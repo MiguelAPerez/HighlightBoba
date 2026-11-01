@@ -1,0 +1,13 @@
+#define X 1 \
+^^^^^^^ meta.preprocessor
+        ^ entity.name.function
+          ^ constant.numeric
+            ^ constant.character.escape
+    + 2
+      ^ constant.numeric
+auto r = R"(crlf
+^^^^ keyword
+         ^^^^^^^ string.quoted
+raw)";
+^^^^^ string.quoted
+

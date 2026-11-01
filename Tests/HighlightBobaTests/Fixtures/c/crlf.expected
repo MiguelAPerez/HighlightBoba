@@ -1,0 +1,12 @@
+#include <a.h>
+^^^^^^^^ meta.preprocessor
+         ^^^^^ string.quoted
+int main() {
+^^^ entity.name.type
+    return "crlf"[0]; // c
+    ^^^^^^ keyword
+           ^^^^^^ string.quoted
+                  ^ constant.numeric
+                      ^^^^ comment.line
+}
+
