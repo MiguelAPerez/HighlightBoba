@@ -1,0 +1,3 @@
+SELECT 1 -- one
+FROM t
+WHERE a = 'x';

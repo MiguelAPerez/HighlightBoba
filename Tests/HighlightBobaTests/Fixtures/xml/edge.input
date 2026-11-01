@@ -1,0 +1,7 @@
+<root>
+  <!-- bad -- comment -->
+  <a href="x < y">fish & chips</a>
+  <名前 属性="値">日本語 🧋 ✓</名前>
+  <unclosed attr="never closed>
+  <next/>
+</root>

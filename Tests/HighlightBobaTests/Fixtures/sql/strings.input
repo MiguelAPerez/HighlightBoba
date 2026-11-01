@@ -1,0 +1,10 @@
+SELECT 'it''s', E'tab\t quote\' octal\101 hex\x41 \u00e9', N'national', X'DEADBEEF';
+SELECT "a ""quoted"" identifier", 'spans
+two lines';
+CREATE OR REPLACE FUNCTION add_one(n integer) RETURNS integer AS $$
+    SELECT n + 1; -- 'not a string end'
+$$ LANGUAGE sql;
+CREATE FUNCTION tagged() RETURNS text AS $body$ SELECT $$ inside $$; $body$ LANGUAGE sql;
+/* outer /* nested */ still a comment */ SELECT 1;
+SELECT '日本語 🧋 ✓' AS emoji;
+SELECT left(name, 3), replace(name, 'a', 'b') FROM t LEFT JOIN u USING (id);

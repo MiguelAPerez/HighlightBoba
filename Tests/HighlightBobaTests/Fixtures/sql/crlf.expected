@@ -1,0 +1,11 @@
+SELECT 1 -- one
+^^^^^^ keyword
+       ^ constant.numeric
+         ^^^^^^ comment.line
+FROM t
+^^^^ keyword
+WHERE a = 'x';
+^^^^^ keyword
+          ^^^ string.quoted
+             ^ punctuation
+
