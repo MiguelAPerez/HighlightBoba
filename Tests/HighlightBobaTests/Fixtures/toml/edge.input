@@ -1,0 +1,8 @@
+open = "never closed
+next = 'also open
+after = 1
+emoji = "🧋 boba ✓ 日本語"
+"🧋" = "key with emoji"
+unterminated = """
+still a string = 1
+[not.a.table]

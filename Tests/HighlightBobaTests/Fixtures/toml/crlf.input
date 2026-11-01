@@ -1,0 +1,3 @@
+crlf = "yes"
+[table]
+key = 1 # comment

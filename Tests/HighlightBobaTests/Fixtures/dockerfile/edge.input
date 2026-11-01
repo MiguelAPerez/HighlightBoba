@@ -1,0 +1,7 @@
+RUN echo "never closed
+CMD ["unclosed
+LABEL emoji="🧋 boba ✓" note='日本語'
+ENV MSG="tab\t \"quoted\" ${NAME:-默认}"
+FROM alpine
+not_an_instruction here
+RUN echo 'single \ stays'

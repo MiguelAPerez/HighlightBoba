@@ -1,0 +1,24 @@
+# syntax=docker/dockerfile:1
+# escape=\
+# A comment, not a directive
+ARG GO_VERSION=1.22
+FROM --platform=$BUILDPLATFORM golang:${GO_VERSION}-alpine AS build
+WORKDIR /src
+COPY --chown=app:app go.mod go.sum ./
+RUN --mount=type=cache,target=/root/.cache go mod download
+RUN go build -o /out/app ./cmd/app && echo "built $GOOS"
+ENV CGO_ENABLED=0 PATH="/usr/local/bin:$PATH"
+LABEL org.opencontainers.image.title="boba" version='1.0'
+EXPOSE 8080/tcp 9000-9010
+USER 1000:1000
+
+FROM scratch as final
+COPY --from=build /out/app /app
+VOLUME ["/data", "/cache"]
+HEALTHCHECK --interval=30s --timeout=3s CMD curl -f http://localhost/ || exit 1
+HEALTHCHECK NONE
+ENTRYPOINT ["/app", "--port", "8080"]
+CMD ["serve"]
+SHELL ["/bin/sh", "-c"]
+STOPSIGNAL SIGTERM
+ONBUILD RUN echo "child build"

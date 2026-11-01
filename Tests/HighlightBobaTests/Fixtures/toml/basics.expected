@@ -1,0 +1,142 @@
+# A TOML document
+^^^^^^^^^^^^^^^^^ comment.line
+title = "TOML Example"
+^^^^^ support.type.property-name
+      ^ punctuation
+        ^^^^^^^^^^^^^^ string.quoted
+"quoted key" = 'literal \n stays'
+^^^^^^^^^^^^ support.type.property-name
+             ^ punctuation
+               ^^^^^^^^^^^^^^^^^^ string.quoted
+site."google.com" = true
+^^^^ support.type.property-name
+    ^ punctuation
+     ^^^^^^^^^^^^ support.type.property-name
+                  ^ punctuation
+                    ^^^^ constant.language
+3 = "a bare numeric key"
+^ support.type.property-name
+  ^ punctuation
+    ^^^^^^^^^^^^^^^^^^^^ string.quoted
+true = false
+^^^^ support.type.property-name
+     ^ punctuation
+       ^^^^^ constant.language
+
+[owner]
+^ punctuation
+ ^^^^^ entity.name.type
+      ^ punctuation
+name = "Tom" # trailing comment
+^^^^ support.type.property-name
+     ^ punctuation
+       ^^^^^ string.quoted
+             ^^^^^^^^^^^^^^^^^^ comment.line
+dob = 1979-05-27T07:32:00-08:00
+^^^ support.type.property-name
+    ^ punctuation
+      ^^^^^^^^^^^^^^^^^^^^^^^^^ constant.numeric
+lunch = 07:32:00.999
+^^^^^ support.type.property-name
+      ^ punctuation
+        ^^^^^^^^^^^^ constant.numeric
+day = 1979-05-27
+^^^ support.type.property-name
+    ^ punctuation
+      ^^^^^^^^^^ constant.numeric
+
+[servers.alpha]
+^ punctuation
+ ^^^^^^^ entity.name.type
+        ^ punctuation
+         ^^^^^ entity.name.type
+              ^ punctuation
+ip = "10.0.0.1"
+^^ support.type.property-name
+   ^ punctuation
+     ^^^^^^^^^^ string.quoted
+ports = [ 8000, 8001, 8002 ]
+^^^^^ support.type.property-name
+      ^ punctuation
+        ^ punctuation
+          ^^^^ constant.numeric
+              ^ punctuation
+                ^^^^ constant.numeric
+                    ^ punctuation
+                      ^^^^ constant.numeric
+                           ^ punctuation
+nested = [[1, 2], ["a", 'b'], [{ x = 1, y = "two" }]]
+^^^^^^ support.type.property-name
+       ^ punctuation
+         ^^ punctuation
+           ^ constant.numeric
+            ^ punctuation
+              ^ constant.numeric
+               ^^ punctuation
+                  ^ punctuation
+                   ^^^ string.quoted
+                      ^ punctuation
+                        ^^^ string.quoted
+                           ^^ punctuation
+                              ^^ punctuation
+                                 ^ support.type.property-name
+                                   ^ punctuation
+                                     ^ constant.numeric
+                                      ^ punctuation
+                                        ^ support.type.property-name
+                                          ^ punctuation
+                                            ^^^^^ string.quoted
+                                                  ^^^ punctuation
+point = { x = 1, y = 2, inner = { z = [3] } }
+^^^^^ support.type.property-name
+      ^ punctuation
+        ^ punctuation
+          ^ support.type.property-name
+            ^ punctuation
+              ^ constant.numeric
+               ^ punctuation
+                 ^ support.type.property-name
+                   ^ punctuation
+                     ^ constant.numeric
+                      ^ punctuation
+                        ^^^^^ support.type.property-name
+                              ^ punctuation
+                                ^ punctuation
+                                  ^ support.type.property-name
+                                    ^ punctuation
+                                      ^ punctuation
+                                       ^ constant.numeric
+                                        ^ punctuation
+                                          ^ punctuation
+                                            ^ punctuation
+
+[[products]]
+^^ punctuation
+  ^^^^^^^^ entity.name.type
+          ^^ punctuation
+name = "Hammer"
+^^^^ support.type.property-name
+     ^ punctuation
+       ^^^^^^^^ string.quoted
+sku = 738594937
+^^^ support.type.property-name
+    ^ punctuation
+      ^^^^^^^^^ constant.numeric
+
+[[products]]  # an empty one
+^^ punctuation
+  ^^^^^^^^ entity.name.type
+          ^^ punctuation
+              ^^^^^^^^^^^^^^ comment.line
+
+[[ fruits . "varieties" ]]
+^^ punctuation
+   ^^^^^^ entity.name.type
+          ^ punctuation
+            ^^^^^^^^^^^ entity.name.type
+                        ^^ punctuation
+name = "plantain"
+^^^^ support.type.property-name
+     ^ punctuation
+       ^^^^^^^^^^ string.quoted
+

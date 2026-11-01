@@ -1,0 +1,627 @@
+{
+  "name": "toml",
+  "fileExtensions": [
+    "toml"
+  ],
+  "initial": "document",
+  "states": {
+    "array": {
+      "spansLines": true,
+      "rules": [
+        {
+          "include": "values"
+        },
+        {
+          "match": {
+            "literal": ","
+          },
+          "scope": "punctuation"
+        },
+        {
+          "match": {
+            "literal": "]"
+          },
+          "scope": "punctuation",
+          "pop": true
+        }
+      ]
+    },
+    "arrayHeader": {
+      "endsAtEOL": true,
+      "rules": [
+        {
+          "match": {
+            "seq": [
+              {
+                "literal": "#"
+              },
+              {
+                "repeat": "[^\\r\\n]"
+              }
+            ]
+          },
+          "scope": "comment.line"
+        },
+        {
+          "match": {
+            "literal": "\""
+          },
+          "scope": "entity.name.type",
+          "push": "headerBasic"
+        },
+        {
+          "match": {
+            "literal": "'"
+          },
+          "scope": "entity.name.type",
+          "push": "headerLiteral"
+        },
+        {
+          "match": {
+            "repeat": "[A-Za-z0-9_-]",
+            "min": 1
+          },
+          "scope": "entity.name.type"
+        },
+        {
+          "match": {
+            "literal": "."
+          },
+          "scope": "punctuation"
+        },
+        {
+          "match": {
+            "literal": "]]"
+          },
+          "scope": "punctuation",
+          "pop": true
+        }
+      ]
+    },
+    "basic": {
+      "scope": "string.quoted",
+      "endsAtEOL": true,
+      "rules": [
+        {
+          "include": "escapes"
+        },
+        {
+          "match": {
+            "literal": "\""
+          },
+          "pop": true
+        }
+      ]
+    },
+    "document": {
+      "rules": [
+        {
+          "match": {
+            "seq": [
+              {
+                "literal": "#"
+              },
+              {
+                "repeat": "[^\\r\\n]"
+              }
+            ]
+          },
+          "scope": "comment.line"
+        },
+        {
+          "match": {
+            "literal": "[["
+          },
+          "scope": "punctuation",
+          "push": "arrayHeader"
+        },
+        {
+          "match": {
+            "literal": "["
+          },
+          "scope": "punctuation",
+          "push": "header"
+        },
+        {
+          "match": {
+            "literal": "\""
+          },
+          "scope": "support.type.property-name",
+          "push": "keyBasic"
+        },
+        {
+          "match": {
+            "literal": "'"
+          },
+          "scope": "support.type.property-name",
+          "push": "keyLiteral"
+        },
+        {
+          "match": {
+            "repeat": "[A-Za-z0-9_-]",
+            "min": 1
+          },
+          "scope": "support.type.property-name"
+        },
+        {
+          "match": {
+            "literal": "."
+          },
+          "scope": "punctuation"
+        },
+        {
+          "match": {
+            "literal": "="
+          },
+          "scope": "punctuation",
+          "push": "value"
+        }
+      ]
+    },
+    "escapes": {
+      "rules": [
+        {
+          "match": {
+            "seq": [
+              {
+                "literal": "\\u"
+              },
+              {
+                "repeat": "[0-9A-Fa-f]",
+                "min": 4,
+                "max": 4
+              }
+            ]
+          },
+          "scope": "constant.character.escape"
+        },
+        {
+          "match": {
+            "seq": [
+              {
+                "literal": "\\U"
+              },
+              {
+                "repeat": "[0-9A-Fa-f]",
+                "min": 8,
+                "max": 8
+              }
+            ]
+          },
+          "scope": "constant.character.escape"
+        },
+        {
+          "match": {
+            "seq": [
+              {
+                "literal": "\\x"
+              },
+              {
+                "repeat": "[0-9A-Fa-f]",
+                "min": 2,
+                "max": 2
+              }
+            ]
+          },
+          "scope": "constant.character.escape"
+        },
+        {
+          "match": {
+            "seq": [
+              {
+                "literal": "\\"
+              },
+              {
+                "class": "[btnfre\"\\\\]"
+              }
+            ]
+          },
+          "scope": "constant.character.escape"
+        },
+        {
+          "match": {
+            "literal": "\\"
+          },
+          "scope": "invalid"
+        }
+      ]
+    },
+    "header": {
+      "endsAtEOL": true,
+      "rules": [
+        {
+          "match": {
+            "seq": [
+              {
+                "literal": "#"
+              },
+              {
+                "repeat": "[^\\r\\n]"
+              }
+            ]
+          },
+          "scope": "comment.line"
+        },
+        {
+          "match": {
+            "literal": "\""
+          },
+          "scope": "entity.name.type",
+          "push": "headerBasic"
+        },
+        {
+          "match": {
+            "literal": "'"
+          },
+          "scope": "entity.name.type",
+          "push": "headerLiteral"
+        },
+        {
+          "match": {
+            "repeat": "[A-Za-z0-9_-]",
+            "min": 1
+          },
+          "scope": "entity.name.type"
+        },
+        {
+          "match": {
+            "literal": "."
+          },
+          "scope": "punctuation"
+        },
+        {
+          "match": {
+            "literal": "]"
+          },
+          "scope": "punctuation",
+          "pop": true
+        }
+      ]
+    },
+    "headerBasic": {
+      "scope": "entity.name.type",
+      "endsAtEOL": true,
+      "rules": [
+        {
+          "include": "escapes"
+        },
+        {
+          "match": {
+            "literal": "\""
+          },
+          "pop": true
+        }
+      ]
+    },
+    "headerLiteral": {
+      "scope": "entity.name.type",
+      "endsAtEOL": true,
+      "rules": [
+        {
+          "match": {
+            "literal": "'"
+          },
+          "pop": true
+        }
+      ]
+    },
+    "inlineTable": {
+      "spansLines": true,
+      "rules": [
+        {
+          "match": {
+            "literal": "\""
+          },
+          "scope": "support.type.property-name",
+          "push": "keyBasic"
+        },
+        {
+          "match": {
+            "literal": "'"
+          },
+          "scope": "support.type.property-name",
+          "push": "keyLiteral"
+        },
+        {
+          "match": {
+            "repeat": "[A-Za-z0-9_-]",
+            "min": 1
+          },
+          "scope": "support.type.property-name"
+        },
+        {
+          "match": {
+            "literal": "."
+          },
+          "scope": "punctuation"
+        },
+        {
+          "match": {
+            "literal": "="
+          },
+          "scope": "punctuation",
+          "push": "inlineValue"
+        },
+        {
+          "match": {
+            "literal": ","
+          },
+          "scope": "punctuation"
+        },
+        {
+          "match": {
+            "literal": "}"
+          },
+          "scope": "punctuation",
+          "pop": true
+        },
+        {
+          "match": {
+            "seq": [
+              {
+                "literal": "#"
+              },
+              {
+                "repeat": "[^\\r\\n]"
+              }
+            ]
+          },
+          "scope": "comment.line"
+        }
+      ]
+    },
+    "inlineValue": {
+      "rules": [
+        {
+          "include": "values"
+        },
+        {
+          "match": {
+            "literal": ","
+          },
+          "scope": "punctuation",
+          "pop": true
+        },
+        {
+          "match": {
+            "literal": "}"
+          },
+          "scope": "punctuation",
+          "pop": 2
+        }
+      ]
+    },
+    "keyBasic": {
+      "scope": "support.type.property-name",
+      "endsAtEOL": true,
+      "rules": [
+        {
+          "include": "escapes"
+        },
+        {
+          "match": {
+            "literal": "\""
+          },
+          "pop": true
+        }
+      ]
+    },
+    "keyLiteral": {
+      "scope": "support.type.property-name",
+      "endsAtEOL": true,
+      "rules": [
+        {
+          "match": {
+            "literal": "'"
+          },
+          "pop": true
+        }
+      ]
+    },
+    "literal": {
+      "scope": "string.quoted",
+      "endsAtEOL": true,
+      "rules": [
+        {
+          "match": {
+            "literal": "'"
+          },
+          "pop": true
+        }
+      ]
+    },
+    "multiBasic": {
+      "scope": "string.quoted",
+      "spansLines": true,
+      "rules": [
+        {
+          "match": {
+            "seq": [
+              {
+                "literal": "\\"
+              },
+              {
+                "repeat": "[ \\t]"
+              },
+              {
+                "eol": true
+              }
+            ]
+          },
+          "scope": "constant.character.escape"
+        },
+        {
+          "include": "escapes"
+        },
+        {
+          "match": {
+            "seq": [
+              {
+                "literal": "\"\"\""
+              },
+              {
+                "notFollowedBy": {
+                  "literal": "\""
+                }
+              }
+            ]
+          },
+          "pop": true
+        }
+      ]
+    },
+    "multiLiteral": {
+      "scope": "string.quoted",
+      "spansLines": true,
+      "rules": [
+        {
+          "match": {
+            "seq": [
+              {
+                "literal": "'''"
+              },
+              {
+                "notFollowedBy": {
+                  "literal": "'"
+                }
+              }
+            ]
+          },
+          "pop": true
+        }
+      ]
+    },
+    "value": {
+      "endsAtEOL": true,
+      "rules": [
+        {
+          "include": "values"
+        }
+      ]
+    },
+    "values": {
+      "rules": [
+        {
+          "match": {
+            "seq": [
+              {
+                "literal": "#"
+              },
+              {
+                "repeat": "[^\\r\\n]"
+              }
+            ]
+          },
+          "scope": "comment.line"
+        },
+        {
+          "match": {
+            "literal": "\"\"\""
+          },
+          "scope": "string.quoted",
+          "push": "multiBasic"
+        },
+        {
+          "match": {
+            "literal": "\""
+          },
+          "scope": "string.quoted",
+          "push": "basic"
+        },
+        {
+          "match": {
+            "literal": "'''"
+          },
+          "scope": "string.quoted",
+          "push": "multiLiteral"
+        },
+        {
+          "match": {
+            "literal": "'"
+          },
+          "scope": "string.quoted",
+          "push": "literal"
+        },
+        {
+          "match": {
+            "words": [
+              "true",
+              "false"
+            ]
+          },
+          "scope": "constant.language"
+        },
+        {
+          "match": {
+            "seq": [
+              {
+                "opt": {
+                  "class": "[+-]"
+                }
+              },
+              {
+                "words": [
+                  "inf",
+                  "nan"
+                ]
+              }
+            ]
+          },
+          "scope": "constant.numeric",
+          "notAfterWord": true
+        },
+        {
+          "match": {
+            "anyOf": [
+              {
+                "seq": [
+                  {
+                    "literal": "0"
+                  },
+                  {
+                    "class": "[xob]"
+                  },
+                  {
+                    "repeat": "[0-9A-Fa-f_]",
+                    "min": 1
+                  }
+                ]
+              },
+              {
+                "seq": [
+                  {
+                    "opt": {
+                      "class": "[+-]"
+                    }
+                  },
+                  {
+                    "class": "[0-9]"
+                  },
+                  {
+                    "repeat": "[0-9_.:eE+\\-TZtz]"
+                  }
+                ]
+              }
+            ]
+          },
+          "scope": "constant.numeric",
+          "notAfterWord": true
+        },
+        {
+          "match": {
+            "literal": "["
+          },
+          "scope": "punctuation",
+          "push": "array"
+        },
+        {
+          "match": {
+            "literal": "{"
+          },
+          "scope": "punctuation",
+          "push": "inlineTable"
+        }
+      ]
+    }
+  }
+}
