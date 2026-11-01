@@ -1,0 +1,350 @@
+{
+  "name": "diff",
+  "fileExtensions": [
+    "diff",
+    "patch"
+  ],
+  "initial": "document",
+  "states": {
+    "document": {
+      "rules": [
+        {
+          "match": {
+            "seq": [
+              {
+                "bol": true
+              },
+              {
+                "anyOf": [
+                  {
+                    "literal": "diff "
+                  },
+                  {
+                    "literal": "Index: "
+                  }
+                ]
+              },
+              {
+                "repeat": "[^\\r\\n]"
+              }
+            ]
+          },
+          "scope": "markup.heading"
+        },
+        {
+          "match": {
+            "seq": [
+              {
+                "bol": true
+              },
+              {
+                "seq": [
+                  {
+                    "anyOf": [
+                      {
+                        "literal": "--- "
+                      },
+                      {
+                        "literal": "+++ "
+                      },
+                      {
+                        "literal": "---\t"
+                      },
+                      {
+                        "literal": "+++\t"
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "repeat": "[^\\r\\n]"
+              }
+            ]
+          },
+          "scope": "markup.heading"
+        },
+        {
+          "match": {
+            "seq": [
+              {
+                "bol": true
+              },
+              {
+                "literal": "@@"
+              },
+              {
+                "repeat": "[@]"
+              },
+              {
+                "repeat": "[^@\\r\\n]"
+              },
+              {
+                "repeat": "[@]",
+                "min": 1
+              },
+              {
+                "repeat": "[ \\t]"
+              },
+              {
+                "repeat": "[^\\r\\n]"
+              }
+            ]
+          },
+          "captures": [
+            null,
+            "meta.preprocessor",
+            "meta.preprocessor",
+            "meta.preprocessor",
+            "meta.preprocessor",
+            null,
+            "entity.name.function"
+          ],
+          "push": "hunk"
+        },
+        {
+          "match": {
+            "seq": [
+              {
+                "bol": true
+              },
+              {
+                "anyOf": [
+                  {
+                    "literal": "index "
+                  },
+                  {
+                    "literal": "new file mode "
+                  },
+                  {
+                    "literal": "deleted file mode "
+                  },
+                  {
+                    "literal": "old mode "
+                  },
+                  {
+                    "literal": "new mode "
+                  },
+                  {
+                    "literal": "similarity index "
+                  },
+                  {
+                    "literal": "dissimilarity index "
+                  },
+                  {
+                    "literal": "rename from "
+                  },
+                  {
+                    "literal": "rename to "
+                  },
+                  {
+                    "literal": "copy from "
+                  },
+                  {
+                    "literal": "copy to "
+                  },
+                  {
+                    "literal": "Binary files "
+                  },
+                  {
+                    "literal": "Only in "
+                  },
+                  {
+                    "literal": "GIT binary patch"
+                  }
+                ]
+              },
+              {
+                "repeat": "[^\\r\\n]"
+              }
+            ]
+          },
+          "scope": "comment.line"
+        },
+        {
+          "match": {
+            "seq": [
+              {
+                "bol": true
+              },
+              {
+                "literal": "==="
+              },
+              {
+                "repeat": "[^\\r\\n]"
+              }
+            ]
+          },
+          "scope": "comment.line"
+        },
+        {
+          "match": {
+            "seq": [
+              {
+                "bol": true
+              },
+              {
+                "literal": "\\"
+              },
+              {
+                "repeat": "[^\\r\\n]"
+              }
+            ]
+          },
+          "scope": "comment.line"
+        },
+        {
+          "match": {
+            "seq": [
+              {
+                "bol": true
+              },
+              {
+                "literal": "+"
+              },
+              {
+                "repeat": "[^\\r\\n]"
+              }
+            ]
+          },
+          "scope": "markup.inserted"
+        },
+        {
+          "match": {
+            "seq": [
+              {
+                "bol": true
+              },
+              {
+                "literal": "-"
+              },
+              {
+                "repeat": "[^\\r\\n]"
+              }
+            ]
+          },
+          "scope": "markup.deleted"
+        }
+      ]
+    },
+    "hunk": {
+      "rules": [
+        {
+          "match": {
+            "seq": [
+              {
+                "bol": true
+              },
+              {
+                "literal": "@@"
+              },
+              {
+                "repeat": "[@]"
+              },
+              {
+                "repeat": "[^@\\r\\n]"
+              },
+              {
+                "repeat": "[@]",
+                "min": 1
+              },
+              {
+                "repeat": "[ \\t]"
+              },
+              {
+                "repeat": "[^\\r\\n]"
+              }
+            ]
+          },
+          "captures": [
+            null,
+            "meta.preprocessor",
+            "meta.preprocessor",
+            "meta.preprocessor",
+            "meta.preprocessor",
+            null,
+            "entity.name.function"
+          ]
+        },
+        {
+          "match": {
+            "seq": [
+              {
+                "bol": true
+              },
+              {
+                "literal": "+"
+              },
+              {
+                "repeat": "[^\\r\\n]"
+              }
+            ]
+          },
+          "scope": "markup.inserted"
+        },
+        {
+          "match": {
+            "seq": [
+              {
+                "bol": true
+              },
+              {
+                "literal": "-"
+              },
+              {
+                "repeat": "[^\\r\\n]"
+              }
+            ]
+          },
+          "scope": "markup.deleted"
+        },
+        {
+          "match": {
+            "seq": [
+              {
+                "bol": true
+              },
+              {
+                "literal": " "
+              },
+              {
+                "repeat": "[^\\r\\n]"
+              }
+            ]
+          }
+        },
+        {
+          "match": {
+            "seq": [
+              {
+                "bol": true
+              },
+              {
+                "literal": "\\"
+              },
+              {
+                "repeat": "[^\\r\\n]"
+              }
+            ]
+          },
+          "scope": "comment.line"
+        },
+        {
+          "match": {
+            "seq": [
+              {
+                "bol": true
+              },
+              {
+                "followedBy": {
+                  "class": "[^ +\\-\\\\\\r\\n]"
+                }
+              }
+            ]
+          },
+          "pop": true
+        }
+      ]
+    }
+  }
+}
