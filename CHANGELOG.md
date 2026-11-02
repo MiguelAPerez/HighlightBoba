@@ -1,5 +1,19 @@
 # Changelog
 
+## 0.5.0 (2026-11-02)
+
+### Feat
+
+- import VS Code, TextMate and Xcode themes (#30)
+- Ruby grammar (#39)
+- Java and Kotlin grammars (#37)
+- C and C++ grammars (#38)
+- Rust grammar (#36)
+- SQL and XML grammars (#35)
+- TOML and Dockerfile grammars (#32)
+- unified diff grammar (#33)
+- markup.inserted and markup.deleted scopes, for diffs (#31)
+
 ## 0.4.0 (2026-10-31)
 
 ### Feat
